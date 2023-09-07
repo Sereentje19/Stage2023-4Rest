@@ -6,42 +6,45 @@
       alt="does not work"
     />
     <div class="loginContainer">
-      <div class="cirkel">
-        <div id="profileIcon">
-          <profile />
+      <div class="right-semi-circle">
+        <div class="tesie">
+          <div class="cirkel">
+            <div id="profileIcon">
+              <profile />
+            </div>
+            <img src="../components/icons/iconLoginProfile.svg" alt="" />
+          </div>
+          <div class="divInput">
+            <div id="profileFillIcon">
+              <profileFill />
+            </div>
+            <input
+              id="inputEmail"
+              class="inputFieldLogin"
+              type="text"
+              placeholder="Email"
+              required
+            />
+            <div class="divie" id="eyeIcon"></div>
+          </div>
+          <div class="divInput">
+            <div id="profileFillIcon">
+              <lockClosed />
+            </div>
+            <input
+              class="inputFieldLogin"
+              id="inputWachtwoord"
+              type="text"
+              placeholder="Wachtwoord"
+              required
+            />
+            <div id="eyeIcon">
+              <eyeOpen />
+            </div>
+          </div>
+          <button class="loginButton" type="button">Login</button>
         </div>
-        <img src="../components/icons/iconLoginProfile.svg" alt="" />
       </div>
-      <div class="divInput">
-        <div id="profileFillIcon">
-          <profileFill />
-        </div>
-        <input
-          id="inputEmail"
-          class="inputFieldLogin"
-          type="text"
-          placeholder="Email"
-          required
-        />
-        <div class="divie" id="eyeIcon">
-        </div>
-      </div>
-      <div class="divInput">
-        <div id="profileFillIcon">
-          <lockClosed />
-        </div>
-        <input
-          class="inputFieldLogin"
-          id="inputWachtwoord"
-          type="text"
-          placeholder="Wachtwoord"
-          required
-        />
-        <div id="eyeIcon">
-          <eyeOpen />
-        </div>
-      </div>
-      <button class="loginButton" type="button">Login</button>
     </div>
   </body>
 </template>
@@ -60,17 +63,32 @@ export default {
     profileFill,
     lockClosed,
     eyeOpen,
-    eyeClosed
+    eyeClosed,
   },
 };
 </script>
 
 <style>
-#logo{
+.right-semi-circle {
+  width: 100%;
+  height: 90%;
+  border-radius: 140% 0 15% 15%;
+  background-color: rgb(150, 172, 144);
+  margin-left: auto;
+  margin-top: auto;
+}
+
+.tesie{
+  margin-top: -110px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#logo {
   width: 150px;
 }
 
-.divie{
+.divie {
   width: 30px;
 }
 
@@ -81,7 +99,7 @@ export default {
   margin-bottom: 7%;
 }
 
-#eyeIcon{
+#eyeIcon {
   height: 40px;
   margin-left: -35px;
   margin-top: 13px;
@@ -100,7 +118,7 @@ export default {
 .cirkel {
   height: 120px;
   width: 120px;
-  background-color: #1a4716;
+  background-color: #153912;
   border-radius: 100%;
   display: inline-block;
   margin-left: auto;
@@ -111,8 +129,8 @@ export default {
 }
 
 .loginContainer {
-  background-color: #98b88d;
-  border-radius: 40px;
+  background-color: #aec5a6;
+  border-radius: 10%;
   border-color: white;
   border-width: 2px;
   border-style: solid;
@@ -129,12 +147,11 @@ export default {
 .loginButton {
   width: 80%;
   height: 45px;
-  margin-left: auto;
-  margin-right: auto;
   font-size: 25px;
-  background-color: #1a4716;
+  background-color: #153912;
   border: none;
-  color:white
+  color: white;
+  margin-left: 10%;
 }
 
 .inputFieldLogin {
@@ -143,7 +160,7 @@ export default {
   padding-left: 10px;
 }
 
-#inputWachtwoord, 
+#inputWachtwoord,
 #inputEmail {
   border-color: rgb(205, 205, 205);
   background-color: rgb(205, 205, 205);
@@ -152,12 +169,12 @@ export default {
   width: 100%;
 }
 
-#inputWachtwoord{
+#inputWachtwoord {
   margin-bottom: 80px;
 }
 
 body {
-  background-image: url("../assets/Pictures/green-background-blur.png");
-  background-size: 100%;
+  background-image: url("../assets/Pictures/green-background-blur2.png");
+  background-size: 100% 1000%;
 }
 </style>
