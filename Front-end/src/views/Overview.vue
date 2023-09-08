@@ -23,7 +23,7 @@
       </div>
 
       <div class="overview" v-for="i in 5">
-        <div id="item">
+        <a id="item" href="/">
           <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
           <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
           <img v-if="i == 5" id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
@@ -31,7 +31,7 @@
           <div id="geldigVanTekst">12-04-2019</div>
           <div id="geldigTotTekst">13-04-2024</div>
           <div id="typeTekst">Contract</div>
-        </div>
+        </a>
       </div>
 
       <div id="pageNavigator">
@@ -58,58 +58,24 @@ export default {
 </script>
 
 <style>
-
 #urgentieSymbool{
-  width: 4%;
+  width: 50px;
   margin-top: 8px;
   margin-left: 8px;
 }
 
+#klantnaamTekst,
+#geldigVanTekst,
+#geldigTotTekst,
 #typeTekst{
-  
-  padding-left: 720px;
-  margin-left: 7.5%;
-  margin-top: -23px;
+  margin-top: auto;
+  margin-bottom: auto;
   font-size: large;
-}
-
-#geldigTot,
-#geldigVan{
-    padding-right: 7.5%;
-}
-
-#geldigVanTekst{
-  padding-left: 200px;
-  margin-left: 20%;
-  margin-top: -23px;
-  font-size: large;
-}
-
-#geldigTotTekst{
-  padding-left: 540px;
-  margin-left: 7.5%;
-  margin-top: -23px;
-  font-size: large;
-}
-
-#klantnaam{
-    padding-right: 20%;
-}
-
-#klantnaamTekst{
-  padding-left: 80px;
-  margin-left: 2.5%;
-  margin-top: -45px;
-  font-size: large;
-}
-
-#urgentie{
-padding-right: 2.5%;
-
 }
 
 #titlesOverview {
-  display: flex;
+  display: grid;
+  grid-template-columns: 10% 30% 15% 15% 30%;
 }
 
 #pageNavigator {
@@ -124,6 +90,11 @@ padding-right: 2.5%;
   border-color: #868686;
   border-width: 1px;
   border-style: solid;
+  display: grid;
+  grid-template-columns: 10% 30% 15% 15% 30%;
+  color: black;
+  text-decoration: none;
+  margin-left: auto;
 }
 
 .overviewContainer {
