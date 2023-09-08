@@ -8,7 +8,7 @@
       />
       <div id="buttonsHeader">
         <a>Document uploaden</a>
-        <a>Uitloggen</a>
+        <a href="/">Uitloggen</a>
       </div>
     </div>
     <div class="overviewContainer">
@@ -93,8 +93,11 @@ export default {
   display: grid;
   grid-template-columns: 10% 30% 15% 15% 30%;
   color: black;
-  text-decoration: none;
   margin-left: auto;
+}
+
+a{
+  text-decoration: none;
 }
 
 .overviewContainer {
