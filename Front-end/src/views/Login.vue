@@ -1,48 +1,43 @@
 <template>
   <body>
-    <img
-      id="logo"
-      src="../assets/Pictures/Logo-4-rest-IT.png"
-      alt="does not work"
-    />
-    <div class="loginContainer">
-      <div class="right-semi-circle">
-        <div class="tesie">
-          <div class="cirkel">
-            <div id="profileIcon">
-              <profile />
+    <div class="loginBody">
+      <img
+        id="logoLogin"
+        src="../assets/Pictures/Logo-4-rest-IT.png"
+        alt="does not work"
+      />
+      <div class="loginContainer">
+        <div id="backgroundCircel">
+          <div id="alignmentBody">
+            <div class="cirkel">
+              <div id="profileIcon">
+                <profile />
+              </div>
+              <img src="../components/icons/iconLoginProfile.svg" alt="" />
             </div>
-            <img src="../components/icons/iconLoginProfile.svg" alt="" />
+            <div class="inputContainer">
+              <div id="profileFillIcon">
+                <profileFill />
+              </div>
+              <input id="inputEmail" type="text" placeholder="Email" required />
+              <div class="divSpace" id="eyeIcon"></div>
+            </div>
+            <div class="inputContainer">
+              <div id="profileFillIcon">
+                <lockClosed />
+              </div>
+              <input
+                id="inputWachtwoord"
+                type="text"
+                placeholder="Wachtwoord"
+                required
+              />
+              <div id="eyeIcon">
+                <eyeOpen />
+              </div>
+            </div>
+            <button class="loginButton" type="button">Login</button>
           </div>
-          <div class="divInput">
-            <div id="profileFillIcon">
-              <profileFill />
-            </div>
-            <input
-              id="inputEmail"
-              class="inputFieldLogin"
-              type="text"
-              placeholder="Email"
-              required
-            />
-            <div class="divie" id="eyeIcon"></div>
-          </div>
-          <div class="divInput">
-            <div id="profileFillIcon">
-              <lockClosed />
-            </div>
-            <input
-              class="inputFieldLogin"
-              id="inputWachtwoord"
-              type="text"
-              placeholder="Wachtwoord"
-              required
-            />
-            <div id="eyeIcon">
-              <eyeOpen />
-            </div>
-          </div>
-          <button class="loginButton" type="button">Login</button>
         </div>
       </div>
     </div>
@@ -69,7 +64,7 @@ export default {
 </script>
 
 <style>
-.right-semi-circle {
+#backgroundCircel {
   width: 100%;
   height: 90%;
   border-radius: 140% 0 15% 15%;
@@ -78,21 +73,22 @@ export default {
   margin-top: auto;
 }
 
-.tesie{
+#alignmentBody {
   margin-top: -110px;
   margin-left: auto;
   margin-right: auto;
 }
 
-#logo {
+#logoLogin {
   width: 150px;
+  padding: 1% 0% 0% 1.5%;
 }
 
-.divie {
+.divSpace {
   width: 30px;
 }
 
-.divInput {
+.inputContainer {
   display: flex;
   margin-left: 10%;
   margin-right: 13%;
@@ -154,12 +150,6 @@ export default {
   margin-left: 10%;
 }
 
-.inputFieldLogin {
-  height: 50px;
-  font-size: 22px;
-  padding-left: 10px;
-}
-
 #inputWachtwoord,
 #inputEmail {
   border-color: rgb(205, 205, 205);
@@ -167,6 +157,9 @@ export default {
   border: none;
   outline: none;
   width: 100%;
+  height: 50px;
+  font-size: 22px;
+  padding-left: 10px;
 }
 
 #inputWachtwoord {
@@ -174,7 +167,14 @@ export default {
 }
 
 body {
+  margin: 0px;
+}
+
+.loginBody {
   background-image: url("../assets/Pictures/green-background-blur2.png");
-  background-size: 100% 1000%;
+  background-size: 100% 100%;
+  position: absolute; 
+  height: 100%; 
+  width: 100%;
 }
 </style>
