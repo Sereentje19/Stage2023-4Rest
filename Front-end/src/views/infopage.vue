@@ -7,7 +7,7 @@
          
         <div class="row">
             <ul> 
-             <img  src="../views/Logo.png" class="Logo" alt="4-Rest">   
+             <img  src="../assets/pictures/Logo.png" class="Logo" alt="4-Rest">   
              <il><a class="Overzicht" href="Overzicht,vue"><h2>Overzicht</h2></a></il>
              <il><a class="Document" href="Document.vue"><h2>Document Uploaden</h2></a> </il>
              <il><a class="Uitloggen" href="login.vue"><h2>Uitloggen</h2></a> </il>
@@ -48,7 +48,7 @@
 </div>
 
         	
-    <img src="../views/contract.jpg" class="Foto"  alt="Document">
+    <img src="../assets/pictures/contract.jpg" class="Foto"  alt="Document">
 
 
 </body>
@@ -59,13 +59,12 @@
 
     position:fixed;
     left: 50px;
-    top: 17px;
+    top: 3px;
     height: 95px;
     width: 150px;
 }
 .row {
     position: fixed;
-    background-color: #22421F;
     height: 100px;
     width: 98.5%;
 }
@@ -78,15 +77,15 @@ a{
 
 .Overzicht{ 
 position: fixed;
-right: 480px;
-top: 26px ;
+right: 545px;
+top: 13px ;
 font-size: 18px;
 }
 
 .Document{ 
     position: fixed;
-    right: 225px;
-    top: 26px ;
+    right: 255px;
+    top: 13px ;
     font-size: 18px;
 
 
@@ -95,7 +94,7 @@ font-size: 18px;
 .Uitloggen{ 
 position: fixed;
 right: 100px;
-top: 26px ;
+top: 13px ;
 font-size: 18px;
 
 

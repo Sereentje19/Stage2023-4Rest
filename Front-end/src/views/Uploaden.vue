@@ -7,7 +7,7 @@
          
         <div class="row">
             <ul> 
-             <img  src="../views/Logo.png" class="Logo" alt="4-Rest">   
+             <img  src="../assets/pictures/Logo.png" class="Logo" alt="4-Rest">   
              <il><a class="Overzicht" href="Overzicht,vue"><h2>Overzicht</h2></a></il>
              <il><a class="Uitloggen" href="login.vue"><h2>Uitloggen</h2></a> </il>
             </ul>
@@ -60,14 +60,13 @@
 .Logo{
 position:fixed;
 left: 50px;
-top: 11px;
+top: 2px;
 height: 95px;
 width: 150px;
 }
 
 .row {
 position: fixed;
-background-color: #22421F;
 height: 100px;
 width: 98.5%;
 }
@@ -81,7 +80,7 @@ text-decoration: none;
 .Overzicht{ 
 position: fixed;
 right: 250px;
-top: 20px ;
+top: 13px ;
 font-size: 18px;
 }
 
@@ -89,7 +88,7 @@ font-size: 18px;
 .Uitloggen{ 
 position: fixed;
 right: 100px;
-top: 20px ;
+top: 13px ;
 font-size: 18px;
 
 } 
@@ -137,14 +136,14 @@ font-size: 40px;
     top: 30px;
     left: 150px;
     background: #22421F;
-    background-image: url(folder.png);
+    background-image: url(../components/icons/folder.png);
     background-repeat: no-repeat;
     background-position: 330px;
     background-size:60px 50px;
     color: white;
     padding: 12px;
     font-size: 25px;
-    size: 300px;
+    width: 378px;
 }
 
 label{
@@ -159,7 +158,7 @@ label{
     position: fixed;
     top: 226px;
     right: 350px;
-    background-image: url(lens.png);
+    background-image: url(../components/icons/lens.png);
     background-position: 10px;
     background-size:45px 45px;
     background-color:#F4F4F4;
