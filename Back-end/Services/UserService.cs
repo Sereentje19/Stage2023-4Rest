@@ -7,6 +7,10 @@ namespace Back_end.Services
 {
     public class UserService
     {
-        
+        private UserRepository _userRepository = new UserRepository();
+        public string GetName()
+        {
+            return _userRepository.GetName();
+        }
     }
 }
