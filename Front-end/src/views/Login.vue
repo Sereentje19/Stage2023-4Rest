@@ -36,7 +36,7 @@
                 <eyeOpen />
               </div>
             </div>
-            <button class="loginButton" type="button">Login</button>
+            <button @click="login()" class="loginButton" type="button">Login</button>
           </div>
         </div>
       </div>
@@ -60,6 +60,11 @@ export default {
     eyeOpen,
     eyeClosed,
   },
+  methods:{
+    login(){
+      this.$router.push("/overzicht");
+    }
+  }
 };
 </script>
 
@@ -148,6 +153,7 @@ export default {
   border: none;
   color: white;
   margin-left: 10%;
+  cursor: pointer;
 }
 
 #inputWachtwoord,
