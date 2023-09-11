@@ -1,6 +1,5 @@
 <template>
     <body>
-<<<<<<< Updated upstream
         
      <div class="header">
          
@@ -13,24 +12,6 @@
             </div>
     </div>
 <br>
-=======
->>>>>>> Stashed changes
-
-        <div class="header">
-
-            <div class="row">
-                <ul>
-                    <img src="../views/Logo.png" class="Logo" alt="4-Rest">
-                    <il><a class="Overzicht" href="Overzicht,vue">
-                            <h2>Overzicht</h2>
-                        </a></il>
-                    <il><a class="Uitloggen" href="login.vue">
-                            <h2>Uitloggen</h2>
-                        </a> </il>
-                </ul>
-            </div>
-        </div>
-        <br>
 
         <div class="input">
             <h1>Document uploaden</h1>
@@ -74,7 +55,6 @@
 </template>
 
 <style>
-<<<<<<< Updated upstream
 .Logo{
 position:fixed;
 left: 50px;
@@ -87,21 +67,7 @@ width: 150px;
 position: fixed;
 height: 100px;
 width: 98.5%;
-=======
-.Logo {
-    position: fixed;
-    left: 50px;
-    top: 11px;
-    height: 95px;
-    width: 150px;
-}
 
-.row {
-    position: fixed;
-    background-color: #22421F;
-    height: 100px;
-    width: 98.5%;
->>>>>>> Stashed changes
 }
 
 a {
@@ -110,7 +76,6 @@ a {
 
 }
 
-<<<<<<< Updated upstream
 .Overzicht{ 
 position: fixed;
 right: 250px;
@@ -124,21 +89,7 @@ position: fixed;
 right: 100px;
 top: 13px ;
 font-size: 18px;
-=======
-.Overzicht {
-    position: fixed;
-    right: 250px;
-    top: 20px;
-    font-size: 18px;
-}
 
-
-.Uitloggen {
-    position: fixed;
-    right: 100px;
-    top: 20px;
-    font-size: 18px;
->>>>>>> Stashed changes
 
 }
 
