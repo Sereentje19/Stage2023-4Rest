@@ -51,14 +51,11 @@
         </ul>
 </div>
 
-
-
-
-
 </body>
 </template>
 
 <style>
+
 
 body {
   background-color: #d9d9d9;
@@ -232,5 +229,6 @@ export default {
     }
   }
 };
+
 
 </script>
