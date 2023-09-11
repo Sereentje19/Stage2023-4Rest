@@ -1,18 +1,19 @@
 <template>
 
 
-    <body>
+<body>
         
-     <div class="header">
-         
-        <div class="row">
-            <ul> 
-             <img  src="../assets/pictures/Logo.png" class="Logo" alt="4-Rest">   
-             <il><a class="Overzicht" href="Overzicht,vue"><h2>Overzicht</h2></a></il>
-             <il><a class="Document" href="Document.vue"><h2>Document Uploaden</h2></a> </il>
-             <il><a class="Uitloggen" href="login.vue"><h2>Uitloggen</h2></a> </il>
-            </ul>
-            </div>
+        <div class="header">
+      <img
+        id="logoHeader"
+        src="../assets/Pictures/Logo-4-rest-IT.png"
+        alt="does not work"
+      />
+      <div id="buttonsHeader">
+        <a href="/">Document uploaden</a>
+        <a href="/">overzicht</a>
+        <a href="/">Uitloggen</a>
+      </div>
     </div>
 
     <div class="Info">
@@ -55,24 +56,41 @@
 </template>
   
 <style>
-.Logo{
-
-    position:fixed;
-    left: 50px;
-    top: 3px;
-    height: 95px;
-    width: 150px;
-}
-.row {
-    position: fixed;
-    height: 100px;
-    width: 98.5%;
+body {
+  background-color: #d9d9d9;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-a{
-    color: white;
-    text-decoration: none;
- 
+
+#logoHeader{
+    width: 130px;
+  height: 80px;
+  margin-left: 20px;
+  margin-top: 20px;
+  padding: 0.5% 0% 0% 1%;
+}
+
+.header {
+  width: 103%;
+  height: 120px;
+  background-color: #153912;
+  margin-left: -1.5%;
+  margin-top: -1.5%;
+  display: flex;
+  flex-direction: row;
+}
+
+#buttonsHeader {
+  position: absolute;
+  right: 0px;
+  padding: 50px 40px 0px 0px;
+}
+
+a {
+  font-size: 28px;
+  color: white;
+  margin-left: 30px;
+  text-decoration: none;
 }
 
 .Overzicht{ 
@@ -91,19 +109,7 @@ font-size: 18px;
 
 }
 
-.Uitloggen{ 
-position: fixed;
-right: 100px;
-top: 13px ;
-font-size: 18px;
 
-
-} 
-
-body{
-    background-color: #D9D9D9;
-    width: 100%;
-}
 
 
 h1{
@@ -115,7 +121,7 @@ h1{
 h3{
     position:relative;
     left: 400px;
-    top: 270px;
+    top: 180px;
     font-size: 25px;
 }
 
@@ -130,4 +136,3 @@ h3{
   
 
 </style>
-  
