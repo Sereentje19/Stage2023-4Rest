@@ -58,7 +58,7 @@ export default {
     profileFill,
     lockClosed,
     eyeOpen,
-    eyeClosed,
+    eyeClosed, 
   },
   methods:{
     login(){
@@ -67,6 +67,8 @@ export default {
   }
 };
 </script>
+   
+
 
 <style>
 #backgroundCircel {

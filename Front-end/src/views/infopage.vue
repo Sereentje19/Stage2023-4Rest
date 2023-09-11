@@ -16,43 +16,43 @@
       </div>
     </div>
 
-    <div class="Info">
-        <ul>
-    
-
-    
-            <h1>
-                 contract
-            </h1>
-<br>
-<br>    
-            <h3>
-                 23-11-20  
-<br>      
-                 dit is over X dagen
-            </h3>
-<br>
-<br>
-            <h3>
-                Serena Kenter
-<br>
-                serena@gmail.com
-            </h3>
-<br>
-<br>
-            <h3>
-                opmerking
-<br>
-                tarief omhoog
-            </h3>
-        </ul>
-</div>
-
-        	
-    <img src="../assets/pictures/contract.jpg" class="Foto"  alt="Document">
+        <div class="Info">
+            <ul>
 
 
-</body>
+
+                <h1>
+                    contract
+                </h1>
+                <br>
+                <br>
+                <h3>
+                    23-11-20
+                    <br>
+                    dit is over X dagen
+                </h3>
+                <br>
+                <br>
+                <h3>
+                    Serena Kenter
+                    <br>
+                    serena@gmail.com
+                </h3>
+                <br>
+                <br>
+                <h3>
+                    opmerking
+                    <br>
+                    tarief omhoog
+                </h3>
+            </ul>
+        </div>
+
+
+        <img src="../views/contract.jpg" class="Foto" alt="Document">
+
+
+    </body>
 </template>
   
 <style>
@@ -93,17 +93,17 @@ a {
   text-decoration: none;
 }
 
-.Overzicht{ 
-position: fixed;
-right: 545px;
-top: 13px ;
-font-size: 18px;
+.Overzicht {
+    position: fixed;
+    right: 480px;
+    top: 26px;
+    font-size: 18px;
 }
 
-.Document{ 
+.Document {
     position: fixed;
-    right: 255px;
-    top: 13px ;
+    right: 225px;
+    top: 26px;
     font-size: 18px;
 
 
@@ -112,25 +112,26 @@ font-size: 18px;
 
 
 
-h1{
-    position:fixed;
+h1 {
+    position: fixed;
     left: 440px;
     top: 145px;
     font-size: 70px;
 }
-h3{
-    position:relative;
+
+h3 {
+    position: relative;
     left: 400px;
     top: 180px;
     font-size: 25px;
 }
 
-.Foto{
-    
-    position:fixed;
+.Foto {
+
+    position: fixed;
     right: 20%;
     top: 200px;
-    width:550px;
+    width: 550px;
     height: 650px;
 }
   

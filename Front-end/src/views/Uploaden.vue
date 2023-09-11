@@ -1,6 +1,4 @@
 <template>
-
-
     <body>
         
         <div class="header">
@@ -16,23 +14,25 @@
     </div>
 <br>
 
-    <div class="input"> 
-        <h1>Document uploaden</h1>
-        
+        <div class="input">
+            <h1>Document uploaden</h1>
+
             <div class="drop">
 
-            <p>drag & drop</p>
+                <p>drag & drop</p>
+                
+
+                
 
             </div>
-            
-            
-        
+            <label class="overlay"> 
+                Selecteer document
+            <input type="file" class="file">
+                </label>
+        </div>
 
 
 
-        <input type="file" style="display: none;" id="bestand" name="document">
-        <label class="overlay" for="bestand">Selecteer een bestand</label>
-    </div>
 
 
 
@@ -115,13 +115,13 @@ h1{
     
 }
 
-p{
-position: relative;
-top: 45%;
-font-size: 40px;
+p {
+    position: relative;
+    top: 45%;
+    font-size: 40px;
 }
 
-.drop{
+.drop {
 
     position: relative;
     left: 150px;
@@ -134,82 +134,83 @@ font-size: 40px;
 
 
 
-.overlay{
+.overlay {
     position: relative;
+    display: block;
     top: 30px;
     left: 150px;
     background: #22421F;
     background-image: url(../components/icons/folder.png);
     background-repeat: no-repeat;
     background-position: 330px;
-    background-size:60px 50px;
+    background-size: 60px 50px;
     color: white;
     padding: 12px;
     font-size: 25px;
     width: 378px;
 }
 
-label{
-    display: block;
-
+.file{
+    
+    display: none;
 }
 
 
-
-.Zoek{
+.Zoek {
 
     position: fixed;
     top: 226px;
     right: 350px;
     background-image: url(../components/icons/lens.png);
     background-position: 10px;
-    background-size:45px 45px;
-    background-color:#F4F4F4;
-  background-repeat: no-repeat;
+    background-size: 45px 45px;
+    background-color: #F4F4F4;
+    background-repeat: no-repeat;
     border-color: black;
-    padding:12px;
+    padding: 12px;
     font-size: 23px;
     width: 350px;
 
 }
 
-.Naam{
+.Naam {
     position: fixed;
     top: 362px;
     right: 350px;
-    background-color:#F4F4F4;
+    background-color: #F4F4F4;
     border-color: black;
     font-size: 23px;
-    padding:12px;
+    padding: 12px;
     width: 450px;
 }
 
-.Email{
+.Email {
 
     position: fixed;
     top: 440px;
     right: 350px;
-    background-color:#F4F4F4;
+    background-color: #F4F4F4;
     border-color: black;
     font-size: 23px;
-    padding:12px;
+    padding: 12px;
     width: 450px;
 }
-.Type{
+
+.Type {
     position: fixed;
     top: 515px;
     right: 350px;
-    background-color:#F4F4F4;
+    background-color: #F4F4F4;
     border-color: black;
     font-size: 23px;
-    padding:12px;
+    padding: 12px;
     width: 450px;
 }
 
 
 
 
-.verstuur{
+.verstuur {
     position: fixed;
     top: 745px;
     right: 350px;
@@ -219,7 +220,6 @@ background-color: #22421F;
   padding:12px;
 
 }
-
 </style>
 <script>
 
