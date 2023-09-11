@@ -61,7 +61,6 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
 #logoHeader{
     width: 130px;
   height: 80px;
@@ -105,12 +104,7 @@ a {
     right: 225px;
     top: 26px;
     font-size: 18px;
-
-
 }
-
-
-
 
 h1 {
     position: fixed;
@@ -127,13 +121,10 @@ h3 {
 }
 
 .Foto {
-
     position: fixed;
     right: 20%;
     top: 200px;
     width: 550px;
     height: 650px;
 }
-  
-
 </style>

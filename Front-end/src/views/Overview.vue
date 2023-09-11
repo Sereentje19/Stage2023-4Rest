@@ -37,40 +37,27 @@
       <div id="pageNavigator">
         Pagina
         <ArrowLeft />
-        <b>1</b> 2 3 ... 7
+        <b>1</b>/ 2 / 3 .../ 7
         <ArrowRight />
+        <div></div>
+              <button @click="togglePopup('popup1')">Succes</button>
+              <div class="popup-container" :class="{ 'active': activePopup === 'popup1' }">
+                <div class="Succes">
+                  <img class="Succesimage" src="../components/icons/Checked.png">
+                  <p>Succes!<br> Het document is succes geupload.</p>
+                  <button @click="togglePopup('popup1')">Close</button>
+                </div>
+              </div>
+              <button @click="togglePopup('popup2')">Error</button>
+              <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
+                <div class="Error">
+                  <img class="Errorimage" src="../components/icons/cancel.png">
+                  <p>Error!<br> Er is iets mis gegaan.</p>
+                  <button @click="togglePopup('popup2')">Close</button>
+                </div>
+              </div>
+        </div>
       </div>
-    </div>
-
-    <div>
-  <!-- Button to trigger the first pop-up -->
-  <button @click="togglePopup('popup1')">Succes</button>
-
-  <!-- First Pop-up component -->
-  <div class="popup-container" :class="{ 'active': activePopup === 'popup1' }">
-    <div class="Succes">
-      <img class="Succesimage" src="../components/icons/Checked.png">
-      <p>Succes!<br> Het document is succes geupload</p>
-      <button @click="togglePopup('popup1')">Close</button>
-    </div>
-  </div>
-
-  <!-- Button to trigger the second pop-up -->
-  <button @click="togglePopup('popup2')">Error</button>
-
-  <!-- Second Pop-up component -->
-  <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
-    <div class="Error">
-      <img class="Errorimage" src="../components/icons/cancel.png">
-       <p>Error!<br> Er is iets mis gegaan</p>
-      <button @click="togglePopup('popup2')">Close</button>
-    </div>
-  </div>
-</div>
-
-
-
-
 
   </body>
 </template>
@@ -93,10 +80,8 @@ export default {
   methods: {
     togglePopup(popupName) {
       if (this.activePopup === popupName) {
-        // If the clicked pop-up is already active, close it
         this.activePopup = null;
       } else {
-        // Otherwise, open the clicked pop-up and close the other if open
         this.activePopup = popupName;
       }
     },
@@ -107,59 +92,51 @@ export default {
 <style>
 .Succes{
   color: black;
-  padding: 20px;
+  padding: 10px;
   text-align: left;
   background-color: #90F587;
+  font-size: 20px;
 }
 
 .Error{
   color: black;
-  padding: 20px;
+  padding: 10px;
   background-color: #F56C6C;
   font-size: 20px;
   text-align: left;
-
-
 }
 
 .Errorimage{
 width: 60px;
 height: 60px;
-
 }
 
 .Succesimage{
 width: 60px;
 height: 60px;
-
 }
+
 .popup-container {
     position: fixed;
-    bottom: 0;
+    bottom: 0;  
     right: -300px;
     width: 300px;
-    background-color: #ffffff;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
     transition: right 0.3s ease-in-out;
-  }
+}
   
-  .popup-container.active {
+.popup-container.active {
     right: 0;
-  }
-  
+}
 
-  
-  .popup-button {
+.popup-button {
     display: block;
     text-align: center;
     background-color: #007bff;
     color: #fff;
     padding: 10px;
     cursor: pointer;
-  }
-
-
-
+}
 
 #urgentieSymbool{
   width: 50px;

@@ -62,9 +62,8 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
 #logoHeader{
-    width: 130px;
+  width: 130px;
   height: 80px;
   margin-left: 20px;
   margin-top: 20px;
@@ -94,22 +93,18 @@ a {
   text-decoration: none;
 }
 
-
-
 .input{
     position: fixed;
     top: 300px;
     left: 200px;
-    font-size: 20px;
- 
+    font-size: 20px; 
 }
 
 h1{
     position: fixed;
     top: 200px;
     left: 350px;
-    font-size: 40px;
-    
+    font-size: 40px;  
 }
 
 p {
@@ -119,7 +114,6 @@ p {
 }
 
 .drop {
-
     position: relative;
     left: 150px;
     background-color: white;
@@ -128,8 +122,6 @@ p {
     width: 400px;
     text-align: center;
 }
-
-
 
 .overlay {
     position: relative;
@@ -152,7 +144,6 @@ p {
     display: none;
 }
 
-
 .Zoek {
 
     position: fixed;
@@ -167,7 +158,6 @@ p {
     padding: 12px;
     font-size: 23px;
     width: 350px;
-
 }
 
 .Naam {
@@ -182,7 +172,6 @@ p {
 }
 
 .Email {
-
     position: fixed;
     top: 440px;
     right: 350px;
@@ -204,9 +193,6 @@ p {
     width: 450px;
 }
 
-
-
-
 .verstuur {
     position: fixed;
     top: 745px;
@@ -215,11 +201,9 @@ p {
 background-color: #22421F;
   color: white;
   padding:12px;
-
 }
 </style>
 <script>
-
 export default {
   name: "Overzicht",
 
@@ -229,6 +213,4 @@ export default {
     }
   }
 };
-
-
 </script>
