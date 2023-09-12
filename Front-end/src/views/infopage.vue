@@ -1,68 +1,54 @@
 <template>
-
-
-<body>
-        
-        <div class="header">
+  <div>
+    <div class="header">
       <img
         id="logoHeader"
-        src="../assets/Pictures/Logo-4-rest-IT.png"
+        src="@/assets/Pictures/Logo-4-rest-IT.png"
         alt="does not work"
       />
       <div id="buttonsHeader">
         <a href="/">Document uploaden</a>
-        <a href="/">overzicht</a>
+        <a href="/">Overzicht</a>
         <a href="/">Uitloggen</a>
       </div>
     </div>
 
-        <div class="Info">
-            <ul>
+    <div class="info">
+      <ul>
+        <h1>Contract</h1>
+        <br /><br />
+        <h3>
+          23-11-20
+          <br />
+          Dit is over X dagen
+        </h3>
+        <br /><br />
+        <h3>
+          Serena Kenter
+          <br />
+          serena@gmail.com
+        </h3>
+        <br /><br />
+        <h3>
+          Opmerking
+          <br />
+          Tarief omhoog
+        </h3>
+      </ul>
+    </div>
 
-
-
-                <h1>
-                    contract
-                </h1>
-                <br>
-                <br>
-                <h3>
-                    23-11-20
-                    <br>
-                    dit is over X dagen
-                </h3>
-                <br>
-                <br>
-                <h3>
-                    Serena Kenter
-                    <br>
-                    serena@gmail.com
-                </h3>
-                <br>
-                <br>
-                <h3>
-                    opmerking
-                    <br>
-                    tarief omhoog
-                </h3>
-            </ul>
-        </div>
-
-
-        <img src="../views/contract.jpg" class="Foto" alt="Document">
-
-
-    </body>
+    <img src="../views/contract.jpg" class="foto" alt="Document" />
+  </div>
 </template>
-  
-<style>
+
+<style scoped>
 body {
   background-color: #d9d9d9;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#logoHeader{
-    width: 130px;
+#logoHeader {
+  width: 130px;
   height: 80px;
   margin-left: 20px;
   margin-top: 20px;
@@ -70,61 +56,45 @@ body {
 }
 
 .header {
-  width: 103%;
+  width: 100%;
   height: 120px;
   background-color: #153912;
-  margin-left: -1.5%;
-  margin-top: -1.5%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
 }
 
-#buttonsHeader {
-  position: absolute;
-  right: 0px;
-  padding: 50px 40px 0px 0px;
-}
-
-a {
+#buttonsHeader a {
   font-size: 28px;
   color: white;
-  margin-left: 30px;
   text-decoration: none;
+  margin-left: 30px;
 }
 
-.Overzicht {
-    position: fixed;
-    right: 480px;
-    top: 26px;
-    font-size: 18px;
-}
-
-.Document {
-    position: fixed;
-    right: 225px;
-    top: 26px;
-    font-size: 18px;
+.info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
 }
 
 h1 {
-    position: fixed;
-    left: 440px;
-    top: 145px;
-    font-size: 70px;
+  font-size: 70px;
+  margin-left: 20px;
 }
 
 h3 {
-    position: relative;
-    left: 400px;
-    top: 180px;
-    font-size: 25px;
+  font-size: 25px;
+  margin-left: 20px;
 }
 
-.Foto {
-    position: fixed;
-    right: 20%;
-    top: 200px;
-    width: 550px;
-    height: 650px;
+.foto {
+  width: 550px;
+  height: 650px;
+  margin-top: 50px;
+  margin-right: 20px;
+  float: right;
 }
 </style>

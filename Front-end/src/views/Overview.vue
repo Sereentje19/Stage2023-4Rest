@@ -7,7 +7,7 @@
         alt="does not work"
       />
       <div id="buttonsHeader">
-        <a>Document uploaden</a>
+        <router-link to="/uploaden">Document uploaden</router-link>
         <a href="/">Uitloggen</a>
       </div>
     </div>
@@ -39,7 +39,7 @@
         <ArrowLeft />
         <b>1</b>/ 2 / 3 .../ 7
         <ArrowRight />
-        <div></div>
+        <div>
               <button @click="togglePopup('popup1')">Succes</button>
               <div class="popup-container" :class="{ 'active': activePopup === 'popup1' }">
                 <div class="Succes">
@@ -58,6 +58,7 @@
               </div>
         </div>
       </div>
+      </div>
 
   </body>
 </template>
@@ -75,6 +76,7 @@ export default {
   data() {
     return {
       activePopup: null,
+      sidebarOpen: true,
     };
   },
   methods: {
