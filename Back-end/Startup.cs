@@ -12,19 +12,19 @@ namespace Back_end
     public class Startup
     {
 
-        private IApplicationEnvironment _appEnv;
+        // private IApplicationEnvironment _appEnv;
 
-        public Startup(IApplicationEnvironment appEnv)
-        {
-            _appEnv = appEnv;
-        }
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddEntityFramework()
-                .AddSqlite()
-                .AddDbContext<MyContext>(
-                    options => { options.UseSqlite($"Data Source={_appEnv.ApplicationBasePath}/data.db"); });
-        }
+        // public Startup(IApplicationEnvironment appEnv)
+        // {
+        //     _appEnv = appEnv;
+        // }
+        // public void ConfigureServices(IServiceCollection services)
+        // {
+        //     services.AddEntityFramework()
+        //         .AddSqlite()
+        //         .AddDbContext<MyContext>(
+        //             options => { options.UseSqlite($"Data Source={_appEnv.ApplicationBasePath}/data.db"); });
+        // }
 
         public IConfiguration Configuration { get; }
 
@@ -35,19 +35,19 @@ namespace Back_end
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddDbContext<NotificationContext>(options =>
-            //                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<NotificationContext>(options =>
+                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            // services.AddControllersWithViews();
+            services.AddControllersWithViews();
 
             // Load configuration from appsettings.json
-            IConfiguration configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+            // IConfiguration configuration = new ConfigurationBuilder()
+            //     .SetBasePath(Directory.GetCurrentDirectory())
+            //     .AddJsonFile("appsettings.json")
+            //     .Build();
 
-            // Use the configuration
-            services.Configure<BaseRepository>(configuration.GetSection("YourConfigurationSection"));
+            // // Use the configuration
+            // services.Configure<BaseRepository>(configuration.GetSection("YourConfigurationSection"));
 
             // Add other services here
         }
