@@ -1,6 +1,7 @@
 using Back_end;
 using System.Linq;
 using Back_end.Models;
+using Microsoft.EntityFrameworkCore;
 
 using var db = new NotificationContext();
 
@@ -26,43 +27,10 @@ db.SaveChanges();
 
 
 
-// using Back_end;
-// using Back_end.Models;
-
-// var host = CreateHostBuilder(args).Build();
-
-// CreateDbIfNotExists(host);
-
-// host.Run();
-
-// static void CreateDbIfNotExists(IHost host)
-// {
-//     using (var scope = host.Services.CreateScope())
-//     {
-//         var services = scope.ServiceProvider;
-//         try
-//         {
-//             var context = services.GetRequiredService<NotificationContext>();
-//             DbInitializer.Initialize(context);
-//         }
-//         catch (Exception ex)
-//         {
-//             var logger = services.GetRequiredService<ILogger<Program>>();
-//             logger.LogError(ex, "An error occurred creating the DB.");
-//         }
-//     }
-// }
-
-// static IHostBuilder CreateHostBuilder(string[] args) =>
-//     Host.CreateDefaultBuilder(args)
-//         .ConfigureWebHostDefaults(webBuilder =>
-//         {
-//             webBuilder.UseStartup<Startup>();
-//         });
-
-
-
 var builder = WebApplication.CreateBuilder(args);
+
+var startup = new Startup(builder.Configuration);
+startup.ConfigureServices(builder.Services);
 
 // Add services to the container.
 
