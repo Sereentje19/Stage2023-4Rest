@@ -40,7 +40,6 @@ namespace Back_end.Migrations
                 });
 
                 migrationBuilder.InsertData(
-                // schema: null,
                 table: "Users",
                 columns: new[] { "UserId", "Email", "Password" },
                 values: new object[,]
