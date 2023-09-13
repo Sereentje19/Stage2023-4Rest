@@ -26,8 +26,9 @@ namespace Back_end.Models
             DbPath = System.IO.Path.Join(path, "Automated_notifications.db");
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
+        protected override void OnConfiguring(DbContextOptionsBuilder options) 
+            => options.UseSqlServer("Server=localhost;Database=Automated_notifications;Integrated Security=SSPI;TrustServerCertificate=True;Encrypt=False;",
+            options => options.EnableRetryOnFailure());
 
     }
 }

@@ -11,6 +11,19 @@ namespace Back_end
 {
     public class Startup
     {
+
+
+
+                // migrationBuilder.InsertData(
+                // schema: null,
+                // table: "Users",
+                // columns: new[] { "UserId", "Email", "Password" },
+                // values: new object[,]
+                // {
+                //     { 1, "Serena@Kenter.nl", "12345" },
+                //     { 2, "Kerena@Senter.nl", "11111" },
+                // });
+
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -21,7 +34,8 @@ namespace Back_end
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<NotificationContext>(options =>
-                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                            options => options.EnableRetryOnFailure()));
 
             services.AddControllersWithViews();
         }

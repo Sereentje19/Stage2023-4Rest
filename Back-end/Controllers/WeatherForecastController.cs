@@ -8,7 +8,7 @@ namespace Back_end.Controllers;
 public class WeatherForecastController : ControllerBase
 {
     private readonly NotificationContext context1;
-    // private readonly User user1;
+    private readonly User user1;
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -20,9 +20,11 @@ public class WeatherForecastController : ControllerBase
     {
         context1 = context;
         _logger = logger;
-        // User user = context.Users.Find(1);
-        // user1 = user;
+        User? user = context1.Users.Find(1);
+        user1 = user;
     }
+
+
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
@@ -31,8 +33,8 @@ public class WeatherForecastController : ControllerBase
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            // Summary = user1.email
+            // Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            Summary = user1.Email
         })
         .ToArray();
     }

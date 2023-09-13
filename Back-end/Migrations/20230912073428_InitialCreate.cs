@@ -39,6 +39,16 @@ namespace Back_end.Migrations
                     table.PrimaryKey("PK_Users", x => x.UserId);
                 });
 
+                migrationBuilder.InsertData(
+                schema: null,
+                table: "Users",
+                columns: new[] { "UserId", "Email", "Password" },
+                values: new object[,]
+                {
+                    { 1, "Serena@Kenter.nl", "12345" },
+                    { 2, "Kerena@Senter.nl", "11111" },
+                });
+
             migrationBuilder.CreateTable(
                 name: "Documents",
                 columns: table => new

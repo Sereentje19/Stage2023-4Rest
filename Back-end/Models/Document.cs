@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Back_end.Models
 {
@@ -12,7 +13,9 @@ namespace Back_end.Models
         public int DocumentId { get; set; }
         public string? Image { get; set; }
         public DateTime Date { get; set; }
+        [ForeignKey("CustomerId")]
         public Customer? Customer { get; set; }
+        [ForeignKey("UserId")]
         public User? User { get; set; }
         public Type Type { get; set; }
     }
