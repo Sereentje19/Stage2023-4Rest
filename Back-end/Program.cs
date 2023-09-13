@@ -1,4 +1,6 @@
 using Back_end;
+using Back_end.Services;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +9,14 @@ startup.ConfigureServices(builder.Services);
 
 // Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.Services.GetService<IDocumentService>();
+app.Services.GetService<ICustomerService>();
+app.Services.GetService<IUserService>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

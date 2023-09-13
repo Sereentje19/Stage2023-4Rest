@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {}
+    "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {}
   },
   "projects": {
-    "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {
+    "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
+        "projectUniqueName": "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
         "projectName": "Back-end",
-        "projectPath": "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
+        "projectPath": "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
         "packagesPath": "C:\\Users\\seren\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\obj\\",
+        "outputPath": "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\seren\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -48,15 +48,7 @@
               "target": "Package",
               "version": "[7.0.11, )"
             },
-            "Microsoft.EntityFrameworkCore.InMemory": {
-              "target": "Package",
-              "version": "[7.0.10, )"
-            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[7.0.10, )"
-            },
-            "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[7.0.10, )"
             },

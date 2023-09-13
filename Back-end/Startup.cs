@@ -11,9 +11,6 @@ namespace Back_end
 {
     public class Startup
     {
-
-
-
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -29,26 +26,5 @@ namespace Back_end
 
             services.AddControllersWithViews();
         }
-
-        // public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        // {
-        //     if (env.IsDevelopment())
-        //     {
-        //         app.UseDeveloperExceptionPage();
-        //     }
-        //     else
-        //     {
-        //         // Configure error handling for production here
-        //     }
-
-        //     // Add middleware and routing configuration here
-
-        //     app.UseRouting();
-
-        //     app.UseEndpoints(endpoints =>
-        //     {
-        //         // Configure endpoints and routes here
-        //     });
-        // }
     }
 }
