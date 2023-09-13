@@ -15,13 +15,25 @@
     <div class="input">
       <h1 id="h1">Document uploaden</h1>
 
-      <div class="drop">
-        <p id="p">drag & drop</p>
+      <div
+        class="drop"
+        id="dropArea"
+        @dragover.prevent="handleDragOver"
+        @dragleave="handleDragLeave"
+        @drop.prevent="handleDrop"
+      >
+        <p id="p"></p>
+        <input
+          type="file"
+          class="file"
+          @change="handleFileChange"
+          style="display: none"
+        />
       </div>
 
       <label class="overlay">
         Selecteer document
-        <input type="file" class="file" />
+        <input type="file" class="file" @change="handleFileChange" />
       </label>
 
       <div class="Klant">
@@ -30,30 +42,30 @@
             <input
               type="text"
               class="Zoek"
-              placeholder="       Zoek klant"
+              placeholder="Zoek klant"
               name="Naam"
-            /><br /><br />
+            />
             <input
               type="text"
               class="Naam"
               placeholder="Naam klant"
               name="Zoek"
-            /><br /><br />
+            />
             <input
               type="text"
               class="Email"
               placeholder="Email klant"
               name="Email"
-            /><br /><br />
+            />
             <input
               type="text"
               class="Type"
               placeholder="Type bestand"
               name="Type"
-            /><br /><br />
-            <button @click="Overzicht()" class="verstuur" type="button">
-              Verstuur document
-            </button>
+            />
+            <button @click="handleVerstuur" class="verstuur" type="button">
+           Verstuur document
+           </button>
           </form>
         </ul>
       </div>
@@ -62,25 +74,105 @@
 </template>
 
 <script>
-
 export default {
-  
-  name: "Uploaden",
+  data() {
+    return {
+      selectedFile: null,
+      dropAreaActive: false,
+    };
+  },
   methods: {
-    Overzicht() {
-      const fileInput = document.querySelector(".file");
-      if (fileInput.files.length === 0) {
-        alert("Selecteer graag een bestand.");
+    handleDragOver(e) {
+      e.preventDefault();
+      this.dropAreaActive = true;
+    },
+    handleDragLeave() {
+      this.dropAreaActive = false;
+    },
+    handleDrop(e) {
+      e.preventDefault();
+      this.dropAreaActive = false;
+      const files = e.dataTransfer.files;
+      this.processFile(files[0]);
+    },
+    handleFileChange(e) {
+      const files = e.target.files;
+      this.processFile(files[0]);
+    },
+    processFile(file) {
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = this.handleImageLoad;
+        reader.readAsDataURL(file);
+      }
+    },
+    handleImageLoad(e) {
+      const reader = e.target;
+      const image = new Image();
+      image.src = reader.result;
+      image.onload = () => {
+        let width = image.width;
+        let height = image.height;
+        const maxWidth = 400;
+        const maxHeight = 410;
+        const aspectRatio = width / height;
+        if (width > maxWidth) {
+          width = maxWidth;
+          height = width / aspectRatio;
+        }
+        if (height > maxHeight) {
+          height = maxHeight;
+          width = height * aspectRatio;
+        }
+        this.$refs.dropArea.style.width = `${width}px`;
+        this.$refs.dropArea.style.height = `${height}px`;
+        this.$refs.dropArea.style.backgroundImage = `url(${reader.result})`;
+        this.$refs.dropArea.style.backgroundSize = 'cover';
+        this.$refs.dropArea.style.backgroundRepeat = 'no-repeat';
+        this.$refs.dropArea.style.backgroundPosition = 'center center';
+        this.$refs.pElement.style.display = 'none';
+      };
+    },
+    handleVerstuurClick() {
+      if (this.selectedFile) {
+        alert('goed gedaan.');
       } else {
-        alert("file in gevulld")
+        alert('Select a document before sending.');
       }
     },
   },
 };
-
 </script>
 
-<style scoped>
+
+<style>
+#dropArea.active {
+  border: 2px dashed #007bff;
+}
+
+.drop {
+  position: relative;
+  left: 150px;
+  background-color: white;
+  color: #717171;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* To hide any content that goes beyond the dimensions */
+  max-width: 400px; /* Maximum width of 400px */
+  max-height: 410px; /* Maximum height of 410px */
+}
+
+#p {
+  width: 100px; /* Set the width to 100px */
+  height: 100px; /* Set the height to 100px */
+  background-image: url(../components/icons/move.png);
+  background-size: 100px 100px; /* Adjust background size to 100px x 100px */
+  display: block;
+}
+
+
 body {
   background-color: #d9d9d9;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -131,21 +223,7 @@ a {
   font-size: 40px;
 }
 
-#p {
-  position: relative;
-  top: 45%;
-  font-size: 40px;
-}
 
-.drop {
-  position: relative;
-  left: 150px;
-  background-color: white;
-  color: #717171;
-  height: 400px;
-  width: 400px;
-  text-align: center;
-}
 
 .overlay {
   position: relative;
