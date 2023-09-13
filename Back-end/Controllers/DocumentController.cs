@@ -10,28 +10,46 @@ namespace Back_end.Controllers
     [Route("[controller]")]
     public class DocumentController : ControllerBase
     {
-        private readonly NotificationContext context;
         private readonly IDocumentService documentService;
 
-        public DocumentController(NotificationContext nc, IDocumentService ds)
+        public DocumentController(IDocumentService ds)
         {
-            context = nc;
             documentService = ds;
         }
 
-
-        [HttpGet(Name = "GetDocument")]
-        public IActionResult Get()
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            var document = context.Documents.Find(1);
+            var document = documentService.GetAll();
             return Ok(document);
         }
 
-        [HttpPost(Name = "PostDocument")]
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var document = documentService.GetById(id);
+            return Ok(document);
+        }
+
+        [HttpPost]
         public IActionResult Post(Document doc)
         {
             documentService.Post(doc);
-            return Ok(new { message = "User created" });
+            return Ok(new { message = "Document created" });
+        }
+
+        [HttpPut]
+        public IActionResult Put(Document doc)
+        {
+            documentService.Put(doc);
+            return Ok(new { message = "Document updated" });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(Document doc)
+        {
+            documentService.Delete(doc);
+            return Ok(new { message = "Document Deleted" });
         }
     }
 }

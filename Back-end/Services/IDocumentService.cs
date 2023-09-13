@@ -12,6 +12,6 @@ namespace Back_end.Services
         Document GetById(int id);
         void Post(Document document);
         void Delete(Document document);
-        void Update(Document document);
+        void Put(Document document);
     }
 }

@@ -20,6 +20,7 @@ namespace Back_end.Services
         {
             return _userRepository.GetAll();
         }
+
         public User GetById(int id)
         {
             return _userRepository.GetById(id);
@@ -35,7 +36,7 @@ namespace Back_end.Services
             _userRepository.Delete(user);
         }
 
-        public void Update(User user)
+        public void Put(User user)
         {
             _userRepository.Update(user);
         }

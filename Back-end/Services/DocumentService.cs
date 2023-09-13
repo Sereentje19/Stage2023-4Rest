@@ -20,6 +20,7 @@ namespace Back_end.Services
         {
             return _documentRepository.GetAll();
         }
+
         public Document GetById(int id)
         {
             return _documentRepository.GetById(id);
@@ -35,7 +36,7 @@ namespace Back_end.Services
             _documentRepository.Delete(document);
         }
 
-        public void Update(Document document)
+        public void Put(Document document)
         {
             _documentRepository.Update(document);
         }

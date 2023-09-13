@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Back_end.Models;
 using Back_end.Repositories;
 
@@ -20,6 +17,7 @@ namespace Back_end.Services
         {
             return _customerRepository.GetAll();
         }
+
         public Customer GetById(int id)
         {
             return _customerRepository.GetById(id);
@@ -35,7 +33,7 @@ namespace Back_end.Services
             _customerRepository.Delete(customer);
         }
 
-        public void Update(Customer customer)
+        public void Put(Customer customer)
         {
             _customerRepository.Update(customer);
         }

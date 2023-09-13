@@ -12,6 +12,6 @@ namespace Back_end.Services
         Customer GetById(int id);
         void Post(Customer customer);
         void Delete(Customer customer);
-        void Update(Customer customer);
+        void Put(Customer customer);
     }
 }
