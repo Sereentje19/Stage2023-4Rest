@@ -6,24 +6,24 @@ using Microsoft.EntityFrameworkCore;
 using var db = new NotificationContext();
 
 // Note: This sample requires the database to be created before running.
-Console.WriteLine($"Database path: {db.DbPath}.");
+// Console.WriteLine($"Database path: {db.DbPath}.");
 
-// Create
-Console.WriteLine("Inserting a new blog");
-db.Add(new User { Email = "ser@k.nl", Password = "12345" });
-Console.WriteLine("gelukt!");
-db.SaveChanges();
+// // Create
+// Console.WriteLine("Inserting a new blog");
+// db.Add(new User { Email = "ser@k.nl", Password = "12345" });
+// Console.WriteLine("gelukt!");
+// db.SaveChanges();
 
-// Read
-Console.WriteLine("Querying for a blog");
-var user = db.Users
-    .OrderBy(b => b.UserId)
-    .First();
+// // Read
+// Console.WriteLine("Querying for a blog");
+// var user = db.Users
+//     .OrderBy(b => b.UserId)
+//     .First();
 
-// Delete
-Console.WriteLine("Delete the blog");
-db.Remove(user);
-db.SaveChanges();
+// // Delete
+// Console.WriteLine("Delete the blog");
+// db.Remove(user);
+// db.SaveChanges();
 
 
 

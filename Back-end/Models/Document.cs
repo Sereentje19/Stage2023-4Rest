@@ -13,10 +13,12 @@ namespace Back_end.Models
         public int DocumentId { get; set; }
         public string? Image { get; set; }
         public DateTime Date { get; set; }
+
         [ForeignKey("CustomerId")]
-        public Customer? Customer { get; set; }
+        public virtual Customer Customer { get; set; }
+
         [ForeignKey("UserId")]
-        public User? User { get; set; }
+        public virtual User User { get; set; }
         public Type Type { get; set; }
     }
 }
