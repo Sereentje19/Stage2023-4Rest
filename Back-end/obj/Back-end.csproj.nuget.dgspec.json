@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {}
+    "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {}
   },
   "projects": {
-    "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {
+    "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
+        "projectUniqueName": "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
         "projectName": "Back-end",
-        "projectPath": "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
+        "projectPath": "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\Back-end.csproj",
         "packagesPath": "C:\\Users\\seren\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\obj\\",
+        "outputPath": "C:\\Users\\seren\\OneDrive\\Documents\\GitHub\\Stage2023-4Rest\\Back-end\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\seren\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -42,9 +42,35 @@
               "target": "Package",
               "version": "[7.0.10, )"
             },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
             }
           },
           "imports": [
