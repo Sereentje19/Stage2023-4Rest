@@ -22,17 +22,18 @@
         <h3 id="Type">Type document</h3>
       </div>
 
-      <div class="overview" v-for="i in 5">
-        <a id="item" href="/">
-          <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-          <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
-          <img v-if="i == 5" id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-          <div id="klantnaamTekst">Serena Kenter</div>
-          <div id="geldigVanTekst">12-04-2019</div>
-          <div id="geldigTotTekst">13-04-2024</div>
-          <div id="typeTekst">Contract</div>
-        </a>
-      </div>
+      <div class="overview" v-for="i in 5" :key="i">
+  <router-link :to="{ path: '/infopage' }" id="item">
+    <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+    <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
+    <img v-if="i == 5" id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+    <div id="klantnaamTekst">Serena Kenter</div>
+    <div id="geldigVanTekst">12-04-2019</div>
+    <div id="geldigTotTekst">13-04-2024</div>
+    <div id="typeTekst">Contract</div>
+  </router-link>
+</div>
+
 
       <div id="pageNavigator">
         Pagina
@@ -73,7 +74,7 @@ export default {
     return {
       activePopup: null,
       sidebarOpen: true,
-      popup1: this.$route.query.popup1 || false, // Get the query parameter popup1
+      popup1: this.$route.query.popup1 || false,
     };
   },
   methods: {

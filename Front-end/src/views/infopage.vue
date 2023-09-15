@@ -7,94 +7,62 @@
         alt="does not work"
       />
       <div id="buttonsHeader">
-        <a href="/">Document uploaden</a>
-        <a href="/">Overzicht</a>
+        <router-link to="/uploaden">Document uploaden</router-link>
+        <router-link to="/overzicht">Overzicht</router-link>
         <a href="/">Uitloggen</a>
       </div>
     </div>
-
+    
     <div class="info">
       <ul>
-        <h1>Contract</h1>
+        <h1 class="title">Contract</h1>
         <br /><br />
-        <h3>
+        <h3 class="text">
           23-11-20
           <br />
           Dit is over X dagen
         </h3>
         <br /><br />
-        <h3>
+        <h3 class="text">
           Serena Kenter
           <br />
           serena@gmail.com
         </h3>
         <br /><br />
-        <h3>
+        <h3 class="text">
           Opmerking
           <br />
           Tarief omhoog
         </h3>
       </ul>
     </div>
-
-    <img src="../views/contract.jpg" class="foto" alt="Document" />
-  </div>
+</div>
+    <img src="../assets/pictures/contract.jpg" class="foto" alt="Document" />
+  
 </template>
 
 <style scoped>
-body {
-  background-color: #d9d9d9;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+.text{ 
+  position: relative;
+  left: 400px;
+  top: 80px;
+text-align: left;
+font-size: 30px;
 }
 
-#logoHeader {
-  width: 130px;
-  height: 80px;
-  margin-left: 20px;
-  margin-top: 20px;
-  padding: 0.5% 0% 0% 1%;
+.title{
+  position: relative;
+  top: 80px;
+  left: 400px;
+text-align: left;
+font-size: 50px;
+  
 }
-
-.header {
-  width: 100%;
-  height: 120px;
-  background-color: #153912;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
-}
-
-#buttonsHeader a {
-  font-size: 28px;
-  color: white;
-  text-decoration: none;
-  margin-left: 30px;
-}
-
-.info ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: left;
-}
-
-h1 {
-  font-size: 70px;
-  margin-left: 20px;
-}
-
-h3 {
-  font-size: 25px;
-  margin-left: 20px;
-}
-
-.foto {
-  width: 550px;
-  height: 650px;
-  margin-top: 50px;
-  margin-right: 20px;
-  float: right;
+.foto{
+  position:fixed;
+right: 300px;
+top: 200px;
+width: 600px;
+height: 700px;
 }
 </style>
