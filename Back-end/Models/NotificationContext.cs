@@ -15,20 +15,6 @@ namespace Back_end.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Documents> Documents { get; set; }
-
-        public string DbPath { get; }
-
-        public NotificationContext()
-        {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "Automated_notifications.db");
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options) 
-            => options.UseSqlServer("Server=localhost;Database=Automated_notifications;Integrated Security=SSPI;TrustServerCertificate=True;Encrypt=False;",
-            options => options.EnableRetryOnFailure());
-
+        public DbSet<Document> Documents { get; set; }
     }
 }

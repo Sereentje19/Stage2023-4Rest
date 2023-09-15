@@ -1,0 +1,32 @@
+
+//insert method Table Users
+migrationBuilder.InsertData(
+table: "Users",
+columns: new[] { "UserId", "Email", "Password" },
+values: new object[,]
+{
+                    { 1, "Serena@Kenter.nl", "12345" },
+                    { 2, "Kerena@Senter.nl", "11111" },
+});
+
+
+//insert method Table Documents
+migrationBuilder.InsertData(
+    table: "Documents",
+    columns: new[] { "DocumentId", "Image", "Date", "CustomerId", "UserId", "Type" },
+    values: new object[,]
+    {
+        { 1, "Blabla", new DateTime(2023, 10, 18), 1,1, Models.Type.Contract.ToString() },
+        { 2, "Blabla", new DateTime(2023, 10, 18), 1,1, Models.Type.Contract.ToString() },
+    });
+
+
+//insert method Table Customers
+migrationBuilder.InsertData(
+table: "Customers",
+columns: new[] { "CustomerId", "Email", "Name" },
+values: new object[,]
+{
+                    { 1, "Lisa@Bakker.nl", "Lisa Bakker" },
+                    { 2, "Bla@Bla.nl", "Bla Bla" },
+});

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Back_end.Models
 {
-    public class Documents
+    public class Document
     {
         [Key]
         public int DocumentId { get; set; }
@@ -15,10 +15,11 @@ namespace Back_end.Models
         public DateTime Date { get; set; }
 
         [ForeignKey("CustomerId")]
-        public virtual Customer Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
 
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
+        [Column(TypeName = "nvarchar(24)")]
         public Type Type { get; set; }
     }
 }
