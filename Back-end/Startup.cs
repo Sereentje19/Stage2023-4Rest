@@ -17,18 +17,15 @@ namespace Back_end
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<NotificationContext>(options =>
                             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                             options => options.EnableRetryOnFailure()));
 
-            // RegisterSwagger(services);
             RegisterCustomDependencies(services);
         }
 
         private static void RegisterCustomDependencies(IServiceCollection services)
         {
-
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
 
@@ -39,35 +36,27 @@ namespace Back_end
             services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
 
-        private static void RegisterSwagger(IServiceCollection services)
-        {
-            services.AddControllersWithViews();
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
-        }
-
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+        // public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        // {
+        //     if (env.IsDevelopment())
+        //     {
+        //         app.UseDeveloperExceptionPage();
+        //     }
+        //     else
+        //     {
+        //         app.UseHsts();
+        //     }
 
-            app.UseStaticFiles();
-            app.UseFileServer();
-            app.UseRouting();
+        //     app.UseStaticFiles();
+        //     app.UseFileServer();
+        //     app.UseRouting();
 
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
+        //     app.UseEndpoints(endpoints =>
+        //     {
+        //         endpoints.MapControllers();
+        //     });
+        // }
     }
 }
