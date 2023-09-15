@@ -2,6 +2,6 @@ namespace Back_end.Models
 {
     public enum Type
     {
-        Vog, contract, paspoort, id_kaart, diploma, certificaat
+        Vog, Contract, Paspoort, Id_kaart, Diploma, Certificaat
     }
 }

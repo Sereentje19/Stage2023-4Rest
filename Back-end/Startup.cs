@@ -1,29 +1,13 @@
 using Back_end;
 using Back_end.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Back_end.Repositories;
+using Back_end.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.IO;
 
 namespace Back_end
 {
     public class Startup
     {
-
-
-
-                // migrationBuilder.InsertData(
-                // schema: null,
-                // table: "Users",
-                // columns: new[] { "UserId", "Email", "Password" },
-                // values: new object[,]
-                // {
-                //     { 1, "Serena@Kenter.nl", "12345" },
-                //     { 2, "Kerena@Senter.nl", "11111" },
-                // });
-
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -37,9 +21,22 @@ namespace Back_end
                             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                             options => options.EnableRetryOnFailure()));
 
-            services.AddControllersWithViews();
+            RegisterCustomDependencies(services);
         }
 
+        private static void RegisterCustomDependencies(IServiceCollection services)
+        {
+            services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         // {
         //     if (env.IsDevelopment())
@@ -48,16 +45,17 @@ namespace Back_end
         //     }
         //     else
         //     {
-        //         // Configure error handling for production here
+        //         app.UseHsts();
         //     }
 
-        //     // Add middleware and routing configuration here
-
+        //     app.UseStaticFiles();
+        //     app.UseFileServer();
         //     app.UseRouting();
+
 
         //     app.UseEndpoints(endpoints =>
         //     {
-        //         // Configure endpoints and routes here
+        //         endpoints.MapControllers();
         //     });
         // }
     }
