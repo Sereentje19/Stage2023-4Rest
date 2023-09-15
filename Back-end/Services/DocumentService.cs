@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
 using Back_end.Repositories;
+using Back_end.Models;
 
 namespace Back_end.Services
 {
     public class DocumentService : IDocumentService
     {
-        private readonly IRepository<Document> _documentRepository;
+        private readonly IDocumentRepository _documentRepository;
 
-        public DocumentService(IRepository<Document> dr)
+        public DocumentService(IDocumentRepository dr)
         {
             _documentRepository = dr;
         }

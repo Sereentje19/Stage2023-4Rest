@@ -1,19 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Back_end.Models;
 using Microsoft.EntityFrameworkCore;
-// using system.Repositories;
 
 namespace Back_end.Repositories
 {
-    public class EntityFrameworkRepository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly NotificationContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public EntityFrameworkRepository(NotificationContext context)
+        public Repository(NotificationContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();

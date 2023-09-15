@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Back_end.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;

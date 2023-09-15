@@ -9,9 +9,9 @@ namespace Back_end.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(IRepository<User> ur)
+        public UserService(IUserRepository ur)
         {
             _userRepository = ur;
         }

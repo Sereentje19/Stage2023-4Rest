@@ -15,6 +15,6 @@ namespace Back_end.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Documents> Documents { get; set; }
+        public DbSet<Document> Documents { get; set; }
     }
 }

@@ -1,11 +1,8 @@
 using Back_end;
 using Back_end.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Back_end.Repositories;
+using Back_end.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.IO;
 
 namespace Back_end
 {
@@ -20,11 +17,57 @@ namespace Back_end
 
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddDbContext<NotificationContext>(options =>
                             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                             options => options.EnableRetryOnFailure()));
 
+            // RegisterSwagger(services);
+            RegisterCustomDependencies(services);
+        }
+
+        private static void RegisterCustomDependencies(IServiceCollection services)
+        {
+
+            services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+        }
+
+        private static void RegisterSwagger(IServiceCollection services)
+        {
             services.AddControllersWithViews();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+        }
+
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
+            app.UseStaticFiles();
+            app.UseFileServer();
+            app.UseRouting();
+
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

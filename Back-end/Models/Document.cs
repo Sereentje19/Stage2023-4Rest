@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Back_end.Models
 {
-    public class Documents
+    public class Document
     {
         [Key]
         public int DocumentId { get; set; }

@@ -6,9 +6,9 @@ namespace Back_end.Services
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IRepository<Customer> _customerRepository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(IRepository<Customer> cr)
+        public CustomerService(ICustomerRepository cr)
         {
             _customerRepository = cr;
         }

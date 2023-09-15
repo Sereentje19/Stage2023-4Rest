@@ -32,21 +32,21 @@ namespace Back_end.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Document doc)
+        public IActionResult Post(Models.Document doc)
         {
             documentService.Post(doc);
             return Ok(new { message = "Document created" });
         }
 
         [HttpPut]
-        public IActionResult Put(Document doc)
+        public IActionResult Put(Models.Document doc)
         {
             documentService.Put(doc);
             return Ok(new { message = "Document updated" });
         }
 
         [HttpDelete]
-        public IActionResult Delete(Document doc)
+        public IActionResult Delete(Models.Document doc)
         {
             documentService.Delete(doc);
             return Ok(new { message = "Document Deleted" });

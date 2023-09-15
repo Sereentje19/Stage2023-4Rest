@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Back_end.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService customerService;
