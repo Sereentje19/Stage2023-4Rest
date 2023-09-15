@@ -29,16 +29,19 @@ namespace Back_end.Repositories
         public void Add(User entity)
         {
             _dbSet.Add(entity);
+            _context.SaveChanges();
         }
 
         public void Update(User entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public void Delete(User entity)
         {
             _dbSet.Remove(entity);
+            _context.SaveChanges();
         }
     }
 }
