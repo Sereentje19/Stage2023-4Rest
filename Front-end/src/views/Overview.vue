@@ -40,22 +40,17 @@
         <b>1</b>/ 2 / 3 .../ 7
         <ArrowRight />
         <div>
-              <button @click="togglePopup('popup1')">Succes</button>
-              <div class="popup-container" :class="{ 'active': activePopup === 'popup1' }">
-                <div class="Succes">
+          <div>
+            <div>
+      <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
+        <div class="Succes">
                   <img class="Succesimage" src="../components/icons/Checked.png">
                   <p>Succes!<br> Het document is succes geupload.</p>
-                  <button @click="togglePopup('popup1')">Close</button>
-                </div>
-              </div>
-              <button @click="togglePopup('popup2')">Error</button>
-              <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
-                <div class="Error">
-                  <img class="Errorimage" src="../components/icons/cancel.png">
-                  <p>Error!<br> Er is iets mis gegaan.</p>
-                  <button @click="togglePopup('popup2')">Close</button>
-                </div>
-              </div>
+                  <button @click="closePopup('popup1')">Close</button>
+      </div>
+    </div>
+  </div>
+            </div>
         </div>
       </div>
       </div>
@@ -73,23 +68,24 @@ export default {
     ArrowLeft,
     ArrowRight,
   },
+
   data() {
     return {
       activePopup: null,
       sidebarOpen: true,
+      popup1: this.$route.query.popup1 || false, // Get the query parameter popup1
     };
   },
   methods: {
-    togglePopup(popupName) {
-      if (this.activePopup === popupName) {
-        this.activePopup = null;
-      } else {
-        this.activePopup = popupName;
+    closePopup(popupName) {
+      if (popupName === 'popup1') {
+        this.popup1 = false; // Set popup1 to false to hide the popup
       }
     },
   },
 };
 </script>
+
 
 <style>
 .Succes{

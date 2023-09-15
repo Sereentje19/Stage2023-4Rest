@@ -8,6 +8,7 @@
       />
       <div id="buttonsHeader">
         <router-link to="/overzicht">Overzicht</router-link>
+
         <a href="/">Uitloggen</a>
       </div>
     </div>
@@ -68,6 +69,17 @@
         <button @click="handleVerstuurClick" class="verstuur" type="button">
           Verstuur document
         </button>
+
+        <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
+  <div class="Error">
+    <img class="Errorimage" src="../components/icons/cancel.png">
+    <p>
+      {{ errorMessage }}
+    </p>
+    <button @click="togglePopup('popup2')">Close</button>
+  </div>
+</div>
+
       </div>
     </div>
   </div>
@@ -76,32 +88,53 @@
 <script>
 export default {
   data() {
-    return {
-      selectedFile: null,
-      dropAreaActive: false,
-      displayImage: false, // Initialize as false to hide the pElement initially
-      uploadedFileName: '',
-      imageContainerWidth: 400,
-      imageContainerHeight: 410,
-    };
-  },
+  return {
+    activePopup: null,
+    selectedFile: null,
+    dropAreaActive: false,
+    displayImage: false,
+    uploadedFileName: '',
+    imageContainerWidth: 400,
+    imageContainerHeight: 410,
+    errorMessage: '',
+  };
+},
+
   methods: {
+
+    togglePopup(popupName) {
+      if (this.activePopup === popupName) {
+        this.activePopup = null;
+      } else {
+        this.activePopup = popupName;
+      }
+    },
+  
+
+
     handleFileChange(e) {
       const files = e.target.files || e.dataTransfer.files;
       this.processFile(files[0]);
     },
+    
 
     handleVerstuurClick() {
-      if (this.selectedFile) {
-        if (this.displayImage) {
-          alert('Verstuur document clicked. Image is uploaded.');
-        } else {
-          alert(`Verstuur document clicked. File "${this.uploadedFileName}" is uploaded.`);
-        }
-      } else {
-        alert('Select a valid file before sending.');
-      }
-    },
+  if (this.selectedFile || this.displayImage) {
+    if (this.displayImage) {
+      this.$router.push({ name: 'overview', query: { popup1: true } }); // Set popup1 to true
+      alert('Verstuur document clicked. Image is uploaded.');
+    } else {
+      // Set an upload success message
+      this.errorMessage = `Upload successful. File "${this.uploadedFileName}" is uploaded.`;
+    }
+  } else {
+    // Set an error message for no file selected
+    this.errorMessage = 'Error: Selecteer een bestand.';
+  }
+
+  // Toggle "popup2"
+  this.togglePopup('popup2');
+},
     handleDragOver(e) {
       e.preventDefault();
       this.dropAreaActive = true;
@@ -163,6 +196,21 @@ export default {
 </script>
 
 <style scoped>
+
+.Error{
+  color: black;
+  padding: 10px;
+  background-color: #F56C6C;
+  font-size: 20px;
+  text-align: left;
+}
+
+.Errorimage{
+width: 60px;
+height: 60px;
+}
+
+
 .dropArea.active {
   border: 2px dashed #007bff;
   background-color: #f5f5f5;
