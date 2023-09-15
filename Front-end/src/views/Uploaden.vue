@@ -14,15 +14,15 @@
 
     <div class="input">
       <h1 id="h1">Document uploaden</h1>
-
       <div
-        class="drop"
-        id="dropArea"
+        id="drop"
+        ref="dropArea"
+        class="dropArea"
         @dragover.prevent="handleDragOver"
         @dragleave="handleDragLeave"
         @drop.prevent="handleDrop"
       >
-        <p id="p"></p>
+        <p id="p" ref="pElement"></p>
         <input
           type="file"
           class="file"
@@ -33,7 +33,7 @@
 
       <label class="overlay">
         Selecteer document
-        <input type="file" class="file" @change="handleFileChange" />
+        <input type="file"  class="file" @change="handleFileChange" />
       </label>
 
       <div class="Klant">
@@ -63,11 +63,11 @@
               placeholder="Type bestand"
               name="Type"
             />
-            <button @click="handleVerstuur" class="verstuur" type="button">
-           Verstuur document
-           </button>
           </form>
         </ul>
+        <button @click="handleVerstuurClick" class="verstuur" type="button">
+          Verstuur document
+        </button>
       </div>
     </div>
   </div>
@@ -79,14 +79,35 @@ export default {
     return {
       selectedFile: null,
       dropAreaActive: false,
+      displayImage: false, // Initialize as false to hide the pElement initially
+      uploadedFileName: '',
+      imageContainerWidth: 400,
+      imageContainerHeight: 410,
     };
   },
   methods: {
+    handleFileChange(e) {
+      const files = e.target.files || e.dataTransfer.files;
+      this.processFile(files[0]);
+    },
+
+    handleVerstuurClick() {
+      if (this.selectedFile) {
+        if (this.displayImage) {
+          alert('Verstuur document clicked. Image is uploaded.');
+        } else {
+          alert(`Verstuur document clicked. File "${this.uploadedFileName}" is uploaded.`);
+        }
+      } else {
+        alert('Select a valid file before sending.');
+      }
+    },
     handleDragOver(e) {
       e.preventDefault();
       this.dropAreaActive = true;
     },
-    handleDragLeave() {
+    handleDragLeave(e) {
+      e.preventDefault();
       this.dropAreaActive = false;
     },
     handleDrop(e) {
@@ -95,10 +116,12 @@ export default {
       const files = e.dataTransfer.files;
       this.processFile(files[0]);
     },
-    handleFileChange(e) {
-      const files = e.target.files;
-      this.processFile(files[0]);
+
+    calculateImageContainerDimensions() {
+      this.imageContainerWidth = 400;
+      this.imageContainerHeight = 410;
     },
+
     processFile(file) {
       if (file) {
         const reader = new FileReader();
@@ -106,6 +129,7 @@ export default {
         reader.readAsDataURL(file);
       }
     },
+
     handleImageLoad(e) {
       const reader = e.target;
       const image = new Image();
@@ -124,34 +148,29 @@ export default {
           height = maxHeight;
           width = height * aspectRatio;
         }
+        this.$refs.pElement.style.display = 'none'; // Hide the pElement
+        this.displayImage = true; // Set displayImage to true
         this.$refs.dropArea.style.width = `${width}px`;
         this.$refs.dropArea.style.height = `${height}px`;
         this.$refs.dropArea.style.backgroundImage = `url(${reader.result})`;
         this.$refs.dropArea.style.backgroundSize = 'cover';
         this.$refs.dropArea.style.backgroundRepeat = 'no-repeat';
         this.$refs.dropArea.style.backgroundPosition = 'center center';
-        this.$refs.pElement.style.display = 'none';
       };
-    },
-    handleVerstuurClick() {
-      if (this.selectedFile) {
-        alert('goed gedaan.');
-      } else {
-        alert('Select a document before sending.');
-      }
     },
   },
 };
 </script>
 
-
-<style>
-#dropArea.active {
+<style scoped>
+.dropArea.active {
   border: 2px dashed #007bff;
+  background-color: #f5f5f5;
 }
 
-.drop {
+.dropArea {
   position: relative;
+  height: 400px;
   left: 150px;
   background-color: white;
   color: #717171;
@@ -159,19 +178,21 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* To hide any content that goes beyond the dimensions */
-  max-width: 400px; /* Maximum width of 400px */
-  max-height: 410px; /* Maximum height of 410px */
+  overflow: hidden;
+  max-width: 400px;
+  max-height: 410px;
+  transition: background-color 0.3s, border 0.3s;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #p {
-  width: 100px; /* Set the width to 100px */
-  height: 100px; /* Set the height to 100px */
-  background-image: url(../components/icons/move.png);
-  background-size: 100px 100px; /* Adjust background size to 100px x 100px */
+  width: 100px;
+  height: 100px;
+  background-size: cover;
   display: block;
+  background-image: url(../components/icons/move.png);
 }
-
 
 body {
   background-color: #d9d9d9;
@@ -222,8 +243,6 @@ a {
   left: 350px;
   font-size: 40px;
 }
-
-
 
 .overlay {
   position: relative;
