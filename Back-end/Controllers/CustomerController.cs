@@ -34,7 +34,7 @@ namespace Back_end.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Customer cus)
+        public IActionResult Post(Customer cus)
         {
             customerService.Post(cus);
             return Ok(new { message = "Customer created" });

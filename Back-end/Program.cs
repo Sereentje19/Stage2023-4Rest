@@ -1,14 +1,27 @@
 using Back_end;
+using Back_end.Models;
+using Back_end.Repositories;
+using Back_end.Services;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
 
-var startup = new Startup(builder.Configuration);
-startup.ConfigureServices(builder.Services);
+builder.Services.AddDbContext<NotificationContext>(options =>
+                            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                            options => options.EnableRetryOnFailure()));
 
-// Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 var app = builder.Build();
 
