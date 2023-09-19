@@ -1,11 +1,7 @@
 <template>
   <body>
     <div class="loginBody">
-      <img
-        id="logoLogin"
-        src="../assets/Pictures/Logo-4-rest-IT.png"
-        alt="does not work"
-      />
+      <img id="logoLogin" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" />
       <div class="loginContainer">
         <div id="backgroundCircel">
           <div id="alignmentBody">
@@ -26,12 +22,7 @@
               <div id="profileFillIcon">
                 <lockClosed />
               </div>
-              <input
-                id="inputWachtwoord"
-                type="text"
-                placeholder="Wachtwoord"
-                required
-              />
+              <input id="inputWachtwoord" type="text" placeholder="Wachtwoord" required />
               <div id="eyeIcon">
                 <eyeOpen />
               </div>
@@ -58,10 +49,10 @@ export default {
     profileFill,
     lockClosed,
     eyeOpen,
-    eyeClosed, 
+    eyeClosed,
   },
-  methods:{
-    login(){
+  methods: {
+    login() {
       this.$router.push("/overzicht");
     }
   }
@@ -181,8 +172,8 @@ body {
 .loginBody {
   background-image: url("../assets/Pictures/green-background-blur2.png");
   background-size: 100% 100%;
-  position: absolute; 
-  height: 100%; 
+  position: absolute;
+  height: 100%;
   width: 100%;
 }
 </style>

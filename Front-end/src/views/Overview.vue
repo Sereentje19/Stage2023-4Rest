@@ -1,14 +1,11 @@
 <template>
   <body class="overviewBody">
     <div class="header">
-      <img
-        id="logoHeader"
-        src="../assets/Pictures/Logo-4-rest-IT.png"
-        alt="does not work"
-      />
+      <a href="/overzicht"><img id="logoHeader" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
       <div id="buttonsHeader">
+        <router-link to="/overzicht">Overzicht</router-link>
         <router-link to="/uploaden">Document uploaden</router-link>
-        <a href="/">Uitloggen</a>
+        <router-link to="/">Uitloggen</router-link>
       </div>
     </div>
     <div class="overviewContainer">
@@ -23,16 +20,17 @@
       </div>
 
       <div class="overview" v-for="i in 5" :key="i">
-  <router-link :to="{ path: '/infopage' }" id="item">
-    <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-    <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
-    <img v-if="i == 5" id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-    <div id="klantnaamTekst">Serena Kenter</div>
-    <div id="geldigVanTekst">12-04-2019</div>
-    <div id="geldigTotTekst">13-04-2024</div>
-    <div id="typeTekst">Contract</div>
-  </router-link>
-</div>
+        <router-link :to="{ path: '/infopage' }" id="item">
+          <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+          <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png"
+            alt="does not work" />
+          <img v-if="i == 5" id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+          <div id="klantnaamTekst">Serena Kenter</div>
+          <div id="geldigVanTekst">12-04-2019</div>
+          <div id="geldigTotTekst">13-04-2024</div>
+          <div id="typeTekst">Contract</div>
+        </router-link>
+      </div>
 
 
       <div id="pageNavigator">
@@ -43,18 +41,18 @@
         <div>
           <div>
             <div>
-      <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
-        <div class="Succes">
+              <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
+                <div class="Succes">
                   <img class="Succesimage" src="../components/icons/Checked.png">
                   <p>Succes!<br> Het document is succes geupload.</p>
                   <button @click="closePopup('popup1')">Close</button>
-      </div>
-    </div>
-  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
       </div>
-      </div>
+    </div>
 
   </body>
 </template>
@@ -89,7 +87,7 @@ export default {
 
 
 <style>
-.Succes{
+.Succes {
   color: black;
   padding: 10px;
   text-align: left;
@@ -97,7 +95,7 @@ export default {
   font-size: 20px;
 }
 
-.Error{
+.Error {
   color: black;
   padding: 10px;
   background-color: #F56C6C;
@@ -105,39 +103,39 @@ export default {
   text-align: left;
 }
 
-.Errorimage{
-width: 60px;
-height: 60px;
+.Errorimage {
+  width: 60px;
+  height: 60px;
 }
 
-.Succesimage{
-width: 60px;
-height: 60px;
+.Succesimage {
+  width: 60px;
+  height: 60px;
 }
 
 .popup-container {
-    position: fixed;
-    bottom: 0;  
-    right: -300px;
-    width: 300px;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
-    transition: right 0.3s ease-in-out;
+  position: fixed;
+  bottom: 0;
+  right: -300px;
+  width: 300px;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s ease-in-out;
 }
-  
+
 .popup-container.active {
-    right: 0;
+  right: 0;
 }
 
 .popup-button {
-    display: block;
-    text-align: center;
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px;
-    cursor: pointer;
+  display: block;
+  text-align: center;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
 }
 
-#urgentieSymbool{
+#urgentieSymbool {
   width: 50px;
   margin-top: 8px;
   margin-left: 8px;
@@ -146,7 +144,7 @@ height: 60px;
 #klantnaamTekst,
 #geldigVanTekst,
 #geldigTotTekst,
-#typeTekst{
+#typeTekst {
   margin-top: auto;
   margin-bottom: auto;
   font-size: large;
@@ -175,7 +173,7 @@ height: 60px;
   margin-left: auto;
 }
 
-a{
+a {
   text-decoration: none;
 }
 
@@ -192,8 +190,8 @@ h1 {
 #logoHeader {
   width: 130px;
   height: 80px;
-  margin-left: 20px;
-  margin-top: 20px;
+  margin-left: 3px;
+  margin-top: 28px;
   padding: 0.5% 0% 0% 1%;
 }
 
