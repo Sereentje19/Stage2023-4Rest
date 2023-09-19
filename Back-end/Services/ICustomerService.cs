@@ -11,7 +11,5 @@ namespace Back_end.Services
         IEnumerable<Customer> GetAll();
         Customer GetById(int id);
         void Post(Customer customer);
-        void Delete(Customer customer);
-        void Put(Customer customer);
     }
 }

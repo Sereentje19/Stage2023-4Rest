@@ -8,7 +8,5 @@ namespace Back_end.Repositories
         User GetById(int id);
         IEnumerable<User> GetAll();
         void Add(User entity);
-        void Update(User entity);
-        void Delete(User entity);
     }
 }
