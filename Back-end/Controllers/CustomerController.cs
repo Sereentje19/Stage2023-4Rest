@@ -40,18 +40,5 @@ namespace Back_end.Controllers
             return Ok(new { message = "Customer created" });
         }
 
-        [HttpPut]
-        public IActionResult Put(Customer cus)
-        {
-            customerService.Put(cus);
-            return Ok(new { message = "Customer updated" });
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(Customer cus)
-        {
-            customerService.Delete(cus);
-            return Ok(new { message = "Customer Deleted" });
-        }
     }
 }

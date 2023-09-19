@@ -39,19 +39,5 @@ namespace Back_end.Controllers
             userService.Post(user);
             return Ok(new { message = "User created" });
         }
-
-        [HttpPut]
-        public IActionResult Put(User user)
-        {
-            userService.Put(user);
-            return Ok(new { message = "User updated" });
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(User user)
-        {
-            userService.Delete(user);
-            return Ok(new { message = "User Deleted" });
-        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Back_end.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Back_end.Repositories
@@ -28,16 +29,8 @@ namespace Back_end.Repositories
         public void Add(Customer entity)
         {
             _dbSet.Add(entity);
+            _context.SaveChanges();
         }
 
-        public void Update(Customer entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-        }
-
-        public void Delete(Customer entity)
-        {
-            _dbSet.Remove(entity);
-        }
     }
 }

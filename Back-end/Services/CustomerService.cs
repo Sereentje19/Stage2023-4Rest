@@ -28,14 +28,5 @@ namespace Back_end.Services
             _customerRepository.Add(customer);
         }
 
-        public void Delete(Customer customer)
-        {
-            _customerRepository.Delete(customer);
-        }
-
-        public void Put(Customer customer)
-        {
-            _customerRepository.Update(customer);
-        }
     }
 }

@@ -31,14 +31,5 @@ namespace Back_end.Services
             _userRepository.Add(user);
         }
 
-        public void Delete(User user)
-        {
-            _userRepository.Delete(user);
-        }
-
-        public void Put(User user)
-        {
-            _userRepository.Update(user);
-        }
     }
 }
