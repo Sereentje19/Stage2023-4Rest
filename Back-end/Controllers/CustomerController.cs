@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Back_end.Models;
 using Back_end.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Back_end.Controllers
 {
+    [EnableCors("ApiCorsPolicy")]
     [ApiController]
     [Route("[controller]")]
     public class CustomerController : ControllerBase

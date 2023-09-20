@@ -9,20 +9,19 @@
               <div id="profileIcon">
                 <profile />
               </div>
-              <img src="../components/icons/iconLoginProfile.svg" alt="" />
             </div>
             <div class="inputContainer">
               <div id="profileFillIcon">
                 <profileFill />
               </div>
-              <input id="inputEmail" v-model="this.user.email" type="text" placeholder="Email" required />
+              <input id="inputEmail" v-model="this.user.Email" type="text" placeholder="Email" required />
               <div class="divSpace" id="eyeIcon"></div>
             </div>
             <div class="inputContainer">
               <div id="profileFillIcon">
                 <lockClosed />
               </div>
-              <input id="inputWachtwoord" v-model="this.user.password" type="text" placeholder="Wachtwoord" required />
+              <input id="inputWachtwoord" v-model="this.user.Password" type="text" placeholder="Wachtwoord" required />
               <a href="/" id="eyeIcon">
                 <eyeOpen />
               </a>
@@ -54,27 +53,25 @@ export default {
   },
   data() {
     return {
-      user: [
-        {
-          Email: '',
-          Password: '',
-        }
-      ]
+      user: {
+        UserId: 0,
+        Email: '',
+        Password: '',
+      }
     };
   },
   methods: {
     login() {
-      axios.post("/Login", {
-        user: this.user
-      }).then((res) => {
-        axios.defaults.headers.common['Authorization'] = "Bearer " + res.data.jwt;
-        localStorage.setItem("jwt", res.data.jwt)
-        this.$router.push("/overzicht");
-        console.log(res.data.jwt);
-      }).catch((error) => {
-        console.log(error);
-        alert("Error logging in");
-      });
+      console.log(this.user)
+      axios.post("Login", this.user)
+        .then((res) => {
+          axios.defaults.headers.common['Authorization'] = "Bearer " + res.data;
+          localStorage.setItem("jwt", res.data)
+          this.$router.push("/overzicht");
+          console.log(res.data);
+        }).catch((error) => {
+          alert(error.response.data);
+        });
     }
   }
 };
