@@ -26,6 +26,11 @@ namespace Back_end.Services
             return _userRepository.GetById(id);
         }
 
+        public User checkCredentials(User user)
+        {
+            return _userRepository.checkCredentials(user);
+        }
+
         public void Post(User user)
         {
             _userRepository.Add(user);

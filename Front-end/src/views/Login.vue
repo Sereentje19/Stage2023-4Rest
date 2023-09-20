@@ -15,17 +15,17 @@
               <div id="profileFillIcon">
                 <profileFill />
               </div>
-              <input id="inputEmail" type="text" placeholder="Email" required />
+              <input id="inputEmail" v-model="this.user.email" type="text" placeholder="Email" required />
               <div class="divSpace" id="eyeIcon"></div>
             </div>
             <div class="inputContainer">
               <div id="profileFillIcon">
                 <lockClosed />
               </div>
-              <input id="inputWachtwoord" type="text" placeholder="Wachtwoord" required />
-              <div id="eyeIcon">
+              <input id="inputWachtwoord" v-model="this.user.password" type="text" placeholder="Wachtwoord" required />
+              <a href="/" id="eyeIcon">
                 <eyeOpen />
-              </div>
+              </a>
             </div>
             <button @click="login()" class="loginButton" type="button">Login</button>
           </div>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import axios from '../../axios-auth.js'
 import profile from "../components/icons/iconLoginProfile.vue";
 import profileFill from "../components/icons/iconLoginProfileFill.vue";
 import lockClosed from "../components/icons/iconLoginLockClosed.vue";
@@ -43,7 +44,7 @@ import eyeOpen from "../components/icons/iconLoginEyeOpen.vue";
 import eyeClosed from "../components/icons/iconLoginEyeClosed.vue";
 
 export default {
-  name: "login",
+  name: "Login",
   components: {
     profile,
     profileFill,
@@ -51,9 +52,29 @@ export default {
     eyeOpen,
     eyeClosed,
   },
+  data() {
+    return {
+      user: [
+        {
+          Email: '',
+          Password: '',
+        }
+      ]
+    };
+  },
   methods: {
     login() {
-      this.$router.push("/overzicht");
+      axios.post("/Login", {
+        user: this.user
+      }).then((res) => {
+        axios.defaults.headers.common['Authorization'] = "Bearer " + res.data.jwt;
+        localStorage.setItem("jwt", res.data.jwt)
+        this.$router.push("/overzicht");
+        console.log(res.data.jwt);
+      }).catch((error) => {
+        console.log(error);
+        alert("Error logging in");
+      });
     }
   }
 };
@@ -94,9 +115,9 @@ export default {
 }
 
 #eyeIcon {
-  height: 40px;
+  height: 30px;
   margin-left: -35px;
-  margin-top: 13px;
+  margin-top: 8px;
 }
 
 #profileIcon {

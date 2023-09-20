@@ -79,3 +79,4 @@ C:\Users\seren\OneDrive\Documents\GitHub\Stage2023-4Rest\Back-end\bin\Debug\net7
 C:\Users\seren\OneDrive\Documents\GitHub\Stage2023-4Rest\Back-end\bin\Debug\net7.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\seren\OneDrive\Documents\GitHub\Stage2023-4Rest\Back-end\bin\Debug\net7.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\seren\OneDrive\Documents\GitHub\Stage2023-4Rest\Back-end\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Users\seren\OneDrive\Documents\GitHub\Stage2023-4Rest\Back-end\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

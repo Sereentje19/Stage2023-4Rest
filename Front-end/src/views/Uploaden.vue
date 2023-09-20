@@ -25,20 +25,25 @@
       </div>
 
       <div class="rightSide">
-          <ul>
-            <form class="gegevens" action="/action_page.php">
-              <input type="text" class="Zoek" placeholder="Zoek klant" name="Naam" />
-              <input type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
-              <input type="text" class="Email" placeholder="Email klant" name="Email" />
-              <input type="text" class="Type" placeholder="Type bestand" name="Type" />
-              <input type="date" class="Date" name="Date" />
-            </form>
-          </ul>
-          
-          <a @click="handleVerstuurClick" class="verstuur" type="button">
-            Verstuur document
-          </a>
-        </div>
+        <ul>
+          <form class="gegevens" action="/action_page.php">
+            <input type="text" class="Zoek" placeholder="Zoek klant" name="Naam" />
+            <input type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
+            <input type="text" class="Email" placeholder="Email klant" name="Email" />
+            <select class="Type" placeholder="Type bestand" name="Type">
+              <option value="Paspoort">Paspoort</option>
+              <option value="Id_kaart">id kaart</option>
+              <option value="contract">Contract</option>
+              <option value="Vog">Vog</option>
+            </select>
+            <input type="date" class="Date" name="Date" />
+          </form>
+        </ul>
+
+        <a @click="handleVerstuurClick" class="verstuur" type="button">
+          Verstuur document
+        </a>
+      </div>
     </div>
 
 
@@ -295,16 +300,16 @@ a {
   display: none;
 }
 
-.gegevens{
+.gegevens {
   display: flex;
   flex-direction: column;
 }
 
 .Zoek,
 .Naam,
-.Email, 
-.Date, 
-.Type{
+.Email,
+.Date,
+.Type {
   right: 350px;
   background-color: #f4f4f4;
   font-size: 23px;
@@ -313,6 +318,10 @@ a {
   margin-bottom: 15px;
   border-radius: 25px;
   border: black solid 2px;
+}
+
+.Type{
+  width: 477px;
 }
 
 .Zoek {

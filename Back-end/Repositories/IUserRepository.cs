@@ -8,5 +8,6 @@ namespace Back_end.Repositories
         User GetById(int id);
         IEnumerable<User> GetAll();
         void Add(User entity);
+        User checkCredentials(User user);
     }
 }

@@ -11,5 +11,6 @@ namespace Back_end.Services
         IEnumerable<User> GetAll();
         User GetById(int id);
         void Post(User user);
+        User checkCredentials(User user);
     }
 }
