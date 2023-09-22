@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Back_end.Migrations
 {
     [DbContext(typeof(NotificationContext))]
-    [Migration("20230913120503_InitialCreate")]
+    [Migration("20230922085038_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace Back_end.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("Back_end.Models.Documents", b =>
+            modelBuilder.Entity("Back_end.Models.Document", b =>
                 {
                     b.Property<int>("DocumentId")
                         .ValueGeneratedOnAdd()
@@ -52,27 +52,20 @@ namespace Back_end.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentId"));
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(24)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("DocumentId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Documents");
                 });
@@ -94,21 +87,6 @@ namespace Back_end.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Back_end.Models.Documents", b =>
-                {
-                    b.HasOne("Back_end.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
-                    b.HasOne("Back_end.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

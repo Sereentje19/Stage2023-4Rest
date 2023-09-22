@@ -18,7 +18,7 @@ namespace Back_end.Repositories
 
         public User checkCredentials(User user)
         {
-            IEnumerable<User> users = _dbSet.ToList();
+            List<User> users = _dbSet.ToList();
 
             foreach (User u in users)
             {
@@ -28,14 +28,11 @@ namespace Back_end.Repositories
                 }
                 else if (u.Email == user.Email)
                 {
-                    throw new Exception("Incorrect password!");
-                }
-                else if (u.Password == user.Password)
-                {
-                    throw new Exception("Incorrect email!");
+                    throw new Exception("Wachtwoord is incorrect!");
                 }
             }
-            return user;
+            
+            throw new Exception("Email is incorrect!");
         }
 
         public User GetById(int id)

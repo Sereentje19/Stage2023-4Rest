@@ -10,9 +10,7 @@ const router = createRouter({
     { path: '/', component: Login },
     { path: '/infopage', component: infopage},
     { path: '/uploaden', component: Uploaden },
-    {path: '/overzicht',
-    name: 'overview',
-    component: Overview,
+    { path: '/overzicht', component: Overview ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
   ],
 });

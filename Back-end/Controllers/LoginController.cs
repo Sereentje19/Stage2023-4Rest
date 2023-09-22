@@ -2,19 +2,19 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Back_end.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Back_end.Services;
+using Microsoft.AspNetCore.Cors;
 
 namespace Back_end.Controllers
 {
+    [EnableCors("ApiCorsPolicy")]
     [ApiController]
     [Route("[controller]")]
     public class LoginController : ControllerBase
     {
-
         private readonly IConfiguration _config;
         private readonly IUserService userService;
         public LoginController(IConfiguration config, IUserService us)
@@ -25,45 +25,38 @@ namespace Back_end.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Login([FromBody] User userLogin)
+        public ActionResult Login([FromBody] User user)
         {
-            var user = Authenticate(userLogin);
-            if (user != null)
+            try
             {
-                var token = GenerateToken(user);
-                return Ok(token);
-            }
+                User currentUser = userService.checkCredentials(user);
 
-            return NotFound("user not found");
+                if (currentUser != null)
+                {
+                    var token = GenerateToken();
+                    return Ok(token);
+                }
+                return NotFound("Email of wachtwoord incorrect");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
         }
 
-        private string GenerateToken(User user)
+        private string GenerateToken()
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Email)
-            };
+
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
-                claims,
+                null,
                 expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
 
-        }
-
-        private User Authenticate(User userLogin)
-        {
-            User currentUser = userService.checkCredentials(userLogin);
-
-            if (currentUser != null)
-            {
-                return currentUser;
-            }
-            return null;
         }
     }
 }
