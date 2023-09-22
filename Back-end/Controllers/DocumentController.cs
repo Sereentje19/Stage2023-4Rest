@@ -4,6 +4,8 @@ using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
 using System.Reflection.Metadata;
 using Back_end.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Back_end.Controllers
 {
@@ -14,9 +16,11 @@ namespace Back_end.Controllers
     {
         private readonly IDocumentService documentService;
 
-        public DocumentController(IDocumentService ds)
+        public DocumentController(IDocumentService ds, [FromServices] IHttpContextAccessor httpContextAccessor)
         {
             documentService = ds;
+            // var httpContext = httpContextAccessor.HttpContext;
+            // LoginController.CheckForJwt(httpContext);
         }
 
         [HttpGet]
@@ -66,5 +70,7 @@ namespace Back_end.Controllers
             documentService.Delete(doc);
             return Ok(new { message = "Document Deleted" });
         }
+
+
     }
 }

@@ -105,12 +105,16 @@ export default {
         });
 
     },
-    postDocument(customerId) {
+    CreateFromData(customerId) {
       let formData = new FormData();
       formData.append('file', this.selectedFile);
       formData.append('document.Type', this.document.Type);
       formData.append('document.Date', this.document.Date);
       formData.append('document.CustomerId', customerId);
+      return formData;
+    },
+    postDocument(customerId) {
+      let formData = this.CreateFromData(customerId);
 
       axios.post("Document", formData, {
         headers: {
