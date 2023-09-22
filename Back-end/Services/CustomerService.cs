@@ -23,9 +23,9 @@ namespace Back_end.Services
             return _customerRepository.GetById(id);
         }
 
-        public void Post(Customer customer)
+        public int Post(Customer customer)
         {
-            _customerRepository.Add(customer);
+           return _customerRepository.Add(customer);
         }
 
     }

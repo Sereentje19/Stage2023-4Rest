@@ -28,11 +28,11 @@ namespace Back_end.Repositories
                 }
                 else if (u.Email == user.Email)
                 {
-                    throw new Exception("Incorrect password!");
+                    throw new Exception("Wachtwoord is incorrect!");
                 }
             }
             
-            throw new Exception("Incorrect email!");
+            throw new Exception("Email is incorrect!");
         }
 
         public User GetById(int id)

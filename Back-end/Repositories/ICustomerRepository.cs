@@ -7,6 +7,6 @@ namespace Back_end.Repositories
     {
         Customer GetById(int id);
         IEnumerable<Customer> GetAll();
-        void Add(Customer entity);
+        int Add(Customer entity);
     }
 }

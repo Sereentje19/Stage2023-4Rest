@@ -2,7 +2,6 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Back_end.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +15,6 @@ namespace Back_end.Controllers
     [Route("[controller]")]
     public class LoginController : ControllerBase
     {
-
         private readonly IConfiguration _config;
         private readonly IUserService userService;
         public LoginController(IConfiguration config, IUserService us)
@@ -32,12 +30,12 @@ namespace Back_end.Controllers
             try
             {
                 User currentUser = userService.checkCredentials(user);
+
                 if (currentUser != null)
                 {
                     var token = GenerateToken();
                     return Ok(token);
                 }
-
                 return NotFound("Email of wachtwoord incorrect");
             }
             catch (Exception ex)
@@ -60,6 +58,5 @@ namespace Back_end.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
-
     }
 }

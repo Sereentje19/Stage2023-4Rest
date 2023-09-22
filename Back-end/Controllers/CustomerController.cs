@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Back_end.Models;
 using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
@@ -36,10 +33,9 @@ namespace Back_end.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Customer cus)
+        public int Post(Customer cus)
         {
-            customerService.Post(cus);
-            return Ok(new { message = "Customer created" });
+           return customerService.Post(cus);
         }
 
     }

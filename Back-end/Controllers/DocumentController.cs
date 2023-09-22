@@ -1,11 +1,13 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Back_end.Models;
 using Back_end.Services;
+using Microsoft.AspNetCore.Cors;
 using System.Reflection.Metadata;
+using Back_end.Models;
 
 namespace Back_end.Controllers
 {
+    [EnableCors("ApiCorsPolicy")]
     [ApiController]
     [Route("[controller]")]
     public class DocumentController : ControllerBase
@@ -32,8 +34,21 @@ namespace Back_end.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Models.Document doc)
+        public IActionResult Post([FromForm] IFormFile file, [FromForm] Models.Document document)
         {
+            Models.Document doc = new Models.Document
+            {
+                Type = document.Type,
+                Date = document.Date,
+                CustomerId = document.CustomerId
+            };
+
+            using (var memoryStream = new MemoryStream())
+            {
+                file.CopyTo(memoryStream);
+                doc.Image = memoryStream.ToArray();
+            }
+
             documentService.Post(doc);
             return Ok(new { message = "Document created" });
         }

@@ -10,6 +10,6 @@ namespace Back_end.Services
     {
         IEnumerable<Customer> GetAll();
         Customer GetById(int id);
-        void Post(Customer customer);
+        int Post(Customer customer);
     }
 }

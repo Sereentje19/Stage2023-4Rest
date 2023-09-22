@@ -62,7 +62,6 @@ export default {
   },
   methods: {
     login() {
-      console.log(this.user)
       axios.post("Login", this.user)
         .then((res) => {
           axios.defaults.headers.common['Authorization'] = "Bearer " + res.data;

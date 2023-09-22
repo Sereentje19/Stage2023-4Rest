@@ -28,15 +28,18 @@
         <ul>
           <form class="gegevens" action="/action_page.php">
             <input type="text" class="Zoek" placeholder="Zoek klant" name="Naam" />
-            <input type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
-            <input type="text" class="Email" placeholder="Email klant" name="Email" />
-            <select class="Type" placeholder="Type bestand" name="Type">
-              <option value="Paspoort">Paspoort</option>
-              <option value="Id_kaart">id kaart</option>
-              <option value="contract">Contract</option>
-              <option value="Vog">Vog</option>
+            <input v-model="this.customer.Name" type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
+            <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
+            <select v-model="this.document.Type" class="Type" placeholder="Type bestand" name="Type">
+              <option value="0">Vog</option>
+              <option value="1">Contract</option>
+              <option value="2">Paspoort</option>
+              <option value="3">id kaart</option>
+              <option value="4">Diploma</option>
+              <option value="5">Certificaat</option>
+              <option value="6">Lease auto</option>
             </select>
-            <input type="date" class="Date" name="Date" />
+            <input v-model="this.document.Date" type="date" class="Date" name="Date" />
           </form>
         </ul>
 
@@ -49,7 +52,7 @@
 
     <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
       <div class="Error">
-        <img class="Errorimage" src="../components/icons/cancel.png">
+        <img class="Errorimage" src="../assets/Pictures/cancel.png">
         <p>
           {{ errorMessage }}
         </p>
@@ -61,6 +64,8 @@
 </template>
 
 <script>
+import axios from '../../axios-auth.js'
+
 export default {
   data() {
     return {
@@ -72,11 +77,61 @@ export default {
       imageContainerWidth: 400,
       imageContainerHeight: 410,
       errorMessage: '',
+      customer: {
+        CustomerId: 0,
+        Name: '',
+        Email: '',
+      },
+      document: {
+        DocumentId: 0,
+        Type: 0,
+        Date: "",
+        CustomerId: 0,
+      }
     };
   },
 
-  methods: {
 
+  methods: {
+    CreateDocument() {
+
+      axios.post("Customer", this.customer)
+        .then((res) => {
+          let customerId = res.data;
+          this.postDocument(customerId);
+
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+
+    },
+    postDocument(customerId) {
+      let formData = new FormData();
+      formData.append('file', this.selectedFile);
+      formData.append('document.Type', this.document.Type);
+      formData.append('document.Date', this.document.Date);
+      formData.append('document.CustomerId', customerId);
+
+      axios.post("Document", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+    },
+    handleFileChange(event) {
+      this.selectedFile = event.target.files[0]
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.fileContents = reader.result;
+      };
+      reader.readAsBinaryString(this.selectedFile)
+    },
     togglePopup(popupName) {
       if (this.activePopup === popupName) {
         this.activePopup = null;
@@ -84,28 +139,20 @@ export default {
         this.activePopup = popupName;
       }
     },
-
-
-
-    handleFileChange(e) {
-      const files = e.target.files || e.dataTransfer.files;
-      this.processFile(files[0]);
-    },
-
-
     handleVerstuurClick() {
       if (this.selectedFile || this.displayImage) {
         if (this.displayImage) {
           this.$router.push({ name: 'overview', query: { popup1: true } }); // Set popup1 to true
-          alert('Verstuur document clicked. Image is uploaded.');
+          // alert('Verstuur document clicked. Image is uploaded.');
         } else {
           // Set an upload success message
-          this.errorMessage = `Upload successful. File "${this.uploadedFileName}" is uploaded.`;
+          this.errorMessage = `Upload successful. File "${this.selectedFile.name}" is uploaded.`;
         }
       } else {
         // Set an error message for no file selected
         this.errorMessage = 'Error: Selecteer een bestand.';
       }
+      this.CreateDocument();
 
       // Toggle "popup2"
       this.togglePopup('popup2');
@@ -129,15 +176,6 @@ export default {
       this.imageContainerWidth = 400;
       this.imageContainerHeight = 410;
     },
-
-    processFile(file) {
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = this.handleImageLoad;
-        reader.readAsDataURL(file);
-      }
-    },
-
     handleImageLoad(e) {
       const reader = e.target;
       const image = new Image();
@@ -234,7 +272,7 @@ export default {
   height: 100px;
   background-size: cover;
   display: block;
-  background-image: url(../components/icons/move.png);
+  background-image: url(../assets/Pictures/move.png);
 }
 
 body {
@@ -285,7 +323,7 @@ a {
   display: block;
   top: 30px;
   background: #22421f;
-  background-image: url(../components/icons/folder.png);
+  background-image: url(../assets/Pictures/folder.png);
   background-repeat: no-repeat;
   background-position: 330px;
   background-size: 60px 50px;
@@ -320,7 +358,7 @@ a {
   border: black solid 2px;
 }
 
-.Type{
+.Type {
   width: 477px;
 }
 

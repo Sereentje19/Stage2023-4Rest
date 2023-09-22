@@ -26,10 +26,11 @@ namespace Back_end.Repositories
             return _dbSet.ToList();
         }
 
-        public void Add(Customer entity)
+        public int Add(Customer entity)
         {
             _dbSet.Add(entity);
             _context.SaveChanges();
+            return entity.CustomerId;
         }
 
     }

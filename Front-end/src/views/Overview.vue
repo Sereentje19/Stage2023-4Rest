@@ -43,7 +43,7 @@
             <div>
               <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
                 <div class="Succes">
-                  <img class="Succesimage" src="../components/icons/Checked.png">
+                  <img class="Succesimage" src="../assets/Pictures/Checked.png">
                   <p>Succes!<br> Het document is succes geupload.</p>
                   <button @click="closePopup('popup1')">Close</button>
                 </div>
