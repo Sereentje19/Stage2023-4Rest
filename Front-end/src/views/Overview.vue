@@ -19,7 +19,7 @@
         <h3 id="Type">Type document</h3>
       </div>
 
-      <div class="overview" v-for="(document, i) in this.documents" :key="document.documentId">
+      <div class="overview" v-for="(document, i) in displayedDocuments" :key="document.documentId">
         <router-link :to="{ path: '/infopage' }" id="item">
           <img v-if="documentDaysFromExpiration(document, 14)" id="urgentieSymbool"
             src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
@@ -33,11 +33,13 @@
         </router-link>
       </div>
 
+      <Pagination :currentPage="currentPage" :totalPages="totalPages" @page-changed="handlePageChange" />
+
       <div id="pageNavigator">
-        Pagina
+        <!-- Pagina
         <ArrowLeft />
         <b>1</b>/ 2 / 3 ... 7
-        <ArrowRight />
+        <ArrowRight /> -->
         <div>
           <div>
             <div>
@@ -62,18 +64,23 @@ import axios from '../../axios-auth.js';
 import moment from 'moment';
 import ArrowLeft from "../components/icons/iconOverviewArrowLeft.vue";
 import ArrowRight from "../components/icons/iconOverviewArrowRight.vue";
+import Pagination from '../views/Pagination.vue'; 
+
 
 export default {
   name: "overview",
   components: {
     ArrowLeft,
     ArrowRight,
+    Pagination,
   },
 
   data() {
     return {
-      activePopup: null,
       documents: [],
+      currentPage: 1,
+      itemsPerPage: 5,
+      activePopup: null,
       sidebarOpen: true,
       popup1: this.$route.query.popup1 || false,
     };
@@ -82,10 +89,13 @@ export default {
     this.getDocuments()
   },
   methods: {
+    handlePageChange(newPage) {
+      this.currentPage = newPage;
+    },
     getDocuments() {
       axios.get("Document")
         .then((res) => {
-          this.documents = res.data;
+          this.documents = res.data.documents;
           console.log(this.documents);
         }).catch((error) => {
           alert(error.response.data);
@@ -105,6 +115,16 @@ export default {
       if (popupName === 'popup1') {
         this.popup1 = false;
       }
+    },
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.documents.length / this.itemsPerPage);
+    },
+    displayedDocuments() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.documents.slice(startIndex, endIndex);
     },
   },
 };
