@@ -26,20 +26,18 @@
           <img v-else-if="documentDaysFromExpiration(document, 30)" id="urgentieSymbool"
             src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
           <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-          <div id="klantnaamTekst">{{ document.customerId }}</div>
+          <div id="klantnaamTekst">{{ document.customerName }}</div>
           <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
           <div id="geldigTotTekst">{{ formatDate(document.date) }}</div>
           <div id="typeTekst">{{ document.type }}</div>
         </router-link>
       </div>
 
-      <Pagination :currentPage="currentPage" :totalPages="totalPages" @page-changed="handlePageChange" />
+      <div id="paging">
+        <Pagination :currentPage="currentPage" :totalPages="totalPages" @page-changed="handlePageChange" />
+      </div>
 
       <div id="pageNavigator">
-        <!-- Pagina
-        <ArrowLeft />
-        <b>1</b>/ 2 / 3 ... 7
-        <ArrowRight /> -->
         <div>
           <div>
             <div>
@@ -64,7 +62,7 @@ import axios from '../../axios-auth.js';
 import moment from 'moment';
 import ArrowLeft from "../components/icons/iconOverviewArrowLeft.vue";
 import ArrowRight from "../components/icons/iconOverviewArrowRight.vue";
-import Pagination from '../views/Pagination.vue'; 
+import Pagination from '../views/Pagination.vue';
 
 
 export default {
@@ -77,7 +75,15 @@ export default {
 
   data() {
     return {
-      documents: [],
+      documents: [
+        {
+          customerId: 0,
+          date: "",
+          customerName: "",
+          type: ""
+        }
+      ],
+      customers: [],
       currentPage: 1,
       itemsPerPage: 5,
       activePopup: null,
@@ -96,10 +102,26 @@ export default {
       axios.get("Document")
         .then((res) => {
           this.documents = res.data.documents;
+
+          for (let index = 0; index < this.documents.length; index++) {
+            const customerId = this.documents[index].customerId;
+            this.getCustomerName(customerId, index);
+          }
+
           console.log(this.documents);
         }).catch((error) => {
           alert(error.response.data);
         });
+    },
+    getCustomerName(id, index) {
+      axios.get("Customer/" + id)
+        .then((res) => {
+          this.documents[index].customerName = res.data.name;
+          console.log(res.data)
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");
@@ -132,6 +154,12 @@ export default {
 
 
 <style>
+#paging {
+  display: flex;
+  margin-right: auto;
+
+}
+
 .Succes {
   color: black;
   padding: 10px;

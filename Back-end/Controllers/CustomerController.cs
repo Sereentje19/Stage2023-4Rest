@@ -31,7 +31,7 @@ namespace Back_end.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             var customer = customerService.GetById(id);
             return Ok(customer);
         }

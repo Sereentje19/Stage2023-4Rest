@@ -32,6 +32,7 @@ namespace Back_end.Controllers
 
             // Create a Pager instance to paginate the results
             var pager = new Pager(allDocuments.Count, page, pageSize);
+            allDocuments.Sort((y, x) => y.Date.CompareTo(x.Date));
 
             // Get the paginated subset of documents
             var pagedDocuments = allDocuments
