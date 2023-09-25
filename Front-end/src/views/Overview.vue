@@ -19,7 +19,7 @@
         <h3 id="Type">Type document</h3>
       </div>
 
-      <div class="overview" v-for="i in 5" :key="i">
+      <!-- <div class="overview" v-for="i in 5" :key="i">
         <router-link :to="{ path: '/infopage' }" id="item">
           <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
           <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png"
@@ -29,6 +29,21 @@
           <div id="geldigVanTekst">12-04-2019</div>
           <div id="geldigTotTekst">13-04-2024</div>
           <div id="typeTekst">Contract</div>
+        </router-link>
+      </div> -->
+
+
+      <div class="overview" v-for="(document, i) in documents" :key="document.id">
+        <router-link :to="{ path: '/infopage' }" id="item">
+          <img v-if="documentDaysFromExpiration(document, 14)" id="urgentieSymbool"
+            src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+          <img v-else-if="documentDaysFromExpiration(document, 30)" id="urgentieSymbool"
+            src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
+          <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+          <div id="klantnaamTekst">{{ document.customerId }}</div>
+          <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
+          <div id="geldigTotTekst">{{ formatDate(document.date) }}</div>
+          <div id="typeTekst">{{ document.type }}</div>
         </router-link>
       </div>
 
@@ -58,6 +73,8 @@
 </template>
 
 <script>
+import axios from '../../axios-auth.js';
+import moment from 'moment';
 import ArrowLeft from "../components/icons/iconOverviewArrowLeft.vue";
 import ArrowRight from "../components/icons/iconOverviewArrowRight.vue";
 
@@ -71,14 +88,34 @@ export default {
   data() {
     return {
       activePopup: null,
+      documents: [],
       sidebarOpen: true,
       popup1: this.$route.query.popup1 || false,
     };
   },
+  mounted() {
+    axios.get("Document")
+      .then((res) => {
+        this.documents = res.data;
+        console.log(res.data);
+      }).catch((error) => {
+        alert(error.response.data);
+      });
+  },
   methods: {
+    formatDate(date) {
+      return moment(date).format("DD-MM-YYYY");
+    },
+    documentDaysFromExpiration(document, days) {
+      const documentDate = new Date(document.date);
+      const currentDate = new Date();
+      const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
+
+      return (Math.abs(ageInDays) <= days)
+    },
     closePopup(popupName) {
       if (popupName === 'popup1') {
-        this.popup1 = false; // Set popup1 to false to hide the popup
+        this.popup1 = false;
       }
     },
   },

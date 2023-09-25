@@ -94,7 +94,6 @@ export default {
 
   methods: {
     CreateDocument() {
-
       axios.post("Customer", this.customer)
         .then((res) => {
           let customerId = res.data;
@@ -103,7 +102,6 @@ export default {
         }).catch((error) => {
           alert(error.response.data);
         });
-
     },
     CreateFromData(customerId) {
       let formData = new FormData();

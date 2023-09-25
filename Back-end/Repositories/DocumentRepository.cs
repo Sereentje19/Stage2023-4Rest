@@ -20,7 +20,7 @@ namespace Back_end.Repositories
             return _dbSet.Find(id);
         }
 
-        public IEnumerable<Document> GetAll()
+        public List<Document> GetAll()
         {
             return _dbSet.ToList();
         }

@@ -5,7 +5,7 @@ namespace Back_end.Services
 {
     public interface IDocumentService
     {
-        IEnumerable<Document> GetAll();
+        List<Document> GetAll();
         Document GetById(int id);
         void Post(Document document);
         void Delete(Document document);

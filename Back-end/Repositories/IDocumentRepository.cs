@@ -6,7 +6,7 @@ namespace Back_end.Repositories
     public interface IDocumentRepository
     {
         Document GetById(int id);
-        IEnumerable<Document> GetAll();
+        List<Document> GetAll();
         void Add(Document entity);
         void Update(Document entity);
         void Delete(Document entity);

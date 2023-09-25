@@ -15,24 +15,55 @@ namespace Back_end.Controllers
     public class DocumentController : ControllerBase
     {
         private readonly IDocumentService documentService;
+        private readonly IJwtValidationService jwtValidationService;
 
-        public DocumentController(IDocumentService ds, [FromServices] IHttpContextAccessor httpContextAccessor)
+        public DocumentController(IDocumentService ds, IJwtValidationService jwtv)
         {
             documentService = ds;
-            // var httpContext = httpContextAccessor.HttpContext;
-            // LoginController.CheckForJwt(httpContext);
+            jwtValidationService = jwtv;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int page = 1, int pageSize = 10)
         {
-            var document = documentService.GetAll();
-            return Ok(document);
+            jwtValidationService.ValidateToken(HttpContext);
+            // Assuming documentService.GetAll() returns a list of documents
+            List<Models.Document> allDocuments = documentService.GetAll();
+
+            // Create a Pager instance to paginate the results
+            var pager = new Pager(allDocuments.Count, page, pageSize);
+
+            // Get the paginated subset of documents
+            var pagedDocuments = allDocuments
+                .Skip(pager.StartIndex)
+                .Take(pager.PageSize)
+                .ToList();
+
+            // You can return both the paged documents and the pager information in the response
+            var response = new
+            {
+                Documents = pagedDocuments,
+                Pager = new
+                {
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                    pager.StartPage,
+                    pager.EndPage,
+                    pager.StartIndex,
+                    pager.EndIndex,
+                    Pages = pager.Pages.ToList()
+                }
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            jwtValidationService.ValidateToken(HttpContext);
             var document = documentService.GetById(id);
             return Ok(document);
         }
@@ -40,6 +71,8 @@ namespace Back_end.Controllers
         [HttpPost]
         public IActionResult Post([FromForm] IFormFile file, [FromForm] Models.Document document)
         {
+            jwtValidationService.ValidateToken(HttpContext);
+
             Models.Document doc = new Models.Document
             {
                 Type = document.Type,
@@ -60,6 +93,7 @@ namespace Back_end.Controllers
         [HttpPut]
         public IActionResult Put(Models.Document doc)
         {
+            jwtValidationService.ValidateToken(HttpContext);
             documentService.Put(doc);
             return Ok(new { message = "Document updated" });
         }
@@ -67,6 +101,7 @@ namespace Back_end.Controllers
         [HttpDelete]
         public IActionResult Delete(Models.Document doc)
         {
+            jwtValidationService.ValidateToken(HttpContext);
             documentService.Delete(doc);
             return Ok(new { message = "Document Deleted" });
         }

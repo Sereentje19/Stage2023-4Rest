@@ -13,7 +13,7 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
-        public IEnumerable<Document> GetAll()
+        public List<Document> GetAll()
         {
             return _documentRepository.GetAll();
         }

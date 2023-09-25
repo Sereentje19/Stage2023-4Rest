@@ -12,15 +12,18 @@ namespace Back_end.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService customerService;
+        private readonly IJwtValidationService jwtValidationService;
 
-        public CustomerController(ICustomerService cs)
+        public CustomerController(ICustomerService cs, IJwtValidationService jwtv)
         {
             customerService = cs;
+            jwtValidationService = jwtv;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
+            jwtValidationService.ValidateToken(HttpContext);
             var customer = customerService.GetAll();
             return Ok(customer);
         }
@@ -28,6 +31,7 @@ namespace Back_end.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            jwtValidationService.ValidateToken(HttpContext);
             var customer = customerService.GetById(id);
             return Ok(customer);
         }
@@ -35,6 +39,7 @@ namespace Back_end.Controllers
         [HttpPost]
         public int Post(Customer cus)
         {
+            jwtValidationService.ValidateToken(HttpContext);
            return customerService.Post(cus);
         }
 
