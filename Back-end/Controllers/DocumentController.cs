@@ -6,6 +6,7 @@ using System.Reflection.Metadata;
 using Back_end.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Drawing;
 
 namespace Back_end.Controllers
 {
@@ -26,38 +27,48 @@ namespace Back_end.Controllers
         [HttpGet]
         public IActionResult GetAll(int page = 1, int pageSize = 10)
         {
-            jwtValidationService.ValidateToken(HttpContext);
             // Assuming documentService.GetAll() returns a list of documents
+            
             List<Models.Document> allDocuments = documentService.GetAll();
 
-            // Create a Pager instance to paginate the results
-            var pager = new Pager(allDocuments.Count, page, pageSize);
 
-            // Get the paginated subset of documents
-            var pagedDocuments = allDocuments
-                .Skip(pager.StartIndex)
-                .Take(pager.PageSize)
-                .ToList();
 
-            // You can return both the paged documents and the pager information in the response
-            var response = new
-            {
-                Documents = pagedDocuments,
-                Pager = new
-                {
-                    pager.TotalItems,
-                    pager.CurrentPage,
-                    pager.PageSize,
-                    pager.TotalPages,
-                    pager.StartPage,
-                    pager.EndPage,
-                    pager.StartIndex,
-                    pager.EndIndex,
-                    Pages = pager.Pages.ToList()
-                }
-            };
+            // // Create a Pager instance to paginate the results
+            // var pager = new Pager(allDocuments.Count, page, pageSize);
 
-            return Ok(response);
+            // // Get the paginated subset of documents
+            // var pagedDocuments = allDocuments
+            //     .Skip(pager.StartIndex)
+            //     .Take(pager.PageSize)
+            //     .Select(doc => new
+            //     {
+            //         doc.DocumentId,
+            //         doc.Image,
+            //         doc.Date,
+            //         doc.CustomerId,
+            //         Type = doc.Type.ToString()
+            //     })
+            //     .ToList();
+
+            // // You can return both the paged documents and the pager information in the response
+            // var response = new
+            // {
+            //     Documents = pagedDocuments,
+            //     Pager = new
+            //     {
+            //         pager.TotalItems,
+            //         pager.CurrentPage,
+            //         pager.PageSize,
+            //         pager.TotalPages,
+            //         pager.StartPage,
+            //         pager.EndPage,
+            //         pager.StartIndex,
+            //         pager.EndIndex,
+            //         Pages = pager.Pages.ToList()
+            //     }
+            // };
+
+            return Ok(allDocuments);
         }
 
         [HttpGet("{id}")]

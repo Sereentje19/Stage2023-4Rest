@@ -19,21 +19,7 @@
         <h3 id="Type">Type document</h3>
       </div>
 
-      <!-- <div class="overview" v-for="i in 5" :key="i">
-        <router-link :to="{ path: '/infopage' }" id="item">
-          <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-          <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png"
-            alt="does not work" />
-          <img v-if="i == 5" id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-          <div id="klantnaamTekst">Serena Kenter</div>
-          <div id="geldigVanTekst">12-04-2019</div>
-          <div id="geldigTotTekst">13-04-2024</div>
-          <div id="typeTekst">Contract</div>
-        </router-link>
-      </div> -->
-
-
-      <div class="overview" v-for="(document, i) in documents" :key="document.id">
+      <div class="overview" v-for="(document, i) in this.documents" :key="document.documentId">
         <router-link :to="{ path: '/infopage' }" id="item">
           <img v-if="documentDaysFromExpiration(document, 14)" id="urgentieSymbool"
             src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
@@ -47,11 +33,10 @@
         </router-link>
       </div>
 
-
       <div id="pageNavigator">
         Pagina
         <ArrowLeft />
-        <b>1</b>/ 2 / 3 .../ 7
+        <b>1</b>/ 2 / 3 ... 7
         <ArrowRight />
         <div>
           <div>
@@ -94,15 +79,18 @@ export default {
     };
   },
   mounted() {
-    axios.get("Document")
-      .then((res) => {
-        this.documents = res.data;
-        console.log(res.data);
-      }).catch((error) => {
-        alert(error.response.data);
-      });
+    this.getDocuments()
   },
   methods: {
+    getDocuments() {
+      axios.get("Document")
+        .then((res) => {
+          this.documents = res.data;
+          console.log(this.documents);
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+    },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");
     },

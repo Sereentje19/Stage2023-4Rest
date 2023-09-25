@@ -55,7 +55,7 @@ namespace Back_end.Migrations
                     table.PrimaryKey("PK_Users", x => x.UserId);
                 });
 
-                //insert method Table Users
+            //insert method Table Users
             migrationBuilder.InsertData(
             table: "Users",
             columns: new[] { "UserId", "Email", "Password" },
