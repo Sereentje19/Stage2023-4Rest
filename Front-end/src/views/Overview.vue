@@ -14,12 +14,12 @@
       <div id="titlesOverview">
         <h3 id="urgentie">Urgentie</h3>
         <h3 id="klantnaam">Klantnaam</h3>
-        <h3 id="geldigVan">Geldig van</h3>
-        <h3 id="geldigTot">Geldig tot</h3>
+        <h3 id="geldigVan">Geldig tot</h3>
+        <h3 id="geldigTot">Aantal dagen</h3>
         <h3 id="Type">Type document</h3>
       </div>
 
-      <div class="overview" v-for="(document, i) in displayedDocuments" :key="document.documentId">
+      <div class="overview" v-for="(document, i) in displayedDocuments">
         <router-link :to="{ path: '/infopage' }" id="item">
           <img v-if="documentDaysFromExpiration(document, 14)" id="urgentieSymbool"
             src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
@@ -28,13 +28,13 @@
           <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
           <div id="klantnaamTekst">{{ document.customerName }}</div>
           <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
-          <div id="geldigTotTekst">{{ formatDate(document.date) }}</div>
+          <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
           <div id="typeTekst">{{ document.type }}</div>
         </router-link>
       </div>
 
       <div id="paging">
-        <Pagination :currentPage="currentPage" :totalPages="totalPages" @page-changed="handlePageChange" />
+        <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
       </div>
 
       <div id="pageNavigator">
@@ -77,38 +77,54 @@ export default {
     return {
       documents: [
         {
+          documentId: 0,
           customerId: 0,
           date: "",
           customerName: "",
           type: ""
         }
       ],
+      pager: {
+        currentPage: 1,
+        totalItems: 0,
+        totalPages: 0,
+        pageSize: 5,
+        startIndex: 0,
+        endIndex: 0,
+        startPage: 0,
+        endPage: 0,
+      },
       customers: [],
-      currentPage: 1,
-      itemsPerPage: 5,
       activePopup: null,
       sidebarOpen: true,
       popup1: this.$route.query.popup1 || false,
     };
   },
   mounted() {
-    this.getDocuments()
+    this.getDocuments();
   },
   methods: {
     handlePageChange(newPage) {
-      this.currentPage = newPage;
+      this.pager.currentPage = newPage;
+      this.getDocuments();
     },
     getDocuments() {
-      axios.get("Document")
+      axios.get("Document", {
+        params: {
+          page: this.pager.currentPage,
+          pageSize: this.pager.pageSize
+        }
+      })
         .then((res) => {
           this.documents = res.data.documents;
+          this.pager = res.data.pager;
+          console.log(res.data.documents)
+          console.log(res.data.pager)
 
           for (let index = 0; index < this.documents.length; index++) {
             const customerId = this.documents[index].customerId;
             this.getCustomerName(customerId, index);
           }
-
-          console.log(this.documents);
         }).catch((error) => {
           alert(error.response.data);
         });
@@ -117,20 +133,25 @@ export default {
       axios.get("Customer/" + id)
         .then((res) => {
           this.documents[index].customerName = res.data.name;
-          console.log(res.data)
         }).catch((error) => {
           alert(error.response.data);
         });
-
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");
     },
-    documentDaysFromExpiration(document, days) {
-      const documentDate = new Date(document.date);
+    caculationDays(date){
+      const documentDate = new Date(date);
       const currentDate = new Date();
       const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
-
+      return ageInDays;
+    },
+    daysAway(date) {
+      const ageInDays = this.caculationDays(date);
+      return Math.abs(ageInDays)
+    },
+    documentDaysFromExpiration(document, days) {
+      const ageInDays = this.caculationDays(document.date);
       return (Math.abs(ageInDays) <= days)
     },
     closePopup(popupName) {
@@ -140,13 +161,11 @@ export default {
     },
   },
   computed: {
-    totalPages() {
-      return Math.ceil(this.documents.length / this.itemsPerPage);
-    },
     displayedDocuments() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.documents.slice(startIndex, endIndex);
+      const startIndex = (this.pager.currentPage - 1) * this.pager.pageSize;
+      const endIndex = startIndex + this.pager.pageSize;
+
+      return this.documents.slice(0, 5);
     },
   },
 };

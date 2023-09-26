@@ -39,7 +39,7 @@ namespace Back_end.Controllers
         [HttpPost]
         public int Post(Customer cus)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
            return customerService.Post(cus);
         }
 

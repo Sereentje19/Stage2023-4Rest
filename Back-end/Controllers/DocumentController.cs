@@ -24,20 +24,22 @@ namespace Back_end.Controllers
             jwtValidationService = jwtv;
         }
 
+
+        // allDocuments.Sort((y, x) => y.Date.CompareTo(x.Date));
+
         [HttpGet]
-        public IActionResult GetAll(int page = 1, int pageSize = 10)
+        public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             List<Models.Document> allDocuments = documentService.GetAll();
 
-
-            // Create a Pager instance to paginate the results
-            var pager = new Pager(allDocuments.Count, page, pageSize);
-            allDocuments.Sort((y, x) => y.Date.CompareTo(x.Date));
+            // Calculate the number of documents to skip based on the page and pageSize
+            int skipCount = (page - 1) * pageSize;
 
             // Get the paginated subset of documents
             var pagedDocuments = allDocuments
-                .Skip(pager.StartIndex)
-                .Take(pager.PageSize)
+                .OrderBy(doc => doc.Date)
+                .Skip(skipCount) // Skip the appropriate number of documents
+                .Take(pageSize) // Take the specified number of documents
                 .Select(doc => new
                 {
                     doc.DocumentId,
@@ -47,6 +49,9 @@ namespace Back_end.Controllers
                     Type = doc.Type.ToString()
                 })
                 .ToList();
+
+            // Create a Pager instance to calculate paging information
+            var pager = new Pager(allDocuments.Count, page, pageSize);
 
             // You can return both the paged documents and the pager information in the response
             var response = new
@@ -69,6 +74,7 @@ namespace Back_end.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -80,7 +86,7 @@ namespace Back_end.Controllers
         [HttpPost]
         public IActionResult Post([FromForm] IFormFile file, [FromForm] Models.Document document)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
 
             Models.Document doc = new Models.Document
             {
