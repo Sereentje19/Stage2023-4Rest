@@ -53,10 +53,10 @@
     <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
       <div class="Error">
         <img class="Errorimage" src="../assets/Pictures/cancel.png">
-        <p>
-          {{ errorMessage }}
-        </p>
-        <button @click="togglePopup('popup2')">Close</button>
+        <div id="message">
+          {{ Message }}
+        </div>
+        <button id="buttonClose" @click="togglePopup('popup2')"><b>x</b></button>
       </div>
     </div>
 
@@ -74,9 +74,7 @@ export default {
       dropAreaActive: false,
       displayImage: false,
       uploadedFileName: '',
-      imageContainerWidth: 400,
-      imageContainerHeight: 410,
-      errorMessage: '',
+      Message: '',
       customer: {
         CustomerId: 0,
         Name: '',
@@ -99,9 +97,7 @@ export default {
           let customerId = res.data;
           this.postDocument(customerId);
 
-        }).catch((error) => {
-          alert(error.response.data);
-        });
+        }).catch((error) => { });
     },
     CreateFromData(customerId) {
       let formData = new FormData();
@@ -121,9 +117,7 @@ export default {
       })
         .then((res) => {
           console.log(res.data)
-        }).catch((error) => {
-          alert(error.response.data);
-        });
+        }).catch((error) => { });
     },
     handleFileChange(event) {
       this.selectedFile = event.target.files[0]
@@ -142,22 +136,21 @@ export default {
       }
     },
     handleVerstuurClick() {
-      if (this.selectedFile || this.displayImage) {
-        if (this.displayImage) {
-          this.$router.push({ name: 'overview', query: { popup1: true } }); // Set popup1 to true
-          // alert('Verstuur document clicked. Image is uploaded.');
-        } else {
-          // Set an upload success message
-          this.errorMessage = `Upload successful. File "${this.selectedFile.name}" is uploaded.`;
-        }
+      if (this.selectedFile) {
+        this.CreateDocument();
+        this.$router.push({ path: '/Overzicht', query: { popup1: true } }); 
       } else {
-        // Set an error message for no file selected
-        this.errorMessage = 'Error: Selecteer een bestand.';
+        this.Message = 'Geen bestand geselecteerd!';
       }
-      this.CreateDocument();
 
-      // Toggle "popup2"
       this.togglePopup('popup2');
+
+      setTimeout(() => {
+        this.closePopup();
+      }, 4000);
+    },
+    closePopup() {
+      this.activePopup = null;
     },
     handleDragOver(e) {
       e.preventDefault();
@@ -173,39 +166,34 @@ export default {
       const files = e.dataTransfer.files;
       this.processFile(files[0]);
     },
-
-    calculateImageContainerDimensions() {
-      this.imageContainerWidth = 400;
-      this.imageContainerHeight = 410;
-    },
-    handleImageLoad(e) {
-      const reader = e.target;
-      const image = new Image();
-      image.src = reader.result;
-      image.onload = () => {
-        let width = image.width;
-        let height = image.height;
-        const maxWidth = 400;
-        const maxHeight = 410;
-        const aspectRatio = width / height;
-        if (width > maxWidth) {
-          width = maxWidth;
-          height = width / aspectRatio;
-        }
-        if (height > maxHeight) {
-          height = maxHeight;
-          width = height * aspectRatio;
-        }
-        this.$refs.pElement.style.display = 'none'; // Hide the pElement
-        this.displayImage = true; // Set displayImage to true
-        this.$refs.dropArea.style.width = `${width}px`;
-        this.$refs.dropArea.style.height = `${height}px`;
-        this.$refs.dropArea.style.backgroundImage = `url(${reader.result})`;
-        this.$refs.dropArea.style.backgroundSize = 'cover';
-        this.$refs.dropArea.style.backgroundRepeat = 'no-repeat';
-        this.$refs.dropArea.style.backgroundPosition = 'center center';
-      };
-    },
+    // handleImageLoad(e) {
+    //   const reader = e.target;
+    //   const image = new Image();
+    //   image.src = reader.result;
+    //   image.onload = () => {
+    //     let width = image.width;
+    //     let height = image.height;
+    //     const maxWidth = 500;
+    //     const maxHeight = 410;
+    //     const aspectRatio = width / height;
+    //     if (width > maxWidth) {
+    //       width = maxWidth;
+    //       height = width / aspectRatio;
+    //     }
+    //     if (height > maxHeight) {
+    //       height = maxHeight;
+    //       width = height * aspectRatio;
+    //     }
+    //     this.$refs.pElement.style.display = 'none'; // Hide the pElement
+    //     this.displayImage = true; // Set displayImage to true
+    //     this.$refs.dropArea.style.width = `${width}px`;
+    //     this.$refs.dropArea.style.height = `${height}px`;
+    //     this.$refs.dropArea.style.backgroundImage = `url(${reader.result})`;
+    //     this.$refs.dropArea.style.backgroundSize = 'cover';
+    //     this.$refs.dropArea.style.backgroundRepeat = 'no-repeat';
+    //     this.$refs.dropArea.style.backgroundPosition = 'center center';
+    //   };
+    // },
   },
 };
 </script>
@@ -229,17 +217,34 @@ export default {
   margin-bottom: 50px;
 }
 
+#buttonClose{
+  font-size: 25px;
+  background-color: #F56C6C;
+  color: rgb(63, 63, 63);
+  border: none;
+}
+
 .Error {
   color: black;
-  padding: 10px;
   background-color: #F56C6C;
-  font-size: 20px;
+  font-size: 17px;
   text-align: left;
+  display: flex;
+  padding: 10px;
 }
 
 .Errorimage {
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
+  margin: auto;
+}
+
+.popup-container {
+  width: fit-content;
+}
+
+#message {
+  margin: auto 20px auto 20px;
 }
 
 

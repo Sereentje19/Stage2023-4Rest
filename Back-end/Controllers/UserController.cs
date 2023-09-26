@@ -23,7 +23,7 @@ namespace Back_end.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             var user = userService.GetAll();
             return Ok(user);
         }
@@ -31,7 +31,7 @@ namespace Back_end.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             var user = userService.GetById(id);
             return Ok(user);
         }
@@ -39,7 +39,7 @@ namespace Back_end.Controllers
         [HttpPost]
         public IActionResult Post(User user)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             userService.Post(user);
             return Ok(new { message = "User created" });
         }

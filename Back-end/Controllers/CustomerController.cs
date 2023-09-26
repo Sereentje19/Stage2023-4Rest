@@ -23,7 +23,7 @@ namespace Back_end.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             var customer = customerService.GetAll();
             return Ok(customer);
         }

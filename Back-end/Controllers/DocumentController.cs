@@ -25,21 +25,17 @@ namespace Back_end.Controllers
         }
 
 
-        // allDocuments.Sort((y, x) => y.Date.CompareTo(x.Date));
-
         [HttpGet]
         public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             List<Models.Document> allDocuments = documentService.GetAll();
-
-            // Calculate the number of documents to skip based on the page and pageSize
             int skipCount = (page - 1) * pageSize;
+            var pager = new Pager(allDocuments.Count, page, pageSize);
 
-            // Get the paginated subset of documents
             var pagedDocuments = allDocuments
                 .OrderBy(doc => doc.Date)
-                .Skip(skipCount) // Skip the appropriate number of documents
-                .Take(pageSize) // Take the specified number of documents
+                .Skip(skipCount)
+                .Take(pageSize)
                 .Select(doc => new
                 {
                     doc.DocumentId,
@@ -50,10 +46,6 @@ namespace Back_end.Controllers
                 })
                 .ToList();
 
-            // Create a Pager instance to calculate paging information
-            var pager = new Pager(allDocuments.Count, page, pageSize);
-
-            // You can return both the paged documents and the pager information in the response
             var response = new
             {
                 Documents = pagedDocuments,
@@ -63,11 +55,6 @@ namespace Back_end.Controllers
                     pager.CurrentPage,
                     pager.PageSize,
                     pager.TotalPages,
-                    pager.StartPage,
-                    pager.EndPage,
-                    pager.StartIndex,
-                    pager.EndIndex,
-                    Pages = pager.Pages.ToList()
                 }
             };
 
@@ -78,9 +65,16 @@ namespace Back_end.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             var document = documentService.GetById(id);
-            return Ok(document);
+
+            var response = new
+            {
+                Document = document,
+                type = document.Type.ToString() 
+            };
+            
+            return Ok(response);
         }
 
         [HttpPost]
@@ -88,12 +82,15 @@ namespace Back_end.Controllers
         {
             // jwtValidationService.ValidateToken(HttpContext);
 
+
+
             Models.Document doc = new Models.Document
             {
                 Type = document.Type,
                 Date = document.Date,
                 CustomerId = document.CustomerId
             };
+
 
             using (var memoryStream = new MemoryStream())
             {
@@ -108,7 +105,7 @@ namespace Back_end.Controllers
         [HttpPut]
         public IActionResult Put(Models.Document doc)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             documentService.Put(doc);
             return Ok(new { message = "Document updated" });
         }
@@ -116,7 +113,7 @@ namespace Back_end.Controllers
         [HttpDelete]
         public IActionResult Delete(Models.Document doc)
         {
-            jwtValidationService.ValidateToken(HttpContext);
+            // jwtValidationService.ValidateToken(HttpContext);
             documentService.Delete(doc);
             return Ok(new { message = "Document Deleted" });
         }

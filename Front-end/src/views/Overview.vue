@@ -20,7 +20,7 @@
       </div>
 
       <div class="overview" v-for="(document, i) in displayedDocuments">
-        <router-link :to="{ path: '/infopage' }" id="item">
+        <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
           <img v-if="documentDaysFromExpiration(document, 14)" id="urgentieSymbool"
             src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
           <img v-else-if="documentDaysFromExpiration(document, 30)" id="urgentieSymbool"
@@ -37,19 +37,11 @@
         <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
       </div>
 
-      <div id="pageNavigator">
-        <div>
-          <div>
-            <div>
-              <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
-                <div class="Succes">
-                  <img class="Succesimage" src="../assets/Pictures/Checked.png">
-                  <p>Succes!<br> Het document is succes geupload.</p>
-                  <button @click="closePopup('popup1')">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
+        <div class="Succes">
+          <img class="Succesimage" src="../assets/Pictures/Checked.png">
+          <p id="message">Upload successful.</p>
+          <button id="buttonClose" @click="closePopup('popup1')"><b>x</b></button>
         </div>
       </div>
     </div>
@@ -66,7 +58,7 @@ import Pagination from '../views/Pagination.vue';
 
 
 export default {
-  name: "overview",
+  name: "Overview",
   components: {
     ArrowLeft,
     ArrowRight,
@@ -89,19 +81,18 @@ export default {
         totalItems: 0,
         totalPages: 0,
         pageSize: 5,
-        startIndex: 0,
-        endIndex: 0,
-        startPage: 0,
-        endPage: 0,
       },
       customers: [],
       activePopup: null,
-      sidebarOpen: true,
-      popup1: this.$route.query.popup1 || false,
+      popup1: this.$route.query.popup1,
     };
   },
   mounted() {
     this.getDocuments();
+
+    setTimeout(() => {
+      this.closePopup();
+    }, 3000);
   },
   methods: {
     handlePageChange(newPage) {
@@ -118,8 +109,6 @@ export default {
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
-          console.log(res.data.documents)
-          console.log(res.data.pager)
 
           for (let index = 0; index < this.documents.length; index++) {
             const customerId = this.documents[index].customerId;
@@ -140,7 +129,7 @@ export default {
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");
     },
-    caculationDays(date){
+    caculationDays(date) {
       const documentDate = new Date(date);
       const currentDate = new Date();
       const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
@@ -154,18 +143,13 @@ export default {
       const ageInDays = this.caculationDays(document.date);
       return (Math.abs(ageInDays) <= days)
     },
-    closePopup(popupName) {
-      if (popupName === 'popup1') {
-        this.popup1 = false;
-      }
+    closePopup() {
+      this.popup1 = false;
     },
   },
   computed: {
     displayedDocuments() {
-      const startIndex = (this.pager.currentPage - 1) * this.pager.pageSize;
-      const endIndex = startIndex + this.pager.pageSize;
-
-      return this.documents.slice(0, 5);
+      return this.documents.slice(0, this.pager.pageSize);
     },
   },
 };
@@ -181,37 +165,41 @@ export default {
 
 .Succes {
   color: black;
-  padding: 10px;
   text-align: left;
   background-color: #90F587;
-  font-size: 20px;
-}
-
-.Error {
-  color: black;
+  font-size: 17px;
   padding: 10px;
-  background-color: #F56C6C;
-  font-size: 20px;
-  text-align: left;
+  display: flex;
 }
 
-.Errorimage {
-  width: 60px;
-  height: 60px;
+.popup-container {
+  width: fit-content;
+}
+
+#message {
+  margin: auto 20px auto 20px;
 }
 
 .Succesimage {
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
+  margin: auto;
 }
 
 .popup-container {
   position: fixed;
   bottom: 0;
-  right: -300px;
-  width: 300px;
+  right: -600px;
+  width: fit-content;
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
   transition: right 0.3s ease-in-out;
+}
+
+#buttonClose{
+  font-size: 25px;
+  background-color: #90F587;
+  color: rgb(63, 63, 63);
+  border: none;
 }
 
 .popup-container.active {

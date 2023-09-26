@@ -10,26 +10,87 @@
   <div class="overviewContainer">
     <div class="info">
       <ul>
-        <h1 class="title">Contract</h1>
+        <h1 class="title">{{ this.document.type }}</h1>
         <br /><br />
         <h2 class="text">
-          23-11-20
+          {{ formatDate(this.document.date) }}
           <br />
-          Dit is over X dagen
+          {{ "Over " + daysAway(this.document.date) + " dagen vervalt het document!" }}
         </h2>
         <br /><br />
         <h2 class="text">
-          Serena Kenter
+          {{this.customer.name}}
           <br />
-          serena@gmail.com
+          {{this.customer.email}}
         </h2>
       </ul>
     </div>
     <div class="foto">
-      <img src="../assets/pictures/contract.jpg" class="foto" alt="Document" />
+      <img class="foto" :src="this.document.image" alt="image not shown" />
     </div>
   </div>
 </template>
+
+<script>
+import axios from '../../axios-auth.js';
+import moment from 'moment';
+
+export default {
+  name: "Quiz",
+  props: {
+    id: Number,
+  },
+  data() {
+    return {
+      document:
+      {
+        documentId: 0,
+        customerId: 0,
+        date: "",
+        customerName: "",
+        type: "",
+        image: "",
+      },
+      customer: [],
+    }
+  },
+  mounted() {
+    this.getDocuments();
+  },
+  methods: {
+    getDocuments() {
+      axios.get("Document/" + this.id)
+        .then((res) => {
+          this.document = res.data.document;
+          this.document.type = res.data.type
+          console.log(this.document)
+
+          this.getCustomerName(this.document.customerId);
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+    },
+    getCustomerName(id) {
+      axios.get("Customer/" + id)
+        .then((res) => {
+          this.customer = res.data;
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+    },
+    formatDate(date) {
+      return moment(date).format("DD-MM-YYYY");
+    },
+    daysAway(date) {
+      const documentDate = new Date(date);
+      const currentDate = new Date();
+      const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
+      return Math.abs(ageInDays)
+    },
+  }
+}
+
+</script>
 
 <style scoped>
 .overviewContainer {

@@ -8,7 +8,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', component: Login },
-    { path: '/infopage', component: infopage},
+    { path: '/infopage/:id', component: infopage, props: true},
     { path: '/uploaden', component: Uploaden },
     { path: '/overzicht', component: Overview ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
