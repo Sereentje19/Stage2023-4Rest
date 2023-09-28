@@ -21,9 +21,12 @@
               <div id="profileFillIcon">
                 <lockClosed />
               </div>
-              <input id="inputWachtwoord" v-model="this.user.Password" type="text" placeholder="Wachtwoord" required />
-              <a href="/" id="eyeIcon">
+              <input id="inputWachtwoord" v-model="this.user.Password" :type="this.inputType" placeholder="Wachtwoord" required />
+              <a v-if="this.eyeCon == true" @click="eyecon" id="eyeIcon">
                 <eyeOpen />
+              </a>
+              <a class="eyeconClosed" v-if="this.eyeCon == false" @click="eyecon" id="eyeIcon">
+                <eyeClosed />
               </a>
             </div>
             <button @click="login()" class="loginButton" type="button">Login</button>
@@ -53,6 +56,8 @@ export default {
   },
   data() {
     return {
+      eyeCon: true,
+      inputType: "",
       user: {
         UserId: 0,
         Email: '',
@@ -71,14 +76,29 @@ export default {
         }).catch((error) => {
           alert(error.response.data);
         });
-    }
-  }
+    },
+    eyecon(){
+      if(this.eyeCon == true)
+      {
+        this.eyeCon = false;
+        this.inputType = "password"
+      }
+      else{
+        this.eyeCon = true;
+        this.inputType = "text";
+      }
+
+
+
+    },
+  },
 };
 </script>
    
 
 
 <style>
+
 #backgroundCircel {
   width: 100%;
   height: 90%;
@@ -114,6 +134,7 @@ export default {
   height: 30px;
   margin-left: -35px;
   margin-top: 8px;
+  cursor: pointer;
 }
 
 #profileIcon {
