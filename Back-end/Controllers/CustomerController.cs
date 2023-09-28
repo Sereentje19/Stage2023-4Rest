@@ -12,22 +12,36 @@ namespace Back_end.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService customerService;
+        private readonly IJwtValidationService jwtValidationService;
 
-        public CustomerController(ICustomerService cs)
+        public CustomerController(ICustomerService cs, IJwtValidationService jwtv)
         {
             customerService = cs;
+            jwtValidationService = jwtv;
         }
+
+
+        [HttpGet("Filter")]
+        public IActionResult FilterAll(string searchField)
+        {
+            // jwtValidationService.ValidateToken(HttpContext);
+            var customers = customerService.FilterAll(searchField);
+            return Ok(customers);
+        }
+
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var customer = customerService.GetAll();
-            return Ok(customer);
+            // jwtValidationService.ValidateToken(HttpContext);
+            var customers = customerService.GetAll();
+            return Ok(customers);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            // jwtValidationService.ValidateToken(HttpContext);
             var customer = customerService.GetById(id);
             return Ok(customer);
         }
@@ -35,7 +49,8 @@ namespace Back_end.Controllers
         [HttpPost]
         public int Post(Customer cus)
         {
-           return customerService.Post(cus);
+            // jwtValidationService.ValidateToken(HttpContext);
+            return customerService.Post(cus);
         }
 
     }

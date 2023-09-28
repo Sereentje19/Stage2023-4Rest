@@ -12,15 +12,18 @@ namespace Back_end.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly IJwtValidationService jwtValidationService;
 
-        public UserController(IUserService us)
+        public UserController(IUserService us, IJwtValidationService jwtv)
         {
             userService = us;
+            jwtValidationService = jwtv;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
+            // jwtValidationService.ValidateToken(HttpContext);
             var user = userService.GetAll();
             return Ok(user);
         }
@@ -28,6 +31,7 @@ namespace Back_end.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            // jwtValidationService.ValidateToken(HttpContext);
             var user = userService.GetById(id);
             return Ok(user);
         }
@@ -35,6 +39,7 @@ namespace Back_end.Controllers
         [HttpPost]
         public IActionResult Post(User user)
         {
+            // jwtValidationService.ValidateToken(HttpContext);
             userService.Post(user);
             return Ok(new { message = "User created" });
         }

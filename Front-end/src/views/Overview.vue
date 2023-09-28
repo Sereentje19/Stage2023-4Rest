@@ -9,77 +9,150 @@
       </div>
     </div>
     <div class="overviewContainer">
-      <h1>Overzicht</h1>
-
+      <div id="h1AndButton">
+        <h1 id="h1Overzicht">Overzicht</h1>
+        <button @click="toArchive" id="buttonArchief"> Archief</button>
+      </div>
       <div id="titlesOverview">
         <h3 id="urgentie">Urgentie</h3>
         <h3 id="klantnaam">Klantnaam</h3>
-        <h3 id="geldigVan">Geldig van</h3>
-        <h3 id="geldigTot">Geldig tot</h3>
+        <h3 id="geldigVan">Geldig tot</h3>
+        <h3 id="geldigTot">Aantal dagen</h3>
         <h3 id="Type">Type document</h3>
       </div>
 
-      <div class="overview" v-for="i in 5" :key="i">
-        <router-link :to="{ path: '/infopage' }" id="item">
-          <img v-if="i == 1" id="urgentieSymbool" src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-          <img v-if="i >= 2 && i <= 4" id="urgentieSymbool" src="../assets/Pictures/middelUrgentie.png"
-            alt="does not work" />
-          <img v-if="i == 5" id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-          <div id="klantnaamTekst">Serena Kenter</div>
-          <div id="geldigVanTekst">12-04-2019</div>
-          <div id="geldigTotTekst">13-04-2024</div>
-          <div id="typeTekst">Contract</div>
+      <div class="overview" v-for="(document, i) in displayedDocuments">
+        <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
+          <img v-if="documentDaysFromExpiration(document, 14)" id="urgentieSymbool"
+            src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+          <img v-else-if="documentDaysFromExpiration(document, 30)" id="urgentieSymbool"
+            src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
+          <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+          <div id="klantnaamTekst">{{ document.customerName }}</div>
+          <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
+          <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
+          <div id="typeTekst">{{ document.type }}</div>
         </router-link>
       </div>
 
+      <div id="paging">
+        <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
+      </div>
 
-      <div id="pageNavigator">
-        Pagina
-        <ArrowLeft />
-        <b>1</b>/ 2 / 3 .../ 7
-        <ArrowRight />
-        <div>
-          <div>
-            <div>
-              <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
-                <div class="Succes">
-                  <img class="Succesimage" src="../assets/Pictures/Checked.png">
-                  <p>Succes!<br> Het document is succes geupload.</p>
-                  <button @click="closePopup('popup1')">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
+        <div class="Succes">
+          <img class="Succesimage" src="../assets/Pictures/Checked.png">
+          <p id="message">Upload successful.</p>
+          <button id="buttonClose" @click="closePopup('popup1')"><b>x</b></button>
         </div>
       </div>
     </div>
+    <br><br><br>
 
   </body>
 </template>
 
 <script>
-import ArrowLeft from "../components/icons/iconOverviewArrowLeft.vue";
-import ArrowRight from "../components/icons/iconOverviewArrowRight.vue";
+import axios from '../../axios-auth.js';
+import moment from 'moment';
+import Pagination from '../views/Pagination.vue';
+
 
 export default {
-  name: "overview",
+  name: "Overview",
   components: {
-    ArrowLeft,
-    ArrowRight,
+    Pagination,
   },
 
   data() {
     return {
+      documents: [
+        {
+          documentId: 0,
+          customerId: 0,
+          date: "",
+          customerName: "",
+          type: ""
+        }
+      ],
+      pager: {
+        currentPage: 1,
+        totalItems: 0,
+        totalPages: 0,
+        pageSize: 5,
+      },
+      customers: [],
       activePopup: null,
-      sidebarOpen: true,
-      popup1: this.$route.query.popup1 || false,
+      popup1: this.$route.query.popup1,
     };
   },
+  mounted() {
+    this.getDocuments();
+
+    setTimeout(() => {
+      this.closePopup();
+    }, 3000);
+  },
   methods: {
-    closePopup(popupName) {
-      if (popupName === 'popup1') {
-        this.popup1 = false; // Set popup1 to false to hide the popup
-      }
+    handlePageChange(newPage) {
+      this.pager.currentPage = newPage;
+      this.getDocuments();
+    },
+    toArchive() {
+      this.$router.push("/archief");
+    },
+    getDocuments() {
+      axios.get("Document", {
+                params: {
+                    page: this.pager.currentPage,
+                    pageSize: this.pager.pageSize,
+                    isArchived: false
+                }
+            })
+        .then((res) => {
+          this.documents = res.data.documents;
+          this.pager = res.data.pager;
+
+          for (let index = 0; index < this.documents.length; index++) {
+            const customerId = this.documents[index].customerId;
+            this.getCustomerName(customerId, index);
+          }
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+    },
+    getCustomerName(id, index) {
+      axios.get("Customer/" + id)
+        .then((res) => {
+          this.documents[index].customerName = res.data.name;
+        }).catch((error) => {
+          alert(error.response.data);
+        });
+    },
+    formatDate(date) {
+      return moment(date).format("DD-MM-YYYY");
+    },
+    caculationDays(date) {
+      const documentDate = new Date(date);
+      const currentDate = new Date();
+      const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
+      return (ageInDays - (ageInDays + ageInDays));
+    },
+    daysAway(date) {
+      const ageInDays = this.caculationDays(date);
+      return ageInDays
+    },
+    documentDaysFromExpiration(document, days) {
+      const ageInDays = this.caculationDays(document.date);
+      return (ageInDays <= days)
+    },
+    closePopup() {
+      this.popup1 = false;
+    },
+  },
+  computed: {
+    displayedDocuments() {
+      return this.documents.slice(0, this.pager.pageSize);
     },
   },
 };
@@ -87,43 +160,70 @@ export default {
 
 
 <style>
+#paging {
+  display: flex;
+  margin-right: auto;
+
+}
+
 .Succes {
   color: black;
-  padding: 10px;
   text-align: left;
   background-color: #90F587;
-  font-size: 20px;
-}
-
-.Error {
-  color: black;
+  font-size: 17px;
   padding: 10px;
-  background-color: #F56C6C;
-  font-size: 20px;
-  text-align: left;
+  display: flex;
 }
 
-.Errorimage {
-  width: 60px;
-  height: 60px;
+.popup-container {
+  width: fit-content;
+}
+
+#message {
+  margin: auto 20px auto 20px;
 }
 
 .Succesimage {
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
+  margin: auto;
 }
 
 .popup-container {
   position: fixed;
   bottom: 0;
-  right: -300px;
-  width: 300px;
+  right: -600px;
+  width: fit-content;
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
   transition: right 0.3s ease-in-out;
 }
 
+#buttonClose {
+  font-size: 25px;
+  background-color: #90F587;
+  color: rgb(63, 63, 63);
+  border: none;
+}
+
 .popup-container.active {
   right: 0;
+}
+
+#h1AndButton {
+  display: flex;
+  /* margin: auto; */
+  height: 70px;
+}
+
+#buttonArchief {
+  font-size: 25px;
+  height: fit-content;
+  padding: 10px 20px 10px 20px;
+  margin: 0;
+  background-color: #22421f;
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 
 .popup-button {
@@ -171,6 +271,7 @@ export default {
   grid-template-columns: 10% 30% 15% 15% 30%;
   color: black;
   margin-left: auto;
+  border-radius: 3px;
 }
 
 a {
@@ -185,6 +286,10 @@ a {
 
 h1 {
   font-size: 50px;
+}
+
+#h1Overzicht {
+  margin: auto auto auto 0;
 }
 
 #logoHeader {
@@ -218,7 +323,7 @@ a {
 }
 
 body {
-  background-color: #d9d9d9;
+  background-color: #afaeae;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>
