@@ -6,11 +6,8 @@ using Back_end.Models;
 
 namespace Back_end.Services
 {
-    public interface IUserService
+    public interface ILoginService
     {
-        IEnumerable<User> GetAll();
-        User GetById(int id);
-        void Post(User user);
         User checkCredentials(User user);
     }
 }

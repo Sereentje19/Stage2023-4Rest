@@ -16,11 +16,11 @@ namespace Back_end.Controllers
     [Route("[controller]")]
     public class LoginController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly ILoginService loginService;
         private readonly IJwtValidationService jwtValidationService;
-        public LoginController(IUserService us, IJwtValidationService jwtv)
+        public LoginController(ILoginService lo, IJwtValidationService jwtv)
         {
-            userService = us;
+            loginService = lo;
             jwtValidationService = jwtv;
         }
 
@@ -30,7 +30,7 @@ namespace Back_end.Controllers
         {
             try
             {
-                User currentUser = userService.checkCredentials(user);
+                User currentUser = loginService.checkCredentials(user);
 
                 if (currentUser != null)
                 {

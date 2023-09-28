@@ -28,11 +28,6 @@ namespace Back_end.Services
             _documentRepository.Add(document);
         }
 
-        public void Delete(Document document)
-        {
-            _documentRepository.Delete(document);
-        }
-
         public void Put(Document document)
         {
             _documentRepository.Update(document);

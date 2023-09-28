@@ -37,10 +37,5 @@ namespace Back_end.Repositories
             _context.SaveChanges();
         }
 
-        public void Delete(Document entity)
-        {
-            _dbSet.Remove(entity);
-            _context.SaveChanges();
-        }
     }
 }

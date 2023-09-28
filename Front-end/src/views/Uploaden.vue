@@ -28,11 +28,11 @@
       <div class="rightSide">
         <ul>
           <form class="gegevens" action="/action_page.php">
-            <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur"  v-model="this.searchField" type="search" class="Zoek" placeholder="Zoek klant"
+            <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur"  v-model="searchField" type="search" class="Zoek" placeholder="Zoek klant"
               name="Naam" />
 
-            <ul id="myUL" v-show="isFocused && filteredCustomers.length > 0">
-              <li v-for="customer in filteredCustomers.slice(0, 5)" :key="customer.id">
+            <ul id="myUL" v-show="isFocused && filteredCustomers.length> 0">
+              <li v-for="customer in filteredCustomers" :key="customer.id">
                 <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
               </li>
             </ul>
@@ -101,8 +101,6 @@ export default {
       filteredCustomers: []
     };
   },
-
-
   methods: {
     CreateDocument() {
       axios.post("Customer", this.customer)
@@ -182,7 +180,7 @@ export default {
     onBlur() {
       setTimeout(() => {
         this.isFocused = false;
-      }, 1);
+      }, 100);
     },
     closePopup() {
       this.activePopup = null;
@@ -224,6 +222,7 @@ export default {
   font-size: 18px;
   color: black;
   margin: auto;
+  cursor: pointer;
 }
 
 .leftSide {
@@ -302,8 +301,6 @@ export default {
 
 }
 
-
-
 #p {
   width: 100px;
   height: 100px;
@@ -316,8 +313,6 @@ body {
   background-color: #d9d9d9;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-
-
 
 a {
   color: white;
@@ -371,9 +366,6 @@ margin-top: auto;
 #searchOutputButtons {
   background-color: white;
 }
-
-
-
 
 .Naam,
 .Email,

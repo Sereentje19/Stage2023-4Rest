@@ -20,21 +20,11 @@ namespace Back_end.Controllers
             jwtValidationService = jwtv;
         }
 
-
         [HttpGet("Filter")]
         public IActionResult FilterAll(string searchField)
         {
             // jwtValidationService.ValidateToken(HttpContext);
             var customers = customerService.FilterAll(searchField);
-            return Ok(customers);
-        }
-
-
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            // jwtValidationService.ValidateToken(HttpContext);
-            var customers = customerService.GetAll();
             return Ok(customers);
         }
 
@@ -52,6 +42,5 @@ namespace Back_end.Controllers
             // jwtValidationService.ValidateToken(HttpContext);
             return customerService.Post(cus);
         }
-
     }
 }

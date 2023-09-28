@@ -10,19 +10,25 @@
   <div class="overviewContainer">
     <div class="info">
       <ul>
-        <h1 class="title">{{ this.document.type }}</h1>
-        <br /><br />
-        <h2 class="text">
-          {{ formatDate(this.document.date) }}
-          <br />
-          {{ "Over " + daysAway(this.document.date) + " dagen vervalt het document!" }}
-        </h2>
-        <br /><br />
-        <h2 class="text">
-          {{this.customer.name}}
-          <br />
-          {{this.customer.email}}
-        </h2>
+        <h1>Info</h1>
+        <br>
+        <div id="DocumentTitle">
+          Document:
+        </div>
+        <div id="documentInfo">
+          Documenttype: &nbsp;&nbsp; {{ this.document.type }}
+          <br>
+          VervalDatum: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.document.date) }}
+        </div>
+        <br><br><br>
+        <div id="DocumentTitle">
+          klant:
+        </div>
+        <div id="documentInfo">
+          Klantnaam: &nbsp;&nbsp; {{ this.customer.name }}
+          <br>
+          Klantemail: &nbsp;&nbsp;&nbsp;&nbsp; {{ this.customer.email }}
+        </div>
       </ul>
     </div>
     <div class="foto">
@@ -81,12 +87,6 @@ export default {
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");
     },
-    daysAway(date) {
-      const documentDate = new Date(date);
-      const currentDate = new Date();
-      const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
-      return Math.abs(ageInDays)
-    },
   }
 }
 
@@ -106,28 +106,13 @@ export default {
   margin-left: auto;
 }
 
-/* .text {
-  position: relative;
-  left: 400px;
-  top: 80px;
-  text-align: left;
+#documentInfo {
+  font-size: 20px;
+}
+
+#DocumentTitle {
   font-size: 30px;
+  font-weight: 500;
 }
 
-.title {
-  position: relative;
-  top: 80px;
-  left: 400px;
-  text-align: left;
-  font-size: 50px;
-
-}
-
-.foto {
-  position: fixed;
-  right: 300px;
-  top: 200px;
-  width: 600px;
-  height: 700px;
-} */
 </style>

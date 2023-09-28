@@ -29,8 +29,6 @@ namespace Back_end.Controllers
         public IActionResult GetDocuments(int page = 1, int pageSize = 5, bool isArchived = false)
         {
             List<Models.Document> allDocuments = documentService.GetAll();
-            // int skipCount = (page - 1) * pageSize;
-            // var pager = new Pager(allDocuments.Count, page, pageSize);
 
             IEnumerable<Models.Document> filteredDocuments;
             DateTime currentDate = DateTime.Now;
@@ -47,11 +45,8 @@ namespace Back_end.Controllers
             }
 
             int totalArchivedDocuments = filteredDocuments.Count();
-
-    // Calculate skipCount based on the total number of archived documents
-    int skipCount = Math.Max(0, (page - 1) * pageSize);
-
-    var pager = new Pager(totalArchivedDocuments, page, pageSize);
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            var pager = new Pager(totalArchivedDocuments, page, pageSize);
 
             var pagedDocuments = filteredDocuments
                 .Skip(skipCount)
@@ -131,15 +126,5 @@ namespace Back_end.Controllers
             documentService.Put(doc);
             return Ok(new { message = "Document updated" });
         }
-
-        [HttpDelete]
-        public IActionResult Delete(Models.Document doc)
-        {
-            // jwtValidationService.ValidateToken(HttpContext);
-            documentService.Delete(doc);
-            return Ok(new { message = "Document Deleted" });
-        }
-
-
     }
 }
