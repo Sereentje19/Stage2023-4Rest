@@ -26,14 +26,34 @@ namespace Back_end.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll(int page = 1, int pageSize = 5)
+        public IActionResult GetDocuments(int page = 1, int pageSize = 5, bool isArchived = false)
         {
             List<Models.Document> allDocuments = documentService.GetAll();
-            int skipCount = (page - 1) * pageSize;
-            var pager = new Pager(allDocuments.Count, page, pageSize);
+            // int skipCount = (page - 1) * pageSize;
+            // var pager = new Pager(allDocuments.Count, page, pageSize);
 
-            var pagedDocuments = allDocuments
-                .OrderBy(doc => doc.Date)
+            IEnumerable<Models.Document> filteredDocuments;
+            DateTime currentDate = DateTime.Now;
+
+            if (isArchived)
+            {
+                filteredDocuments = allDocuments.Where(doc => doc.Date < currentDate)
+                .OrderByDescending(doc => doc.Date);
+            }
+            else
+            {
+                filteredDocuments = allDocuments.Where(doc => doc.Date > currentDate)
+                .OrderBy(doc => doc.Date);
+            }
+
+            int totalArchivedDocuments = filteredDocuments.Count();
+
+    // Calculate skipCount based on the total number of archived documents
+    int skipCount = Math.Max(0, (page - 1) * pageSize);
+
+    var pager = new Pager(totalArchivedDocuments, page, pageSize);
+
+            var pagedDocuments = filteredDocuments
                 .Skip(skipCount)
                 .Take(pageSize)
                 .Select(doc => new
@@ -62,6 +82,8 @@ namespace Back_end.Controllers
         }
 
 
+
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -71,9 +93,9 @@ namespace Back_end.Controllers
             var response = new
             {
                 Document = document,
-                type = document.Type.ToString() 
+                type = document.Type.ToString()
             };
-            
+
             return Ok(response);
         }
 

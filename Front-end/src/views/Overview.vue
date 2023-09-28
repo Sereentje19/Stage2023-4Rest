@@ -10,8 +10,8 @@
     </div>
     <div class="overviewContainer">
       <div id="h1AndButton">
-        <h1>Overzicht</h1>
-        <button id="buttonArchief"> Archief</button>
+        <h1 id="h1Overzicht">Overzicht</h1>
+        <button @click="toArchive" id="buttonArchief"> Archief</button>
       </div>
       <div id="titlesOverview">
         <h3 id="urgentie">Urgentie</h3>
@@ -98,13 +98,17 @@ export default {
       this.pager.currentPage = newPage;
       this.getDocuments();
     },
+    toArchive() {
+      this.$router.push("/archief");
+    },
     getDocuments() {
       axios.get("Document", {
-        params: {
-          page: this.pager.currentPage,
-          pageSize: this.pager.pageSize
-        }
-      })
+                params: {
+                    page: this.pager.currentPage,
+                    pageSize: this.pager.pageSize,
+                    isArchived: false
+                }
+            })
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
@@ -207,14 +211,15 @@ export default {
 
 #h1AndButton {
   display: flex;
-  margin: auto;
+  /* margin: auto; */
+  height: 70px;
 }
 
 #buttonArchief {
   font-size: 25px;
   height: fit-content;
   padding: 10px 20px 10px 20px;
-  margin: auto 0 auto auto;
+  margin: 0;
   background-color: #22421f;
   color: white;
   border: none;
@@ -281,6 +286,10 @@ a {
 
 h1 {
   font-size: 50px;
+}
+
+#h1Overzicht {
+  margin: auto auto auto 0;
 }
 
 #logoHeader {
