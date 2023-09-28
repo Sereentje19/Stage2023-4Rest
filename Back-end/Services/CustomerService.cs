@@ -13,6 +13,16 @@ namespace Back_end.Services
             _customerRepository = cr;
         }
 
+        public IEnumerable<Customer> FilterAll(string searchfield)
+        {
+            Console.WriteLine(searchfield);
+            if (string.IsNullOrWhiteSpace(searchfield))
+            {
+                return new List<Customer>();
+            }
+            return _customerRepository.FilterAll(searchfield);
+        }
+
         public IEnumerable<Customer> GetAll()
         {
             return _customerRepository.GetAll();
@@ -25,7 +35,7 @@ namespace Back_end.Services
 
         public int Post(Customer customer)
         {
-           return _customerRepository.Add(customer);
+            return _customerRepository.Add(customer);
         }
 
     }

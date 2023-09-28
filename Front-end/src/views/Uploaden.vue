@@ -19,7 +19,8 @@
         </div>
 
         <label class="overlay">
-          Selecteer document
+          <div id="selectDocument"> Selecteer document</div>
+          <img id="folderImage" src="../assets/Pictures/folder.png" alt="">
           <input type="file" class="file" @change="handleFileChange" />
         </label>
       </div>
@@ -27,7 +28,16 @@
       <div class="rightSide">
         <ul>
           <form class="gegevens" action="/action_page.php">
-            <input type="text" class="Zoek" placeholder="Zoek klant" name="Naam" />
+            <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur"  v-model="this.searchField" type="search" class="Zoek" placeholder="Zoek klant"
+              name="Naam" />
+
+            <ul id="myUL" v-show="isFocused && filteredCustomers.length > 0">
+              <li v-for="customer in filteredCustomers.slice(0, 5)" :key="customer.id">
+                <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
+              </li>
+            </ul>
+
+
             <input v-model="this.customer.Name" type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
             <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
             <select v-model="this.document.Type" class="Type" placeholder="Type bestand" name="Type">
@@ -70,9 +80,11 @@ export default {
   data() {
     return {
       activePopup: null,
+      isFocused: false,
       selectedFile: null,
       dropAreaActive: false,
       displayImage: false,
+      searchField: "",
       uploadedFileName: '',
       Message: '',
       customer: {
@@ -85,7 +97,8 @@ export default {
         Type: 0,
         Date: "",
         CustomerId: 0,
-      }
+      },
+      filteredCustomers: []
     };
   },
 
@@ -119,6 +132,23 @@ export default {
           console.log(res.data)
         }).catch((error) => { });
     },
+    filterCustomer() {
+      if (this.searchField != "") {
+        axios.get("Customer/Filter", {
+          params: {
+            searchField: this.searchField
+          }
+        })
+          .then((res) => {
+            this.filteredCustomers = res.data;
+            console.log(this.filteredCustomers)
+          }).catch((error) => {});
+      }
+    },
+    fillCustomer(cus) {
+      this.customer.Email = cus.email;
+      this.customer.Name = cus.name;
+    },
     handleFileChange(event) {
       this.selectedFile = event.target.files[0]
 
@@ -138,7 +168,7 @@ export default {
     handleVerstuurClick() {
       if (this.selectedFile) {
         this.CreateDocument();
-        this.$router.push({ path: '/Overzicht', query: { popup1: true } }); 
+        this.$router.push({ path: '/Overzicht', query: { popup1: true } });
       } else {
         this.Message = 'Geen bestand geselecteerd!';
       }
@@ -148,6 +178,11 @@ export default {
       setTimeout(() => {
         this.closePopup();
       }, 4000);
+    },
+    onBlur() {
+      setTimeout(() => {
+        this.isFocused = false;
+      }, 1);
     },
     closePopup() {
       this.activePopup = null;
@@ -166,39 +201,31 @@ export default {
       const files = e.dataTransfer.files;
       this.processFile(files[0]);
     },
-    // handleImageLoad(e) {
-    //   const reader = e.target;
-    //   const image = new Image();
-    //   image.src = reader.result;
-    //   image.onload = () => {
-    //     let width = image.width;
-    //     let height = image.height;
-    //     const maxWidth = 500;
-    //     const maxHeight = 410;
-    //     const aspectRatio = width / height;
-    //     if (width > maxWidth) {
-    //       width = maxWidth;
-    //       height = width / aspectRatio;
-    //     }
-    //     if (height > maxHeight) {
-    //       height = maxHeight;
-    //       width = height * aspectRatio;
-    //     }
-    //     this.$refs.pElement.style.display = 'none'; // Hide the pElement
-    //     this.displayImage = true; // Set displayImage to true
-    //     this.$refs.dropArea.style.width = `${width}px`;
-    //     this.$refs.dropArea.style.height = `${height}px`;
-    //     this.$refs.dropArea.style.backgroundImage = `url(${reader.result})`;
-    //     this.$refs.dropArea.style.backgroundSize = 'cover';
-    //     this.$refs.dropArea.style.backgroundRepeat = 'no-repeat';
-    //     this.$refs.dropArea.style.backgroundPosition = 'center center';
-    //   };
-    // },
   },
 };
 </script>
 
 <style scoped>
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  z-index: 10;
+  position: absolute;
+  margin-top: 49px;
+  margin-left: 128px;
+  width: 350px;
+}
+
+#myUL li #searchList {
+  border: 1px solid rgb(155, 155, 155);
+  border-top: none;
+  background-color: #f6f6f6;
+  padding: 10px;
+  font-size: 18px;
+  color: black;
+  margin: auto;
+}
+
 .leftSide {
   margin-right: auto;
 }
@@ -217,7 +244,7 @@ export default {
   margin-bottom: 50px;
 }
 
-#buttonClose{
+#buttonClose {
   font-size: 25px;
   background-color: #F56C6C;
   color: rgb(63, 63, 63);
@@ -268,11 +295,14 @@ export default {
   transition: background-color 0.3s, border 0.3s;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 25px;
+  border-radius: 5px;
   border-color: black;
-  border-width: 12x;
+  border-width: 2px;
   border-style: solid;
+
 }
+
+
 
 #p {
   width: 100px;
@@ -287,37 +317,6 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* #logoHeader {
-  width: 130px;
-  height: 80px;
-  margin-left: 20px;
-  padding: 0.5% 0% 0% 1%;
-} */
-
-/* .header {
-  width: 103%;
-  height: 120px;
-  background-color: #153912;
-  margin-left: -1.5%;
-  margin-top: -1.5%;
-  display: flex;
-  flex-direction: row;
-} */
-
-/* #buttonsHeader {
-  position: absolute;
-  right: 0px;
-  padding: 50px 40px 0px 0px;
-}
-
- */
-
-/* .input {
-  position: fixed;
-  top: 300px;
-  left: 200px;
-  font-size: 20px;
-} */
 
 
 a {
@@ -325,20 +324,27 @@ a {
   text-decoration: none;
 }
 
+
+#folderImage{
+  width: 50px;
+  padding: 3px;
+  margin-left: auto;
+}
+
+#selectDocument{
+margin-top: auto;
+  padding: 12px;
+}
+
 .overlay {
   position: relative;
-  display: block;
   top: 30px;
   background: #22421f;
-  background-image: url(../assets/Pictures/folder.png);
-  background-repeat: no-repeat;
-  background-position: 330px;
-  background-size: 60px 50px;
   color: white;
-  padding: 12px;
   font-size: 25px;
-  width: 378px;
-  border-radius: 25px;
+  width: 400px;
+  border-radius: 5px;
+  display: flex;
 }
 
 .file {
@@ -348,21 +354,39 @@ a {
 .gegevens {
   display: flex;
   flex-direction: column;
+  position: relative;
+  margin-top: 2px;
 }
 
-.Zoek,
+
+#searchOutput {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  margin-left: auto;
+  z-index: 20;
+}
+
+#searchOutputButtons {
+  background-color: white;
+}
+
+
+
+
 .Naam,
 .Email,
 .Date,
 .Type {
   right: 350px;
   background-color: #f4f4f4;
-  font-size: 23px;
+  font-size: 20px;
   padding: 12px;
   width: 450px;
   margin-bottom: 15px;
-  border-radius: 25px;
-  border: black solid 2px;
+  border-radius: 5px;
+  border: black solid 1px;
 }
 
 .Type {
@@ -370,10 +394,17 @@ a {
 }
 
 .Zoek {
-  margin-bottom: 20px;
   margin-left: auto;
-  margin-bottom: 70px;
   width: 350px;
+  background-color: #f4f4f4;
+  font-size: 20px;
+  padding: 12px;
+  border: black solid 1px;
+  border-radius: 5px;
+}
+
+.Naam {
+  margin-top: 90px;
 }
 
 
@@ -384,6 +415,6 @@ a {
   color: white;
   padding: 12px;
   font-size: 25px;
-  border-radius: 25px;
+  border-radius: 5px;
 }
 </style>

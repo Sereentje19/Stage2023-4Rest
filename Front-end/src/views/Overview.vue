@@ -9,8 +9,10 @@
       </div>
     </div>
     <div class="overviewContainer">
-      <h1>Overzicht</h1>
-
+      <div id="h1AndButton">
+        <h1>Overzicht</h1>
+        <button id="buttonArchief"> Archief</button>
+      </div>
       <div id="titlesOverview">
         <h3 id="urgentie">Urgentie</h3>
         <h3 id="klantnaam">Klantnaam</h3>
@@ -45,6 +47,7 @@
         </div>
       </div>
     </div>
+    <br><br><br>
 
   </body>
 </template>
@@ -52,16 +55,12 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import ArrowLeft from "../components/icons/iconOverviewArrowLeft.vue";
-import ArrowRight from "../components/icons/iconOverviewArrowRight.vue";
 import Pagination from '../views/Pagination.vue';
 
 
 export default {
   name: "Overview",
   components: {
-    ArrowLeft,
-    ArrowRight,
     Pagination,
   },
 
@@ -133,15 +132,15 @@ export default {
       const documentDate = new Date(date);
       const currentDate = new Date();
       const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
-      return ageInDays;
+      return (ageInDays - (ageInDays + ageInDays));
     },
     daysAway(date) {
       const ageInDays = this.caculationDays(date);
-      return Math.abs(ageInDays)
+      return ageInDays
     },
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);
-      return (Math.abs(ageInDays) <= days)
+      return (ageInDays <= days)
     },
     closePopup() {
       this.popup1 = false;
@@ -195,7 +194,7 @@ export default {
   transition: right 0.3s ease-in-out;
 }
 
-#buttonClose{
+#buttonClose {
   font-size: 25px;
   background-color: #90F587;
   color: rgb(63, 63, 63);
@@ -204,6 +203,22 @@ export default {
 
 .popup-container.active {
   right: 0;
+}
+
+#h1AndButton {
+  display: flex;
+  margin: auto;
+}
+
+#buttonArchief {
+  font-size: 25px;
+  height: fit-content;
+  padding: 10px 20px 10px 20px;
+  margin: auto 0 auto auto;
+  background-color: #22421f;
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 
 .popup-button {
@@ -251,6 +266,7 @@ export default {
   grid-template-columns: 10% 30% 15% 15% 30%;
   color: black;
   margin-left: auto;
+  border-radius: 3px;
 }
 
 a {
@@ -298,7 +314,7 @@ a {
 }
 
 body {
-  background-color: #d9d9d9;
+  background-color: #afaeae;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

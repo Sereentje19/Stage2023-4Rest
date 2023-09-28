@@ -20,12 +20,22 @@ namespace Back_end.Controllers
             jwtValidationService = jwtv;
         }
 
+
+        [HttpGet("Filter")]
+        public IActionResult FilterAll(string searchField)
+        {
+            // jwtValidationService.ValidateToken(HttpContext);
+            var customers = customerService.FilterAll(searchField);
+            return Ok(customers);
+        }
+
+
         [HttpGet]
         public IActionResult GetAll()
         {
             // jwtValidationService.ValidateToken(HttpContext);
-            var customer = customerService.GetAll();
-            return Ok(customer);
+            var customers = customerService.GetAll();
+            return Ok(customers);
         }
 
         [HttpGet("{id}")]
@@ -40,7 +50,7 @@ namespace Back_end.Controllers
         public int Post(Customer cus)
         {
             // jwtValidationService.ValidateToken(HttpContext);
-           return customerService.Post(cus);
+            return customerService.Post(cus);
         }
 
     }

@@ -21,6 +21,19 @@ namespace Back_end.Repositories
             return _dbSet.Find(id);
         }
 
+        public IEnumerable<Customer> FilterAll(string searchfield)
+        {
+            var filteredCustomers = _dbSet
+            .Where(customer =>
+                customer.Name.Contains(searchfield) ||
+                customer.Email.Contains(searchfield) ||
+                customer.CustomerId.ToString().Contains(searchfield)
+            )
+            .ToList();
+
+            return filteredCustomers;
+        }
+
         public IEnumerable<Customer> GetAll()
         {
             return _dbSet.ToList();
@@ -28,6 +41,16 @@ namespace Back_end.Repositories
 
         public int Add(Customer entity)
         {
+            List<Customer> customer = _dbSet.ToList();
+
+            foreach (Customer c in customer)
+            {
+                if (c.Email == entity.Email && c.Name == entity.Name)
+                {
+                    return c.CustomerId;
+                }
+            }
+
             _dbSet.Add(entity);
             _context.SaveChanges();
             return entity.CustomerId;

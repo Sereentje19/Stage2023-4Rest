@@ -1,13 +1,24 @@
 <template>
     <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 1">Vorige</button>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages">Volgende</button>
+        <button @click="prevPage" :disabled="currentPage === 1">
+            <ArrowLeft />
+        </button>
+        <span>Pagina {{ currentPage }} van {{ totalPages }}</span>
+        <button id="button2" @click="nextPage" :disabled="currentPage === totalPages">
+            <ArrowRight />
+        </button>
     </div>
 </template>
   
 <script>
+import ArrowLeft from "../components/icons/iconArrowLeft.vue";
+import ArrowRight from "../components/icons/iconArrowRight.vue";
 export default {
+    name: "Overview",
+    components: {
+        ArrowLeft,
+        ArrowRight
+    },
     props: {
         currentPage: {
             type: Number,
@@ -41,14 +52,23 @@ export default {
 }
 
 button {
-    margin: 0 5px;
+    margin-right: 10px;
+    margin-top: 2px;
+    display: flex;
     padding: 5px 10px;
     cursor: pointer;
+    background-color: #afaeae;
+    color: rgb(14, 12, 12);
+    border-radius: 3px;
+    border: none;
+}
+
+#button2 {
+    margin-left: 10px;
 }
 
 button[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-}
-</style>
+}</style>
   
