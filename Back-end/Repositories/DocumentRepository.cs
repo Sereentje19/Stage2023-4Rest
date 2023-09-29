@@ -27,6 +27,11 @@ namespace Back_end.Repositories
 
         public void Add(Document entity)
         {
+            // if (entity.Type.Equals(Models.Type.Not_Selected))
+            // {
+            //     throw new Exception("Selecteer een type!");
+            // }
+
             _dbSet.Add(entity);
             _context.SaveChanges();
         }

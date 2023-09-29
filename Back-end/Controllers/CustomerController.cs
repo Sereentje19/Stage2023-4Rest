@@ -37,10 +37,18 @@ namespace Back_end.Controllers
         }
 
         [HttpPost]
-        public int Post(Customer cus)
+        public IActionResult Post(Customer cus)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
-            return customerService.Post(cus);
+            try
+            {
+                int result = customerService.Post(cus);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message); 
+            }
         }
+
     }
 }

@@ -41,6 +41,11 @@ namespace Back_end.Repositories
 
         public int Add(Customer entity)
         {
+            if (entity.Name.Equals("") || entity.Email.Equals(""))
+            {
+                throw new Exception("Klant naam of email is leeg.");
+            }
+
             List<Customer> customer = _dbSet.ToList();
 
             foreach (Customer c in customer)

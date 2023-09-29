@@ -39,15 +39,10 @@
         <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
       </div>
 
-      <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
-        <div class="Succes">
-          <img class="Succesimage" src="../assets/Pictures/Checked.png">
-          <p id="message">Upload successful.</p>
-          <button id="buttonClose" @click="closePopup('popup1')"><b>x</b></button>
-        </div>
-      </div>
+      <br><br><br>
+
+      <Popup ref="Popup" />
     </div>
-    <br><br><br>
 
   </body>
 </template>
@@ -56,12 +51,14 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
+import Popup from '../views/popUp.vue';
 
 
 export default {
   name: "Overview",
   components: {
     Pagination,
+    Popup
   },
 
   data() {
@@ -82,16 +79,18 @@ export default {
         pageSize: 5,
       },
       customers: [],
-      activePopup: null,
-      popup1: this.$route.query.popup1,
     };
   },
   mounted() {
     this.getDocuments();
 
-    setTimeout(() => {
-      this.closePopup();
-    }, 3000);
+    if (this.$route.query.activePopup) {
+      this.$refs.Popup.popUpError("Document is geupload!");
+
+      setTimeout(() => {
+        this.closePopup();
+      }, 3000);
+    }
   },
   methods: {
     handlePageChange(newPage) {
@@ -103,12 +102,12 @@ export default {
     },
     getDocuments() {
       axios.get("Document", {
-                params: {
-                    page: this.pager.currentPage,
-                    pageSize: this.pager.pageSize,
-                    isArchived: false
-                }
-            })
+        params: {
+          page: this.pager.currentPage,
+          pageSize: this.pager.pageSize,
+          isArchived: false
+        }
+      })
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
@@ -146,9 +145,6 @@ export default {
       const ageInDays = this.caculationDays(document.date);
       return (ageInDays <= days)
     },
-    closePopup() {
-      this.popup1 = false;
-    },
   },
   computed: {
     displayedDocuments() {
@@ -166,52 +162,8 @@ export default {
 
 }
 
-.Succes {
-  color: black;
-  text-align: left;
-  background-color: #90F587;
-  font-size: 17px;
-  padding: 10px;
-  display: flex;
-}
-
-.popup-container {
-  width: fit-content;
-}
-
-#message {
-  margin: auto 20px auto 20px;
-}
-
-.Succesimage {
-  width: 30px;
-  height: 30px;
-  margin: auto;
-}
-
-.popup-container {
-  position: fixed;
-  bottom: 0;
-  right: -600px;
-  width: fit-content;
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
-  transition: right 0.3s ease-in-out;
-}
-
-#buttonClose {
-  font-size: 25px;
-  background-color: #90F587;
-  color: rgb(63, 63, 63);
-  border: none;
-}
-
-.popup-container.active {
-  right: 0;
-}
-
 #h1AndButton {
   display: flex;
-  /* margin: auto; */
   height: 70px;
 }
 

@@ -97,26 +97,30 @@ namespace Back_end.Controllers
         [HttpPost]
         public IActionResult Post([FromForm] IFormFile file, [FromForm] Models.Document document)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
-
-
-
-            Models.Document doc = new Models.Document
+            try
             {
-                Type = document.Type,
-                Date = document.Date,
-                CustomerId = document.CustomerId
-            };
+                // jwtValidationService.ValidateToken(HttpContext);
 
+                Models.Document doc = new Models.Document
+                {
+                    Type = document.Type,
+                    Date = document.Date,
+                    CustomerId = document.CustomerId
+                };
 
-            using (var memoryStream = new MemoryStream())
-            {
-                file.CopyTo(memoryStream);
-                doc.Image = memoryStream.ToArray();
+                using (var memoryStream = new MemoryStream())
+                {
+                    file.CopyTo(memoryStream);
+                    doc.Image = memoryStream.ToArray();
+                }
+
+                documentService.Post(doc);
+                return Ok(new { message = "Document created" });
             }
-
-            documentService.Post(doc);
-            return Ok(new { message = "Document created" });
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
         }
 
         [HttpPut]

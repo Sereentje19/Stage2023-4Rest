@@ -28,10 +28,10 @@
       <div class="rightSide">
         <ul>
           <form class="gegevens" action="/action_page.php">
-            <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur"  v-model="searchField" type="search" class="Zoek" placeholder="Zoek klant"
-              name="Naam" />
+            <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
+              class="Zoek" placeholder="Zoek klant" name="Naam" />
 
-            <ul id="myUL" v-show="isFocused && filteredCustomers.length> 0">
+            <ul id="myUL" v-show="isFocused && filteredCustomers.length > 0">
               <li v-for="customer in filteredCustomers" :key="customer.id">
                 <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
               </li>
@@ -40,53 +40,47 @@
 
             <input v-model="this.customer.Name" type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
             <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
-            <select v-model="this.document.Type" class="Type" placeholder="Type bestand" name="Type">
-              <option value="0">Vog</option>
-              <option value="1">Contract</option>
-              <option value="2">Paspoort</option>
-              <option value="3">id kaart</option>
-              <option value="4">Diploma</option>
-              <option value="5">Certificaat</option>
-              <option value="6">Lease auto</option>
+            <select v-model="this.document.Type" class="Type" name="Type">
+              <option value="0">Selecteer type...</option>
+              <option value="1">Vog</option>
+              <option value="2">Contract</option>
+              <option value="3">Paspoort</option>
+              <option value="4">id kaart</option>
+              <option value="5">Diploma</option>
+              <option value="6">Certificaat</option>
+              <option value="7">Lease auto</option>
             </select>
-            <input v-model="this.document.Date" type="date" class="Date" name="Date" />
+            <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="Date" name="Date" />
           </form>
         </ul>
 
-        <a @click="handleVerstuurClick" class="verstuur" type="button">
+        <button @click="this.CreateDocument()" class="verstuur" type="button">
           Verstuur document
-        </a>
+        </button>
       </div>
     </div>
 
-
-    <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
-      <div class="Error">
-        <img class="Errorimage" src="../assets/Pictures/cancel.png">
-        <div id="message">
-          {{ Message }}
-        </div>
-        <button id="buttonClose" @click="togglePopup('popup2')"><b>x</b></button>
-      </div>
-    </div>
+    <Popup ref="Popup" />
 
   </div>
 </template>
 
 <script>
 import axios from '../../axios-auth.js'
+import Popup from '../views/popUp.vue';
 
 export default {
+  components: {
+    Popup,
+  },
   data() {
     return {
-      activePopup: null,
       isFocused: false,
       selectedFile: null,
       dropAreaActive: false,
       displayImage: false,
       searchField: "",
       uploadedFileName: '',
-      Message: '',
       customer: {
         CustomerId: 0,
         Name: '',
@@ -95,7 +89,7 @@ export default {
       document: {
         DocumentId: 0,
         Type: 0,
-        Date: "",
+        Date: new Date().toISOString().split('T')[0],
         CustomerId: 0,
       },
       filteredCustomers: []
@@ -103,20 +97,23 @@ export default {
   },
   methods: {
     CreateDocument() {
-      axios.post("Customer", this.customer)
-        .then((res) => {
-          let customerId = res.data;
-          this.postDocument(customerId);
+      if (this.selectedFile == null) {
+        this.$refs.Popup.popUpError("Selecteer een bestand!");
+      }
+      else if (this.document.Type == 0) {
+        this.$refs.Popup.popUpError("Selecteer een type!");
+      }
+      else {
+        axios.post("Customer", this.customer)
+          .then((res) => {
+            let customerId = res.data;
+            console.log(customerId)
+            this.postDocument(customerId);
 
-        }).catch((error) => { });
-    },
-    CreateFromData(customerId) {
-      let formData = new FormData();
-      formData.append('file', this.selectedFile);
-      formData.append('document.Type', this.document.Type);
-      formData.append('document.Date', this.document.Date);
-      formData.append('document.CustomerId', customerId);
-      return formData;
+          }).catch((error) => {
+            this.$refs.Popup.popUpError(error.response.data);
+          });
+      }
     },
     postDocument(customerId) {
       let formData = this.CreateFromData(customerId);
@@ -127,8 +124,18 @@ export default {
         }
       })
         .then((res) => {
-          console.log(res.data)
-        }).catch((error) => { });
+          this.$router.push({ path: '/Overzicht', query: { activePopup: true } });
+        }).catch((error) => {
+          this.$refs.Popup.popUpError(error.response.data);
+        });
+    },
+    CreateFromData(customerId) {
+      let formData = new FormData();
+      formData.append('file', this.selectedFile);
+      formData.append('document.Type', this.document.Type);
+      formData.append('document.Date', this.document.Date);
+      formData.append('document.CustomerId', customerId);
+      return formData;
     },
     filterCustomer() {
       if (this.searchField != "") {
@@ -140,7 +147,7 @@ export default {
           .then((res) => {
             this.filteredCustomers = res.data;
             console.log(this.filteredCustomers)
-          }).catch((error) => {});
+          }).catch((error) => { });
       }
     },
     fillCustomer(cus) {
@@ -156,34 +163,10 @@ export default {
       };
       reader.readAsBinaryString(this.selectedFile)
     },
-    togglePopup(popupName) {
-      if (this.activePopup === popupName) {
-        this.activePopup = null;
-      } else {
-        this.activePopup = popupName;
-      }
-    },
-    handleVerstuurClick() {
-      if (this.selectedFile) {
-        this.CreateDocument();
-        this.$router.push({ path: '/Overzicht', query: { popup1: true } });
-      } else {
-        this.Message = 'Geen bestand geselecteerd!';
-      }
-
-      this.togglePopup('popup2');
-
-      setTimeout(() => {
-        this.closePopup();
-      }, 4000);
-    },
     onBlur() {
       setTimeout(() => {
         this.isFocused = false;
       }, 100);
-    },
-    closePopup() {
-      this.activePopup = null;
     },
     handleDragOver(e) {
       e.preventDefault();
@@ -243,37 +226,6 @@ export default {
   margin-bottom: 50px;
 }
 
-#buttonClose {
-  font-size: 25px;
-  background-color: #F56C6C;
-  color: rgb(63, 63, 63);
-  border: none;
-}
-
-.Error {
-  color: black;
-  background-color: #F56C6C;
-  font-size: 17px;
-  text-align: left;
-  display: flex;
-  padding: 10px;
-}
-
-.Errorimage {
-  width: 30px;
-  height: 30px;
-  margin: auto;
-}
-
-.popup-container {
-  width: fit-content;
-}
-
-#message {
-  margin: auto 20px auto 20px;
-}
-
-
 .dropArea.active {
   border: 2px dashed #007bff;
   background-color: #f5f5f5;
@@ -320,14 +272,14 @@ a {
 }
 
 
-#folderImage{
+#folderImage {
   width: 50px;
   padding: 3px;
   margin-left: auto;
 }
 
-#selectDocument{
-margin-top: auto;
+#selectDocument {
+  margin-top: auto;
   padding: 12px;
 }
 
@@ -340,6 +292,7 @@ margin-top: auto;
   width: 400px;
   border-radius: 5px;
   display: flex;
+  cursor: pointer;
 }
 
 .file {
@@ -408,5 +361,6 @@ margin-top: auto;
   padding: 12px;
   font-size: 25px;
   border-radius: 5px;
+  border: none;
 }
 </style>

@@ -22,14 +22,17 @@
                 <lockClosed />
               </div>
               <input id="inputWachtwoord" v-model="this.user.Password" :type="this.inputType" placeholder="Wachtwoord" required />
-              <a v-if="this.eyeCon == true" @click="eyecon" id="eyeIcon">
+              <a v-if="this.eyeCon == true" @click="eyeconChange" id="eyeIcon">
                 <eyeOpen />
               </a>
-              <a class="eyeconClosed" v-if="this.eyeCon == false" @click="eyecon" id="eyeIcon">
+              <a v-else-if="this.eyeCon == false" class="eyeconClosed" @click="eyeconChange" id="eyeIcon">
                 <eyeClosed />
               </a>
             </div>
             <button @click="login()" class="loginButton" type="button">Login</button>
+            <div id="errorMessage"> 
+              {{ this.errorMessage }}
+            </div>
           </div>
         </div>
       </div>
@@ -38,8 +41,8 @@
 </template>
 
 <script>
-import axios from '../../axios-auth.js'
-import profile from "../components/icons/iconLoginProfile.vue";
+import axios from '../../axios-auth.js';
+import profile from "../components/icons/iconloginprofile.vue";
 import profileFill from "../components/icons/iconLoginProfileFill.vue";
 import lockClosed from "../components/icons/iconLoginLockClosed.vue";
 import eyeOpen from "../components/icons/iconLoginEyeOpen.vue";
@@ -56,8 +59,9 @@ export default {
   },
   data() {
     return {
-      eyeCon: true,
-      inputType: "",
+      eyeCon: false,
+      inputType: "password",
+      errorMessage: "",
       user: {
         UserId: 0,
         Email: '',
@@ -74,11 +78,11 @@ export default {
           this.$router.push("/overzicht");
           console.log(res.data);
         }).catch((error) => {
-          alert(error.response.data);
+          this.errorMessage = error.response.data
         });
     },
-    eyecon(){
-      if(this.eyeCon == true)
+    eyeconChange(){
+      if(this.eyeCon)
       {
         this.eyeCon = false;
         this.inputType = "password"
@@ -87,9 +91,6 @@ export default {
         this.eyeCon = true;
         this.inputType = "text";
       }
-
-
-
     },
   },
 };
@@ -98,6 +99,14 @@ export default {
 
 
 <style>
+
+#errorMessage{
+  color: rgb(153, 17, 17);
+  font-weight: 500;
+  font-size: 16px;
+  padding-left: 10%;
+  padding-top: 5px;
+}
 
 #backgroundCircel {
   width: 100%;
@@ -121,6 +130,10 @@ export default {
 
 .divSpace {
   width: 30px;
+}
+
+button{
+  cursor: pointer;
 }
 
 .inputContainer {
