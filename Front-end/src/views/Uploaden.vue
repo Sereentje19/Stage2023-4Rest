@@ -117,6 +117,7 @@ export default {
     },
     postDocument(customerId) {
       let formData = this.CreateFromData(customerId);
+      console.log(this.selectedFile)
 
       axios.post("Document", formData, {
         headers: {

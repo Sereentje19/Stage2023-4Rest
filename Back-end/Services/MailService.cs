@@ -6,6 +6,8 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using Back_end.Models;
 using Microsoft.Extensions.Options;
+using System.Drawing;
+using MimeKit.Utils;
 
 
 namespace Back_end.Services
@@ -26,7 +28,7 @@ namespace Back_end.Services
             _mailSettings = mailSettingsOptions.Value;
         }
 
-        public void SendEmail(string customerName, DateTime date, Models.Type type)
+        public void SendEmail(string customerName, DateTime date, Models.Type type, byte[] image, int weeks)
         {
             try
             {
@@ -39,10 +41,35 @@ namespace Back_end.Services
 
                     emailMessage.Subject = "Document vervalt Binnenkort!";
 
-                    BodyBuilder emailBodyBuilder = new BodyBuilder();
-                    emailBodyBuilder.TextBody = $"Het volgende document zal over 6 weken komen te vervallen:\n"
-                     + customerName + "\n" + date.ToString() + "\n" + type.ToString();
+                    BodyBuilder emailBodyBuilder = new BodyBuilder
+                    {
+                        //     emailBodyBuilder.TextBody = $"Het volgende document zal over {weeks} weken komen te vervallen:\n" +
+                        //  $"Naam: {customerName}\nVerloop datum: {date:dd-MM-yyyy}\nType document: {type}\n\n";
 
+                        HtmlBody = $@"<html>
+<head></head>
+<body>
+<p>Het volgende document zal over {weeks} weken komen te vervallen:</p>
+<p>Naam: {customerName}</p>
+<p>Verloop datum: {date:dd-MM-yyyy}</p>
+<p>Type document: {type}</p>
+<img src=""cid:imageId"">
+</body>
+</html>"
+                    };
+
+
+                    var imagePart = new MimePart("image", "jpeg") // Use a generic MIME type for all image types
+                    {
+                        Content = new MimeContent(new MemoryStream(image), ContentEncoding.Default),
+                        ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
+                        ContentTransferEncoding = ContentEncoding.Base64,
+                        FileName = "image.jpg", // Use a generic file extension
+                        ContentId = MimeUtils.GenerateMessageId()
+                    };
+
+                    emailBodyBuilder.HtmlBody = emailBodyBuilder.HtmlBody.Replace("src=\"cid:imageId\"", $"src=\"cid:{imagePart.ContentId}\"");
+                    emailBodyBuilder.LinkedResources.Add(imagePart);
                     emailMessage.Body = emailBodyBuilder.ToMessageBody();
                     //this is the SmtpClient from the Mailkit.Net.Smtp namespace, not the System.Net.Mail one
                     using (MailKit.Net.Smtp.SmtpClient mailClient = new MailKit.Net.Smtp.SmtpClient())
