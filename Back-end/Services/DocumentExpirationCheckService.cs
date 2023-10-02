@@ -65,7 +65,7 @@ namespace Back_end.Services
                     }
                 }
 
-                var delay = TimeSpan.FromDays(1);
+                var delay = TimeSpan.FromMinutes(1);
                 await Task.Delay(delay, stoppingToken);
             }
         }

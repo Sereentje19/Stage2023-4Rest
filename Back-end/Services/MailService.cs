@@ -28,6 +28,49 @@ namespace Back_end.Services
             _mailSettings = mailSettingsOptions.Value;
         }
 
+        private MimePart SetImage(byte[] image)
+        {
+            var imagePart = new MimePart("image", "jpeg")
+            {
+                Content = new MimeContent(new MemoryStream(image), ContentEncoding.Default),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
+                ContentTransferEncoding = ContentEncoding.Base64,
+                FileName = "image.jpg",
+                ContentId = MimeUtils.GenerateMessageId()
+            };
+            return imagePart;
+        }
+
+        private BodyBuilder SetBody(int weeks, string customerName, DateTime date, Models.Type type)
+        {
+            BodyBuilder emailBodyBuilder = new BodyBuilder
+            {
+                HtmlBody = $@"<html>
+                                    <head></head>
+                                    <body>
+                                    <p>Het volgende document zal over {weeks} weken komen te vervallen:</p>
+                                    <p>Naam: {customerName}</p>
+                                    <p>Verloop datum: {date:dd-MM-yyyy}</p>
+                                    <p>Type document: {type}</p>
+                                    <img src=""cid:imageId"" width=""100"">
+                                    </body>
+                                    </html>"
+            };
+
+            return emailBodyBuilder;
+        }
+
+        private void ConnectAndSendMail(MimeMessage emailMessage)
+        {
+            using (MailKit.Net.Smtp.SmtpClient mailClient = new MailKit.Net.Smtp.SmtpClient())
+            {
+                mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
+                mailClient.Send(emailMessage);
+                mailClient.Disconnect(true);
+            }
+        }
+
         public void SendEmail(string customerName, DateTime date, Models.Type type, byte[] image, int weeks)
         {
             try
@@ -38,47 +81,17 @@ namespace Back_end.Services
                     emailMessage.From.Add(emailFrom);
                     MailboxAddress emailTo = new MailboxAddress("serena", toEmail);
                     emailMessage.To.Add(emailTo);
-
                     emailMessage.Subject = "Document vervalt Binnenkort!";
 
-                    BodyBuilder emailBodyBuilder = new BodyBuilder
-                    {
-                        //     emailBodyBuilder.TextBody = $"Het volgende document zal over {weeks} weken komen te vervallen:\n" +
-                        //  $"Naam: {customerName}\nVerloop datum: {date:dd-MM-yyyy}\nType document: {type}\n\n";
+                    BodyBuilder emailBodyBuilder = SetBody(weeks, customerName, date, type);
 
-                        HtmlBody = $@"<html>
-<head></head>
-<body>
-<p>Het volgende document zal over {weeks} weken komen te vervallen:</p>
-<p>Naam: {customerName}</p>
-<p>Verloop datum: {date:dd-MM-yyyy}</p>
-<p>Type document: {type}</p>
-<img src=""cid:imageId"">
-</body>
-</html>"
-                    };
-
-
-                    var imagePart = new MimePart("image", "jpeg") // Use a generic MIME type for all image types
-                    {
-                        Content = new MimeContent(new MemoryStream(image), ContentEncoding.Default),
-                        ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
-                        ContentTransferEncoding = ContentEncoding.Base64,
-                        FileName = "image.jpg", // Use a generic file extension
-                        ContentId = MimeUtils.GenerateMessageId()
-                    };
+                    MimePart imagePart = SetImage(image);
 
                     emailBodyBuilder.HtmlBody = emailBodyBuilder.HtmlBody.Replace("src=\"cid:imageId\"", $"src=\"cid:{imagePart.ContentId}\"");
                     emailBodyBuilder.LinkedResources.Add(imagePart);
                     emailMessage.Body = emailBodyBuilder.ToMessageBody();
-                    //this is the SmtpClient from the Mailkit.Net.Smtp namespace, not the System.Net.Mail one
-                    using (MailKit.Net.Smtp.SmtpClient mailClient = new MailKit.Net.Smtp.SmtpClient())
-                    {
-                        mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-                        mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-                        mailClient.Send(emailMessage);
-                        mailClient.Disconnect(true);
-                    }
+
+                    ConnectAndSendMail(emailMessage);
                 }
             }
             catch (Exception ex)
