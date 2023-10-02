@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
- 
+
 AddServices();
 // JWTAuthentication();
 AddCors();
@@ -78,6 +78,9 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<ICustomerService, CustomerService>();
     builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
     builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
+    builder.Services.AddScoped<IMailService, MailService>();
+    builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+    builder.Services.AddHostedService<DocumentExpirationCheckService>();
 }
 
 
