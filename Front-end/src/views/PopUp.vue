@@ -1,20 +1,41 @@
 <template>
-<div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
-      <div class="Error">
-      <img v-if="this.Message == 'Document is geupload!'" class="Succesimage" src="../assets/Pictures/Checked.png">
-        <img v-else class="Errorimage" src="../assets/Pictures/cancel.png">
-        <div id="message">
-          {{ Message }}
+  <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
+    <div class="Error" :class="{ 'SuccessPopup': Message === 'Document is geupload!' }">
+        <div>
+          <div id="CrossCircle">
+            <div v-if="this.Message == 'Document is geupload!'" id="ErrorItem" class="SuccesPopup">
+              <Check /> &nbsp;&nbsp; Succes
+            </div>
+            <div v-else id="ErrorItem" class="ErrorPopup">
+              <CrossCircle /> &nbsp;&nbsp; Error
+            </div>
+            <div id="ErrorItemCross">
+              <button id="buttonClose" @click="togglePopup('popup2')" :class="{ 'SuccessPopup': Message === 'Document is geupload!' }">
+                <Cross />
+              </button>
+            </div>
+          </div>
+          <div id="message">
+            {{ Message }}
+          </div>
         </div>
-        <button id="buttonClose" @click="togglePopup('popup2')"><b>x</b></button>
-      </div>
     </div>
+  </div>
 </template>
 
 
 
 <script>
+import Cross from '../components/icons/IconCross.vue';
+import CrossCircle from '../components/icons/IconCrossCircle.vue';
+import Check from '../components/icons/IconCheck.vue';
+
 export default {
+  components: {
+    Cross,
+    CrossCircle,
+    Check
+  },
   props: {
     Message: String,
   },
@@ -43,7 +64,6 @@ export default {
     },
     closePopup() {
       this.activePopup = null;
-      // this.Message = "";
     },
   },
 };
@@ -52,40 +72,56 @@ export default {
 
 
 <style scoped>
+.SuccessPopup {
+  background-color: #10b473 !important; 
+}
+
+#CrossCircle {
+  display: flex;
+  color: white;
+  font-weight: 500;
+  font-size: 21px;
+  min-width: 300px
+}
+
+#ErrorItem {
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+}
+
+#ErrorItemCross {
+  margin-left: auto;
+  margin-bottom: -5px;
+}
+
+
 #buttonClose {
-  font-size: 25px;
-  background-color: #535353;
-  color: rgb(216, 216, 216);
-  border: none;
+  background-color: #d85353;
+    border: none;
 }
 
 .Error {
-  color: rgb(216, 216, 216);
-  background-color: #535353;
-  font-size: 17px;
-  text-align: left;
-  display: flex;
+  background-color: #d85353;
   padding: 10px;
-  border-radius: 5px;
-}
-
-.Errorimage {
-  width: 30px;
-  height: 30px;
-  margin: auto;
+  border-radius: 7px;
 }
 
 .popup-container {
+  padding-right: 10px;
   position: fixed;
-  bottom: 1px;
-
+  bottom: 10px;
   right: -600px;
-  width: fit-content;
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
   transition: right 0.3s ease-in-out;
 }
 
+.popup-container.active {
+    right: 0;
+}
+
 #message {
-  margin: auto 20px auto 20px;
+  margin-left: 45px;
+  margin-top: 8px;
+  color: white;
 }
 </style>

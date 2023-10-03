@@ -140,48 +140,9 @@ export default {
 
 }
 
-.Succes {
-    color: black;
-    text-align: left;
-    background-color: #90F587;
-    font-size: 17px;
-    padding: 10px;
-    display: flex;
-}
 
-.popup-container {
-    width: fit-content;
-}
 
-#message {
-    margin: auto 20px auto 20px;
-}
 
-.Succesimage {
-    width: 30px;
-    height: 30px;
-    margin: auto;
-}
-
-.popup-container {
-    position: fixed;
-    bottom: 0;
-    right: -600px;
-    width: fit-content;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
-    transition: right 0.3s ease-in-out;
-}
-
-#buttonClose {
-    font-size: 25px;
-    background-color: #90F587;
-    color: rgb(63, 63, 63);
-    border: none;
-}
-
-.popup-container.active {
-    right: 0;
-}
 
 #h1AndButton {
     display: flex;
