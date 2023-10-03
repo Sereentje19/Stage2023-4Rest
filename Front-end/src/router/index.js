@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../views/Login.vue';
 import Overview from '../views/Overview.vue';
 import Uploaden from '../views/Uploaden.vue';
-import infopage from '../views/infopage.vue';
+import infopage from '../views/Infopage.vue';
 import archief from '../views/Archive.vue';
 
 const router = createRouter({

@@ -23,17 +23,31 @@ namespace Back_end.Controllers
         [HttpGet("Filter")]
         public IActionResult FilterAll(string searchField)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
-            var customers = customerService.FilterAll(searchField);
-            return Ok(customers);
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var customers = customerService.FilterAll(searchField);
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
-            var customer = customerService.GetById(id);
-            return Ok(customer);
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var customer = customerService.GetById(id);
+                return Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
         }
 
         [HttpPost]
@@ -41,14 +55,14 @@ namespace Back_end.Controllers
         {
             try
             {
+                jwtValidationService.ValidateToken(HttpContext);
                 int result = customerService.Post(cus);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(401, ex.Message); 
+                return StatusCode(401, ex.Message);
             }
         }
-
     }
 }

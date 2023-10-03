@@ -1,13 +1,6 @@
 <template>
     <body class="overviewBody">
-        <div class="header">
-            <a href="/overzicht"><img id="logoHeader" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
-            <div id="buttonsHeader">
-                <router-link to="/overzicht">Overzicht</router-link>
-                <router-link to="/uploaden">Document uploaden</router-link>
-                <router-link to="/">Uitloggen</router-link>
-            </div>
-        </div>
+        <Header></Header>
         <div class="overviewContainer">
             <h1 id="h1Overzicht">Archief</h1>
             <div id="titlesArchive">
@@ -31,15 +24,10 @@
                     @page-changed="handlePageChange" />
             </div>
 
-            <div class="popup-container" :class="{ 'active': activePopup === 'popup1' || popup1 === 'true' }">
-                <div class="Succes">
-                    <img class="Succesimage" src="../assets/Pictures/Checked.png">
-                    <p id="message">Upload successful.</p>
-                    <button id="buttonClose" @click="closePopup('popup1')"><b>x</b></button>
-                </div>
-            </div>
         </div>
+
         <br><br><br>
+        <Popup ref="Popup" />
 
     </body>
 </template>
@@ -48,12 +36,16 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
+import Popup from '../views/popUp.vue';
+import Header from '../views/Header.vue';
 
 
 export default {
     name: "Overview",
     components: {
         Pagination,
+        Popup,
+        Header
     },
 
     data() {
@@ -74,16 +66,10 @@ export default {
                 pageSize: 5,
             },
             customers: [],
-            activePopup: null,
-            popup1: this.$route.query.popup1,
         };
     },
     mounted() {
         this.getDocuments();
-
-        setTimeout(() => {
-            this.closePopup();
-        }, 3000);
     },
     methods: {
         handlePageChange(newPage) {
@@ -92,6 +78,9 @@ export default {
         },
         getDocuments() {
             axios.get("Document", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                },
                 params: {
                     page: this.pager.currentPage,
                     pageSize: this.pager.pageSize,
@@ -107,15 +96,19 @@ export default {
                         this.getCustomerName(customerId, index);
                     }
                 }).catch((error) => {
-                    alert(error.response.data);
+                    this.$refs.Popup.popUpError(error.response.data);
                 });
         },
         getCustomerName(id, index) {
-            axios.get("Customer/" + id)
+            axios.get("Customer/" + id, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
                 .then((res) => {
                     this.documents[index].customerName = res.data.name;
                 }).catch((error) => {
-                    alert(error.response.data);
+                    this.$refs.Popup.popUpError(error.response.data);
                 });
         },
         formatDate(date) {

@@ -37,12 +37,13 @@ export default {
       this.Message = error;
       this.togglePopup('popup2');
 
-    //   setTimeout(() => {
-    //     this.closePopup();
-    //   }, 4000);
+      setTimeout(() => {
+        this.closePopup();
+      }, 4000);
     },
     closePopup() {
       this.activePopup = null;
+      // this.Message = "";
     },
   },
 };

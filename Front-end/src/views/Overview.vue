@@ -1,13 +1,6 @@
 <template>
   <body class="overviewBody">
-    <div class="header">
-      <a href="/overzicht"><img id="logoHeader" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
-      <div id="buttonsHeader">
-        <router-link to="/overzicht">Overzicht</router-link>
-        <router-link to="/uploaden">Document uploaden</router-link>
-        <router-link to="/">Uitloggen</router-link>
-      </div>
-    </div>
+    <Header></Header>
     <div class="overviewContainer">
       <div id="h1AndButton">
         <h1 id="h1Overzicht">Overzicht</h1>
@@ -23,9 +16,9 @@
 
       <div class="overview" v-for="(document, i) in displayedDocuments">
         <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
-          <img v-if="documentDaysFromExpiration(document, 14)" id="urgentieSymbool"
+          <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
             src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-          <img v-else-if="documentDaysFromExpiration(document, 30)" id="urgentieSymbool"
+          <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
             src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
           <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
           <div id="klantnaamTekst">{{ document.customerName }}</div>
@@ -52,13 +45,15 @@ import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
 import Popup from '../views/popUp.vue';
+import Header from '../views/Header.vue';
 
 
 export default {
   name: "Overview",
   components: {
     Pagination,
-    Popup
+    Popup,
+    Header
   },
 
   data() {
@@ -86,10 +81,6 @@ export default {
 
     if (this.$route.query.activePopup) {
       this.$refs.Popup.popUpError("Document is geupload!");
-
-      setTimeout(() => {
-        this.closePopup();
-      }, 3000);
     }
   },
   methods: {
@@ -102,6 +93,9 @@ export default {
     },
     getDocuments() {
       axios.get("Document", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        },
         params: {
           page: this.pager.currentPage,
           pageSize: this.pager.pageSize,
@@ -117,15 +111,19 @@ export default {
             this.getCustomerName(customerId, index);
           }
         }).catch((error) => {
-          alert(error.response.data);
+          this.$refs.Popup.popUpError(error.response.data);
         });
     },
     getCustomerName(id, index) {
-      axios.get("Customer/" + id)
+      axios.get("Customer/" + id, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        }
+      })
         .then((res) => {
           this.documents[index].customerName = res.data.name;
         }).catch((error) => {
-          alert(error.response.data);
+          this.$refs.Popup.popUpError(error.response.data);
         });
     },
     formatDate(date) {
@@ -194,6 +192,15 @@ export default {
 }
 
 #klantnaamTekst,
+#typeTekst {
+  max-width: 350px;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+#klantnaamTekst,
 #geldigVanTekst,
 #geldigTotTekst,
 #typeTekst {
@@ -244,35 +251,7 @@ h1 {
   margin: auto auto auto 0;
 }
 
-#logoHeader {
-  width: 130px;
-  height: 80px;
-  margin-left: 3px;
-  margin-top: 28px;
-  padding: 0.5% 0% 0% 1%;
-}
 
-a {
-  font-size: 28px;
-  color: white;
-  margin-left: 30px;
-}
-
-#buttonsHeader {
-  position: absolute;
-  right: 0px;
-  padding: 50px 40px 0px 0px;
-}
-
-.header {
-  width: 103%;
-  height: 120px;
-  background-color: #153912;
-  margin-left: -1.5%;
-  margin-top: -1.5%;
-  display: flex;
-  flex-direction: row;
-}
 
 body {
   background-color: #afaeae;
