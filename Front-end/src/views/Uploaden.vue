@@ -273,7 +273,6 @@ a {
   text-decoration: none;
 }
 
-
 #folderImage {
   width: 50px;
   padding: 3px;
