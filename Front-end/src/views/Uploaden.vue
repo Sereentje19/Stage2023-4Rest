@@ -1,14 +1,6 @@
 <template>
   <div>
-    <div class="header">
-      <a href="/overzicht"><img id="logoHeader" src="@/assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
-      <div id="buttonsHeader">
-        <router-link to="/overzicht">Overzicht</router-link>
-        <router-link to="/uploaden">Document uploaden</router-link>
-        <router-link to="/">Uitloggen</router-link>
-      </div>
-    </div>
-
+    <Header></Header>
     <div class="uploadContainer">
       <div class="leftSide">
         <h1 id="h1">Document uploaden</h1>
@@ -36,7 +28,6 @@
                 <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
               </li>
             </ul>
-
 
             <input v-model="this.customer.Name" type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
             <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
@@ -68,10 +59,12 @@
 <script>
 import axios from '../../axios-auth.js'
 import Popup from '../views/popUp.vue';
+import Header from '../views/Header.vue';
 
 export default {
   components: {
     Popup,
+    Header
   },
   data() {
     return {
@@ -104,7 +97,11 @@ export default {
         this.$refs.Popup.popUpError("Selecteer een type!");
       }
       else {
-        axios.post("Customer", this.customer)
+        axios.post("Customer", this.customer, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt")
+          }
+        })
           .then((res) => {
             let customerId = res.data;
             console.log(customerId)
@@ -122,6 +119,7 @@ export default {
       axios.post("Document", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: "Bearer " + localStorage.getItem("jwt")
         }
       })
         .then((res) => {
@@ -141,6 +139,9 @@ export default {
     filterCustomer() {
       if (this.searchField != "") {
         axios.get("Customer/Filter", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt")
+          },
           params: {
             searchField: this.searchField
           }

@@ -18,12 +18,10 @@ namespace Back_end.Controllers
     {
         private readonly ILoginService loginService;
         private readonly IJwtValidationService jwtValidationService;
-        private readonly IMailService mailService;
-        public LoginController(ILoginService lo, IJwtValidationService jwtv, IMailService ms)
+        public LoginController(ILoginService lo, IJwtValidationService jwtv)
         {
             loginService = lo;
             jwtValidationService = jwtv;
-            mailService = ms;
         }
 
         [AllowAnonymous]
@@ -37,7 +35,6 @@ namespace Back_end.Controllers
                 if (currentUser != null)
                 {
                     var token = jwtValidationService.GenerateToken();
-                    // mailService.SendEmail("customerName",  new DateTime(2023, 10, 10), Models.Type.Certificaat);
                     return Ok(token);
                 }
                 return NotFound("Email of wachtwoord incorrect");

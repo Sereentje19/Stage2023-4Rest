@@ -1,12 +1,5 @@
 <template>
-  <div class="header">
-    <a href="/overzicht"><img id="logoHeader" src="@/assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
-    <div id="buttonsHeader">
-      <router-link to="/overzicht">Overzicht</router-link>
-      <router-link to="/uploaden">Document uploaden</router-link>
-      <router-link to="/">Uitloggen</router-link>
-    </div>
-  </div>
+  <Header></Header>
   <div class="overviewContainer">
     <div class="info">
       <ul>
@@ -32,19 +25,27 @@
       </ul>
     </div>
     <div class="foto">
-      <img class="foto" :src="this.document.image" alt="image not shown" />
+      <img class="foto" :src="'data:image/jpeg;base64,' + this.document.image" alt="image not shown" />
     </div>
   </div>
+
+  <Popup ref="Popup" />
 </template>
 
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
+import Popup from '../views/popUp.vue';
+import Header from '../views/Header.vue';
 
 export default {
   name: "Quiz",
   props: {
     id: Number,
+  },
+  components: {
+    Popup,
+    Header
   },
   data() {
     return {
@@ -65,23 +66,30 @@ export default {
   },
   methods: {
     getDocuments() {
-      axios.get("Document/" + this.id)
+      axios.get("Document/" + this.id, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        }
+      })
         .then((res) => {
           this.document = res.data.document;
           this.document.type = res.data.type
-          console.log(this.document)
 
           this.getCustomerName(this.document.customerId);
         }).catch((error) => {
-          alert(error.response.data);
+          this.$refs.Popup.popUpError(error.response.data);
         });
     },
     getCustomerName(id) {
-      axios.get("Customer/" + id)
+      axios.get("Customer/" + id, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        }
+      })
         .then((res) => {
           this.customer = res.data;
         }).catch((error) => {
-          alert(error.response.data);
+          this.$refs.Popup.popUpError(error.response.data);
         });
     },
     formatDate(date) {
@@ -103,6 +111,9 @@ export default {
 .foto {
   max-height: 500px;
   max-width: 500px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   margin-left: auto;
 }
 
@@ -114,5 +125,4 @@ export default {
   font-size: 30px;
   font-weight: 500;
 }
-
 </style>

@@ -13,10 +13,30 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
-        public List<Document> GetAll()
+        public (IEnumerable<object>, Pager) GetAllPagedDocuments(bool isArchived, int page, int pageSize)
         {
-            return _documentRepository.GetAll();
+            IEnumerable<Document> filteredDocuments = _documentRepository.GetAll(isArchived);
+
+            int totalArchivedDocuments = filteredDocuments.Count();
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            var pager = new Pager(totalArchivedDocuments, page, pageSize);
+
+            var pagedDocuments = filteredDocuments
+                .Skip(skipCount)
+                .Take(pageSize)
+                .Select(doc => new
+                {
+                    doc.DocumentId,
+                    doc.Image,
+                    doc.Date,
+                    doc.CustomerId,
+                    Type = doc.Type.ToString()
+                })
+                .ToList();
+
+            return (pagedDocuments.Cast<object>(), pager);
         }
+
 
         public Document GetById(int id)
         {

@@ -20,9 +20,24 @@ namespace Back_end.Repositories
             return _dbSet.Find(id);
         }
 
-        public List<Document> GetAll()
+        public IEnumerable<Document> GetAll(bool isArchived)
         {
-            return _dbSet.ToList();
+            IEnumerable<Document> allDocuments = _dbSet.ToList();
+            IEnumerable<Document> filteredDocuments;
+            DateTime currentDate = DateTime.Now;
+
+            if (isArchived)
+            {
+                filteredDocuments = allDocuments.Where(doc => doc.Date < currentDate)
+                .OrderByDescending(doc => doc.Date);
+            }
+            else
+            {
+                filteredDocuments = allDocuments.Where(doc => doc.Date > currentDate)
+                .OrderBy(doc => doc.Date);
+            }
+
+            return filteredDocuments;
         }
 
         public void Add(Document entity)

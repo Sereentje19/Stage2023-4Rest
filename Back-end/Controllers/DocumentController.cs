@@ -24,56 +24,32 @@ namespace Back_end.Controllers
             jwtValidationService = jwtv;
         }
 
-
         [HttpGet]
         public IActionResult GetDocuments(int page = 1, int pageSize = 5, bool isArchived = false)
         {
-            List<Models.Document> allDocuments = documentService.GetAll();
-
-            IEnumerable<Models.Document> filteredDocuments;
-            DateTime currentDate = DateTime.Now;
-
-            if (isArchived)
+            try
             {
-                filteredDocuments = allDocuments.Where(doc => doc.Date < currentDate)
-                .OrderByDescending(doc => doc.Date);
-            }
-            else
-            {
-                filteredDocuments = allDocuments.Where(doc => doc.Date > currentDate)
-                .OrderBy(doc => doc.Date);
-            }
+                jwtValidationService.ValidateToken(HttpContext);
+                var (pagedDocuments, pager) = documentService.GetAllPagedDocuments(isArchived, page, pageSize);
 
-            int totalArchivedDocuments = filteredDocuments.Count();
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(totalArchivedDocuments, page, pageSize);
-
-            var pagedDocuments = filteredDocuments
-                .Skip(skipCount)
-                .Take(pageSize)
-                .Select(doc => new
+                var response = new
                 {
-                    doc.DocumentId,
-                    doc.Image,
-                    doc.Date,
-                    doc.CustomerId,
-                    Type = doc.Type.ToString()
-                })
-                .ToList();
+                    Documents = pagedDocuments,
+                    Pager = new
+                    {
+                        pager.TotalItems,
+                        pager.CurrentPage,
+                        pager.PageSize,
+                        pager.TotalPages,
+                    }
+                };
 
-            var response = new
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
-                Documents = pagedDocuments,
-                Pager = new
-                {
-                    pager.TotalItems,
-                    pager.CurrentPage,
-                    pager.PageSize,
-                    pager.TotalPages,
-                }
-            };
-
-            return Ok(response);
+                return StatusCode(401, ex.Message);
+            }
         }
 
 
@@ -82,16 +58,23 @@ namespace Back_end.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
-            var document = documentService.GetById(id);
-
-            var response = new
+            try
             {
-                Document = document,
-                type = document.Type.ToString()
-            };
+                jwtValidationService.ValidateToken(HttpContext);
+                var document = documentService.GetById(id);
 
-            return Ok(response);
+                var response = new
+                {
+                    Document = document,
+                    type = document.Type.ToString()
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
         }
 
         [HttpPost]
@@ -99,7 +82,7 @@ namespace Back_end.Controllers
         {
             try
             {
-                // jwtValidationService.ValidateToken(HttpContext);
+                jwtValidationService.ValidateToken(HttpContext);
 
                 Models.Document doc = new Models.Document
                 {
@@ -126,9 +109,16 @@ namespace Back_end.Controllers
         [HttpPut]
         public IActionResult Put(Models.Document doc)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
-            documentService.Put(doc);
-            return Ok(new { message = "Document updated" });
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                documentService.Put(doc);
+                return Ok(new { message = "Document updated" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
         }
     }
 }
