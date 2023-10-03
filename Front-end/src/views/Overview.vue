@@ -106,9 +106,11 @@ export default {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
 
+
           for (let index = 0; index < this.documents.length; index++) {
             const customerId = this.documents[index].customerId;
             this.getCustomerName(customerId, index);
+            this.documents[index].type = this.replaceUnderscoreForSpace(this.documents[index].type);
           }
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -142,6 +144,9 @@ export default {
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);
       return (ageInDays <= days)
+    },
+    replaceUnderscoreForSpace(value) {
+      return value.replace(/_/g, ' ');
     },
   },
   computed: {
@@ -194,7 +199,7 @@ export default {
 #klantnaamTekst,
 #typeTekst {
   max-width: 350px;
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }

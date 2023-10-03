@@ -155,6 +155,7 @@ export default {
     fillCustomer(cus) {
       this.customer.Email = cus.email;
       this.customer.Name = cus.name;
+      this.searchField = "";
     },
     handleFileChange(event) {
       this.selectedFile = event.target.files[0]

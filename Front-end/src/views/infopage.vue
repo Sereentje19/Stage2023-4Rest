@@ -9,7 +9,7 @@
           Document:
         </div>
         <div id="documentInfo">
-          Documenttype: &nbsp;&nbsp; {{ this.document.type }}
+          Documenttype: &nbsp; {{ this.document.type }}
           <br>
           VervalDatum: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.document.date) }}
         </div>
@@ -20,7 +20,7 @@
         <div id="documentInfo">
           Klantnaam: &nbsp;&nbsp; {{ this.customer.name }}
           <br>
-          Klantemail: &nbsp;&nbsp;&nbsp;&nbsp; {{ this.customer.email }}
+          Klantemail: &nbsp;&nbsp; {{ this.customer.email }}
         </div>
       </ul>
     </div>
