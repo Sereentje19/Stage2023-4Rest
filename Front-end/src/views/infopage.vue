@@ -1,6 +1,6 @@
 <template>
   <Header></Header>
-  <div class="overviewContainer">
+  <div class="InfoContainer">
     <div class="info">
       <ul>
         <h1>Info</h1>
@@ -9,7 +9,7 @@
           Document:
         </div>
         <div id="documentInfo">
-          Documenttype: &nbsp;&nbsp; {{ this.document.type }}
+          Documenttype: &nbsp; {{ this.document.type }}
           <br>
           VervalDatum: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.document.date) }}
         </div>
@@ -20,7 +20,7 @@
         <div id="documentInfo">
           Klantnaam: &nbsp;&nbsp; {{ this.customer.name }}
           <br>
-          Klantemail: &nbsp;&nbsp;&nbsp;&nbsp; {{ this.customer.email }}
+          Klantemail: &nbsp;&nbsp; {{ this.customer.email }}
         </div>
       </ul>
     </div>
@@ -100,29 +100,7 @@ export default {
 
 </script>
 
-<style scoped>
-.overviewContainer {
-  width: 85%;
-  margin: auto;
-  margin-top: 80px;
-  display: flex;
-}
-
-.foto {
-  max-height: 500px;
-  max-width: 500px;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  margin-left: auto;
-}
-
-#documentInfo {
-  font-size: 20px;
-}
-
-#DocumentTitle {
-  font-size: 30px;
-  font-weight: 500;
-}
+<style>
+@import '../assets/Css/Info.css';
+@import '../assets/Css/Main.css';
 </style>

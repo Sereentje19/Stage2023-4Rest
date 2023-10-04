@@ -1,20 +1,40 @@
 <template>
-<div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
-      <div class="Error">
-      <img v-if="this.Message == 'Document is geupload!'" class="Succesimage" src="../assets/Pictures/Checked.png">
-        <img v-else class="Errorimage" src="../assets/Pictures/cancel.png">
+  <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
+    <div class="Error" :class="{ 'SuccessPopup': Message === 'Document is geupload!' }">
+      <div>
+        <div id="CrossCircle">
+          <div v-if="this.Message == 'Document is geupload!'" id="ErrorItem" class="SuccesPopup">
+            <Check /> &nbsp;&nbsp; Succes
+          </div>
+          <div v-else id="ErrorItem" class="ErrorPopup">
+            <CrossCircle /> &nbsp;&nbsp; Error
+          </div>
+          <div id="ErrorItemCross">
+            <button id="buttonClose" @click="togglePopup('popup2')"
+              :class="{ 'SuccessPopup': Message === 'Document is geupload!' }">
+              <Cross />
+            </button>
+          </div>
+        </div>
         <div id="message">
           {{ Message }}
         </div>
-        <button id="buttonClose" @click="togglePopup('popup2')"><b>x</b></button>
       </div>
     </div>
+  </div>
 </template>
 
-
-
 <script>
+import Cross from '../components/icons/IconCross.vue';
+import CrossCircle from '../components/icons/IconCrossCircle.vue';
+import Check from '../components/icons/IconCheck.vue';
+
 export default {
+  components: {
+    Cross,
+    CrossCircle,
+    Check
+  },
   props: {
     Message: String,
   },
@@ -43,7 +63,6 @@ export default {
     },
     closePopup() {
       this.activePopup = null;
-      // this.Message = "";
     },
   },
 };
@@ -51,41 +70,7 @@ export default {
 
 
 
-<style scoped>
-#buttonClose {
-  font-size: 25px;
-  background-color: #535353;
-  color: rgb(216, 216, 216);
-  border: none;
-}
-
-.Error {
-  color: rgb(216, 216, 216);
-  background-color: #535353;
-  font-size: 17px;
-  text-align: left;
-  display: flex;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.Errorimage {
-  width: 30px;
-  height: 30px;
-  margin: auto;
-}
-
-.popup-container {
-  position: fixed;
-  bottom: 1px;
-
-  right: -600px;
-  width: fit-content;
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
-  transition: right 0.3s ease-in-out;
-}
-
-#message {
-  margin: auto 20px auto 20px;
-}
+<style>
+@import '../assets/Css/Main.css';
+@import '../assets/Css/Popup.css';
 </style>

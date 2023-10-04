@@ -44,31 +44,8 @@ export default {
 };
 </script>
   
-<style scoped>
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-button {
-    margin-right: 10px;
-    margin-top: 2px;
-    display: flex;
-    padding: 5px 10px;
-    cursor: pointer;
-    background-color: #afaeae;
-    color: rgb(14, 12, 12);
-    border-radius: 3px;
-    border: none;
-}
-
-#button2 {
-    margin-left: 10px;
-}
-
-button[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-}</style>
   
+<style>
+@import '../assets/Css/Main.css';
+@import '../assets/Css/Pagination.css';
+</style>

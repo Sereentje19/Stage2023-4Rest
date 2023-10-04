@@ -1,0 +1,176 @@
+
+#myUL {
+    list-style-type: none;
+    padding: 0;
+    z-index: 10;
+    position: absolute;
+    margin-top: 49px;
+    margin-left: 128px;
+    width: 350px;
+  }
+  
+  #myUL li #searchList {
+    border: 1px solid rgb(155, 155, 155);
+    border-top: none;
+    background-color: #f6f6f6;
+    padding: 10px;
+    font-size: 18px;
+    color: black;
+    margin: auto;
+    cursor: pointer;
+  }
+  
+  .leftSide {
+    margin-right: auto;
+  }
+  
+  .rightSide {
+    display: flex;
+    flex-direction: column;
+    margin-top: 117px;
+  }
+  
+  .uploadContainer {
+    width: 85%;
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    margin-bottom: 50px;
+  }
+  
+  .dropArea.active {
+    border: 2px dashed #007bff;
+    background-color: #f5f5f5;
+  }
+  
+  .dropArea {
+    position: relative;
+    height: 400px;
+    background-color: white;
+    color: #717171;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 400px;
+    max-height: 380px;
+    transition: background-color 0.3s, border 0.3s;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 5px;
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+  
+  }
+  
+  #p {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    display: block;
+    background-image: url(../Pictures/move.png);
+  }
+  
+  body {
+    background-color: #d9d9d9;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  #folderImage {
+    width: 50px;
+    padding: 3px;
+    margin-left: auto;
+  }
+  
+  #selectDocument {
+    margin-top: auto;
+    padding: 12px;
+  }
+  
+  .overlay {
+    position: relative;
+    top: 30px;
+    background: #22421f;
+    color: white;
+    font-size: 25px;
+    width: 400px;
+    border-radius: 5px;
+    display: flex;
+    cursor: pointer;
+  }
+  
+  .file {
+    display: none;
+  }
+  
+  .gegevens {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-top: 2px;
+  }
+  
+  
+  #searchOutput {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    margin-left: auto;
+    z-index: 20;
+  }
+  
+  #searchOutputButtons {
+    background-color: white;
+  }
+  
+  .Naam,
+  .Email,
+  .Date,
+  .Type {
+    right: 350px;
+    background-color: #f4f4f4;
+    font-size: 20px;
+    padding: 12px;
+    width: 450px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: black solid 1px;
+  }
+  
+  .Type {
+    width: 477px;
+  }
+  
+  .Zoek {
+    margin-left: auto;
+    width: 350px;
+    background-color: #f4f4f4;
+    font-size: 20px;
+    padding: 12px;
+    border: black solid 1px;
+    border-radius: 5px;
+  }
+  
+  .Naam {
+    margin-top: 90px;
+  }
+  
+  
+  .verstuur {
+    margin-left: auto;
+    font-size: 20px;
+    background-color: #22421f;
+    color: white;
+    padding: 12px;
+    font-size: 25px;
+    border-radius: 5px;
+    border: none;
+  }

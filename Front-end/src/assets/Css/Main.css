@@ -1,0 +1,10 @@
+button {
+    cursor: pointer;
+    border: none;
+}
+
+  
+body {
+    background-color: #afaeae;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }

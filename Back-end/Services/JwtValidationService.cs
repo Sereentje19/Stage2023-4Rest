@@ -31,7 +31,7 @@ namespace Back_end.Services
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 null,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: DateTime.Now.AddMinutes(45),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -44,7 +44,7 @@ namespace Back_end.Services
 
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
-                throw new Exception("No token provided");
+                throw new Exception("inloggen vereist");
             }
 
             // Extract JWT token from the header
@@ -70,17 +70,9 @@ namespace Back_end.Services
                 // Assuming you want to retrieve the subject (name) from the token
                 return claimsPrincipal.Identity.Name;
             }
-            catch (SecurityTokenExpiredException)
-            {
-                throw new Exception("Token expired");
-            }
-            catch (SecurityTokenInvalidSignatureException)
-            {
-                throw new Exception("Invalid token signature");
-            }
             catch (Exception)
             {
-                throw new Exception("Invalid token");
+                throw new Exception("Opnieuw inloggen vereist");
             }
         }
 
