@@ -57,6 +57,7 @@
     background-color: #ffffff;
     height: 47px;
     padding-top: 5px;
+    border-radius:  4px 0px 0px 4px;
   }
   
   .cirkel {
@@ -97,7 +98,8 @@
     color: white;
     margin-left: 10%;
     cursor: pointer;
-  }
+    display: unset;
+}
   
   #inputWachtwoord,
   #inputEmail {
@@ -109,6 +111,7 @@
     height: 50px;
     font-size: 22px;
     padding-left: 10px;
+    border-radius: 0px 4px 4px 0px;
   }
   
   #inputWachtwoord {
