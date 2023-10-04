@@ -16,5 +16,6 @@ export default {
 </script>
 
 <style>
+@import '../assets/Css/Main.css';
 @import '../assets/Css/Header.css';
 </style>
