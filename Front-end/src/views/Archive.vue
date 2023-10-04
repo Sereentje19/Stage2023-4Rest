@@ -134,5 +134,7 @@ export default {
   
   
 <style>
+@import '../assets/Css/Overview.css';
+@import '../assets/Css/Main.css';
 @import '../assets/Css/Archive.css';
 </style>
