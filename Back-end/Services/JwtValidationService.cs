@@ -19,10 +19,13 @@ namespace Back_end.Services
         }
 
         /// <summary>
-        /// wat doet de functie
-        ///  wat die returnt
+        /// Generates a JSON Web Token (JWT) with the specified claims and expiration time.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>
+        /// This method creates a JWT token using the provided configuration settings for the issuer, audience,
+        /// and signing key, and sets an expiration time of 30 minutes from the current time.
+        /// </remarks>
+        /// <returns>The generated JWT token as a string.</returns>
         public string GenerateToken()
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -31,14 +34,53 @@ namespace Back_end.Services
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 null,
-                expires: DateTime.Now.AddMinutes(45),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
+        /// <summary>
+        /// Validates and decodes a JSON Web Token (JWT) extracted from the HTTP context's Authorization header.
+        /// </summary>
+        /// <param name="context">The HTTP context containing the Authorization header with the JWT token.</param>
+        /// <returns>
+        /// The name (subject) extracted from the JWT token if validation succeeds.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// Thrown when the JWT token is missing or in an invalid format, or if the token validation fails.
+        /// The exception message provides guidance for reauthentication.
+        /// </exception>
         public string ValidateToken(HttpContext context)
+        {
+            string jwtToken = ExtractJwtToken(context);
+            var tokenValidationParameters = ConfigureTokenValidationParameters();
+
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var claimsPrincipal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out _);
+
+                return claimsPrincipal.Identity.Name;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Opnieuw inloggen vereist");
+            }
+        }
+
+        /// <summary>
+        /// Extracts a JSON Web Token (JWT) from the Authorization header of the provided HTTP context.
+        /// </summary>
+        /// <param name="context">The HTTP context containing the Authorization header.</param>
+        /// <returns>
+        /// The JWT token extracted from the Authorization header.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// Thrown when the Authorization header is missing or not in the expected "Bearer [Token]" format.
+        /// The exception message indicates that login is required.
+        /// </exception>
+        private string ExtractJwtToken(HttpContext context)
         {
             string authHeader = context.Request.Headers["Authorization"].ToString();
 
@@ -47,11 +89,18 @@ namespace Back_end.Services
                 throw new Exception("inloggen vereist");
             }
 
-            // Extract JWT token from the header
-            string jwtToken = authHeader.Substring("Bearer ".Length);
+            return authHeader.Substring("Bearer ".Length);
+        }
 
-            // Create token validation parameters
-            var tokenValidationParameters = new TokenValidationParameters
+        /// <summary>
+        /// Configures the parameters used for validating JSON Web Tokens (JWTs).
+        /// </summary>
+        /// <returns>
+        /// An instance of <see cref="TokenValidationParameters"/> configured with specific settings for JWT validation.
+        /// </returns>
+        private TokenValidationParameters ConfigureTokenValidationParameters()
+        {
+            return new TokenValidationParameters
             {
                 ValidateIssuer = false,
                 ValidateAudience = false,
@@ -60,21 +109,8 @@ namespace Back_end.Services
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey)),
                 ClockSkew = TimeSpan.Zero
             };
-
-            try
-            {
-                // Validate and decode JWT token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var claimsPrincipal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out _);
-
-                // Assuming you want to retrieve the subject (name) from the token
-                return claimsPrincipal.Identity.Name;
-            }
-            catch (Exception)
-            {
-                throw new Exception("Opnieuw inloggen vereist");
-            }
         }
+
 
     }
 }

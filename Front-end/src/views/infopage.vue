@@ -3,7 +3,7 @@
   <div class="InfoContainer">
     <div class="info">
       <ul>
-        <h1>Info</h1>
+          <h1>Info</h1>
         <br>
         <div id="DocumentTitle">
           Document:
@@ -13,6 +13,7 @@
           <br>
           VervalDatum: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.document.date) }}
         </div>
+        <button @click="toEdit('document')" id="EditButton">Edit</button>
         <br><br><br>
         <div id="DocumentTitle">
           klant:
@@ -22,6 +23,7 @@
           <br>
           Klantemail: &nbsp;&nbsp; {{ this.customer.email }}
         </div>
+        <button @click="toEdit('klant')" id="EditButton">Edit</button>
       </ul>
     </div>
     <div class="foto">
@@ -39,7 +41,7 @@ import Popup from '../views/popUp.vue';
 import Header from '../views/Header.vue';
 
 export default {
-  name: "Quiz",
+  name: "Info",
   props: {
     id: Number,
   },
@@ -91,6 +93,9 @@ export default {
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
+    },
+    toEdit(route){
+      this.$router.push("/edit/" + route);
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");

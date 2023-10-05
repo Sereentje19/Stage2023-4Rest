@@ -4,12 +4,14 @@ import Overview from '../views/Overview.vue';
 import Uploaden from '../views/Uploaden.vue';
 import infopage from '../views/Infopage.vue';
 import archief from '../views/Archive.vue';
+import Edit from '../views/Edit.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', component: Login },
     { path: '/infopage/:id', component: infopage, props: true},
+    { path: '/Edit/:route', component: Edit, props: true},
     { path: '/uploaden', component: Uploaden },
     { path: '/archief', component: archief },
     { path: '/overzicht', component: Overview ,

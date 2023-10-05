@@ -4,7 +4,7 @@
         <div id="buttonsHeader">
             <router-link to="/overzicht">Overzicht</router-link>
             <router-link to="/uploaden">Document uploaden</router-link>
-            <router-link to="/">Uitloggen</router-link>
+            <router-link to="/" @click="logOut">Uitloggen</router-link>
         </div>
     </div>
 </template>
@@ -12,7 +12,14 @@
 <script>
 export default {
     name: "Header",
+    methods: {
+        logOut() {
+            localStorage.setItem("jwt", "");
+        }
+    }
 };
+
+
 </script>
 
 <style>
