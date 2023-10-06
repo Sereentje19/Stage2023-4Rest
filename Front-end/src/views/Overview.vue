@@ -10,7 +10,7 @@
         <h3 id="urgentie">Urgentie</h3>
         <h3 id="klantnaam">Klantnaam</h3>
         <h3 id="geldigVan">Geldig tot</h3>
-        <h3 id="geldigTot">Aantal dagen</h3>
+        <h3 id="geldigTot">Verloopt in</h3>
         <h3 id="Type">Type document</h3>
       </div>
 
@@ -138,7 +138,25 @@ export default {
     },
     daysAway(date) {
       const ageInDays = this.caculationDays(date);
-      return ageInDays
+      const week = 7;
+      const month = 30;
+      const year = 365;
+      var time;
+
+      if (ageInDays >= year) {
+        time = Math.floor(ageInDays / year) + " jaar"
+      }
+      else if (ageInDays >= (month * 2)) {
+        time = Math.floor(ageInDays / month) + " maanden"
+      }
+      else if (ageInDays >= (week * 2)) {
+        time = Math.floor(ageInDays / week) + " weken"
+      }
+      else {
+        time = ageInDays + " dagen"
+      }
+
+      return time
     },
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);
