@@ -132,7 +132,6 @@ Console.WriteLine(document.Type);
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-            Console.WriteLine(doc.Type + "blabla");
                 documentService.Put(doc);
                 return Ok(new { message = "Document updated" });
             }

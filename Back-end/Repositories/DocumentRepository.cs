@@ -62,19 +62,18 @@ namespace Back_end.Repositories
         /// <param name="entity">The document entity to be updated.</param>
         public void Update(Document entity)
         {
-            Console.WriteLine(entity.Type);
             var existingDocument = _dbSet.Find(entity.DocumentId);
-            entity.Image = existingDocument.Image;
 
             if (entity.Type == Models.Type.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
             {
                 throw new Exception("Datum of type is leeg.");
             }
 
-
             _context.Entry(existingDocument).CurrentValues.SetValues(entity);
+            _context.Entry(existingDocument).Property(x => x.Image).IsModified = false;
             _context.SaveChanges();
         }
+
 
     }
 }

@@ -170,7 +170,7 @@ export default {
     onBlur() {
       setTimeout(() => {
         this.isFocused = false;
-      }, 100);
+      }, 200);
     },
     handleDragOver(e) {
       e.preventDefault();
