@@ -79,8 +79,9 @@ export default {
   mounted() {
     this.getDocuments();
 
-    if (this.$route.query.activePopup) {
+    if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.Popup.popUpError("Document is geupload!");
+      localStorage.setItem('popUpSucces', 'false');
     }
   },
   methods: {

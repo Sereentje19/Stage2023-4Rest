@@ -45,7 +45,7 @@
           </form>
         </ul>
 
-        <button @click="this.CreateDocument()" class="verstuur" type="button">
+        <button @click="this.CreateDocument()" class="verstuur">
           Verstuur document
         </button>
       </div>
@@ -124,6 +124,7 @@ export default {
         }
       })
         .then((res) => {
+          localStorage.setItem('popUpSucces', 'true');
           this.$router.push({ path: '/Overzicht', query: { activePopup: true } });
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
