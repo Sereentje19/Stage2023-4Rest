@@ -6,8 +6,8 @@
 
             <form action="/action_page.php">
                 <div class="gegevensEdit" v-if="this.route == 'klant'">
-                    <input v-model="this.customer.Name" type="text" class="NaamEdit" placeholder="Naam klant" name="Zoek" />
-                    <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
+                    <input v-model="this.customer.Name" :placeholder="this.customer.name" class="NaamEdit" />
+                    <input v-model="this.customer.Email" :placeholder="this.customer.email" class="Email" />
                 </div>
                 <div class="gegevensEdit" v-else>
                     <select v-model="this.document.Type" class="Type" name="Type">
@@ -20,14 +20,12 @@
                         <option value="6">Certificaat</option>
                         <option value="7">Lease auto</option>
                     </select>
-                    <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="Date"
-                        name="Date" />
+                    <input v-model="formattedDate" type="date" class="Date" name="Date" />
+
                 </div>
             </form>
-
-            <button @click="this.getCurrectDocument()" class="verstuurEdit" type="button">
-                Verstuur document
-            </button>
+            <button @click="route === 'document' ? putDocument() : putCustomer()" class="verstuurEdit">Verstuur
+                document</button>
         </div>
 
         <Popup ref="Popup" />
@@ -57,39 +55,49 @@ export default {
                 Email: '',
             },
             document: {
-                DocumentId: 0,
+                DocumentId: parseInt(this.id, 10),
                 Type: 0,
-                Date: new Date().toISOString().split('T')[0],
+                Date: "",
                 CustomerId: 0,
             },
             filteredCustomers: []
         };
     },
+    mounted() {
+        this.getCustomerId();
+    },
     methods: {
-        Edit(customerId) {
-
-            console.log(customerId)
-            if (this.route == 'document') {
-                this.putDocument(customerId);
-            }
-            else {
-                this.putCustomer(customerId);
-            }
-        },
-        getCurrectDocument() {
+        getCustomerId() {
             axios.get("Document/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
             })
                 .then((res) => {
-                    this.Edit(res.data.document.customerId);
+                    this.customer.CustomerId = res.data.document.customerId;
+                    this.document.CustomerId = res.data.document.customerId;
+                    this.document.Date = res.data.document.date;
+                    this.document.Type = res.data.document.type;
+                    console.log(this.document.Date)
+                    this.getCustomerInfo(res.data.document.customerId);
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        putCustomer(customerId) {
-            this.customer.CustomerId = customerId;
+        getCustomerInfo(customerId) {
+            axios.get("Customer/" + customerId, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    this.customer = res.data;
+                    console.log(res.data)
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
+        putCustomer() {
             axios.put("Customer", this.customer, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -102,11 +110,8 @@ export default {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        putDocument(customerId) {
-            this.document.DocumentId = parseInt(this.id, 10);
-            this.document.CustomerId = customerId;
-    this.document.Type = parseInt(this.document.Type, 10);
-            console.log(this.document)
+        putDocument() {
+            this.document.Type = parseInt(this.document.Type, 10);
             axios.put("Document", this.document, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -118,6 +123,16 @@ export default {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
+    },
+    computed: {
+        formattedDate: {
+            get() {
+                return this.document.Date.split('T')[0];
+            },
+            set(newDate) {
+                this.document.Date = newDate;
+            },
+        }
     },
 };
 </script>

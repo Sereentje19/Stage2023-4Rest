@@ -71,6 +71,7 @@ namespace Back_end.Repositories
 
             _context.Entry(existingDocument).CurrentValues.SetValues(entity);
             _context.Entry(existingDocument).Property(x => x.Image).IsModified = false;
+            _context.Entry(existingDocument).Property(x => x.CustomerId).IsModified = false;
             _context.SaveChanges();
         }
 

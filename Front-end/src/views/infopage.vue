@@ -6,7 +6,7 @@
           <h1>Info</h1>
         <br>
         <div id="DocumentTitle">
-          Document:
+          Document
         </div>
         <div id="documentInfo">
           Documenttype: &nbsp; {{ this.document.type }}
@@ -16,7 +16,7 @@
         <button @click="toEdit('document')" id="EditButton">Edit</button>
         <br><br><br>
         <div id="DocumentTitle">
-          klant:
+          klant
         </div>
         <div id="documentInfo">
           Klantnaam: &nbsp;&nbsp; {{ this.customer.name }}
