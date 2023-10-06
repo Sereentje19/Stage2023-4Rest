@@ -4,28 +4,28 @@
         <div class="uploadContainerEdit">
             <h1 id="h1">Edit {{ this.route }}</h1>
 
-            <form  action="/action_page.php">
-                <div class="gegevensEdit" v-if="this.route == 'document'">
+            <form action="/action_page.php">
+                <div class="gegevensEdit" v-if="this.route == 'klant'">
                     <input v-model="this.customer.Name" type="text" class="NaamEdit" placeholder="Naam klant" name="Zoek" />
                     <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
                 </div>
                 <div class="gegevensEdit" v-else>
-                <select v-model="this.document.Type" class="Type" name="Type">
-                    <option value="0">Selecteer type...</option>
-                    <option value="1">Vog</option>
-                    <option value="2">Contract</option>
-                    <option value="3">Paspoort</option>
-                    <option value="4">id kaart</option>
-                    <option value="5">Diploma</option>
-                    <option value="6">Certificaat</option>
-                    <option value="7">Lease auto</option>
-                </select>
-                <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="Date"
-                    name="Date" />
+                    <select v-model="this.document.Type" class="Type" name="Type">
+                        <option value="0">Selecteer type...</option>
+                        <option value="1">Vog</option>
+                        <option value="2">Contract</option>
+                        <option value="3">Paspoort</option>
+                        <option value="4">id kaart</option>
+                        <option value="5">Diploma</option>
+                        <option value="6">Certificaat</option>
+                        <option value="7">Lease auto</option>
+                    </select>
+                    <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="Date"
+                        name="Date" />
                 </div>
             </form>
 
-            <button @click="this.CreateDocument()" class="verstuurEdit" type="button">
+            <button @click="this.getCurrectDocument()" class="verstuurEdit" type="button">
                 Verstuur document
             </button>
         </div>
@@ -47,15 +47,10 @@ export default {
     },
     props: {
         route: String,
+        id: Number
     },
     data() {
         return {
-            isFocused: false,
-            selectedFile: null,
-            dropAreaActive: false,
-            displayImage: false,
-            searchField: "",
-            uploadedFileName: '',
             customer: {
                 CustomerId: 0,
                 Name: '',
@@ -71,101 +66,57 @@ export default {
         };
     },
     methods: {
-        CreateDocument() {
-            if (this.selectedFile == null) {
-                this.$refs.Popup.popUpError("Selecteer een bestand!");
-            }
-            else if (this.document.Type == 0) {
-                this.$refs.Popup.popUpError("Selecteer een type!");
+        Edit(customerId) {
+
+            console.log(customerId)
+            if (this.route == 'document') {
+                this.putDocument(customerId);
             }
             else {
-                axios.post("Customer", this.customer, {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("jwt")
-                    }
-                })
-                    .then((res) => {
-                        let customerId = res.data;
-                        console.log(customerId)
-                        this.postDocument(customerId);
-
-                    }).catch((error) => {
-                        this.$refs.Popup.popUpError(error.response.data);
-                    });
+                this.putCustomer(customerId);
             }
         },
-        postDocument(customerId) {
-            let formData = this.CreateFromData(customerId);
-            console.log(this.selectedFile)
-
-            axios.post("Document", formData, {
+        getCurrectDocument() {
+            axios.get("Document/" + this.id, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
             })
                 .then((res) => {
-                    this.$router.push({ path: '/Overzicht', query: { activePopup: true } });
+                    this.Edit(res.data.document.customerId);
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        CreateFromData(customerId) {
-            let formData = new FormData();
-            formData.append('file', this.selectedFile);
-            formData.append('document.Type', this.document.Type);
-            formData.append('document.Date', this.document.Date);
-            formData.append('document.CustomerId', customerId);
-            return formData;
-        },
-        filterCustomer() {
-            if (this.searchField != "") {
-                axios.get("Customer/Filter", {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("jwt")
-                    },
-                    params: {
-                        searchField: this.searchField
-                    }
-                })
-                    .then((res) => {
-                        this.filteredCustomers = res.data;
-                        console.log(this.filteredCustomers)
-                    }).catch((error) => { });
-            }
-        },
-        fillCustomer(cus) {
-            this.customer.Email = cus.email;
-            this.customer.Name = cus.name;
-            this.searchField = "";
-        },
-        handleFileChange(event) {
-            this.selectedFile = event.target.files[0]
+        putCustomer(customerId) {
+            this.customer.CustomerId = customerId;
+            axios.put("Customer", this.customer, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
 
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.fileContents = reader.result;
-            };
-            reader.readAsBinaryString(this.selectedFile)
+                    this.$router.push("/infopage/" + this.id);
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
         },
-        onBlur() {
-            setTimeout(() => {
-                this.isFocused = false;
-            }, 100);
-        },
-        handleDragOver(e) {
-            e.preventDefault();
-            this.dropAreaActive = true;
-        },
-        handleDragLeave(e) {
-            e.preventDefault();
-            this.dropAreaActive = false;
-        },
-        handleDrop(e) {
-            e.preventDefault();
-            this.dropAreaActive = false;
-            const files = e.dataTransfer.files;
-            this.processFile(files[0]);
+        putDocument(customerId) {
+            this.document.DocumentId = parseInt(this.id, 10);
+            this.document.CustomerId = customerId;
+    this.document.Type = parseInt(this.document.Type, 10);
+            console.log(this.document)
+            axios.put("Document", this.document, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    this.$router.push("/infopage/" + this.id);
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
         },
     },
 };

@@ -8,49 +8,31 @@ namespace Back_end.Services
         private readonly IServiceProvider _provider;
         private readonly ILogger<DocumentExpirationCheckService> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the DocumentExpirationCheckService class with the provided dependencies.
+        /// </summary>
+        /// <param name="provider">The service provider for dependency injection.</param>
+        /// <param name="logger">The logger used for logging.</param>
         public DocumentExpirationCheckService(IServiceProvider provider, ILogger<DocumentExpirationCheckService> logger)
         {
             _provider = provider;
             _logger = logger;
         }
 
-        private List<Document> getDateList(NotificationContext dbContext, DateTime targetDate5Weeks, DateTime targetDate6Weeks)
-        {
-            var expiringDocuments6Weeks = dbContext.Documents
-                .Where(d => d.Date.Date == targetDate6Weeks.Date)
-                .ToList();
-
-            var expiringDocuments5Weeks = dbContext.Documents
-                .Where(d => d.Date.Date == targetDate5Weeks.Date)
-                .ToList();
-
-            var expiringDocuments = expiringDocuments6Weeks.Concat(expiringDocuments5Weeks).ToList();
-            return expiringDocuments;
-        }
-
+        /// <summary>
+        /// Executes the document expiration check logic in a background task.
+        /// </summary>
+        /// <param name="stoppingToken">The cancellation token to stop the background task.</param>
+        /// <returns>A task representing the execution of the background task.</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 using (var scope = _provider.CreateScope())
                 {
-                    NotificationContext dbContext = scope.ServiceProvider.GetRequiredService<NotificationContext>();
-                    var mailService = scope.ServiceProvider.GetRequiredService<IMailService>();
-
-                    var targetDate6Weeks = DateTime.Now.AddDays(6 * 7);
-                    var targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
-
                     try
                     {
-                        List<Document> expiringDocuments = getDateList(dbContext, targetDate5Weeks, targetDate6Weeks);
-
-                        foreach (var document in expiringDocuments)
-                        {
-                            int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
-                            var customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.CustomerId);
-
-                            mailService.SendEmail(customer.Name, document.Date, document.Type, document.Image, weeks);
-                        }
+                        await ProcessExpiringDocumentsAsync(scope.ServiceProvider);
                     }
                     catch (Exception ex)
                     {
@@ -60,6 +42,32 @@ namespace Back_end.Services
 
                 var delay = TimeSpan.FromDays(1);
                 await Task.Delay(delay, stoppingToken);
+            }
+        }
+
+        /// <summary>
+        /// Processes expiring documents by checking their expiration dates and sending notifications.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider for dependency injection.</param>
+        /// <returns>A task representing the processing of expiring documents.</returns>
+        private async Task ProcessExpiringDocumentsAsync(IServiceProvider serviceProvider)
+        {
+            NotificationContext dbContext = serviceProvider.GetRequiredService<NotificationContext>();
+            var mailService = serviceProvider.GetRequiredService<IMailService>();
+
+            var targetDate6Weeks = DateTime.Now.AddDays(6 * 7);
+            var targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
+
+            var expiringDocuments = dbContext.Documents
+                        .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
+                        .ToList();
+
+            foreach (var document in expiringDocuments)
+            {
+                int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
+                var customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.CustomerId);
+
+                mailService.SendEmail(customer.Name, document.Date, document.Type, document.Image, weeks);
             }
         }
     }

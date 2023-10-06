@@ -95,7 +95,7 @@ export default {
         });
     },
     toEdit(route){
-      this.$router.push("/edit/" + route);
+      this.$router.push("/edit/" + route + "/" + this.id);
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");

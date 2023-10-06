@@ -10,17 +10,31 @@ namespace Back_end.Repositories
         private readonly NotificationContext _context;
         private readonly DbSet<Customer> _dbSet;
 
+        /// <summary>
+        /// Initializes a new instance of the CustomerRepository class with the provided NotificationContext.
+        /// </summary>
+        /// <param name="context">The NotificationContext used for database interactions.</param>
         public CustomerRepository(NotificationContext context)
         {
             _context = context;
             _dbSet = _context.Set<Customer>();
         }
 
+        /// <summary>
+        /// Retrieves a customer by their unique identifier (ID).
+        /// </summary>
+        /// <param name="id">The unique identifier of the customer to retrieve.</param>
+        /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
         public Customer GetById(int id)
         {
             return _dbSet.Find(id);
         }
 
+        /// <summary>
+        /// Filters and retrieves a collection of customers based on a search field.
+        /// </summary>
+        /// <param name="searchfield">The search field to filter customers by (can match customer name, email, or ID).</param>
+        /// <returns>A collection of customers matching the search criteria.</returns>
         public IEnumerable<Customer> FilterAll(string searchfield)
         {
             var filteredCustomers = _dbSet
@@ -34,31 +48,55 @@ namespace Back_end.Repositories
             return filteredCustomers;
         }
 
+
+        /// <summary>
+        /// Retrieves all customers from the repository.
+        /// </summary>
+        /// <returns>A collection containing all the customers in the repository.</returns>
         public IEnumerable<Customer> GetAll()
         {
             return _dbSet.ToList();
         }
 
+        /// <summary>
+        /// Adds a new customer to the repository.
+        /// </summary>
+        /// <param name="entity">The customer entity to be added.</param>
+        /// <returns>The unique identifier (ID) of the added customer, or the ID of an existing customer if the same name and email combination is found.</returns>
+        /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
         public int Add(Customer entity)
         {
-            if (entity.Name.Equals("") || entity.Email.Equals(""))
+            if (string.IsNullOrEmpty(entity.Name) || string.IsNullOrEmpty(entity.Email))
             {
                 throw new Exception("Klant naam of email is leeg.");
             }
 
-            List<Customer> customer = _dbSet.ToList();
+            var existingCustomer = _dbSet.FirstOrDefault(c => c.Name == entity.Name && c.Email == entity.Email);
 
-            foreach (Customer c in customer)
+            if (existingCustomer != null)
             {
-                if (c.Email == entity.Email && c.Name == entity.Name)
-                {
-                    return c.CustomerId;
-                }
+                return existingCustomer.CustomerId;
             }
 
             _dbSet.Add(entity);
             _context.SaveChanges();
             return entity.CustomerId;
+        }
+
+        /// <summary>
+        /// Updates an existing customer in the repository.
+        /// </summary>
+        /// <param name="entity">The document entity to be updated.</param>
+        public void Update(Customer entity)
+        {
+            if (string.IsNullOrEmpty(entity.Name) || string.IsNullOrEmpty(entity.Email))
+            {
+                throw new Exception("Klant naam of email is leeg.");
+            }
+
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
     }

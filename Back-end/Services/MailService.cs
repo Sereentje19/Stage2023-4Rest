@@ -10,11 +10,21 @@ namespace Back_end.Services
     {
         private string toEmail = "serena.kenter@4-rest.nl";
         private readonly MailSettings _mailSettings;
+
+        /// <summary>
+        /// Initializes a new instance of the MailService class.
+        /// </summary>
+        /// <param name="mailSettingsOptions">The configuration options for email settings.</param>
         public MailService(IOptions<MailSettings> mailSettingsOptions)
         {
             _mailSettings = mailSettingsOptions.Value;
         }
 
+        /// <summary>
+        /// Creates a MIME part for embedding an image in the email.
+        /// </summary>
+        /// <param name="image">The byte array representing the image data.</param>
+        /// <returns>The MIME part representing the embedded image.</returns>
         private MimePart SetImage(byte[] image)
         {
             var imagePart = new MimePart("image", "jpeg")
@@ -28,6 +38,15 @@ namespace Back_end.Services
             return imagePart;
         }
 
+        /// <summary>
+        /// Sets the HTML body of the email message with specific content and embeds an image.
+        /// </summary>
+        /// <param name="weeks">The number of weeks until document expiration.</param>
+        /// <param name="customerName">The name of the customer.</param>
+        /// <param name="date">The expiration date of the document.</param>
+        /// <param name="type">The type of the document.</param>
+        /// <param name="emailMessage">The MimeMessage to which the body will be set.</param>
+        /// <param name="image">The byte array representing the embedded image.</param>
         private void SetBody(int weeks, string customerName, DateTime date, Models.Type type, MimeMessage emailMessage, byte[] image)
         {
             BodyBuilder emailBodyBuilder = new BodyBuilder
@@ -53,6 +72,10 @@ namespace Back_end.Services
             emailMessage.Body = emailBodyBuilder.ToMessageBody();
         }
 
+        /// <summary>
+        /// Connects to the SMTP server, authenticates, and sends the email message.
+        /// </summary>
+        /// <param name="emailMessage">The MimeMessage to be sent.</param>
         private void ConnectAndSendMail(MimeMessage emailMessage)
         {
             using (MailKit.Net.Smtp.SmtpClient mailClient = new MailKit.Net.Smtp.SmtpClient())
@@ -64,6 +87,14 @@ namespace Back_end.Services
             }
         }
 
+        /// <summary>
+        /// Sends an email with document expiration information to a specified recipient.
+        /// </summary>
+        /// <param name="customerName">The name of the customer.</param>
+        /// <param name="date">The expiration date of the document.</param>
+        /// <param name="type">The type of the document.</param>
+        /// <param name="image">The byte array representing the embedded image.</param>
+        /// <param name="weeks">The number of weeks until document expiration.</param>
         public void SendEmail(string customerName, DateTime date, Models.Type type, byte[] image, int weeks)
         {
             try
@@ -77,7 +108,6 @@ namespace Back_end.Services
                     emailMessage.Subject = "Document vervalt Binnenkort!";
 
                     SetBody(weeks, customerName, date, type, emailMessage, image);
-
                     ConnectAndSendMail(emailMessage);
                 }
             }

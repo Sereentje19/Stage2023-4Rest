@@ -11,7 +11,7 @@ const router = createRouter({
   routes: [
     { path: '/', component: Login },
     { path: '/infopage/:id', component: infopage, props: true},
-    { path: '/Edit/:route', component: Edit, props: true},
+    { path: '/Edit/:route/:id', component: Edit, props: true},
     { path: '/uploaden', component: Uploaden },
     { path: '/archief', component: archief },
     { path: '/overzicht', component: Overview ,

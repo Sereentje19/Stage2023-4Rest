@@ -113,6 +113,7 @@ export default {
       }
     },
     postDocument(customerId) {
+      console.log(this.document)
       let formData = this.CreateFromData(customerId);
       console.log(this.selectedFile)
 

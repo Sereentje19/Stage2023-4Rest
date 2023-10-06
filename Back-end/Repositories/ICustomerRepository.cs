@@ -9,5 +9,6 @@ namespace Back_end.Repositories
         IEnumerable<Customer> FilterAll(string searchfield);
         IEnumerable<Customer> GetAll();
         int Add(Customer entity);
+        void Update(Customer entity);
     }
 }

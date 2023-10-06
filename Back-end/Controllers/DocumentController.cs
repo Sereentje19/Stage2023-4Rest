@@ -1,12 +1,7 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
-using System.Reflection.Metadata;
 using Back_end.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Drawing;
 
 namespace Back_end.Controllers
 {
@@ -18,12 +13,24 @@ namespace Back_end.Controllers
         private readonly IDocumentService documentService;
         private readonly IJwtValidationService jwtValidationService;
 
-        public DocumentController(IDocumentService ds, IJwtValidationService jwtv)
+        /// <summary>
+        /// Initializes a new instance of the DocumentController class.
+        /// </summary>
+        /// <param name="ds">The document service for managing documents.</param>
+        /// <param name="jwt">The JWT validation service for token validation.</param>
+        public DocumentController(IDocumentService ds, IJwtValidationService jwt)
         {
             documentService = ds;
-            jwtValidationService = jwtv;
+            jwtValidationService = jwt;
         }
 
+        /// <summary>
+        /// Retrieves a paged list of documents based on specified parameters.
+        /// </summary>
+        /// <param name="page">The page number to retrieve (default is 1).</param>
+        /// <param name="pageSize">The number of items per page (default is 5).</param>
+        /// <param name="isArchived">A flag indicating whether to retrieve archived documents (default is false).</param>
+        /// <returns>A collection of documents and pagination information.</returns>
         [HttpGet]
         public IActionResult GetDocuments(int page = 1, int pageSize = 5, bool isArchived = false)
         {
@@ -52,9 +59,11 @@ namespace Back_end.Controllers
             }
         }
 
-
-
-
+        /// <summary>
+        /// Retrieves a document by its unique identifier (ID).
+        /// </summary>
+        /// <param name="id">The unique identifier of the document to retrieve.</param>
+        /// <returns>The document and its type information if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -77,14 +86,20 @@ namespace Back_end.Controllers
             }
         }
 
+        /// <summary>
+        /// Uploads a new document and associates it with the provided document information.
+        /// </summary>
+        /// <param name="file">The document file to upload.</param>
+        /// <param name="document">The document information, including type, date, and customer ID.</param>
+        /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public IActionResult Post([FromForm] IFormFile file, [FromForm] Models.Document document)
+        public IActionResult Post([FromForm] IFormFile file, [FromForm] Document document)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-
-                Models.Document doc = new Models.Document
+Console.WriteLine(document.Type);
+                Document doc = new Document
                 {
                     Type = document.Type,
                     Date = document.Date,
@@ -106,12 +121,18 @@ namespace Back_end.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates an existing document with the provided information.
+        /// </summary>
+        /// <param name="doc">The document entity to be updated.</param>
+        /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(Models.Document doc)
+        public IActionResult Put(Document doc)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
+            Console.WriteLine(doc.Type + "blabla");
                 documentService.Put(doc);
                 return Ok(new { message = "Document updated" });
             }

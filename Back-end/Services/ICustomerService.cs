@@ -12,5 +12,6 @@ namespace Back_end.Services
         IEnumerable<Customer> FilterAll(string searchfield);
         Customer GetById(int id);
         int Post(Customer customer);
+        void Put(Customer customer);
     }
 }

@@ -13,6 +13,10 @@ namespace Back_end.Services
         private readonly IConfiguration _configuration;
         public static string SecretKey { get; } = "iRAW38828BzlnM3tJFcPiuCmZdUcM9ng";
 
+        /// <summary>
+        /// Initializes a new instance of the JwtValidationService class with the provided configuration.
+        /// </summary>
+        /// <param name="configuration">The configuration containing JWT settings.</param>
         public JwtValidationService(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -53,11 +57,11 @@ namespace Back_end.Services
         /// </exception>
         public string ValidateToken(HttpContext context)
         {
-            string jwtToken = ExtractJwtToken(context);
-            var tokenValidationParameters = ConfigureTokenValidationParameters();
-
             try
             {
+                string jwtToken = ExtractJwtToken(context);
+                var tokenValidationParameters = ConfigureTokenValidationParameters();
+
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var claimsPrincipal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out _);
 
@@ -110,7 +114,5 @@ namespace Back_end.Services
                 ClockSkew = TimeSpan.Zero
             };
         }
-
-
     }
 }
