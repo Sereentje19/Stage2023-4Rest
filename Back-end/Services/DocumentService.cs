@@ -43,7 +43,7 @@ namespace Back_end.Services
                     doc.Image,
                     doc.Date,
                     doc.CustomerId,
-                    Type = doc.Type.ToString()
+                    Type = doc.Type.ToString().Replace("_", " ")
                 })
                 .ToList();
 

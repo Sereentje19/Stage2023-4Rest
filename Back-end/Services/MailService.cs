@@ -59,7 +59,7 @@ namespace Back_end.Services
                             <p>Het volgende document zal over {weeks} weken komen te vervallen:</p>
                             <p>Naam: {customerName}</p>
                             <p>Verloop datum: {date:dd-MM-yyyy}</p>
-                            <p>Type document: {type}</p>
+                            <p>Type document: {type.ToString().Replace("_", " ")}</p>
                             <img src=""cid:imageId"" class=""email-image"">
                             </body>
                             </html>"

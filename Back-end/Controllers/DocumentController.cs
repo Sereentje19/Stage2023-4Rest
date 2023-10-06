@@ -75,7 +75,7 @@ namespace Back_end.Controllers
                 var response = new
                 {
                     Document = document,
-                    type = document.Type.ToString()
+                    type = document.Type.ToString().Replace("_", " ")
                 };
 
                 return Ok(response);
@@ -98,7 +98,6 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-Console.WriteLine(document.Type);
                 Document doc = new Document
                 {
                     Type = document.Type,
