@@ -66,7 +66,7 @@ namespace Back_end.Services
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
                 var customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.CustomerId);
 
-                mailService.SendEmail(customer.Name, document.Date, document.Type, document.File, weeks);
+                mailService.SendEmail(customer.Name, document.FileType, document.Date, document.Type, document.File, weeks);
             }
         }
     }
