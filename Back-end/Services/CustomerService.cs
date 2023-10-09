@@ -1,5 +1,5 @@
-using System;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 using Back_end.Repositories;
 
 namespace Back_end.Services
@@ -32,20 +32,11 @@ namespace Back_end.Services
         }
 
         /// <summary>
-        /// Retrieves all customers from the repository.
-        /// </summary>
-        /// <returns>A collection containing all the customers in the repository.</returns>
-        public IEnumerable<Customer> GetAll()
-        {
-            return _customerRepository.GetAll();
-        }
-
-        /// <summary>
         /// Retrieves a customer by their unique identifier (ID).
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public Customer GetById(int id)
+        public CustomerDTO GetById(int id)
         {
             return _customerRepository.GetById(id);
         }
@@ -64,7 +55,7 @@ namespace Back_end.Services
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="customer">The document entity to be updated.</param>
-        public void Put(Customer customer)
+        public void Put(CustomerDTO customer)
         {
             _customerRepository.Update(customer);
         }

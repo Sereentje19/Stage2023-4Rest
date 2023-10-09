@@ -1,6 +1,6 @@
-using System;
 using Back_end.Repositories;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 
 namespace Back_end.Services
 {
@@ -28,7 +28,7 @@ namespace Back_end.Services
         /// </returns>
         public (IEnumerable<object>, Pager) GetAllPagedDocuments(bool isArchived, int page, int pageSize)
         {
-            IEnumerable<Document> filteredDocuments = _documentRepository.GetAll(isArchived);
+            IEnumerable<OverviewResponseDTO> filteredDocuments = _documentRepository.GetAll(isArchived);
 
             int totalArchivedDocuments = filteredDocuments.Count();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
@@ -40,7 +40,6 @@ namespace Back_end.Services
                 .Select(doc => new
                 {
                     doc.DocumentId,
-                    doc.File,
                     doc.Date,
                     doc.CustomerId,
                     Type = doc.Type.ToString().Replace("_", " ")
@@ -55,7 +54,7 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public Document GetById(int id)
+        public DocumentDTO GetById(int id)
         {
             return _documentRepository.GetById(id);
         }
@@ -73,7 +72,7 @@ namespace Back_end.Services
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public void Put(Document document)
+        public void Put(EditDocumentRequestDTO document)
         {
             _documentRepository.Update(document);
         }

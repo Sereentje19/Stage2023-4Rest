@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 
 namespace Back_end.Controllers
 {
@@ -93,7 +94,7 @@ namespace Back_end.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public IActionResult Post([FromForm] IFormFile file, [FromForm] Document document)
+        public IActionResult Post([FromForm] IFormFile file, [FromForm] DocumentDTO document)
         {
             try
             {
@@ -127,7 +128,7 @@ namespace Back_end.Controllers
         /// <param name="doc">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(Document doc)
+        public IActionResult Put(EditDocumentRequestDTO doc)
         {
             try
             {

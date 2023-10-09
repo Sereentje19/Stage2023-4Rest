@@ -1,6 +1,5 @@
-using System;
 using Back_end.Models;
-using Microsoft.AspNetCore.Mvc;
+using Back_end.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Back_end.Repositories
@@ -25,9 +24,17 @@ namespace Back_end.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public Customer GetById(int id)
+        public CustomerDTO GetById(int id)
         {
-            return _dbSet.Find(id);
+            Customer cus = _dbSet.Find(id);
+
+            var customerDTO = new CustomerDTO
+            {
+                Email = cus.Email,
+                Name = cus.Name
+            };
+
+            return customerDTO;
         }
 
         /// <summary>
@@ -46,16 +53,6 @@ namespace Back_end.Repositories
             .ToList();
 
             return filteredCustomers;
-        }
-
-
-        /// <summary>
-        /// Retrieves all customers from the repository.
-        /// </summary>
-        /// <returns>A collection containing all the customers in the repository.</returns>
-        public IEnumerable<Customer> GetAll()
-        {
-            return _dbSet.ToList();
         }
 
         /// <summary>
@@ -87,17 +84,15 @@ namespace Back_end.Repositories
         /// Updates an existing customer in the repository.
         /// </summary>
         /// <param name="entity">The document entity to be updated.</param>
-        public void Update(Customer entity)
+        public void Update(CustomerDTO entity)
         {
             if (string.IsNullOrEmpty(entity.Name) || string.IsNullOrEmpty(entity.Email))
             {
                 throw new Exception("Klant naam of email is leeg.");
             }
 
-            _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
         }
-
     }
 }

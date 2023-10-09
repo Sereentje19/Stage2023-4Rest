@@ -1,6 +1,5 @@
-using System;
-using System.Drawing.Imaging;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Back_end.Repositories
@@ -25,9 +24,19 @@ namespace Back_end.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public Document GetById(int id)
+        public DocumentDTO GetById(int id)
         {
-            return _dbSet.Find(id);
+            Document doc = _dbSet.Find(id);
+
+            var documentDto = new DocumentDTO
+            {
+                File = doc.File,
+                FileType = doc.FileType,
+                Date = doc.Date,
+                CustomerId = doc.CustomerId,
+                Type = doc.Type,
+            };
+            return documentDto;
         }
 
         /// <summary>
@@ -35,7 +44,7 @@ namespace Back_end.Repositories
         /// </summary>
         /// <param name="isArchived">A flag indicating whether to retrieve archived or non-archived documents.</param>
         /// <returns>A collection of documents matching the specified archival status.</returns>
-        public IEnumerable<Document> GetAll(bool isArchived)
+        public IEnumerable<OverviewResponseDTO> GetAll(bool isArchived)
         {
             DateTime currentDate = DateTime.Now;
 
@@ -43,7 +52,15 @@ namespace Back_end.Repositories
                 ? _dbSet.Where(doc => doc.Date < currentDate).OrderByDescending(doc => doc.Date)
                 : _dbSet.Where(doc => doc.Date > currentDate).OrderBy(doc => doc.Date);
 
-            return filteredDocuments.ToList();
+            var overviewList = filteredDocuments.Select(doc => new OverviewResponseDTO
+            {
+                DocumentId = doc.DocumentId,
+                Date = doc.Date,
+                CustomerId = doc.CustomerId,
+                Type = doc.Type
+            }).ToList();
+
+            return overviewList;
         }
 
         /// <summary>
@@ -60,7 +77,7 @@ namespace Back_end.Repositories
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="entity">The document entity to be updated.</param>
-        public void Update(Document entity)
+        public void Update(EditDocumentRequestDTO entity)
         {
             var existingDocument = _dbSet.Find(entity.DocumentId);
 

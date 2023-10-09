@@ -6,30 +6,35 @@
         <h1 id="h1Overzicht">Overzicht</h1>
         <button @click="toArchive" id="buttonArchief"> Archief</button>
       </div>
-      <div id="titlesOverview">
-        <h3 id="urgentie">Urgentie</h3>
-        <h3 id="klantnaam">Klantnaam</h3>
-        <h3 id="geldigVan">Geldig tot</h3>
-        <h3 id="geldigTot">Verloopt over</h3>
-        <h3 id="Type">Type document</h3>
-      </div>
+      <div v-if="displayedDocuments.length > 0">
+        <div id="titlesOverview">
+          <h3 id="urgentie">Urgentie</h3>
+          <h3 id="klantnaam">Klantnaam</h3>
+          <h3 id="geldigVan">Geldig tot</h3>
+          <h3 id="geldigTot">Verloopt over</h3>
+          <h3 id="Type">Type document</h3>
+        </div>
 
-      <div class="overview" v-for="(document, i) in displayedDocuments">
-        <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
-          <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
-            src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-          <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
-            src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
-          <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-          <div id="klantnaamTekst">{{ document.customerName }}</div>
-          <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
-          <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
-          <div id="typeTekst">{{ document.type }}</div>
-        </router-link>
-      </div>
+        <div class="overview" v-for="(document, i) in displayedDocuments">
+          <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
+            <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
+              src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+            <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
+              src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
+            <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+            <div id="klantnaamTekst">{{ document.customerName }}</div>
+            <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
+            <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
+            <div id="typeTekst">{{ document.type }}</div>
+          </router-link>
+        </div>
 
-      <div id="paging">
-        <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
+        <div id="paging">
+          <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
+        </div>
+      </div>
+      <div v-else>
+        <br> Nog geen geldige documenten bekend
       </div>
 
       <br><br><br>

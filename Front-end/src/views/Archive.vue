@@ -3,25 +3,32 @@
         <Header></Header>
         <div class="overviewContainer">
             <h1 id="h1Overzicht">Archief</h1>
-            <div id="titlesArchive">
-                <h3 id="klantnaam">Klantnaam</h3>
-                <h3 id="geldigVan">Geldig tot</h3>
-                <h3 id="geldigTot">Verstreken tijd</h3>
-                <h3 id="Type">Type document</h3>
-            </div>
 
-            <div class="overview" v-for="(document, i) in displayedDocuments">
-                <router-link :to="{ path: '/infopage/' + document.documentId }" id="itemArchive">
-                    <div id="klantnaamTekst">{{ document.customerName }}</div>
-                    <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
-                    <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
-                    <div id="typeTekst">{{ document.type }}</div>
-                </router-link>
-            </div>
+            <div v-if="displayedDocuments.length > 0">
 
-            <div id="paging">
-                <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages"
-                    @page-changed="handlePageChange" />
+                <div id="titlesArchive">
+                    <h3 id="klantnaam">Klantnaam</h3>
+                    <h3 id="geldigVan">Geldig tot</h3>
+                    <h3 id="geldigTot">Verstreken tijd</h3>
+                    <h3 id="Type">Type document</h3>
+                </div>
+
+                <div class="overview" v-for="(document, i) in displayedDocuments">
+                    <router-link :to="{ path: '/infopage/' + document.documentId }" id="itemArchive">
+                        <div id="klantnaamTekst">{{ document.customerName }}</div>
+                        <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
+                        <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
+                        <div id="typeTekst">{{ document.type }}</div>
+                    </router-link>
+                </div>
+
+                <div id="paging">
+                    <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages"
+                        @page-changed="handlePageChange" />
+                </div>
+            </div>
+            <div v-else>
+                <br> Nog geen documenten gearchiveerd
             </div>
 
         </div>

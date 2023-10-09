@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 using Back_end.Repositories;
 
 namespace Back_end.Services
@@ -27,7 +24,7 @@ namespace Back_end.Services
         /// <returns>
         /// The user object if the credentials are valid; otherwise, returns null.
         /// </returns>
-        public User checkCredentials(User user)
+        public User checkCredentials(LoginRequestDTO user)
         {
             return _loginRepository.checkCredentials(user);
         }

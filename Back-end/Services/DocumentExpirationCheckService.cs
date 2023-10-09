@@ -1,5 +1,4 @@
 using Back_end.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Back_end.Services
 {

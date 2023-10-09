@@ -1,4 +1,5 @@
 using Back_end.Models;
+using Back_end.Models.DTOs;
 using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -90,7 +91,7 @@ namespace Back_end.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(Customer cus)
+        public IActionResult Put(CustomerDTO cus)
         {
             try
             {
