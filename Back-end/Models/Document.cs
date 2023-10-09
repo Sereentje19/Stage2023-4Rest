@@ -11,7 +11,8 @@ namespace Back_end.Models
     {
         [Key]
         public int DocumentId { get; set; }
-        public byte[]? Image { get; set; }
+        public byte[]? File { get; set; }
+        public string? FileType { get; set; }
         public DateTime Date { get; set; }
         
         [ForeignKey("CustomerId")]

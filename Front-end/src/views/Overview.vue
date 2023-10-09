@@ -10,7 +10,7 @@
         <h3 id="urgentie">Urgentie</h3>
         <h3 id="klantnaam">Klantnaam</h3>
         <h3 id="geldigVan">Geldig tot</h3>
-        <h3 id="geldigTot">Verloopt in</h3>
+        <h3 id="geldigTot">Verloopt over</h3>
         <h3 id="Type">Type document</h3>
       </div>
 
