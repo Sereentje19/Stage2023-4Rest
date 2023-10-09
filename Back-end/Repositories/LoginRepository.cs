@@ -1,3 +1,4 @@
+using Back_end.Exceptions;
 using Back_end.Models;
 using Back_end.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -38,12 +39,12 @@ namespace Back_end.Repositories
                 }
                 else
                 {
-                    throw new Exception("Wachtwoord is incorrect!");
+                    throw new InvalidCredentialsException("Wachtwoord is incorrect!");
                 }
             }
             else
             {
-                throw new Exception("Email is incorrect!");
+                throw new InvalidCredentialsException("Email is incorrect!");
             }
         }
     }

@@ -1,3 +1,4 @@
+using Back_end.Exceptions;
 using Back_end.Models;
 using Back_end.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ namespace Back_end.Repositories
         {
             if (string.IsNullOrEmpty(entity.Name) || string.IsNullOrEmpty(entity.Email))
             {
-                throw new Exception("Klant naam of email is leeg.");
+                throw new CustomerAddException("Klant naam of email is leeg.");
             }
 
             var existingCustomer = _dbSet.FirstOrDefault(c => c.Name == entity.Name && c.Email == entity.Email);
@@ -88,7 +89,7 @@ namespace Back_end.Repositories
         {
             if (string.IsNullOrEmpty(entity.Name) || string.IsNullOrEmpty(entity.Email))
             {
-                throw new Exception("Klant naam of email is leeg.");
+                throw new UpdateCustomerFailedException("Klant naam of email is leeg.");
             }
 
             _context.Entry(entity).State = EntityState.Modified;

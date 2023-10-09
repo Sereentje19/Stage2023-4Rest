@@ -1,3 +1,4 @@
+using Back_end.Exceptions;
 using Back_end.Models;
 using Back_end.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -83,7 +84,7 @@ namespace Back_end.Repositories
 
             if (entity.Type == Models.Type.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
             {
-                throw new Exception("Datum of type is leeg.");
+                throw new UpdateDocumentFailedException("Datum of type is leeg.");
             }
 
             _context.Entry(existingDocument).CurrentValues.SetValues(entity);
