@@ -75,7 +75,7 @@ namespace Back_end.Controllers
                 var response = new
                 {
                     Document = document,
-                    type = document.Type.ToString().Replace("_", " ")
+                    type = document.Type.ToString().Replace("_", " "),
                 };
 
                 return Ok(response);
@@ -102,13 +102,14 @@ namespace Back_end.Controllers
                 {
                     Type = document.Type,
                     Date = document.Date,
-                    CustomerId = document.CustomerId
+                    CustomerId = document.CustomerId,
+                    FileType = document.FileType
                 };
 
                 using (var memoryStream = new MemoryStream())
                 {
                     file.CopyTo(memoryStream);
-                    doc.Image = memoryStream.ToArray();
+                    doc.File = memoryStream.ToArray();
                 }
 
                 documentService.Post(doc);

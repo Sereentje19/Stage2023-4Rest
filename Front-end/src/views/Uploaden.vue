@@ -12,8 +12,8 @@
 
         <label class="overlay">
           <div id="selectDocument"> Selecteer document</div>
-          <img id="folderImage" src="../assets/Pictures/folder.png" alt="">
-          <input type="file" class="file" @change="handleFileChange" />
+          <img id="folderImage" src="../assets/Pictures/folder.png">
+          <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
         </label>
       </div>
 
@@ -45,7 +45,7 @@
           </form>
         </ul>
 
-        <button @click="this.CreateDocument()" class="verstuur" type="button">
+        <button @click="this.CreateDocument()" class="verstuur">
           Verstuur document
         </button>
       </div>
@@ -84,6 +84,7 @@ export default {
         Type: 0,
         Date: new Date().toISOString().split('T')[0],
         CustomerId: 0,
+        fileType: ""
       },
       filteredCustomers: []
     };
@@ -124,6 +125,7 @@ export default {
         }
       })
         .then((res) => {
+          localStorage.setItem('popUpSucces', 'true');
           this.$router.push({ path: '/Overzicht', query: { activePopup: true } });
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -135,6 +137,7 @@ export default {
       formData.append('document.Type', this.document.Type);
       formData.append('document.Date', this.document.Date);
       formData.append('document.CustomerId', customerId);
+      formData.append('document.FileType', this.selectedFile.type);
       return formData;
     },
     filterCustomer() {
@@ -166,6 +169,7 @@ export default {
         this.fileContents = reader.result;
       };
       reader.readAsBinaryString(this.selectedFile)
+
     },
     onBlur() {
       setTimeout(() => {

@@ -3,7 +3,7 @@
   <div class="InfoContainer">
     <div class="info">
       <ul>
-          <h1>Info</h1>
+        <h1>Info</h1>
         <br>
         <div id="DocumentTitle">
           Document
@@ -27,7 +27,14 @@
       </ul>
     </div>
     <div class="foto">
-      <img class="foto" :src="'data:image/jpeg;base64,' + this.document.image" alt="image not shown" />
+
+      <iframe v-if="this.document.fileType === 'application/pdf'"
+        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" frameborder="0" width="100%"
+        height="500px"></iframe>
+      <img v-else-if="this.document.fileType != ''" class="foto"
+        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" alt="image not shown" />
+
+
     </div>
   </div>
 
@@ -58,7 +65,8 @@ export default {
         date: "",
         customerName: "",
         type: "",
-        image: "",
+        file: "",
+        fileType: ""
       },
       customer: [],
     }
@@ -70,13 +78,13 @@ export default {
     getDocuments() {
       axios.get("Document/" + this.id, {
         headers: {
+          'Content-Type': 'multipart/form-data',
           Authorization: "Bearer " + localStorage.getItem("jwt")
         }
       })
         .then((res) => {
           this.document = res.data.document;
           this.document.type = res.data.type
-
           this.getCustomerName(this.document.customerId);
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -94,7 +102,7 @@ export default {
           this.$refs.Popup.popUpError(error.response.data);
         });
     },
-    toEdit(route){
+    toEdit(route) {
       this.$router.push("/edit/" + route + "/" + this.id);
     },
     formatDate(date) {

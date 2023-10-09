@@ -40,7 +40,7 @@ namespace Back_end.Services
                 .Select(doc => new
                 {
                     doc.DocumentId,
-                    doc.Image,
+                    doc.File,
                     doc.Date,
                     doc.CustomerId,
                     Type = doc.Type.ToString().Replace("_", " ")
