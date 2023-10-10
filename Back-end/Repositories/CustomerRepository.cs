@@ -85,15 +85,17 @@ namespace Back_end.Repositories
         /// Updates an existing customer in the repository.
         /// </summary>
         /// <param name="entity">The document entity to be updated.</param>
-        public void Update(CustomerDTO entity)
+        public void Update(Customer entity)
         {
-            if (string.IsNullOrEmpty(entity.Name) || string.IsNullOrEmpty(entity.Email))
+            try
             {
-                throw new UpdateCustomerFailedException("Klant naam of email is leeg.");
+                _context.Update(entity);
+                _context.SaveChanges();
             }
-
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de klantgegevens.");
+            }
         }
     }
 }

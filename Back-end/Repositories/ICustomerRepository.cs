@@ -8,6 +8,6 @@ namespace Back_end.Repositories
         CustomerDTO GetById(int id);
         IEnumerable<Customer> FilterAll(string searchfield);
         int Add(Customer entity);
-        void Update(CustomerDTO entity);
+        void Update(Customer entity);
     }
 }

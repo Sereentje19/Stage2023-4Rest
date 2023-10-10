@@ -4,6 +4,29 @@
     <div class="overviewContainer">
       <div id="h1AndButton">
         <h1 id="h1Overzicht">Overzicht</h1>
+
+        <input id="SearchFieldOverview" @input="filterCustomer" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
+               placeholder="Zoek"/>
+
+            <ul id="myUL" v-show="isFocused && filteredCustomers.length > 0">
+              <li v-for="customer in filteredCustomers" :key="customer.id">
+                <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
+              </li>
+            </ul>
+
+        <select id="filterDropDown">
+              <option value="0">Selecteer document...</option>
+              <option value="1">Vog</option>
+              <option value="2">Contract</option>
+              <option value="3">Paspoort</option>
+              <option value="4">id kaart</option>
+              <option value="5">Diploma</option>
+              <option value="6">Certificaat</option>
+              <option value="7">Lease auto</option>
+            </select>
+
+        <button @click="toGeldig" id="buttonArchief"> Geldig</button>
+        &nbsp; &nbsp; &nbsp;
         <button @click="toArchive" id="buttonArchief"> Archief</button>
       </div>
       <div v-if="displayedDocuments.length > 0">
@@ -48,7 +71,7 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/Pagination.vue';
+import Pagination from '../views/pagination.vue';
 import Popup from '../views/popUp.vue';
 import Header from '../views/Header.vue';
 

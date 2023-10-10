@@ -55,7 +55,7 @@ namespace Back_end.Services
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="customer">The document entity to be updated.</param>
-        public void Put(CustomerDTO customer)
+        public void Put(Customer customer)
         {
             _customerRepository.Update(customer);
         }

@@ -8,6 +8,6 @@ namespace Back_end.Services
         IEnumerable<Customer> FilterAll(string searchfield);
         CustomerDTO GetById(int id);
         int Post(Customer customer);
-        void Put(CustomerDTO customer);
+        void Put(Customer customer);
     }
 }

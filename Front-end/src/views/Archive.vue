@@ -42,7 +42,7 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/Pagination.vue';
+import Pagination from '../views/pagination.vue';
 import Popup from '../views/popUp.vue';
 import Header from '../views/Header.vue';
 

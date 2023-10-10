@@ -28,9 +28,9 @@
     </div>
     <div class="foto">
 
-      <iframe v-if="this.document.fileType === 'application/pdf'"
-        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" frameborder="0" width="100%"
-        height="500px"></iframe>
+      <embed v-if="this.document.fileType === 'application/pdf'"
+        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" width="100%"
+        height="500px">
       <img v-else-if="this.document.fileType != ''" class="foto"
         :src="'data:' + this.document.fileType + ';base64,' + this.document.file" alt="image not shown" />
 

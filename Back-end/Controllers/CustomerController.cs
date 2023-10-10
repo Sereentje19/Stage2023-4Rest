@@ -91,7 +91,7 @@ namespace Back_end.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(CustomerDTO cus)
+        public IActionResult Put(Customer cus)
         {
             try
             {
