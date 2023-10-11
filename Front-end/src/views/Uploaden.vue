@@ -36,7 +36,7 @@
               <option value="1">Vog</option>
               <option value="2">Contract</option>
               <option value="3">Paspoort</option>
-              <option value="4">id kaart</option>
+              <option value="4">ID kaart</option>
               <option value="5">Diploma</option>
               <option value="6">Certificaat</option>
               <option value="7">Lease auto</option>

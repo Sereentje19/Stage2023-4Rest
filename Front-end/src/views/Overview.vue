@@ -5,30 +5,26 @@
       <div id="h1AndButton">
         <h1 id="h1Overzicht">Overzicht</h1>
 
-        <input id="SearchFieldOverview" @input="filterCustomer" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
-               placeholder="Zoek"/>
+        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek"
+          @input="filterDocumentsAndCustomers" />
 
-            <ul id="myUL" v-show="isFocused && filteredCustomers.length > 0">
-              <li v-for="customer in filteredCustomers" :key="customer.id">
-                <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
-              </li>
-            </ul>
-
-        <select id="filterDropDown">
-              <option value="0">Selecteer document...</option>
-              <option value="1">Vog</option>
-              <option value="2">Contract</option>
-              <option value="3">Paspoort</option>
-              <option value="4">id kaart</option>
-              <option value="5">Diploma</option>
-              <option value="6">Certificaat</option>
-              <option value="7">Lease auto</option>
-            </select>
+        <select v-model="dropBoxType" id="filterDropDown" @change="filterDocumentsAndCustomers">
+          <option value="0">Selecteer document...</option>
+          <option value="1">Vog</option>
+          <option value="2">Contract</option>
+          <option value="3">Paspoort</option>
+          <option value="4">id kaart</option>
+          <option value="5">Diploma</option>
+          <option value="6">Certificaat</option>
+          <option value="7">Lease auto</option>
+        </select>
 
         <button @click="toGeldig" id="buttonArchief"> Geldig</button>
         &nbsp; &nbsp; &nbsp;
         <button @click="toArchive" id="buttonArchief"> Archief</button>
       </div>
+
+
       <div v-if="displayedDocuments.length > 0">
         <div id="titlesOverview">
           <h3 id="urgentie">Urgentie</h3>
@@ -81,7 +77,7 @@ export default {
   components: {
     Pagination,
     Popup,
-    Header
+    Header,
   },
 
   data() {
@@ -102,10 +98,12 @@ export default {
         pageSize: 5,
       },
       customers: [],
+      searchField: "",
+      dropBoxType: "0"
     };
   },
   mounted() {
-    this.getDocuments();
+    // this.getDocuments();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.Popup.popUpError("Document is geupload!");
@@ -115,7 +113,7 @@ export default {
   methods: {
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;
-      this.getDocuments();
+      // this.getDocuments();
     },
     toArchive() {
       this.$router.push("/archief");
@@ -153,6 +151,33 @@ export default {
         .then((res) => {
           this.documents[index].customerName = res.data.name;
         }).catch((error) => {
+          this.$refs.Popup.popUpError(error.response.data);
+        });
+    },
+    filterDocumentsAndCustomers() {
+      axios
+        .get("Filter/documents-and-customers", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt"),
+          },
+          params: {
+            searchfield: this.searchField, 
+            dropBoxType: this.dropBoxType
+
+          },
+        })
+        .then((res) => {
+          this.documents = res.data.documents;
+          this.customers = res.data.customers;
+
+          console.log(this.documents)
+
+          for (let index = 0; index < this.documents.length; index++) {
+            this.documents[index].customerName = this.customers[index].name;
+          }
+
+        })
+        .catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
     },

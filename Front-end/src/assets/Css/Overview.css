@@ -23,7 +23,8 @@
     font-size: 17px;
     padding-left: 8px;
     border-width: 1px;
-    margin-top: 15px
+    margin-top: 15px;
+    border: rgb(0, 0, 0) solid 1px;
 }
 
 #filterDropDown{
@@ -43,7 +44,24 @@
     cursor: pointer;
 }
 
-#urgentieSymbool {
+
+
+
+h1 {
+    font-size: 50px;
+}
+
+#h1Overzicht {
+    margin: auto auto auto 0;
+}
+
+#paging {
+    display: flex;
+    margin-right: auto;
+  
+  }
+
+  #urgentieSymbool {
     width: 50px;
     margin-top: 8px;
     margin-left: 8px;
@@ -72,6 +90,12 @@
     grid-template-columns: 10% 30% 15% 15% 30%;
 }
 
+.overviewContainer {
+    width: 85%;
+    margin: auto;
+    margin-top: 80px;
+}
+
 #item {
     width: 100%;
     height: 55px;
@@ -90,23 +114,3 @@
 a {
     text-decoration: none;
 }
-
-.overviewContainer {
-    width: 85%;
-    margin: auto;
-    margin-top: 80px;
-}
-
-h1 {
-    font-size: 50px;
-}
-
-#h1Overzicht {
-    margin: auto auto auto 0;
-}
-
-#paging {
-    display: flex;
-    margin-right: auto;
-  
-  }
