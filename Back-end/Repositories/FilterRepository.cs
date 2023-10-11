@@ -25,48 +25,29 @@ namespace Back_end.Repositories
 
         public object FilterDocumentsAndCustomers(string searchfield, Models.Type? dropBoxType)
         {
-            var filteredCustomerIds = _context.Customers.AsQueryable();
-            var filteredDocuments = _context.Documents.AsQueryable();
-
-            if (dropBoxType != Models.Type.Not_Selected)
-            {
-                filteredDocuments = filteredDocuments
-                    .Where(document =>
-                        document.Type.Equals(dropBoxType)
-                    );
-
-                    filteredCustomerIds = filteredCustomerIds
-                    .Where(customer => filteredDocuments.Any(d => d.CustomerId == customer.CustomerId));
-                
-
-                Console.WriteLine(dropBoxType);
-            }
-
-            if (!string.IsNullOrEmpty(searchfield))
-            {
-                filteredCustomerIds = filteredCustomerIds
-                    .Where(customer =>
-                        customer.Name.Contains(searchfield) ||
-                        customer.Email.Contains(searchfield) ||
-                        customer.CustomerId.ToString().Contains(searchfield)
-                    );
-                    
-                filteredDocuments = filteredDocuments
-                    .Where(document => filteredCustomerIds.Any(c => c.CustomerId == document.CustomerId));
-                
-                Console.WriteLine("blabla");
-            }
+            var query = from document in _context.Documents
+                        join customer in _context.Customers on document.CustomerId equals customer.CustomerId
+                        where string.IsNullOrEmpty(searchfield) ||
+                            customer.Name.Contains(searchfield) ||
+                            customer.Email.Contains(searchfield) ||
+                            customer.CustomerId.ToString().Contains(searchfield)
+                        where dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType)
+                        orderby document.Date
+                        select new
+                        {
+                            Document = document,
+                            Customer = customer
+                        };
 
             var result = new
             {
-                Documents = filteredDocuments.ToList(),
-                Customers = _context.Customers
-            .Where(customer => filteredCustomerIds.Any(c => c.CustomerId == customer.CustomerId))
-            .ToList()
+                Documents = query.Select(item => item.Document).ToList(),
+                Customers = query.Select(item => item.Customer).Distinct().ToList()
             };
 
             return result;
         }
+
 
 
     }
