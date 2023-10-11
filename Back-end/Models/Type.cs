@@ -6,7 +6,7 @@ namespace Back_end.Models
         Vog,
         Contract,
         Paspoort,
-        Id_kaart,
+        ID_kaart,
         Diploma,
         Certificaat,
         Lease_auto

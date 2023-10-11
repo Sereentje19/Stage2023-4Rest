@@ -3,7 +3,7 @@
     <Header></Header>
     <div class="overviewContainer">
       <div id="h1AndButton">
-        <h1 v-if="overviewType == 'valid'" id="h1Overzicht">Geldig</h1>
+        <h1 v-if="overviewType == 'valid'" id="h1Overzicht">Lang geldig</h1>
         <h1 v-else-if="overviewType == 'overview'" id="h1Overzicht">Overzicht</h1>
         <h1 v-else-if="overviewType == 'archive'" id="h1Overzicht">Archief</h1>
 
@@ -14,7 +14,7 @@
           <option value="1">Vog</option>
           <option value="2">Contract</option>
           <option value="3">Paspoort</option>
-          <option value="4">id kaart</option>
+          <option value="4">ID kaart</option>
           <option value="5">Diploma</option>
           <option value="6">Certificaat</option>
           <option value="7">Lease auto</option>
