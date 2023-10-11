@@ -24,29 +24,33 @@ namespace Back_end.Repositories
 
 
         public object FilterDocumentsAndCustomers(string searchfield, Models.Type? dropBoxType)
-        {
-            var query = from document in _context.Documents
-                        join customer in _context.Customers on document.CustomerId equals customer.CustomerId
-                        where string.IsNullOrEmpty(searchfield) ||
-                            customer.Name.Contains(searchfield) ||
-                            customer.Email.Contains(searchfield) ||
-                            customer.CustomerId.ToString().Contains(searchfield)
-                        where dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType)
-                        orderby document.Date
-                        select new
-                        {
-                            Document = document,
-                            Customer = customer
-                        };
+{
+    var sixWeeksAgo = DateTime.Now.AddDays(42);
 
-            var result = new
-            {
-                Documents = query.Select(item => item.Document).ToList(),
-                Customers = query.Select(item => item.Customer).Distinct().ToList()
-            };
+    var query = from document in _context.Documents
+                join customer in _context.Customers on document.CustomerId equals customer.CustomerId
+                where (string.IsNullOrEmpty(searchfield) ||
+                       customer.Name.Contains(searchfield) ||
+                       customer.Email.Contains(searchfield) ||
+                       customer.CustomerId.ToString().Contains(searchfield))
+                where (dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType))
+                where document.Date <= sixWeeksAgo && document.Date >= DateTime.Now
+                orderby document.Date
+                select new
+                {
+                    Document = document,
+                    Customer = customer
+                };
 
-            return result;
-        }
+    var result = new
+    {
+        Documents = query.Select(item => item.Document).ToList(),
+        Customers = query.Select(item => item.Customer).Distinct().ToList()
+    };
+
+    return result;
+}
+
 
 
 
