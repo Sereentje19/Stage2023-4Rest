@@ -20,9 +20,11 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Document>();
         }
 
-        public List<Document> GetFilterDocuments(string searchfield, Models.Type? dropBoxType)
+        public List<Document> GetFilterDocuments(string searchfield, Models.Type? dropBoxType, string overviewType)
         {
-            var sixWeeksFromNow = DateTime.Now.AddDays(42);
+            DateTime now = DateTime.Now;
+            DateTime sixWeeksFromNow = now.AddDays(42);
+            DateTime sixWeeksAgo = now.AddDays(-42);
 
             var query = from document in _context.Documents
                         join customer in _context.Customers on document.CustomerId equals customer.CustomerId
@@ -31,17 +33,29 @@ namespace Back_end.Repositories
                             customer.Email.Contains(searchfield) ||
                             customer.CustomerId.ToString().Contains(searchfield)
                         where dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType)
-                        where document.Date <= sixWeeksFromNow && document.Date >= DateTime.Now
                         orderby document.Date
                         select new
                         {
                             Document = document
                         };
 
-            var documents = query.Select(item => item.Document).ToList();
+            switch (overviewType)
+            {
+                case "overview":
+                    query = query.Where(item => item.Document.Date >= now && item.Document.Date <= sixWeeksFromNow);
+                    break;
+                case "archive":
+                    query = query.Where(item => item.Document.Date >= sixWeeksAgo && item.Document.Date < now);
+                    break;
+                case "valid":
+                    query = query.Where(item => item.Document.Date > sixWeeksFromNow);
+                    break;
+            }
 
+            var documents = query.Select(item => item.Document).ToList();
             return documents;
         }
+
 
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).

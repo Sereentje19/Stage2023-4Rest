@@ -61,12 +61,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("Filter")]
-        public IActionResult GetFilterDocuments(string? searchfield, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
+        public IActionResult GetFilterDocuments(string? searchfield, string overviewType, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedDocuments, pager) = documentService.GetFilterDocuments(searchfield, dropBoxType, page, pageSize);
+                var (pagedDocuments, pager) = documentService.GetFilterDocuments(searchfield, dropBoxType, page, pageSize, overviewType);
 
                 var response = new
                 {

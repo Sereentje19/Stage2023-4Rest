@@ -8,10 +8,16 @@
     height: fit-content;
     padding: 10px 20px 10px 20px;
     margin: 0;
+    margin-top: 5px;
     background-color: #22421f;
     color: white;
     border: none;
     border-radius: 4px;
+    margin-left: 15px;
+    min-width: 145px;
+    text-align: center; 
+    display: flex;
+    justify-content: center;
 }
 
 #SearchFieldOverview,
@@ -23,12 +29,12 @@
     font-size: 17px;
     padding-left: 8px;
     border-width: 1px;
-    margin-top: 15px;
+    margin-top: 20px;
     border: rgb(0, 0, 0) solid 1px;
 }
 
-#filterDropDown{
-    margin-right: 50px;
+#SearchFieldOverview{
+    margin-left: 30px;
 }
 
 #buttonArchief:hover{
@@ -53,6 +59,7 @@ h1 {
 
 #h1Overzicht {
     margin: auto auto auto 0;
+    min-width: 280px;
 }
 
 #paging {

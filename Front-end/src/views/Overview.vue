@@ -3,12 +3,13 @@
     <Header></Header>
     <div class="overviewContainer">
       <div id="h1AndButton">
-        <h1 id="h1Overzicht">Overzicht</h1>
+        <h1 v-if="overviewType == 'valid'" id="h1Overzicht">Geldig</h1>
+        <h1 v-else-if="overviewType == 'overview'" id="h1Overzicht">Overzicht</h1>
+        <h1 v-else-if="overviewType == 'archive'" id="h1Overzicht">Archief</h1>
 
-        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek"
-          @input="filterDocumentsAndCustomers" />
+        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
 
-        <select v-model="dropBoxType" id="filterDropDown" @change="filterDocumentsAndCustomers">
+        <select v-model="dropBoxType" id="filterDropDown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
           <option value="1">Vog</option>
           <option value="2">Contract</option>
@@ -19,9 +20,12 @@
           <option value="7">Lease auto</option>
         </select>
 
-        <button @click="toGeldig" id="buttonArchief"> Geldig</button>
-        &nbsp; &nbsp; &nbsp;
-        <button @click="toArchive" id="buttonArchief"> Archief</button>
+        <button v-if="overviewType == 'overview' || overviewType == 'archive'" @click="changeOverviewType('valid')"
+          id="buttonArchief"> Geldig </button>
+        <button v-if="overviewType == 'valid' || overviewType == 'archive'" @click="changeOverviewType('overview')"
+          id="buttonArchief"> Overzicht</button>
+        <button v-if="overviewType == 'valid' || overviewType == 'overview'" @click="changeOverviewType('archive')"
+          id="buttonArchief"> Archief</button>
       </div>
 
 
@@ -30,7 +34,8 @@
           <h3 id="urgentie">Urgentie</h3>
           <h3 id="klantnaam">Klantnaam</h3>
           <h3 id="geldigVan">Geldig tot</h3>
-          <h3 id="geldigTot">Verloopt over</h3>
+          <h3 v-if="overviewType == 'archive'" id="geldigTot">Verstreken tijd</h3>
+          <h3 v-else id="geldigTot">Verloopt over</h3>
           <h3 id="Type">Type document</h3>
         </div>
 
@@ -99,11 +104,12 @@ export default {
       },
       customers: [],
       searchField: "",
-      dropBoxType: "0"
+      dropBoxType: "0",
+      overviewType: "overview"
     };
   },
   mounted() {
-    this.filterDocumentsAndCustomers();
+    this.filterDocuments();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.Popup.popUpError("Document is geupload!");
@@ -111,9 +117,13 @@ export default {
     }
   },
   methods: {
+    changeOverviewType(type) {
+      this.overviewType = type
+      this.filterDocuments();
+    },
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;
-      this.filterDocumentsAndCustomers();
+      this.filterDocuments();
     },
     toArchive() {
       this.$router.push("/archief");
@@ -130,7 +140,8 @@ export default {
           this.$refs.Popup.popUpError(error.response.data);
         });
     },
-    filterDocumentsAndCustomers() {
+    filterDocuments() {
+      console.log(this.overviewType)
       axios
         .get("Document/Filter", {
           headers: {
@@ -138,10 +149,10 @@ export default {
           },
           params: {
             searchfield: this.searchField,
+            overviewType: this.overviewType,
             dropBoxType: this.dropBoxType,
             page: this.pager.currentPage,
-            pageSize: this.pager.pageSize,
-
+            pageSize: this.pager.pageSize
           },
         })
         .then((res) => {
@@ -176,16 +187,16 @@ export default {
       var time;
 
       if (ageInDays >= year) {
-        time = Math.floor(ageInDays / year) + " jaar"
+        time =  Math.abs(Math.floor(ageInDays / year)) + " jaar"
       }
       else if (ageInDays >= (month * 2)) {
-        time = Math.floor(ageInDays / month) + " maanden"
+        time = Math.abs(Math.floor(ageInDays / month)) + " maanden"
       }
       else if (ageInDays >= (week * 2)) {
-        time = Math.floor(ageInDays / week) + " weken"
+        time = Math.abs(Math.floor(ageInDays / week)) + " weken"
       }
       else {
-        time = ageInDays + " dagen"
+        time = Math.abs(ageInDays) + " dagen"
       }
 
       return time
@@ -206,5 +217,4 @@ export default {
 
 <style>
 @import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';
-</style>
+@import '../assets/Css/Main.css';</style>

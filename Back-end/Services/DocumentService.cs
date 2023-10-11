@@ -17,9 +17,9 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
-        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize, string overviewType)
         {
-            var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType);
+            var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType, overviewType);
 
             int totalArchivedDocuments = documents.Count();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
