@@ -113,66 +113,45 @@ export default {
   methods: {
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;
+      this.filterDocumentsAndCustomers();
     },
     toArchive() {
       this.$router.push("/archief");
     },
-    // getDocuments() {
-    //   axios.get("Document", {
-    //     headers: {
-    //       Authorization: "Bearer " + localStorage.getItem("jwt")
-    //     },
-    //     params: {
-    //       page: this.pager.currentPage,
-    //       pageSize: this.pager.pageSize,
-    //       isArchived: false
-    //     }
-    //   })
-    //     .then((res) => {
-    //       this.documents = res.data.documents;
-    //       this.pager = res.data.pager;
-
-
-    //       for (let index = 0; index < this.documents.length; index++) {
-    //         const customerId = this.documents[index].customerId;
-    //         this.getCustomerName(customerId, index);
-    //       }
-    //     }).catch((error) => {
-    //       this.$refs.Popup.popUpError(error.response.data);
-    //     });
-    // },
-    // getCustomerName(id, index) {
-    //   axios.get("Customer/" + id, {
-    //     headers: {
-    //       Authorization: "Bearer " + localStorage.getItem("jwt")
-    //     }
-    //   })
-    //     .then((res) => {
-    //       this.documents[index].customerName = res.data.name;
-    //     }).catch((error) => {
-    //       this.$refs.Popup.popUpError(error.response.data);
-    //     });
-    // },
+    getCustomerName(id, index) {
+      axios.get("Customer/" + id, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        }
+      })
+        .then((res) => {
+          this.documents[index].customerName = res.data.name;
+        }).catch((error) => {
+          this.$refs.Popup.popUpError(error.response.data);
+        });
+    },
     filterDocumentsAndCustomers() {
       axios
-        .get("Filter/documents-and-customers", {
+        .get("Document/Filter", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwt"),
           },
           params: {
-            searchfield: this.searchField, 
-            dropBoxType: this.dropBoxType
+            searchfield: this.searchField,
+            dropBoxType: this.dropBoxType,
+            page: this.pager.currentPage,
+            pageSize: this.pager.pageSize,
 
           },
         })
         .then((res) => {
           this.documents = res.data.documents;
-          this.customers = res.data.customers;
-
+          this.pager = res.data.pager;
           console.log(this.documents)
 
           for (let index = 0; index < this.documents.length; index++) {
-            this.documents[index].customerName = this.customers[index].name;
+            const customerId = this.documents[index].customerId;
+            this.getCustomerName(customerId, index);
           }
 
         })

@@ -22,19 +22,32 @@ namespace Back_end.Controllers
             jwtValidationService = jwt;
         }
 
-        [HttpGet("documents-and-customers")]
-        public IActionResult FilterDocumentsAndCustomers(string? searchfield, Models.Type? dropBoxType)
-        {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var result =_filterService.FilterDocumentsAndCustomers(searchfield, dropBoxType);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
+        // [HttpGet("documents-and-customers")]
+        // public IActionResult FilterDocumentsAndCustomers(string? searchfield, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
+        // {
+        //     try
+        //     {
+        //         jwtValidationService.ValidateToken(HttpContext);
+        //         var (pagedDocuments, pager) = _filterService.FilterDocumentsAndCustomers(searchfield, dropBoxType, page, pageSize);
+
+        //         var response = new
+        //         {
+        //             Documents = pagedDocuments,
+        //             Pager = new
+        //             {
+        //                 pager.TotalItems,
+        //                 pager.CurrentPage,
+        //                 pager.PageSize,
+        //                 pager.TotalPages,
+        //             }
+        //         };
+
+        //         return Ok(response);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return StatusCode(401, ex.Message);
+        //     }
+        // }
     }
 }

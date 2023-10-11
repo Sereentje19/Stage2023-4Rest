@@ -17,6 +17,29 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
+        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize)
+        {
+            var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType);
+
+            int totalArchivedDocuments = documents.Count();
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            var pager = new Pager(totalArchivedDocuments, page, pageSize);
+
+            var pagedDocuments = documents
+                .Skip(skipCount)
+                .Take(pageSize)
+                .Select(doc => new
+                {
+                    doc.DocumentId,
+                    doc.Date,
+                    doc.CustomerId,
+                    Type = doc.Type.ToString().Replace("_", " ")
+                })
+                .ToList();
+
+             return (pagedDocuments.Cast<object>(), pager);
+        }
+
         /// <summary>
         /// Retrieves a paged list of documents based on their archival status.
         /// </summary>

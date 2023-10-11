@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_end.Models;
+using Back_end.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Back_end.Repositories
@@ -23,36 +24,27 @@ namespace Back_end.Repositories
         }
 
 
-        public object FilterDocumentsAndCustomers(string searchfield, Models.Type? dropBoxType)
-{
-    var sixWeeksAgo = DateTime.Now.AddDays(42);
+        // public List<Document> FilterDocuments(string searchfield, Models.Type? dropBoxType)
+        // {
+        //     var sixWeeksFromNow = DateTime.Now.AddDays(42);
 
-    var query = from document in _context.Documents
-                join customer in _context.Customers on document.CustomerId equals customer.CustomerId
-                where (string.IsNullOrEmpty(searchfield) ||
-                       customer.Name.Contains(searchfield) ||
-                       customer.Email.Contains(searchfield) ||
-                       customer.CustomerId.ToString().Contains(searchfield))
-                where (dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType))
-                where document.Date <= sixWeeksAgo && document.Date >= DateTime.Now
-                orderby document.Date
-                select new
-                {
-                    Document = document,
-                    Customer = customer
-                };
+        //     var query = from document in _context.Documents
+        //                 join customer in _context.Customers on document.CustomerId equals customer.CustomerId
+        //                 where string.IsNullOrEmpty(searchfield) ||
+        //                     customer.Name.Contains(searchfield) ||
+        //                     customer.Email.Contains(searchfield) ||
+        //                     customer.CustomerId.ToString().Contains(searchfield)
+        //                 where dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType)
+        //                 where document.Date <= sixWeeksFromNow && document.Date >= DateTime.Now
+        //                 orderby document.Date
+        //                 select new
+        //                 {
+        //                     Document = document
+        //                 };
 
-    var result = new
-    {
-        Documents = query.Select(item => item.Document).ToList(),
-        Customers = query.Select(item => item.Customer).Distinct().ToList()
-    };
+        //     var documents = query.Select(item => item.Document).ToList();
 
-    return result;
-}
-
-
-
-
+        //     return documents;
+        // }
     }
 }

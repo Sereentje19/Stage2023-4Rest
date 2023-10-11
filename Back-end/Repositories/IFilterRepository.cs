@@ -8,6 +8,6 @@ namespace Back_end.Repositories
 {
     public interface IFilterRepository
     {
-        object FilterDocumentsAndCustomers(string searchfield, Models.Type? dropBoxType);
+        // List<Document> FilterDocuments(string searchfield, Models.Type? dropBoxType);
     }
 }
