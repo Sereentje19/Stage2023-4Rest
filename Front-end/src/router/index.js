@@ -3,7 +3,6 @@ import Login from '../views/Login.vue';
 import Overview from '../views/Overview.vue';
 import Uploaden from '../views/Uploaden.vue';
 import infopage from '../views/Infopage.vue';
-import archief from '../views/Archive.vue';
 import Edit from '../views/Edit.vue';
 
 const router = createRouter({
@@ -13,7 +12,6 @@ const router = createRouter({
     { path: '/infopage/:id', component: infopage, props: true},
     { path: '/Edit/:route/:id', component: Edit, props: true},
     { path: '/uploaden', component: Uploaden },
-    { path: '/archief', component: archief },
     { path: '/overzicht', component: Overview ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
   ],

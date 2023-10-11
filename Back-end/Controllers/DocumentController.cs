@@ -60,6 +60,34 @@ namespace Back_end.Controllers
             }
         }
 
+        [HttpGet("Filter")]
+        public IActionResult GetFilterDocuments(string? searchfield, string overviewType, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var (pagedDocuments, pager) = documentService.GetFilterDocuments(searchfield, dropBoxType, page, pageSize, overviewType);
+
+                var response = new
+                {
+                    Documents = pagedDocuments,
+                    Pager = new
+                    {
+                        pager.TotalItems,
+                        pager.CurrentPage,
+                        pager.PageSize,
+                        pager.TotalPages,
+                    }
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>
