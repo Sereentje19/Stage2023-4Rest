@@ -1,5 +1,6 @@
-using System;
+using Back_end.Exceptions;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -26,9 +27,9 @@ namespace Back_end.Repositories
         /// <param name="user">The user object containing email and password for validation.</param>
         /// <returns>The user object if valid credentials are found; otherwise, throws exceptions for incorrect email or password.</returns>
         /// <exception cref="Exception">Thrown when the email or password is incorrect.</exception>
-        public User checkCredentials(User user)
+        public User checkCredentials(LoginRequestDTO user)
         {
-            var matchingUser = _dbSet.FirstOrDefault(u => u.Email == user.Email);
+            User matchingUser = _dbSet.FirstOrDefault(u => u.Email == user.Email);
 
             if (matchingUser != null)
             {
@@ -38,12 +39,12 @@ namespace Back_end.Repositories
                 }
                 else
                 {
-                    throw new Exception("Wachtwoord is incorrect!");
+                    throw new InvalidCredentialsException("Wachtwoord is incorrect!");
                 }
             }
             else
             {
-                throw new Exception("Email is incorrect!");
+                throw new InvalidCredentialsException("Email is incorrect!");
             }
         }
     }

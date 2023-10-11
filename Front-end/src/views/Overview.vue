@@ -3,33 +3,62 @@
     <Header></Header>
     <div class="overviewContainer">
       <div id="h1AndButton">
-        <h1 id="h1Overzicht">Overzicht</h1>
-        <button @click="toArchive" id="buttonArchief"> Archief</button>
-      </div>
-      <div id="titlesOverview">
-        <h3 id="urgentie">Urgentie</h3>
-        <h3 id="klantnaam">Klantnaam</h3>
-        <h3 id="geldigVan">Geldig tot</h3>
-        <h3 id="geldigTot">Verloopt over</h3>
-        <h3 id="Type">Type document</h3>
+        <h1 v-if="overviewType == 'valid'" id="h1Overzicht">Geldig</h1>
+        <h1 v-else-if="overviewType == 'overview'" id="h1Overzicht">Overzicht</h1>
+        <h1 v-else-if="overviewType == 'archive'" id="h1Overzicht">Archief</h1>
+
+        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
+
+        <select v-model="dropBoxType" id="filterDropDown" @change="filterDocuments">
+          <option value="0">Selecteer document...</option>
+          <option value="1">Vog</option>
+          <option value="2">Contract</option>
+          <option value="3">Paspoort</option>
+          <option value="4">id kaart</option>
+          <option value="5">Diploma</option>
+          <option value="6">Certificaat</option>
+          <option value="7">Lease auto</option>
+        </select>
+
+        <button v-if="overviewType == 'overview' || overviewType == 'archive'" @click="changeOverviewType('valid')"
+          id="buttonArchief"> Geldig </button>
+        <button v-if="overviewType == 'valid' || overviewType == 'archive'" @click="changeOverviewType('overview')"
+          id="buttonArchief"> Overzicht</button>
+        <button v-if="overviewType == 'valid' || overviewType == 'overview'" @click="changeOverviewType('archive')"
+          id="buttonArchief"> Archief</button>
       </div>
 
-      <div class="overview" v-for="(document, i) in displayedDocuments">
-        <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
-          <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
-            src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-          <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
-            src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
-          <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-          <div id="klantnaamTekst">{{ document.customerName }}</div>
-          <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
-          <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
-          <div id="typeTekst">{{ document.type }}</div>
-        </router-link>
-      </div>
 
-      <div id="paging">
-        <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
+      <div v-if="displayedDocuments.length > 0">
+        <div id="titlesOverview">
+          <h3 id="urgentie">Urgentie</h3>
+          <h3 id="klantnaam">Klantnaam</h3>
+          <h3 id="geldigVan">Geldig tot</h3>
+          <h3 v-if="overviewType == 'archive'" id="geldigTot">Verstreken tijd</h3>
+          <h3 v-else id="geldigTot">Verloopt over</h3>
+          <h3 id="Type">Type document</h3>
+        </div>
+
+        <div class="overview" v-for="(document, i) in displayedDocuments">
+          <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
+            <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
+              src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+            <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
+              src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
+            <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+            <div id="klantnaamTekst">{{ document.customerName }}</div>
+            <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
+            <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
+            <div id="typeTekst">{{ document.type }}</div>
+          </router-link>
+        </div>
+
+        <div id="paging">
+          <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
+        </div>
+      </div>
+      <div v-else>
+        <br> Nog geen geldige documenten bekend
       </div>
 
       <br><br><br>
@@ -43,7 +72,7 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/Pagination.vue';
+import Pagination from '../views/pagination.vue';
 import Popup from '../views/popUp.vue';
 import Header from '../views/Header.vue';
 
@@ -53,7 +82,7 @@ export default {
   components: {
     Pagination,
     Popup,
-    Header
+    Header,
   },
 
   data() {
@@ -74,10 +103,13 @@ export default {
         pageSize: 5,
       },
       customers: [],
+      searchField: "",
+      dropBoxType: "0",
+      overviewType: "overview"
     };
   },
   mounted() {
-    this.getDocuments();
+    this.filterDocuments();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.Popup.popUpError("Document is geupload!");
@@ -85,36 +117,16 @@ export default {
     }
   },
   methods: {
+    changeOverviewType(type) {
+      this.overviewType = type
+      this.filterDocuments();
+    },
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;
-      this.getDocuments();
+      this.filterDocuments();
     },
     toArchive() {
       this.$router.push("/archief");
-    },
-    getDocuments() {
-      axios.get("Document", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwt")
-        },
-        params: {
-          page: this.pager.currentPage,
-          pageSize: this.pager.pageSize,
-          isArchived: false
-        }
-      })
-        .then((res) => {
-          this.documents = res.data.documents;
-          this.pager = res.data.pager;
-
-
-          for (let index = 0; index < this.documents.length; index++) {
-            const customerId = this.documents[index].customerId;
-            this.getCustomerName(customerId, index);
-          }
-        }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
-        });
     },
     getCustomerName(id, index) {
       axios.get("Customer/" + id, {
@@ -125,6 +137,36 @@ export default {
         .then((res) => {
           this.documents[index].customerName = res.data.name;
         }).catch((error) => {
+          this.$refs.Popup.popUpError(error.response.data);
+        });
+    },
+    filterDocuments() {
+      console.log(this.overviewType)
+      axios
+        .get("Document/Filter", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt"),
+          },
+          params: {
+            searchfield: this.searchField,
+            overviewType: this.overviewType,
+            dropBoxType: this.dropBoxType,
+            page: this.pager.currentPage,
+            pageSize: this.pager.pageSize
+          },
+        })
+        .then((res) => {
+          this.documents = res.data.documents;
+          this.pager = res.data.pager;
+          console.log(this.documents)
+
+          for (let index = 0; index < this.documents.length; index++) {
+            const customerId = this.documents[index].customerId;
+            this.getCustomerName(customerId, index);
+          }
+
+        })
+        .catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
     },
@@ -145,16 +187,16 @@ export default {
       var time;
 
       if (ageInDays >= year) {
-        time = Math.floor(ageInDays / year) + " jaar"
+        time =  Math.abs(Math.floor(ageInDays / year)) + " jaar"
       }
       else if (ageInDays >= (month * 2)) {
-        time = Math.floor(ageInDays / month) + " maanden"
+        time = Math.abs(Math.floor(ageInDays / month)) + " maanden"
       }
       else if (ageInDays >= (week * 2)) {
-        time = Math.floor(ageInDays / week) + " weken"
+        time = Math.abs(Math.floor(ageInDays / week)) + " weken"
       }
       else {
-        time = ageInDays + " dagen"
+        time = Math.abs(ageInDays) + " dagen"
       }
 
       return time
@@ -175,5 +217,4 @@ export default {
 
 <style>
 @import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';
-</style>
+@import '../assets/Css/Main.css';</style>

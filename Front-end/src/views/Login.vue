@@ -61,7 +61,6 @@ export default {
       inputType: "password",
       errorMessage: "",
       user: {
-        UserId: 0,
         Email: '',
         Password: '',
       }

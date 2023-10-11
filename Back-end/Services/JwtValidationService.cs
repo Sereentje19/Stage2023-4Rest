@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Back_end.Exceptions;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Back_end.Services
@@ -69,7 +66,7 @@ namespace Back_end.Services
             }
             catch (Exception)
             {
-                throw new Exception("Opnieuw inloggen vereist");
+                throw new TokenValidationException("Opnieuw inloggen vereist");
             }
         }
 
@@ -90,7 +87,7 @@ namespace Back_end.Services
 
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
-                throw new Exception("inloggen vereist");
+                throw new InvalidJwtTokenException("inloggen vereist");
             }
 
             return authHeader.Substring("Bearer ".Length);

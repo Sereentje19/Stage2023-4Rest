@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 
 namespace Back_end.Services
 {
     public interface ILoginService
     {
-        User checkCredentials(User user);
+        User checkCredentials(LoginRequestDTO user);
     }
 }

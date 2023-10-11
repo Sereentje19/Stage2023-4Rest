@@ -91,13 +91,16 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.customer = res.data;
-                    console.log(res.data)
+                    this.customer.Email = res.data.email;
+                    this.customer.Name = res.data.name;
+                    console.log(this.customer);
+
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
         putCustomer() {
+            console.log(this.customer);
             axios.put("Customer", this.customer, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

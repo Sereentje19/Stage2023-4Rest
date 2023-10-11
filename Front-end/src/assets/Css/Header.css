@@ -5,12 +5,12 @@
     margin-left: 3px;
     margin-top: 28px;
     padding: 0.5% 0% 0% 1%;
+    margin-left: 30px;
 }
 
 a {
     font-size: 28px;
     color: white;
-    margin-left: 30px;
 }
 
 #buttonsHeader {
@@ -28,3 +28,39 @@ a {
     display: flex;
     flex-direction: row;
 }
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #153912;
+    min-width: 160px;
+    padding-top: 32px;
+    z-index: 1;
+    border-radius: 0px 0px 5px 5px;
+  }
+  
+  .dropdown-content a {
+    color: rgb(255, 255, 255);
+    padding: 10px 10px 10px 10px;
+    text-decoration: none;
+    display: block;
+    background-color: #245521;
+  }
+  .dropdown-content a:last-child{
+
+    border-radius: 0px 0px 5px 5px;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #133610;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }

@@ -1,6 +1,6 @@
-using System;
-using System.Drawing.Imaging;
+using Back_end.Exceptions;
 using Back_end.Models;
+using Back_end.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Back_end.Repositories
@@ -20,14 +20,61 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Document>();
         }
 
+        public List<Document> GetFilterDocuments(string searchfield, Models.Type? dropBoxType, string overviewType)
+        {
+            DateTime now = DateTime.Now;
+            DateTime sixWeeksFromNow = now.AddDays(42);
+            DateTime sixWeeksAgo = now.AddDays(-42);
+
+            var query = from document in _context.Documents
+                        join customer in _context.Customers on document.CustomerId equals customer.CustomerId
+                        where string.IsNullOrEmpty(searchfield) ||
+                            customer.Name.Contains(searchfield) ||
+                            customer.Email.Contains(searchfield) ||
+                            customer.CustomerId.ToString().Contains(searchfield)
+                        where dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType)
+                        orderby document.Date
+                        select new
+                        {
+                            Document = document
+                        };
+
+            switch (overviewType)
+            {
+                case "overview":
+                    query = query.Where(item => item.Document.Date >= now && item.Document.Date <= sixWeeksFromNow);
+                    break;
+                case "archive":
+                    query = query.Where(item => item.Document.Date >= sixWeeksAgo && item.Document.Date < now);
+                    break;
+                case "valid":
+                    query = query.Where(item => item.Document.Date > sixWeeksFromNow);
+                    break;
+            }
+
+            var documents = query.Select(item => item.Document).ToList();
+            return documents;
+        }
+
+
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public Document GetById(int id)
+        public DocumentDTO GetById(int id)
         {
-            return _dbSet.Find(id);
+            Document doc = _dbSet.Find(id);
+
+            var documentDto = new DocumentDTO
+            {
+                File = doc.File,
+                FileType = doc.FileType,
+                Date = doc.Date,
+                CustomerId = doc.CustomerId,
+                Type = doc.Type,
+            };
+            return documentDto;
         }
 
         /// <summary>
@@ -35,7 +82,7 @@ namespace Back_end.Repositories
         /// </summary>
         /// <param name="isArchived">A flag indicating whether to retrieve archived or non-archived documents.</param>
         /// <returns>A collection of documents matching the specified archival status.</returns>
-        public IEnumerable<Document> GetAll(bool isArchived)
+        public IEnumerable<OverviewResponseDTO> GetAll(bool isArchived)
         {
             DateTime currentDate = DateTime.Now;
 
@@ -43,7 +90,15 @@ namespace Back_end.Repositories
                 ? _dbSet.Where(doc => doc.Date < currentDate).OrderByDescending(doc => doc.Date)
                 : _dbSet.Where(doc => doc.Date > currentDate).OrderBy(doc => doc.Date);
 
-            return filteredDocuments.ToList();
+            var overviewList = filteredDocuments.Select(doc => new OverviewResponseDTO
+            {
+                DocumentId = doc.DocumentId,
+                Date = doc.Date,
+                CustomerId = doc.CustomerId,
+                Type = doc.Type
+            }).ToList();
+
+            return overviewList;
         }
 
         /// <summary>
@@ -60,13 +115,13 @@ namespace Back_end.Repositories
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="entity">The document entity to be updated.</param>
-        public void Update(Document entity)
+        public void Update(EditDocumentRequestDTO entity)
         {
             var existingDocument = _dbSet.Find(entity.DocumentId);
 
             if (entity.Type == Models.Type.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
             {
-                throw new Exception("Datum of type is leeg.");
+                throw new UpdateDocumentFailedException("Datum of type is leeg.");
             }
 
             _context.Entry(existingDocument).CurrentValues.SetValues(entity);

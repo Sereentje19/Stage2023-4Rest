@@ -3,6 +3,7 @@ using Back_end.Models;
 using Microsoft.AspNetCore.Authorization;
 using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
+using Back_end.Models.DTOs;
 
 namespace Back_end.Controllers
 {
@@ -32,7 +33,7 @@ namespace Back_end.Controllers
         /// <returns>An authentication token if login is successful; otherwise, an error message.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Login([FromBody] User user)
+        public ActionResult Login([FromBody] LoginRequestDTO user)
         {
             try
             {

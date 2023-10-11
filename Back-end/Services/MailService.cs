@@ -25,14 +25,14 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="image">The byte array representing the image data.</param>
         /// <returns>The MIME part representing the embedded image.</returns>
-        private MimePart SetImage(byte[] image)
+        private MimePart SetImage(byte[] image, string fileType)
         {
-            var imagePart = new MimePart("image", "jpeg")
+            var imagePart = new MimePart()
             {
                 Content = new MimeContent(new MemoryStream(image), ContentEncoding.Default),
                 ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
                 ContentTransferEncoding = ContentEncoding.Base64,
-                FileName = "image.jpg",
+                FileName = fileType,
                 ContentId = MimeUtils.GenerateMessageId()
             };
             return imagePart;
@@ -47,7 +47,7 @@ namespace Back_end.Services
         /// <param name="type">The type of the document.</param>
         /// <param name="emailMessage">The MimeMessage to which the body will be set.</param>
         /// <param name="image">The byte array representing the embedded image.</param>
-        private void SetBody(int weeks, string customerName, DateTime date, Models.Type type, MimeMessage emailMessage, byte[] image)
+        private void SetBody(int weeks, string customerName, DateTime date, Models.Type type, MimeMessage emailMessage, byte[] image, string fileType)
         {
             BodyBuilder emailBodyBuilder = new BodyBuilder
             {
@@ -65,7 +65,7 @@ namespace Back_end.Services
                             </html>"
             };
 
-            MimePart imagePart = SetImage(image);
+            MimePart imagePart = SetImage(image, fileType);
 
             emailBodyBuilder.HtmlBody = emailBodyBuilder.HtmlBody.Replace("src=\"cid:imageId\"", $"src=\"cid:{imagePart.ContentId}\"");
             emailBodyBuilder.LinkedResources.Add(imagePart);
@@ -95,7 +95,7 @@ namespace Back_end.Services
         /// <param name="type">The type of the document.</param>
         /// <param name="image">The byte array representing the embedded image.</param>
         /// <param name="weeks">The number of weeks until document expiration.</param>
-        public void SendEmail(string customerName, DateTime date, Models.Type type, byte[] image, int weeks)
+        public void SendEmail(string customerName, string fileType, DateTime date, Models.Type type, byte[] image, int weeks)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace Back_end.Services
                     emailMessage.To.Add(emailTo);
                     emailMessage.Subject = "Document vervalt Binnenkort!";
 
-                    SetBody(weeks, customerName, date, type, emailMessage, image);
+                    SetBody(weeks, customerName, date, type, emailMessage, image, fileType);
                     ConnectAndSendMail(emailMessage);
                 }
             }

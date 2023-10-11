@@ -32,11 +32,11 @@
             <input v-model="this.customer.Name" type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
             <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
             <select v-model="this.document.Type" class="Type" name="Type">
-              <option value="0">Selecteer type...</option>
+              <option value="0">Selecteer document...</option>
               <option value="1">Vog</option>
               <option value="2">Contract</option>
               <option value="3">Paspoort</option>
-              <option value="4">id kaart</option>
+              <option value="4">ID kaart</option>
               <option value="5">Diploma</option>
               <option value="6">Certificaat</option>
               <option value="7">Lease auto</option>
