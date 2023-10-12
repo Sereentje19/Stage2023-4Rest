@@ -3,9 +3,7 @@
     <Header ref="Header"></Header>
     <div class="overviewContainer">
       <div id="h1AndButton">
-        <h1 v-if="overviewType == 'valid'" id="h1Overzicht">Lang geldig</h1>
-        <h1 v-else-if="overviewType == 'overview'" id="h1Overzicht">Overzicht</h1>
-        <h1 v-else-if="overviewType == 'archive'" id="h1Overzicht">Archief</h1>
+        <h1 id="h1Overzicht">{{overviewType}}</h1>
 
         <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
 
@@ -19,25 +17,17 @@
           <option value="6">Certificaat</option>
           <option value="7">Lease auto</option>
         </select>
-
-        <!-- <button v-if="overviewType == 'overview' || overviewType == 'archive'" @click="changeOverviewType('valid')"
-          id="buttonArchief"> Geldig </button>
-        <button v-if="overviewType == 'valid' || overviewType == 'archive'" @click="changeOverviewType('overview')"
-          id="buttonArchief"> Overzicht</button>
-        <button v-if="overviewType == 'valid' || overviewType == 'overview'" @click="changeOverviewType('archive')"
-          id="buttonArchief"> Archief</button> -->
       </div>
-
 
       <div v-if="displayedDocuments.length > 0">
         <div id="titlesOverview">
           <h3 id="urgentie">Urgentie</h3>
           <h3 id="klantnaam">Klantnaam</h3>
           <h3 id="geldigVan">Geldig tot</h3>
-          <h3 v-if="overviewType == 'archive'" id="geldigTot">Verstreken tijd</h3>
+          <h3 v-if="overviewType == 'Archief'" id="geldigTot">Verstreken tijd</h3>
           <h3 v-else id="geldigTot">Verloopt over</h3>
           <h3 id="Type">Type document</h3>
-          <h3 v-if="overviewType == 'archive'" id="Type">Zet terug</h3>
+          <h3 v-if="overviewType == 'Archief'" id="Type">Zet terug</h3>
           <h3 v-else id="Type">Archiveer</h3>
         </div>
 
@@ -52,7 +42,7 @@
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type }}</div>
-            <div id="checkboxArchive"><input type="checkbox" id="checkboxA" v-model="document.isChecked" 
+            <div id="checkboxArchive"><input type="checkbox" id="checkboxA" v-model="document.isChecked"
                 @change="toggleCheckbox(document)"></div>
           </div>
         </div>
@@ -135,10 +125,10 @@ export default {
     toggleCheckbox(doc) {
       console.log('Toggled for document ID: ', doc);
 
-      if (this.overviewType == 'archive') {
+      if (this.overviewType == 'Archief') {
         doc.isArchived = false;
       }
-      else{
+      else {
         doc.isArchived = true;
       }
 
@@ -190,13 +180,11 @@ export default {
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
-          console.log(this.documents)
 
           for (let index = 0; index < this.documents.length; index++) {
             const customerId = this.documents[index].customerId;
             this.getCustomerName(customerId, index);
           }
-
         })
         .catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -213,37 +201,33 @@ export default {
     },
     daysAway(date) {
       const ageInDays = this.caculationDays(date);
-      const week = 7;
-      const month = 30;
       const year = 365;
-      let years = Math.floor(ageInDays / year)
-      let months = Math.floor(ageInDays / month)
-      let weeks = Math.floor(ageInDays / week)
-      let days = ageInDays;
-      var time;
+      const month = 30;
+      const week = 7;
+      let timeUnit = "dagen";
+      let timeValue = ageInDays;
 
-      if(this.overviewType == 'archive')
-      {
-        years = Math.abs(years)
-        months = Math.abs(months)
-        weeks = Math.abs(weeks)
-        days = Math.abs(days)
+      if (this.overviewType == 'Archief') {
+        if (timeValue < 0) {
+          timeValue = Math.abs(timeValue);
+        }
+        else {
+          timeValue = -timeValue
+        }
       }
 
       if (ageInDays >= year) {
-        time = years + " jaar"
-      }
-      else if (ageInDays >= (month * 2)) {
-        time = months + " maanden"
-      }
-      else if (ageInDays >= (week * 2)) {
-        time = weeks + " weken"
-      }
-      else {
-        time = days + " dagen"
+        timeValue = Math.floor(ageInDays / year);
+        timeUnit = "jaar";
+      } else if (ageInDays >= month * 2) {
+        timeValue = Math.floor(ageInDays / month);
+        timeUnit = "maanden";
+      } else if (ageInDays >= week * 2) {
+        timeValue = Math.floor(ageInDays / week);
+        timeUnit = "weken";
       }
 
-      return time
+      return `${timeValue} ${timeUnit}`;
     },
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);

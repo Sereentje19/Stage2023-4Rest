@@ -39,15 +39,15 @@ namespace Back_end.Repositories
                             Document = document
                         };
 
-            if (overviewType == "overview")
+            if (overviewType == "Overzicht")
             {
                 query = query.Where(item => item.Document.Date <= sixWeeksFromNow && !item.Document.IsArchived);
             }
-            else if (overviewType == "archive")
+            else if (overviewType == "Archief")
             {
                 query = query.Where(item => item.Document.IsArchived);
             }
-            else if (overviewType == "valid")
+            else if (overviewType == "Lang geldig")
             {
                 query = query.Where(item => item.Document.Date > sixWeeksFromNow && !item.Document.IsArchived);
             }
