@@ -77,29 +77,6 @@ namespace Back_end.Repositories
             return documentDto;
         }
 
-        /// <summary>
-        /// Retrieves a collection of documents based on their archival status.
-        /// </summary>
-        /// <param name="isArchived">A flag indicating whether to retrieve archived or non-archived documents.</param>
-        /// <returns>A collection of documents matching the specified archival status.</returns>
-        public IEnumerable<OverviewResponseDTO> GetAll(bool isArchived)
-        {
-            DateTime currentDate = DateTime.Now;
-
-            var filteredDocuments = isArchived
-                ? _dbSet.Where(doc => doc.Date < currentDate).OrderByDescending(doc => doc.Date)
-                : _dbSet.Where(doc => doc.Date > currentDate).OrderBy(doc => doc.Date);
-
-            var overviewList = filteredDocuments.Select(doc => new OverviewResponseDTO
-            {
-                DocumentId = doc.DocumentId,
-                Date = doc.Date,
-                CustomerId = doc.CustomerId,
-                Type = doc.Type
-            }).ToList();
-
-            return overviewList;
-        }
 
         /// <summary>
         /// Adds a new document to the repository.

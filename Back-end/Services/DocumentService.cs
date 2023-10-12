@@ -41,38 +41,6 @@ namespace Back_end.Services
         }
 
         /// <summary>
-        /// Retrieves a paged list of documents based on their archival status.
-        /// </summary>
-        /// <param name="isArchived">A flag indicating whether to retrieve archived or non-archived documents.</param>
-        /// <param name="page">The page number to retrieve.</param>
-        /// <param name="pageSize">The number of items to display per page.</param>
-        /// <returns>
-        /// A tuple containing a paged list of documents and pagination information represented by a Pager object.
-        /// </returns>
-        public (IEnumerable<object>, Pager) GetAllPagedDocuments(bool isArchived, int page, int pageSize)
-        {
-            IEnumerable<OverviewResponseDTO> filteredDocuments = _documentRepository.GetAll(isArchived);
-
-            int totalArchivedDocuments = filteredDocuments.Count();
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(totalArchivedDocuments, page, pageSize);
-
-            var pagedDocuments = filteredDocuments
-                .Skip(skipCount)
-                .Take(pageSize)
-                .Select(doc => new
-                {
-                    doc.DocumentId,
-                    doc.Date,
-                    doc.CustomerId,
-                    Type = doc.Type.ToString().Replace("_", " ")
-                })
-                .ToList();
-
-            return (pagedDocuments.Cast<object>(), pager);
-        }
-
-        /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>

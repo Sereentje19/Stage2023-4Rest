@@ -25,40 +25,6 @@ namespace Back_end.Controllers
             jwtValidationService = jwt;
         }
 
-        /// <summary>
-        /// Retrieves a paged list of documents based on specified parameters.
-        /// </summary>
-        /// <param name="page">The page number to retrieve (default is 1).</param>
-        /// <param name="pageSize">The number of items per page (default is 5).</param>
-        /// <param name="isArchived">A flag indicating whether to retrieve archived documents (default is false).</param>
-        /// <returns>A collection of documents and pagination information.</returns>
-        [HttpGet]
-        public IActionResult GetDocuments(int page = 1, int pageSize = 5, bool isArchived = false)
-        {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var (pagedDocuments, pager) = documentService.GetAllPagedDocuments(isArchived, page, pageSize);
-
-                var response = new
-                {
-                    Documents = pagedDocuments,
-                    Pager = new
-                    {
-                        pager.TotalItems,
-                        pager.CurrentPage,
-                        pager.PageSize,
-                        pager.TotalPages,
-                    }
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
 
         [HttpGet("Filter")]
         public IActionResult GetFilterDocuments(string? searchfield, string overviewType, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
@@ -122,7 +88,7 @@ namespace Back_end.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public IActionResult Post([FromForm] IFormFile file, [FromForm] DocumentDTO document)
+        public IActionResult Post([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
         {
             try
             {
@@ -135,10 +101,13 @@ namespace Back_end.Controllers
                     FileType = document.FileType
                 };
 
-                using (var memoryStream = new MemoryStream())
+                if (file != null)
                 {
-                    file.CopyTo(memoryStream);
-                    doc.File = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        file.CopyTo(memoryStream);
+                        doc.File = memoryStream.ToArray();
+                    }
                 }
 
                 documentService.Post(doc);

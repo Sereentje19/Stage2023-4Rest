@@ -78,8 +78,6 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<ICustomerService, CustomerService>();
     builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
     builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
-    builder.Services.AddScoped<IFilterService, FilterService>();
-    builder.Services.AddScoped<IFilterRepository, FilterRepository>();
     builder.Services.AddScoped<IMailService, MailService>();
     builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
     builder.Services.AddHostedService<DocumentExpirationCheckService>();

@@ -37,6 +37,8 @@
           <h3 v-if="overviewType == 'archive'" id="geldigTot">Verstreken tijd</h3>
           <h3 v-else id="geldigTot">Verloopt over</h3>
           <h3 id="Type">Type document</h3>
+          <h3 id="Type">Archief</h3>
+
         </div>
 
         <div class="overview" v-for="(document, i) in displayedDocuments">
@@ -50,6 +52,7 @@
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type }}</div>
+           <div id="checkboxArchive"><input type="checkbox" v-model="isChecked" @change="toggleCheckbox"></div> 
           </router-link>
         </div>
 
@@ -73,7 +76,7 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/pagination.vue';
-import Popup from '../views/popUp.vue';
+import Popup from '../views/popup.vue';
 import Header from '../views/Header.vue';
 
 
@@ -187,7 +190,7 @@ export default {
       var time;
 
       if (ageInDays >= year) {
-        time =  Math.abs(Math.floor(ageInDays / year)) + " jaar"
+        time = Math.abs(Math.floor(ageInDays / year)) + " jaar"
       }
       else if (ageInDays >= (month * 2)) {
         time = Math.abs(Math.floor(ageInDays / month)) + " maanden"
@@ -217,4 +220,5 @@ export default {
 
 <style>
 @import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';</style>
+@import '../assets/Css/Main.css';
+</style>
