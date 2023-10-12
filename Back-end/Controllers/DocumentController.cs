@@ -138,5 +138,20 @@ namespace Back_end.Controllers
                 return StatusCode(401, ex.Message);
             }
         }
+
+        [HttpPut("IsArchived")]
+        public IActionResult PutIsArchived(CheckBoxDTO doc)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                documentService.UpdateIsArchived(doc);
+                return Ok(new { message = "Document updated" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
     }
 }

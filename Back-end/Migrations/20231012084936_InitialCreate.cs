@@ -35,7 +35,8 @@ namespace Back_end.Migrations
                     FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(24)", nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(24)", nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,8 +57,7 @@ namespace Back_end.Migrations
                     table.PrimaryKey("PK_Users", x => x.UserId);
                 });
 
-
-                //insert method Table Users
+                   //insert method Table Users
             migrationBuilder.InsertData(
             table: "Users",
             columns: new[] { "UserId", "Email", "Password" },
@@ -80,12 +80,13 @@ namespace Back_end.Migrations
             //insert method Table Documents
             migrationBuilder.InsertData(
                 table: "Documents",
-                columns: new[] { "DocumentId", "File", "FileType", "Date", "CustomerId", "Type" },
+                columns: new[] { "DocumentId", "File", "FileType", "Date", "CustomerId", "Type", "IsArchived" },
                 values: new object[,]
                 {
-        { 1, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString() },
-        { 2, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString() },
+        { 1, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString(), false },
+        { 2, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString(), false },
                 });
+        
         }
 
         /// <inheritdoc />

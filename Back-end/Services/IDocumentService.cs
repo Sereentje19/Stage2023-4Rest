@@ -9,5 +9,6 @@ namespace Back_end.Services
         DocumentDTO GetById(int id);
         void Post(Document document);
         void Put(EditDocumentRequestDTO document);
+        void UpdateIsArchived(CheckBoxDTO entity);
     }
 }

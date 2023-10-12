@@ -1,6 +1,6 @@
 <template>
   <body class="overviewBody">
-    <Header></Header>
+    <Header ref="Header"></Header>
     <div class="overviewContainer">
       <div id="h1AndButton">
         <h1 v-if="overviewType == 'valid'" id="h1Overzicht">Lang geldig</h1>
@@ -20,12 +20,12 @@
           <option value="7">Lease auto</option>
         </select>
 
-        <button v-if="overviewType == 'overview' || overviewType == 'archive'" @click="changeOverviewType('valid')"
+        <!-- <button v-if="overviewType == 'overview' || overviewType == 'archive'" @click="changeOverviewType('valid')"
           id="buttonArchief"> Geldig </button>
         <button v-if="overviewType == 'valid' || overviewType == 'archive'" @click="changeOverviewType('overview')"
           id="buttonArchief"> Overzicht</button>
         <button v-if="overviewType == 'valid' || overviewType == 'overview'" @click="changeOverviewType('archive')"
-          id="buttonArchief"> Archief</button>
+          id="buttonArchief"> Archief</button> -->
       </div>
 
 
@@ -37,12 +37,12 @@
           <h3 v-if="overviewType == 'archive'" id="geldigTot">Verstreken tijd</h3>
           <h3 v-else id="geldigTot">Verloopt over</h3>
           <h3 id="Type">Type document</h3>
-          <h3 id="Type">Archief</h3>
-
+          <h3 v-if="overviewType == 'archive'" id="Type">Zet terug</h3>
+          <h3 v-else id="Type">Archiveer</h3>
         </div>
 
         <div class="overview" v-for="(document, i) in displayedDocuments">
-          <router-link :to="{ path: '/infopage/' + document.documentId }" id="item">
+          <div @click="goToInfoPage(document)" :to="{ path: '/infopage/' + document.documentId }" id="item">
             <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
               src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
             <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
@@ -52,8 +52,9 @@
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type }}</div>
-           <div id="checkboxArchive"><input type="checkbox" v-model="isChecked" @change="toggleCheckbox"></div> 
-          </router-link>
+            <div id="checkboxArchive"><input type="checkbox" id="checkboxA" v-model="document.isChecked" 
+                @change="toggleCheckbox(document)"></div>
+          </div>
         </div>
 
         <div id="paging">
@@ -75,8 +76,8 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/pagination.vue';
-import Popup from '../views/popup.vue';
+import Pagination from '../views/Pagination.vue';
+import Popup from '../views/Popup.vue';
 import Header from '../views/Header.vue';
 
 
@@ -96,7 +97,8 @@ export default {
           customerId: 0,
           date: "",
           customerName: "",
-          type: ""
+          type: "",
+          isArchived: null
         }
       ],
       pager: {
@@ -108,7 +110,7 @@ export default {
       customers: [],
       searchField: "",
       dropBoxType: "0",
-      overviewType: "overview"
+      overviewType: localStorage.getItem("overviewType")
     };
   },
   mounted() {
@@ -120,9 +122,36 @@ export default {
     }
   },
   methods: {
-    changeOverviewType(type) {
-      this.overviewType = type
-      this.filterDocuments();
+    goToInfoPage(doc) {
+      setTimeout(() => {
+        if (doc.isArchived == null) {
+          this.$router.push("/infopage/" + doc.documentId);
+        }
+        else {
+          this.filterDocuments();
+        }
+      }, 200);
+    },
+    toggleCheckbox(doc) {
+      console.log('Toggled for document ID: ', doc);
+
+      if (this.overviewType == 'archive') {
+        doc.isArchived = false;
+      }
+      else{
+        doc.isArchived = true;
+      }
+
+      axios.put("Document/IsArchived", doc, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        }
+      })
+        .then((res) => {
+        }).catch((error) => {
+          this.$refs.Popup.popUpError(error.response.data);
+        });
+
     },
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;

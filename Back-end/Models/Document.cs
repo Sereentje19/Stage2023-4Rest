@@ -16,5 +16,6 @@ namespace Back_end.Models
 
         [Column(TypeName = "nvarchar(24)")]
         public Type Type { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

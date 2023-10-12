@@ -67,5 +67,10 @@ namespace Back_end.Services
         {
             _documentRepository.Update(document);
         }
+
+        public void UpdateIsArchived(CheckBoxDTO entity)
+        {
+            _documentRepository.UpdateIsArchived(entity);
+        }
     }
 }

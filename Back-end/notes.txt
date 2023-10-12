@@ -1,4 +1,4 @@
- //insert method Table Users
+   //insert method Table Users
             migrationBuilder.InsertData(
             table: "Users",
             columns: new[] { "UserId", "Email", "Password" },
@@ -21,9 +21,10 @@
             //insert method Table Documents
             migrationBuilder.InsertData(
                 table: "Documents",
-                columns: new[] { "DocumentId", "Image", "Date", "CustomerId", "Type" },
+                columns: new[] { "DocumentId", "File", "FileType", "Date", "CustomerId", "Type", "IsArchived" },
                 values: new object[,]
                 {
-        { 1, new byte[1], new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString() },
-        { 2, new byte[1], new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString() },
+        { 1, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString(), false },
+        { 2, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString(), false },
                 });
+        

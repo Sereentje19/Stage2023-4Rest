@@ -12,7 +12,7 @@ const router = createRouter({
     { path: '/infopage/:id', component: infopage, props: true},
     { path: '/Edit/:route/:id', component: Edit, props: true},
     { path: '/uploaden', component: Uploaden },
-    { path: '/overzicht', component: Overview ,
+    { path: '/overzicht', name: 'Overview', component: Overview ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
   ],
 });

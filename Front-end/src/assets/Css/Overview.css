@@ -82,10 +82,15 @@ h1 {
     text-overflow: ellipsis;
 }
 
+#checkboxA{
+    width: 18px;
+    height: 18px;
+}
 
 #klantnaamTekst,
 #geldigVanTekst,
 #geldigTotTekst,
+#checkboxArchive,
 #typeTekst {
     margin-top: auto;
     margin-bottom: auto;

@@ -39,17 +39,17 @@ namespace Back_end.Repositories
                             Document = document
                         };
 
-            switch (overviewType)
+            if (overviewType == "overview")
             {
-                case "overview":
-                    query = query.Where(item => item.Document.Date >= now && item.Document.Date <= sixWeeksFromNow);
-                    break;
-                case "archive":
-                    query = query.Where(item => item.Document.Date >= sixWeeksAgo && item.Document.Date < now);
-                    break;
-                case "valid":
-                    query = query.Where(item => item.Document.Date > sixWeeksFromNow);
-                    break;
+                query = query.Where(item => item.Document.Date >= now && item.Document.Date <= sixWeeksFromNow && !item.Document.IsArchived);
+            }
+            else if (overviewType == "archive")
+            {
+                query = query.Where(item => item.Document.IsArchived);
+            }
+            else if (overviewType == "valid")
+            {
+                query = query.Where(item => item.Document.Date > sixWeeksFromNow && !item.Document.IsArchived);
             }
 
             var documents = query.Select(item => item.Document).ToList();
@@ -107,6 +107,15 @@ namespace Back_end.Repositories
             _context.SaveChanges();
         }
 
+        public void UpdateIsArchived(CheckBoxDTO entity)
+        {
+            var existingDocument = _dbSet.Find(entity.DocumentId);
 
+            if (existingDocument != null)
+            {
+                existingDocument.IsArchived = entity.IsArchived; 
+                _context.SaveChanges(); 
+            }
+        }
     }
 }

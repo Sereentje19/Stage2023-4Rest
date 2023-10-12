@@ -9,5 +9,6 @@ namespace Back_end.Repositories
         List<Document> GetFilterDocuments(string searchfield, Models.Type? dropBoxType, string overviewType);
         void Add(Document entity);
         void Update(EditDocumentRequestDTO entity);
+        void UpdateIsArchived(CheckBoxDTO entity);
     }
 }
