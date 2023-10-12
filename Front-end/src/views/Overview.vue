@@ -3,7 +3,7 @@
     <Header ref="Header"></Header>
     <div class="overviewContainer">
       <div id="h1AndButton">
-        <h1 id="h1Overzicht">{{overviewType}}</h1>
+        <h1 id="h1Overzicht">{{ overviewType }}</h1>
 
         <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
 
@@ -201,33 +201,35 @@ export default {
     },
     daysAway(date) {
       const ageInDays = this.caculationDays(date);
-      const year = 365;
-      const month = 30;
       const week = 7;
-      let timeUnit = "dagen";
-      let timeValue = ageInDays;
+      const month = 30;
+      const year = 365;
 
-      if (this.overviewType == 'Archief') {
-        if (timeValue < 0) {
-          timeValue = Math.abs(timeValue);
-        }
-        else {
-          timeValue = -timeValue
-        }
-      }
+      let unit, value;
 
       if (ageInDays >= year) {
-        timeValue = Math.floor(ageInDays / year);
-        timeUnit = "jaar";
+        unit = "jaar";
+        value = Math.floor(ageInDays / year);
       } else if (ageInDays >= month * 2) {
-        timeValue = Math.floor(ageInDays / month);
-        timeUnit = "maanden";
+        unit = "maanden";
+        value = Math.floor(ageInDays / month);
       } else if (ageInDays >= week * 2) {
-        timeValue = Math.floor(ageInDays / week);
-        timeUnit = "weken";
+        unit = "weken";
+        value = Math.floor(ageInDays / week);
+      } else {
+        unit = "dagen";
+        value = ageInDays;
       }
 
-      return `${timeValue} ${timeUnit}`;
+      if (this.overviewType === 'Archief' && value < 0) {
+        value = Math.abs(value);
+      }
+      else if(this.overviewType === 'Archief' && value > 0)
+      {
+        value = -value
+      }
+
+      return `${value} ${unit}`;
     },
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);
