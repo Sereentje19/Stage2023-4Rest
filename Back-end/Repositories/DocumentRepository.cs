@@ -41,7 +41,7 @@ namespace Back_end.Repositories
 
             if (overviewType == "overview")
             {
-                query = query.Where(item => item.Document.Date >= now && item.Document.Date <= sixWeeksFromNow && !item.Document.IsArchived);
+                query = query.Where(item => item.Document.Date <= sixWeeksFromNow && !item.Document.IsArchived);
             }
             else if (overviewType == "archive")
             {

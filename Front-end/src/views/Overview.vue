@@ -216,19 +216,31 @@ export default {
       const week = 7;
       const month = 30;
       const year = 365;
+      let years = Math.floor(ageInDays / year)
+      let months = Math.floor(ageInDays / month)
+      let weeks = Math.floor(ageInDays / week)
+      let days = ageInDays;
       var time;
 
+      if(this.overviewType == 'archive')
+      {
+        years = Math.abs(years)
+        months = Math.abs(months)
+        weeks = Math.abs(weeks)
+        days = Math.abs(days)
+      }
+
       if (ageInDays >= year) {
-        time = Math.abs(Math.floor(ageInDays / year)) + " jaar"
+        time = years + " jaar"
       }
       else if (ageInDays >= (month * 2)) {
-        time = Math.abs(Math.floor(ageInDays / month)) + " maanden"
+        time = months + " maanden"
       }
       else if (ageInDays >= (week * 2)) {
-        time = Math.abs(Math.floor(ageInDays / week)) + " weken"
+        time = weeks + " weken"
       }
       else {
-        time = Math.abs(ageInDays) + " dagen"
+        time = days + " dagen"
       }
 
       return time
