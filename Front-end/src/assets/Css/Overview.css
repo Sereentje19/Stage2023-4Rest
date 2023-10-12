@@ -82,10 +82,15 @@ h1 {
     text-overflow: ellipsis;
 }
 
+#checkboxA{
+    width: 18px;
+    height: 18px;
+}
 
 #klantnaamTekst,
 #geldigVanTekst,
 #geldigTotTekst,
+#checkboxArchive,
 #typeTekst {
     margin-top: auto;
     margin-bottom: auto;
@@ -94,7 +99,7 @@ h1 {
 
 #titlesOverview {
     display: grid;
-    grid-template-columns: 10% 30% 15% 15% 30%;
+    grid-template-columns: 10% 30% 15% 15% 20% 10%;
 }
 
 .overviewContainer {
@@ -112,7 +117,7 @@ h1 {
     border-width: 1px;
     border-style: solid;
     display: grid;
-    grid-template-columns: 10% 30% 15% 15% 30%;
+    grid-template-columns: 10% 30% 15% 15% 20% 10%;
     color: black;
     margin-left: auto;
     border-radius: 3px;

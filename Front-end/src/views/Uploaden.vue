@@ -10,6 +10,10 @@
           <input type="file" class="file" @change="handleFileChange" style="display: none" />
         </div>
 
+        <div v-if="this.selectedFile != null">Geselecteerde bestand: <b>{{ this.selectedFile.name }}</b></div>
+        <div v-else>Nog geen bestand geselecteerd</div>
+
+
         <label class="overlay">
           <div id="selectDocument"> Selecteer document</div>
           <img id="folderImage" src="../assets/Pictures/folder.png">
@@ -91,10 +95,7 @@ export default {
   },
   methods: {
     CreateDocument() {
-      if (this.selectedFile == null) {
-        this.$refs.Popup.popUpError("Selecteer een bestand!");
-      }
-      else if (this.document.Type == 0) {
+      if (this.document.Type == 0) {
         this.$refs.Popup.popUpError("Selecteer een type!");
       }
       else {
@@ -133,11 +134,13 @@ export default {
     },
     CreateFromData(customerId) {
       let formData = new FormData();
-      formData.append('file', this.selectedFile);
+      if (this.selectedFile != null) {
+        formData.append('file', this.selectedFile);
+        formData.append('document.FileType', this.selectedFile.type);
+      }
       formData.append('document.Type', this.document.Type);
       formData.append('document.Date', this.document.Date);
       formData.append('document.CustomerId', customerId);
-      formData.append('document.FileType', this.selectedFile.type);
       return formData;
     },
     filterCustomer() {

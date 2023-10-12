@@ -28,11 +28,14 @@
     </div>
     <div class="foto">
 
-      <embed v-if="this.document.fileType === 'application/pdf'"
-        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" width="100%"
+      <div v-if="this.document.fileType == null"> <br><br><br> Er is geen afbeelding aanwezig bij dit document</div>
+      <embed v-else-if="this.document.fileType === 'application/pdf'"
+        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" frameborder="0" width="100%"
         height="500px">
-      <img v-else-if="this.document.fileType != ''" class="foto"
+      <img v-else-if="this.document.fileType != 'application/pdf'" class="foto"
         :src="'data:' + this.document.fileType + ';base64,' + this.document.file" alt="image not shown" />
+
+
 
 
     </div>
