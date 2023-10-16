@@ -24,17 +24,13 @@
 #filterDropDown{
     width: 250px;
     height: 35px;
-    margin-right: 20px;
+    margin-left: 20px;
     border-radius: 5px;
     font-size: 17px;
     padding-left: 8px;
     border-width: 1px;
     margin-top: 20px;
     border: rgb(0, 0, 0) solid 1px;
-}
-
-#SearchFieldOverview{
-    margin-left: 30px;
 }
 
 #buttonArchief:hover{
@@ -49,9 +45,6 @@
     padding: 10px;
     cursor: pointer;
 }
-
-
-
 
 h1 {
     font-size: 50px;
@@ -121,6 +114,7 @@ h1 {
     color: black;
     margin-left: auto;
     border-radius: 3px;
+    cursor: pointer;
 }
 
 a {

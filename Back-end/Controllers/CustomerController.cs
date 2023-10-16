@@ -24,26 +24,7 @@ namespace Back_end.Controllers
             customerService = cs;
             jwtValidationService = jwt;
         }
-
-        /// <summary>
-        /// Filters and retrieves a list of customers based on a search field.
-        /// </summary>
-        /// <param name="searchField">The search field used to filter customers.</param>
-        /// <returns>A collection of customers matching the search criteria.</returns>
-        [HttpGet("Filter")]
-        public IActionResult FilterAll(string searchField)
-        {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var customers = customerService.FilterAll(searchField);
-                return Ok(customers);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
+        
 
         /// <summary>
         /// Retrieves a customer by its unique identifier (ID).
@@ -58,6 +39,41 @@ namespace Back_end.Controllers
                 jwtValidationService.ValidateToken(HttpContext);
                 var customer = customerService.GetById(id);
                 return Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Filters and retrieves a list of customers based on a search field.
+        /// </summary>
+        /// <param name="searchField">The search field used to filter customers.</param>
+        /// <returns>A collection of customers matching the search criteria.</returns>
+        [HttpGet("Filter")]
+        public IActionResult FilterAll(string? searchField)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var customers = customerService.FilterAll(searchField);
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetAllCustomers()
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var customers = customerService.GetAll();
+                return Ok(customers);
             }
             catch (Exception ex)
             {
@@ -91,12 +107,12 @@ namespace Back_end.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(Customer cus)
+        public IActionResult Put(CustomerDocumentDTO customerDocumentDTO)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                customerService.Put(cus);
+                customerService.Put(customerDocumentDTO);
                 return Ok(new { message = "Customer updated" });
             }
             catch (Exception ex)

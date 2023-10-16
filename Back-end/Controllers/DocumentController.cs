@@ -25,6 +25,20 @@ namespace Back_end.Controllers
             jwtValidationService = jwt;
         }
 
+        [HttpGet]
+        public IActionResult GetAllDocuments()
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var documents = documentService.GetAll();
+                return Ok(documents);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
 
         [HttpGet("Filter")]
         public IActionResult GetFilterDocuments(string? searchfield, string overviewType, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
@@ -74,6 +88,21 @@ namespace Back_end.Controllers
                 };
 
                 return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpGet("customerId/{customerId}")]
+        public IActionResult GetByCustomerId(int customerId)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var documents = documentService.GetByCustomerId(customerId);
+                return Ok(documents);
             }
             catch (Exception ex)
             {

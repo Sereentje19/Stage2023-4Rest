@@ -5,7 +5,6 @@
       <div id="h1AndButton">
         <h1 id="h1Overzicht">{{ overviewType }}</h1>
 
-        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
 
         <select v-model="dropBoxType" id="filterDropDown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
@@ -17,6 +16,8 @@
           <option value="6">Certificaat</option>
           <option value="7">Lease auto</option>
         </select>
+        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
+
       </div>
 
       <div v-if="displayedDocuments.length > 0">
@@ -32,7 +33,7 @@
         </div>
 
         <div class="overview" v-for="(document, i) in displayedDocuments">
-          <div @click="goToInfoPage(document)" :to="{ path: '/infopage/' + document.documentId }" id="item">
+          <div @click="goToInfoPage(document)" id="item">
             <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
               src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
             <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
@@ -120,7 +121,7 @@ export default {
         else {
           this.filterDocuments();
         }
-      }, 200);
+      }, 100);
     },
     toggleCheckbox(doc) {
       console.log('Toggled for document ID: ', doc);

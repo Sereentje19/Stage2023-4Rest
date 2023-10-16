@@ -20,6 +20,11 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Document>();
         }
 
+        public IEnumerable<Document> GetAll()
+        {
+            return _dbSet.ToList();
+        }
+
         public List<Document> GetFilterDocuments(string searchfield, Models.Type? dropBoxType, string overviewType)
         {
             DateTime now = DateTime.Now;
@@ -77,6 +82,13 @@ namespace Back_end.Repositories
             return documentDto;
         }
 
+        public IEnumerable<Document> GetByCustomerId(int customerId)
+        {
+            var documents = _dbSet.Where(d => d.CustomerId == customerId).ToList();
+
+            return documents;
+        }
+
 
         /// <summary>
         /// Adds a new document to the repository.
@@ -103,7 +115,7 @@ namespace Back_end.Repositories
 
             _context.Entry(existingDocument).CurrentValues.SetValues(entity);
             _context.Entry(existingDocument).Property(x => x.File).IsModified = false;
-            _context.Entry(existingDocument).Property(x => x.CustomerId).IsModified = false;
+            // _context.Entry(existingDocument).Property(x => x.CustomerId).IsModified = false;
             _context.SaveChanges();
         }
 
@@ -113,8 +125,19 @@ namespace Back_end.Repositories
 
             if (existingDocument != null)
             {
-                existingDocument.IsArchived = entity.IsArchived; 
-                _context.SaveChanges(); 
+                existingDocument.IsArchived = entity.IsArchived;
+                _context.SaveChanges();
+            }
+        }
+
+        public void UpdateCustomerId(int customerId, int documentId)
+        {
+            var existingDocument = _dbSet.Find(documentId);
+
+            if (existingDocument != null)
+            {
+                existingDocument.CustomerId = customerId;
+                _context.SaveChanges();
             }
         }
     }

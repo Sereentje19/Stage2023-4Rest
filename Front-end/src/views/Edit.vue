@@ -24,7 +24,7 @@
 
                 </div>
             </form>
-            <button @click="route === 'document' ? putDocument() : putCustomer()" class="verstuurEdit">Verstuur
+            <button @click="route === 'document' ? editDocument() : editCustomer()" class="verstuurEdit">Verstuur
                 document</button>
         </div>
 
@@ -60,6 +60,9 @@ export default {
                 Date: "",
                 CustomerId: 0,
             },
+            customerDocument:{
+
+            },
             filteredCustomers: []
         };
     },
@@ -79,12 +82,12 @@ export default {
                     this.document.Date = res.data.document.date;
                     this.document.Type = res.data.document.type;
                     console.log(this.document.Date)
-                    this.getCustomerInfo(res.data.document.customerId);
+                    this.getCustomer(res.data.document.customerId);
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        getCustomerInfo(customerId) {
+        getCustomer(customerId) {
             axios.get("Customer/" + customerId, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -99,9 +102,25 @@ export default {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        putCustomer() {
-            console.log(this.customer);
-            axios.put("Customer", this.customer, {
+        createNewCustomer() {
+            this.customer.CustomerId = 0;
+            console.log(this.customer)
+            axios.post("Customer", this.customer, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    let customerId = res.data;
+                    this.document.CustomerId = customerId;
+                    this.editDocument();
+
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
+        changeCurrentCustomer() {
+            axios.get("Customer", this.customer, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -113,8 +132,69 @@ export default {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        putDocument() {
+        checkCustomerExists() {
+            axios.get("Customer", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    if (res.data.length > 0) {
+                        this.document.CustomerId = res.data.CustomerId;
+                        console.log(res.data)
+                        console.log(this.document)
+                    }
+                    else {
+                        this.changeCurrentCustomer();
+                    }
+
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
+        editCustomer() {
+            this.customerDocument.DocumentId = this.document.DocumentId;
+            this.customerDocument.CustomerId = this.customer.CustomerId;
+            this.customerDocument.Email = this.customer.Email;
+            this.customerDocument.Name = this.customer.Name;
+            console.log(this.customerDocument)
+            
+            axios.put("Customer", this.customerDocument, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    this.$router.push("/infopage/" + this.id);
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+
+
+
+
+
+        //     console.log(this.customer)
+        //     axios.get("Document/customerId/" + this.customer.CustomerId, { 
+        //         headers: {
+        //             Authorization: "Bearer " + localStorage.getItem("jwt")
+        //         }
+        //     })
+        //         .then((res) => {
+        //             if (res.data.length > 1) {
+        //                 this.createNewCustomer();
+        //             }
+        //             else {
+        //                 this.checkCustomerExists()
+        //             }
+
+        //         }).catch((error) => {
+        //             this.$refs.Popup.popUpError(error.response.data);
+        //         });
+        },
+        editDocument() {
             this.document.Type = parseInt(this.document.Type, 10);
+            console.log(this.document)
             axios.put("Document", this.document, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

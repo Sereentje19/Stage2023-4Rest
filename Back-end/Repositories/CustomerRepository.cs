@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Back_end.Exceptions;
 using Back_end.Models;
 using Back_end.Models.DTOs;
@@ -20,22 +21,20 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Customer>();
         }
 
+
         /// <summary>
         /// Retrieves a customer by their unique identifier (ID).
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public CustomerDTO GetById(int id)
+        public Customer GetById(int id)
         {
-            Customer cus = _dbSet.Find(id);
+            return _dbSet.Find(id);
+        }
 
-            var customerDTO = new CustomerDTO
-            {
-                Email = cus.Email,
-                Name = cus.Name
-            };
-
-            return customerDTO;
+        public List<Customer> GetAll()
+        {
+            return _dbSet.ToList();
         }
 
         /// <summary>
@@ -90,6 +89,19 @@ namespace Back_end.Repositories
             try
             {
                 _context.Update(entity);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de klantgegevens.");
+            }
+        }
+
+        public void Delete(Customer entity)
+        {
+            try
+            {
+                _dbSet.Remove(entity);
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)

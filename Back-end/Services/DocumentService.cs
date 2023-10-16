@@ -17,6 +17,11 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
+        public IEnumerable<Document> GetAll()
+        {
+            return _documentRepository.GetAll();
+        }
+
         public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize, string overviewType)
         {
             var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType, overviewType);
@@ -48,6 +53,11 @@ namespace Back_end.Services
         public DocumentDTO GetById(int id)
         {
             return _documentRepository.GetById(id);
+        }
+
+        public IEnumerable<Document> GetByCustomerId(int customerId)
+        {
+            return _documentRepository.GetByCustomerId(customerId);
         }
 
         /// <summary>
