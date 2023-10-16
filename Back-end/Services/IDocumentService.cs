@@ -7,7 +7,7 @@ namespace Back_end.Services
     {
         IEnumerable<Document> GetAll();
         (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize, string overviewType);
-        DocumentDTO GetById(int id);
+        object GetById(int id);
         IEnumerable<Document> GetByCustomerId(int customerId);
         void Post(Document document);
         void Put(EditDocumentRequestDTO document);

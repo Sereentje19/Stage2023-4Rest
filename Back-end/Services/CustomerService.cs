@@ -68,10 +68,7 @@ namespace Back_end.Services
             return _customerRepository.FilterAll(searchfield);
         }
 
-        /// <summary>
-        /// Updates an existing document in the repository.
-        /// </summary>
-        /// <param name="customer">The document entity to be updated.</param>
+
         public void Put(CustomerDocumentDTO customerDocumentDTO)
         {
             Customer oldCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
@@ -80,38 +77,45 @@ namespace Back_end.Services
 
             if (documents.Count() > 1)
             {
-                // Create a new customer entity and add it
-                Customer cus = new Customer
-                {
-                    Email = customerDocumentDTO.Email,
-                    Name = customerDocumentDTO.Name
-                };
-                int customerId = _customerRepository.Add(cus);
-                _documentRepository.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
+                AddNewCustomer(customerDocumentDTO);
             }
             else
             {
-                // Find a matching customer by email and name using LINQ
-                var matchingCustomer = allCustomers.FirstOrDefault(c =>
-                    c.Email == customerDocumentDTO.Email &&
-                    c.Name == customerDocumentDTO.Name);
-
-                if (matchingCustomer != null)
-                {
-                    customerDocumentDTO.CustomerId = matchingCustomer.CustomerId;
-                    _documentRepository.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
-                    _customerRepository.Delete(oldCustomer);
-                }
-                else
-                {
-                    // Update the existing customer with new data
-                    oldCustomer.Email = customerDocumentDTO.Email;
-                    oldCustomer.Name = customerDocumentDTO.Name;
-                    _customerRepository.Update(oldCustomer);
-                }
+                UpdateCustomer(allCustomers, customerDocumentDTO, oldCustomer);
             }
         }
 
+        private void AddNewCustomer(CustomerDocumentDTO customerDocumentDTO)
+        {
+            Customer cus = new Customer
+            {
+                Email = customerDocumentDTO.Email,
+                Name = customerDocumentDTO.Name
+            };
+
+            int customerId = _customerRepository.Add(cus);
+            _documentRepository.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
+        }
+
+        private void UpdateCustomer(List<Customer> allCustomers, CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
+        {
+            var matchingCustomer = allCustomers.FirstOrDefault(c =>
+                                c.Email == customerDocumentDTO.Email &&
+                                c.Name == customerDocumentDTO.Name);
+
+            if (matchingCustomer != null)
+            {
+                customerDocumentDTO.CustomerId = matchingCustomer.CustomerId;
+                _documentRepository.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
+                _customerRepository.Delete(oldCustomer);
+            }
+            else
+            {
+                oldCustomer.Email = customerDocumentDTO.Email;
+                oldCustomer.Name = customerDocumentDTO.Name;
+                _customerRepository.Update(oldCustomer);
+            }
+        }
 
     }
 }

@@ -7,14 +7,16 @@ namespace Back_end.Services
     public class DocumentService : IDocumentService
     {
         private readonly IDocumentRepository _documentRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         /// <summary>
         /// Initializes a new instance of the DocumentService class with the provided DocumentRepository.
         /// </summary>
         /// <param name="dr">The DocumentRepository used for document-related operations.</param>
-        public DocumentService(IDocumentRepository dr)
+        public DocumentService(IDocumentRepository dr, ICustomerRepository cr)
         {
             _documentRepository = dr;
+            _customerRepository = cr;
         }
 
         public IEnumerable<Document> GetAll()
@@ -42,7 +44,7 @@ namespace Back_end.Services
                 })
                 .ToList();
 
-             return (pagedDocuments.Cast<object>(), pager);
+            return (pagedDocuments.Cast<object>(), pager);
         }
 
         /// <summary>
@@ -50,9 +52,18 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public DocumentDTO GetById(int id)
+        public object GetById(int id)
         {
-            return _documentRepository.GetById(id);
+            var doc = _documentRepository.GetById(id);
+            var cus = _customerRepository.GetById(doc.CustomerId);
+
+            var response = new
+            {
+                Document = doc,
+                Customer = cus,
+                type = doc.Type.ToString().Replace("_", " "),
+            };
+            return response;
         }
 
         public IEnumerable<Document> GetByCustomerId(int customerId)

@@ -75,36 +75,24 @@ export default {
     }
   },
   mounted() {
-    this.getDocuments();
+    this.getDocument();
   },
   methods: {
-    getDocuments() {
-      axios.get("Document/" + this.id, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: "Bearer " + localStorage.getItem("jwt")
-        }
-      })
-        .then((res) => {
-          this.document = res.data.document;
-          this.document.type = res.data.type
-          this.getCustomerName(this.document.customerId);
-        }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
-        });
-    },
-    getCustomerName(id) {
-      axios.get("Customer/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwt")
-        }
-      })
-        .then((res) => {
-          this.customer = res.data;
-        }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
-        });
-    },
+    getDocument() {
+            axios.get("Document/" + this.id, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    this.customer = res.data.customer;
+                    this.document = res.data.document;
+                    this.document.type = res.data.type
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
     toEdit(route) {
       this.$router.push("/edit/" + route + "/" + this.id);
     },

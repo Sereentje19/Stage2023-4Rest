@@ -79,14 +79,7 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var document = documentService.GetById(id);
-
-                var response = new
-                {
-                    Document = document,
-                    type = document.Type.ToString().Replace("_", " "),
-                };
-
+                var response = documentService.GetById(id);
                 return Ok(response);
             }
             catch (Exception ex)
