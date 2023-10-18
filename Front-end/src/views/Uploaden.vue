@@ -193,6 +193,13 @@ export default {
       const files = e.dataTransfer.files;
       this.processFile(files[0]);
     },
+    processFile(file) {
+      if (file) {
+        this.selectedFile = file;
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+      }
+    },
   },
 };
 </script>
