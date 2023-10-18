@@ -47,7 +47,7 @@ namespace Back_end.Services
         /// <param name="type">The type of the document.</param>
         /// <param name="emailMessage">The MimeMessage to which the body will be set.</param>
         /// <param name="image">The byte array representing the embedded image.</param>
-        private void SetBody(int weeks, string customerName, DateTime date, Models.Type type, MimeMessage emailMessage, byte[] image, string fileType)
+        private void SetBody(int weeks, string customerName, DateTime date, DocumentType type, MimeMessage emailMessage, byte[] image, string fileType)
         {
             BodyBuilder emailBodyBuilder = new BodyBuilder
             {
@@ -95,7 +95,7 @@ namespace Back_end.Services
         /// <param name="type">The type of the document.</param>
         /// <param name="image">The byte array representing the embedded image.</param>
         /// <param name="weeks">The number of weeks until document expiration.</param>
-        public void SendEmail(string customerName, string fileType, DateTime date, Models.Type type, byte[] image, int weeks)
+        public void SendEmail(string customerName, string fileType, DateTime date, DocumentType type, byte[] image, int weeks)
         {
             try
             {

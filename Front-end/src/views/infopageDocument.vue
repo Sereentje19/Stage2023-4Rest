@@ -9,9 +9,9 @@
           Document
         </div>
         <div id="documentInfo">
-          Documenttype: &nbsp; {{ this.document.type }}
+          Type: &nbsp; {{ this.document.type }}
           <br>
-          VervalDatum: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.document.date) }}
+          Verval datum: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.document.date) }}
         </div>
         <button @click="toEdit('document')" id="EditButton">Edit</button>
         <br><br><br>
@@ -19,9 +19,9 @@
           klant
         </div>
         <div id="documentInfo">
-          Klantnaam: &nbsp;&nbsp; {{ this.customer.name }}
+          Naam: &nbsp; {{ this.customer.name }}
           <br>
-          Klantemail: &nbsp;&nbsp; {{ this.customer.email }}
+          Email: &nbsp;&nbsp; {{ this.customer.email }}
         </div>
         <button @click="toEdit('klant')" id="EditButton">Edit</button>
       </ul>
@@ -94,7 +94,7 @@ export default {
                 });
         },
     toEdit(route) {
-      this.$router.push("/edit/" + route + "/" + this.id);
+      this.$router.push("/edit/document/" + route + "/" + this.id);
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");

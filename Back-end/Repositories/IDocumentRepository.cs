@@ -6,7 +6,7 @@ namespace Back_end.Repositories
     public interface IDocumentRepository
     {
         IEnumerable<Document> GetAll();
-        List<Document> GetFilterDocuments(string searchfield, Models.Type? dropBoxType, string overviewType);
+        List<Document> GetFilterDocuments(string searchfield, DocumentType? dropBoxType, string overviewType);
         DocumentDTO GetById(int id);
         IEnumerable<Document> GetByCustomerId(int customerId);
         void Add(Document entity);

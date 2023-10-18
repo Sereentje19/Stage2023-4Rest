@@ -25,7 +25,7 @@ namespace Back_end.Repositories
             return _dbSet.ToList();
         }
 
-        public List<Document> GetFilterDocuments(string searchfield, Models.Type? dropBoxType, string overviewType)
+        public List<Document> GetFilterDocuments(string searchfield, Models.DocumentType? dropBoxType, string overviewType)
         {
             DateTime now = DateTime.Now;
             DateTime sixWeeksFromNow = now.AddDays(42);
@@ -37,7 +37,7 @@ namespace Back_end.Repositories
                             customer.Name.Contains(searchfield) ||
                             customer.Email.Contains(searchfield) ||
                             customer.CustomerId.ToString().Contains(searchfield)
-                        where dropBoxType == Models.Type.Not_Selected || document.Type.Equals(dropBoxType)
+                        where dropBoxType == Models.DocumentType.Not_Selected || document.Type.Equals(dropBoxType)
                         orderby document.Date
                         select new
                         {
@@ -108,7 +108,7 @@ namespace Back_end.Repositories
         {
             var existingDocument = _dbSet.Find(entity.DocumentId);
 
-            if (entity.Type == Models.Type.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
+            if (entity.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
             {
                 throw new UpdateDocumentFailedException("Datum of type is leeg.");
             }

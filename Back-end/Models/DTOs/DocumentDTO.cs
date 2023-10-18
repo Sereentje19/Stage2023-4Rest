@@ -6,6 +6,6 @@ namespace Back_end.Models.DTOs
         public string? FileType { get; set; }
         public DateTime Date { get; set; }
         public int CustomerId { get; set; }
-        public Type Type { get; set; }
+        public DocumentType Type { get; set; }
     }
 }

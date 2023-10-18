@@ -4,7 +4,7 @@
     <div class="uploadContainer">
       <div class="leftSide">
         <h1 id="h1">Document uploaden</h1>
-        <div id="drop" ref="dropArea" class="dropArea" @dragover.prevent="handleDragOver" @dragleave="handleDragLeave"
+        <div id="drop" ref="dropArea" class="dropArea" @dragover.prevent="handleDrag(true)" @dragleave="handleDrag(false)"
           @drop.prevent="handleDrop">
           <p id="p" ref="pElement"></p>
           <input type="file" class="file" @change="handleFileChange" style="display: none" />
@@ -127,7 +127,7 @@ export default {
       })
         .then((res) => {
           localStorage.setItem('popUpSucces', 'true');
-          this.$router.push({ path: '/Overzicht', query: { activePopup: true } });
+          this.$router.push({ path: '/Overzicht/document', query: { activePopup: true } });
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
@@ -179,18 +179,10 @@ export default {
         this.isFocused = false;
       }, 200);
     },
-    handleDragOver(e) {
+    handleDrag(e, bool){
       e.preventDefault();
-      this.dropAreaActive = true;
+      this.dropAreaActive = bool;
     },
-    handleDragLeave(e) {
-      e.preventDefault();
-      this.dropAreaActive = false;
-    },
-    // handleDrag(e, bool){
-    //   e.preventDefault();
-    //   this.dropAreaActive = bool;
-    // },
     handleDrop(e) {
       e.preventDefault();
       this.dropAreaActive = false;

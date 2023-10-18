@@ -15,7 +15,7 @@ namespace Back_end.Models
         public int CustomerId { get; set; }
 
         [Column(TypeName = "nvarchar(24)")]
-        public Type Type { get; set; }
+        public DocumentType Type { get; set; }
         public bool IsArchived { get; set; }
     }
 }

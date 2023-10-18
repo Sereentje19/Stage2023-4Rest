@@ -41,7 +41,7 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("Filter")]
-        public IActionResult GetFilterDocuments(string? searchfield, string overviewType, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
+        public IActionResult GetFilterDocuments(string? searchfield, string overviewType, DocumentType? dropBoxType, int page = 1, int pageSize = 5)
         {
             try
             {

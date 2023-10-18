@@ -44,6 +44,39 @@ namespace Back_end.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LoanHistory",
+                columns: table => new
+                {
+                    LoanHistoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    LoanDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoanHistory", x => x.LoanHistoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(24)", nullable: false),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.ProductId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -56,37 +89,6 @@ namespace Back_end.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
                 });
-
-                   //insert method Table Users
-            migrationBuilder.InsertData(
-            table: "Users",
-            columns: new[] { "UserId", "Email", "Password" },
-            values: new object[,]
-            {
-                    { 1, "Serena@Kenter.nl", "12345" },
-                    { 2, "Kerena@Senter.nl", "11111" },
-            });
-
-            //insert method Table Customers
-            migrationBuilder.InsertData(
-            table: "Customers",
-            columns: new[] { "CustomerId", "Email", "Name" },
-            values: new object[,]
-            {
-                    { 1, "Lisa@Bakker.nl", "Lisa Bakker" },
-                    { 2, "Bla@Bla.nl", "Bla Bla" },
-            });
-
-            //insert method Table Documents
-            migrationBuilder.InsertData(
-                table: "Documents",
-                columns: new[] { "DocumentId", "File", "FileType", "Date", "CustomerId", "Type", "IsArchived" },
-                values: new object[,]
-                {
-        { 1, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString(), false },
-        { 2, new byte[1], "application/pdf", new DateTime(2023, 10, 18), 1, Models.Type.Contract.ToString(), false },
-                });
-        
         }
 
         /// <inheritdoc />
@@ -97,6 +99,12 @@ namespace Back_end.Migrations
 
             migrationBuilder.DropTable(
                 name: "Documents");
+
+            migrationBuilder.DropTable(
+                name: "LoanHistory");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Users");

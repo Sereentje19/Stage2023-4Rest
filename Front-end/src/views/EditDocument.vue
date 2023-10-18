@@ -99,7 +99,7 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.$router.push("/infopage/" + this.id);
+                    this.$router.push("/infopage/document/" + this.id);
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
@@ -113,7 +113,7 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.$router.push("/infopage/" + this.id);
+                    this.$router.push("/infopage/document/" + this.id);
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });

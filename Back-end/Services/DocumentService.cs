@@ -24,7 +24,7 @@ namespace Back_end.Services
             return _documentRepository.GetAll();
         }
 
-        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize, string overviewType)
+        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, DocumentType? dropBoxType, int page, int pageSize, string overviewType)
         {
             var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType, overviewType);
 

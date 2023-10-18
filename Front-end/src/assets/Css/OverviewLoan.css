@@ -1,0 +1,132 @@
+#h1AndButton {
+    display: flex;
+    height: 70px;
+}
+
+#buttonArchief {
+    font-size: 25px;
+    height: fit-content;
+    padding: 10px 20px 10px 20px;
+    margin: 0;
+    margin-top: 5px;
+    background-color: #22421f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-left: 15px;
+    min-width: 145px;
+    text-align: center; 
+    display: flex;
+    justify-content: center;
+}
+
+#SearchFieldOverview,
+#filterDropDown{
+    width: 250px;
+    height: 35px;
+    margin-left: 20px;
+    border-radius: 5px;
+    font-size: 17px;
+    padding-left: 8px;
+    border-width: 1px;
+    margin-top: 20px;
+    border: rgb(0, 0, 0) solid 1px;
+}
+
+#buttonArchief:hover{
+    background-color: #133610;
+}
+
+.popup-button {
+    display: block;
+    text-align: center;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+#h1Overzicht {
+    margin: auto auto auto 0;
+    min-width: 280px;
+}
+
+#paging {
+    display: flex;
+    margin-right: auto;
+  
+  }
+
+  #urgentieSymbool {
+    width: 50px;
+    margin-top: 8px;
+    margin-left: 8px;
+}
+
+#klantnaamTekst,
+#typeTekst {
+    max-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#checkboxA{
+    width: 18px;
+    height: 18px;
+}
+
+#klantnaamTekst,
+#geldigVanTekst,
+#geldigTotTekst,
+#checkboxArchive,
+#typeTekst {
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: large;
+}
+
+#titlesOverviewLoan {
+    display: grid;
+    grid-template-columns: 2% 23% 15% 15% 33% 12%;
+}
+
+.overviewContainer {
+    width: 85%;
+    margin: auto;
+    margin-top: 80px;
+}
+
+#itemLoan {
+    width: 100%;
+    height: 55px;
+    background-color: white;
+    margin-bottom: 6px;
+    border-color: #868686;
+    border-width: 1px;
+    border-style: solid;
+    display: grid;
+    grid-template-columns: 2% 23% 15% 15% 33% 4%;
+    color: black;
+    margin-left: auto;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+#buttonGeschiedenis{
+    background-color: #22421f;
+    color: white;
+    height: fit-content;
+    padding: 8px 12px 8px 12px;
+    margin-top: auto;
+    margin-bottom: auto;
+}

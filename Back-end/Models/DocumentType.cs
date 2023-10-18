@@ -1,6 +1,6 @@
 namespace Back_end.Models
 {
-    public enum Type
+    public enum DocumentType
     {
         Not_Selected,
         Vog,
