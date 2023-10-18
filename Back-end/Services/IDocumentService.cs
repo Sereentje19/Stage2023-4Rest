@@ -12,5 +12,6 @@ namespace Back_end.Services
         void Post(Document document);
         void Put(EditDocumentRequestDTO document);
         void UpdateIsArchived(CheckBoxDTO entity);
+        void UpdateCustomerId(int customerId, int documentId);
     }
 }

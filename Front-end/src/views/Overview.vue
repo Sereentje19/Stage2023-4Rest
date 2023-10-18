@@ -124,14 +124,7 @@ export default {
       }, 100);
     },
     toggleCheckbox(doc) {
-      console.log('Toggled for document ID: ', doc);
-
-      if (this.overviewType == 'Archief') {
-        doc.isArchived = false;
-      }
-      else {
-        doc.isArchived = true;
-      }
+      doc.isArchived = this.overviewType === 'Archief' ? false : true;
 
       axios.put("Document/IsArchived", doc, {
         headers: {
@@ -142,26 +135,10 @@ export default {
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
-
     },
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;
       this.filterDocuments();
-    },
-    toArchive() {
-      this.$router.push("/archief");
-    },
-    getCustomerName(id, index) {
-      axios.get("Customer/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwt")
-        }
-      })
-        .then((res) => {
-          this.documents[index].customerName = res.data.name;
-        }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
-        });
     },
     filterDocuments() {
       console.log(this.overviewType)
@@ -181,11 +158,6 @@ export default {
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
-
-          for (let index = 0; index < this.documents.length; index++) {
-            const customerId = this.documents[index].customerId;
-            this.getCustomerName(customerId, index);
-          }
         })
         .catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -222,6 +194,10 @@ export default {
         value = ageInDays;
       }
 
+      value = this.toOrFromArchive(value);
+      return `${value} ${unit}`;
+    },
+    toOrFromArchive(value){
       if (this.overviewType === 'Archief' && value < 0) {
         value = Math.abs(value);
       }
@@ -229,8 +205,7 @@ export default {
       {
         value = -value
       }
-
-      return `${value} ${unit}`;
+      return value
     },
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);

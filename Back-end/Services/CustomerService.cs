@@ -7,16 +7,16 @@ namespace Back_end.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IDocumentRepository _documentRepository;
+        private readonly IDocumentRepository _documentService;
 
         /// <summary>
         /// Initializes a new instance of the CustomerService class with the provided CustomerRepository.
         /// </summary>
         /// <param name="cr">The CustomerRepository used for customer-related operations.</param>
-        public CustomerService(ICustomerRepository cr, IDocumentRepository dr)
+        public CustomerService(ICustomerRepository cr, IDocumentRepository ds)
         {
             _customerRepository = cr;
-            _documentRepository = dr;
+            _documentService = ds;
         }
 
 
@@ -72,7 +72,7 @@ namespace Back_end.Services
         public void Put(CustomerDocumentDTO customerDocumentDTO)
         {
             Customer oldCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
-            IEnumerable<Document> documents = _documentRepository.GetByCustomerId(customerDocumentDTO.CustomerId);
+            IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
             List<Customer> allCustomers = _customerRepository.GetAll();
 
             if (documents.Count() > 1)
@@ -94,7 +94,7 @@ namespace Back_end.Services
             };
 
             int customerId = _customerRepository.Add(cus);
-            _documentRepository.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
+            _documentService.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
         }
 
         private void UpdateCustomer(List<Customer> allCustomers, CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
@@ -106,7 +106,7 @@ namespace Back_end.Services
             if (matchingCustomer != null)
             {
                 customerDocumentDTO.CustomerId = matchingCustomer.CustomerId;
-                _documentRepository.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
+                _documentService.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
                 _customerRepository.Delete(oldCustomer);
             }
             else

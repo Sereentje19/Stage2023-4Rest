@@ -7,16 +7,16 @@ namespace Back_end.Services
     public class DocumentService : IDocumentService
     {
         private readonly IDocumentRepository _documentRepository;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomerRepository _customerService;
 
         /// <summary>
         /// Initializes a new instance of the DocumentService class with the provided DocumentRepository.
         /// </summary>
         /// <param name="dr">The DocumentRepository used for document-related operations.</param>
-        public DocumentService(IDocumentRepository dr, ICustomerRepository cr)
+        public DocumentService(IDocumentRepository dr, ICustomerRepository cs)
         {
             _documentRepository = dr;
-            _customerRepository = cr;
+            _customerService = cs;
         }
 
         public IEnumerable<Document> GetAll()
@@ -32,6 +32,7 @@ namespace Back_end.Services
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             var pager = new Pager(totalArchivedDocuments, page, pageSize);
 
+
             var pagedDocuments = documents
                 .Skip(skipCount)
                 .Take(pageSize)
@@ -40,7 +41,8 @@ namespace Back_end.Services
                     doc.DocumentId,
                     doc.Date,
                     doc.CustomerId,
-                    Type = doc.Type.ToString().Replace("_", " ")
+                    Type = doc.Type.ToString().Replace("_", " "),
+                    CustomerName = _customerService.GetById(doc.CustomerId).Name
                 })
                 .ToList();
 
@@ -55,7 +57,7 @@ namespace Back_end.Services
         public object GetById(int id)
         {
             var doc = _documentRepository.GetById(id);
-            var cus = _customerRepository.GetById(doc.CustomerId);
+            var cus = _customerService.GetById(doc.CustomerId);
 
             var response = new
             {
@@ -92,6 +94,10 @@ namespace Back_end.Services
         public void UpdateIsArchived(CheckBoxDTO entity)
         {
             _documentRepository.UpdateIsArchived(entity);
+        }
+
+        public void UpdateCustomerId(int customerId, int documentId){
+            _documentRepository.UpdateCustomerId(customerId, documentId);
         }
     }
 }

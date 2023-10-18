@@ -187,6 +187,10 @@ export default {
       e.preventDefault();
       this.dropAreaActive = false;
     },
+    // handleDrag(e, bool){
+    //   e.preventDefault();
+    //   this.dropAreaActive = bool;
+    // },
     handleDrop(e) {
       e.preventDefault();
       this.dropAreaActive = false;
