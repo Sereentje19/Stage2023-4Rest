@@ -7,22 +7,21 @@ namespace Back_end.Services
     public class DocumentService : IDocumentService
     {
         private readonly IDocumentRepository _documentRepository;
-        private readonly ICustomerRepository _customerService;
 
         /// <summary>
         /// Initializes a new instance of the DocumentService class with the provided DocumentRepository.
         /// </summary>
         /// <param name="dr">The DocumentRepository used for document-related operations.</param>
-        public DocumentService(IDocumentRepository dr, ICustomerRepository cs)
+        public DocumentService(IDocumentRepository dr)
         {
             _documentRepository = dr;
-            _customerService = cs;
         }
 
-        public IEnumerable<Document> GetAll()
+        public async Task<IEnumerable<Document>> GetAll()
         {
-            return _documentRepository.GetAll();
+            return await _documentRepository.getAll();
         }
+
 
         public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, DocumentType? dropBoxType, int page, int pageSize, string overviewType)
         {
@@ -40,9 +39,8 @@ namespace Back_end.Services
                 {
                     doc.DocumentId,
                     doc.Date,
-                    doc.CustomerId,
+                    CustomerName = doc.Customer.Name,
                     Type = doc.Type.ToString().Replace("_", " "),
-                    CustomerName = _customerService.GetById(doc.CustomerId).Name
                 })
                 .ToList();
 
@@ -57,12 +55,11 @@ namespace Back_end.Services
         public object GetById(int id)
         {
             var doc = _documentRepository.GetById(id);
-            var cus = _customerService.GetById(doc.CustomerId);
 
             var response = new
             {
                 Document = doc,
-                Customer = cus,
+                Customer = doc.customer,
                 type = doc.Type.ToString().Replace("_", " "),
             };
             return response;
@@ -96,7 +93,8 @@ namespace Back_end.Services
             _documentRepository.UpdateIsArchived(entity);
         }
 
-        public void UpdateCustomerId(int customerId, int documentId){
+        public void UpdateCustomerId(int customerId, int documentId)
+        {
             _documentRepository.UpdateCustomerId(customerId, documentId);
         }
     }

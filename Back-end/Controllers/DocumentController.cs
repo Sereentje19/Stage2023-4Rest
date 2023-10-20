@@ -3,6 +3,7 @@ using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
 using Back_end.Models;
 using Back_end.Models.DTOs;
+using Microsoft.VisualBasic;
 
 namespace Back_end.Controllers
 {
@@ -26,12 +27,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllDocuments()
+        public async Task<IActionResult> GetAllDocuments()
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var documents = documentService.GetAll();
+                var documents = await documentService.GetAll();
                 return Ok(documents);
             }
             catch (Exception ex)
@@ -115,11 +116,16 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
+
                 Document doc = new Document
                 {
                     Type = document.Type,
                     Date = document.Date,
-                    CustomerId = document.CustomerId,
+                    Customer = new Customer()
+                    {
+                        Email = document.customer.Email,
+                        Name = document.customer.Name
+                    },
                     FileType = document.FileType
                 };
 

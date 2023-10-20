@@ -1,4 +1,5 @@
 using Back_end.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Back_end.Services
 {
@@ -58,13 +59,14 @@ namespace Back_end.Services
             var targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
 
             var expiringDocuments = dbContext.Documents
+                        .Include(d => d.Customer)
                         .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
                         .ToList();
 
             foreach (var document in expiringDocuments)
             {
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
-                var customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.CustomerId);
+                var customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.Customer.CustomerId);
 
                 mailService.SendEmail(customer.Name, document.FileType, document.Date, document.Type, document.File, weeks);
             }

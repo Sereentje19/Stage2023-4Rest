@@ -20,45 +20,66 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Document>();
         }
 
-        public IEnumerable<Document> GetAll()
+        public async Task<IEnumerable<Document>> getAll()
         {
-            return _dbSet.ToList();
+            List<Document> documents = await _context.Documents
+                .Include(d => d.Customer)
+                .ToListAsync();
+
+            var documentDTOs = documents.Select(doc => new CustomerDocumentDTO
+            {
+                DocumentId = doc.DocumentId,
+                CustomerId = doc.Customer.CustomerId,
+            });
+
+            return documents;
         }
 
-        public List<Document> GetFilterDocuments(string searchfield, Models.DocumentType? dropBoxType, string overviewType)
+        public List<Document> GetFilterDocuments(string searchfield, DocumentType? dropBoxType, string overviewType)
         {
-            DateTime now = DateTime.Now;
-            DateTime sixWeeksFromNow = now.AddDays(42);
-            DateTime sixWeeksAgo = now.AddDays(-42);
-
-            var query = from document in _context.Documents
-                        join customer in _context.Customers on document.CustomerId equals customer.CustomerId
-                        where string.IsNullOrEmpty(searchfield) ||
-                            customer.Name.Contains(searchfield) ||
-                            customer.Email.Contains(searchfield) ||
-                            customer.CustomerId.ToString().Contains(searchfield)
-                        where dropBoxType == Models.DocumentType.Not_Selected || document.Type.Equals(dropBoxType)
-                        orderby document.Date
-                        select new
-                        {
-                            Document = document
-                        };
-
-            if (overviewType == "Overzicht")
+            try
             {
-                query = query.Where(item => item.Document.Date <= sixWeeksFromNow && !item.Document.IsArchived);
-            }
-            else if (overviewType == "Archief")
-            {
-                query = query.Where(item => item.Document.IsArchived);
-            }
-            else if (overviewType == "Lang geldig")
-            {
-                query = query.Where(item => item.Document.Date > sixWeeksFromNow && !item.Document.IsArchived);
-            }
+                DateTime now = DateTime.Now;
+                DateTime sixWeeksFromNow = now.AddDays(42);
+                DateTime sixWeeksAgo = now.AddDays(-42);
 
-            var documents = query.Select(item => item.Document).ToList();
-            return documents;
+                var query = from document in _context.Documents
+                .Include(d => d.Customer)
+                            where (string.IsNullOrEmpty(searchfield) ||
+                                   document.Customer.Name.Contains(searchfield) ||
+                                   document.Customer.Email.Contains(searchfield) ||
+                                   document.Customer.CustomerId.ToString().Contains(searchfield))
+                            && (dropBoxType == DocumentType.Not_Selected || document.Type == dropBoxType)
+                            orderby document.Date
+                            select new
+                            {
+                                Document = document
+                            };
+
+                if (query.Count() == 0)
+                {
+                    throw new Exception("No documents found.");
+                }
+                else if (overviewType == "Overzicht")
+                {
+                    query = query.Where(item => item.Document.Date <= sixWeeksFromNow && !item.Document.IsArchived);
+                }
+                else if (overviewType == "Archief")
+                {
+                    query = query.Where(item => item.Document.IsArchived);
+                }
+                else if (overviewType == "Lang geldig")
+                {
+                    query = query.Where(item => item.Document.Date > sixWeeksFromNow && !item.Document.IsArchived);
+                }
+
+                var documents = query.Select(item => item.Document).ToList();
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                return new List<Document>();
+            }
         }
 
 
@@ -69,22 +90,28 @@ namespace Back_end.Repositories
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
         public DocumentDTO GetById(int id)
         {
-            Document doc = _dbSet.Find(id);
+            Document doc = _dbSet
+            .Include(d => d.Customer)
+            .FirstOrDefault(d => d.DocumentId == id);
 
             var documentDto = new DocumentDTO
             {
                 File = doc.File,
                 FileType = doc.FileType,
                 Date = doc.Date,
-                CustomerId = doc.CustomerId,
+                customer = doc.Customer,
                 Type = doc.Type,
             };
+
             return documentDto;
         }
 
         public IEnumerable<Document> GetByCustomerId(int customerId)
         {
-            var documents = _dbSet.Where(d => d.CustomerId == customerId).ToList();
+            var documents = _dbSet
+            .Include(d => d.Customer)
+            .Where(d => d.Customer.CustomerId == customerId)
+            .ToList();
 
             return documents;
         }
@@ -106,16 +133,23 @@ namespace Back_end.Repositories
         /// <param name="entity">The document entity to be updated.</param>
         public void Update(EditDocumentRequestDTO entity)
         {
-            var existingDocument = _dbSet.Find(entity.DocumentId);
+            var existingDocument = _dbSet
+            .Include(d => d.Customer)
+            .Where(d => d.DocumentId == entity.DocumentId)
+            .FirstOrDefault();
 
-            if (entity.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
+            existingDocument.Date = entity.Date;
+            existingDocument.Type = entity.Type;
+
+            if (existingDocument == null)
+            {
+                throw new UpdateDocumentFailedException("Document not found.");
+            }
+            else if (entity.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
             {
                 throw new UpdateDocumentFailedException("Datum of type is leeg.");
             }
 
-            _context.Entry(existingDocument).CurrentValues.SetValues(entity);
-            _context.Entry(existingDocument).Property(x => x.File).IsModified = false;
-            // _context.Entry(existingDocument).Property(x => x.CustomerId).IsModified = false;
             _context.SaveChanges();
         }
 
@@ -132,11 +166,13 @@ namespace Back_end.Repositories
 
         public void UpdateCustomerId(int customerId, int documentId)
         {
-            var existingDocument = _dbSet.Find(documentId);
+            Document existingDocument = _dbSet
+            .Include(d => d.Customer)
+            .FirstOrDefault(d => d.DocumentId == documentId);
 
             if (existingDocument != null)
             {
-                existingDocument.CustomerId = customerId;
+                existingDocument.Customer.CustomerId = customerId;
                 _context.SaveChanges();
             }
         }

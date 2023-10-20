@@ -6,8 +6,8 @@
 
             <form action="/action_page.php">
                 <div class="gegevensEdit" v-if="this.route == 'klant'">
-                    <input v-model="this.customer.Name" :placeholder="this.customer.name" class="NaamEdit" />
-                    <input v-model="this.customer.Email" :placeholder="this.customer.email" class="Email" />
+                    <input v-model="this.customer.name" class="NaamEdit" />
+                    <input v-model="this.customer.email" class="Email" />
                 </div>
                 <div class="gegevensEdit" v-else>
                     <select v-model="this.document.Type" class="Type" name="Type">
@@ -15,7 +15,7 @@
                         <option value="1">Vog</option>
                         <option value="2">Contract</option>
                         <option value="3">Paspoort</option>
-                        <option value="4">id kaart</option>
+                        <option value="4">ID kaart</option>
                         <option value="5">Diploma</option>
                         <option value="6">Certificaat</option>
                         <option value="7">Lease auto</option>
@@ -55,13 +55,15 @@ export default {
                 Email: '',
             },
             document: {
-                DocumentId: parseInt(this.id, 10),
+                DocumentId: 0,
                 Type: 0,
                 Date: "",
-                CustomerId: 0,
             },
             customerDocument:{
-
+                CustomerId: 0,
+                Name: '',
+                Email: '',
+                DocumentId: 0,
             },
             filteredCustomers: []
         };
@@ -77,7 +79,6 @@ export default {
                 }
             })
                 .then((res) => {
-                    console.log(res.data)
                     this.customer = res.data.customer;
                     this.document = res.data.document;
                     this.document.Date = res.data.document.date;
@@ -87,10 +88,10 @@ export default {
                 });
         },
         editCustomer() {
-            this.customerDocument.DocumentId = this.document.DocumentId;
-            this.customerDocument.CustomerId = this.customer.CustomerId;
-            this.customerDocument.Email = this.customer.Email;
-            this.customerDocument.Name = this.customer.Name;
+            this.customerDocument.DocumentId = this.id;
+            this.customerDocument.CustomerId = this.customer.customerId;
+            this.customerDocument.Email = this.customer.email;
+            this.customerDocument.Name = this.customer.name;
             console.log(this.customerDocument)
 
             axios.put("Customer", this.customerDocument, {
@@ -106,7 +107,8 @@ export default {
         },
         editDocument() {
             this.document.Type = parseInt(this.document.Type, 10);
-            console.log(this.document)
+            console.log(this.document.DocumentId)
+            this.document.DocumentId = this.id;
             axios.put("Document", this.document, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

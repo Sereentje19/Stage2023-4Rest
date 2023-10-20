@@ -5,7 +5,7 @@ namespace Back_end.Repositories
 {
     public interface IDocumentRepository
     {
-        IEnumerable<Document> GetAll();
+        Task<IEnumerable<Document>> getAll();
         List<Document> GetFilterDocuments(string searchfield, DocumentType? dropBoxType, string overviewType);
         DocumentDTO GetById(int id);
         IEnumerable<Document> GetByCustomerId(int customerId);

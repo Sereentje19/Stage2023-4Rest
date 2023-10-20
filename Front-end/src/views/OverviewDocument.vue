@@ -141,7 +141,6 @@ export default {
       this.filterDocuments();
     },
     filterDocuments() {
-      console.log(this.overviewType)
       axios
         .get("Document/Filter", {
           headers: {
@@ -158,6 +157,7 @@ export default {
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
+          console.log(res.data.documents.length)
         })
         .catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -197,12 +197,11 @@ export default {
       value = this.toOrFromArchive(value);
       return `${value} ${unit}`;
     },
-    toOrFromArchive(value){
+    toOrFromArchive(value) {
       if (this.overviewType === 'Archief' && value < 0) {
         value = Math.abs(value);
       }
-      else if(this.overviewType === 'Archief' && value > 0)
-      {
+      else if (this.overviewType === 'Archief' && value > 0) {
         value = -value
       }
       return value

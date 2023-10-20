@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Back_end.Migrations
 {
     [DbContext(typeof(NotificationContext))]
-    [Migration("20231018133035_InitialCreate")]
+    [Migration("20231019085442_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -73,6 +73,8 @@ namespace Back_end.Migrations
 
                     b.HasKey("DocumentId");
 
+                    b.HasIndex("CustomerId");
+
                     b.ToTable("Documents");
                 });
 
@@ -87,6 +89,9 @@ namespace Back_end.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LoanDate")
                         .HasColumnType("datetime2");
 
@@ -98,6 +103,10 @@ namespace Back_end.Migrations
 
                     b.HasKey("LoanHistoryId");
 
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("LoanHistory");
                 });
 
@@ -108,9 +117,6 @@ namespace Back_end.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
@@ -147,6 +153,36 @@ namespace Back_end.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Back_end.Models.Document", b =>
+                {
+                    b.HasOne("Back_end.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Back_end.Models.LoanHistory", b =>
+                {
+                    b.HasOne("Back_end.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Back_end.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

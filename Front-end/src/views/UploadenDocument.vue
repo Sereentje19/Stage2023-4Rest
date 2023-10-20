@@ -49,7 +49,7 @@
           </form>
         </ul>
 
-        <button @click="this.CreateDocument()" class="verstuur">
+        <button @click="this.postDocument()" class="verstuur">
           Verstuur document
         </button>
       </div>
@@ -94,30 +94,28 @@ export default {
     };
   },
   methods: {
-    CreateDocument() {
-      if (this.document.Type == 0) {
-        this.$refs.Popup.popUpError("Selecteer een type!");
-      }
-      else {
-        axios.post("Customer", this.customer, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwt")
-          }
-        })
-          .then((res) => {
-            let customerId = res.data;
-            console.log(customerId)
-            this.postDocument(customerId);
+  //   CreateDocument() {
+  //     if (this.document.Type == 0) {
+  //       this.$refs.Popup.popUpError("Selecteer een type!");
+  //     }
+  //     else {
+  //       axios.post("Customer", this.customer, {
+  //         headers: {
+  //           Authorization: "Bearer " + localStorage.getItem("jwt")
+  //         }
+  //       })
+  //         .then((res) => {
+  //           let customerId = res.data;
+  //           console.log(customerId)
+  //           this.postDocument(customerId);
 
-          }).catch((error) => {
-            this.$refs.Popup.popUpError(error.response.data);
-          });
-      }
-    },
-    postDocument(customerId) {
-      console.log(this.document)
-      let formData = this.CreateFromData(customerId);
-      console.log(this.selectedFile)
+  //         }).catch((error) => {
+  //           this.$refs.Popup.popUpError(error.response.data);
+  //         });
+  //     }
+  //   },
+    postDocument() {
+      let formData = this.CreateFromData();
 
       axios.post("Document", formData, {
         headers: {
@@ -132,7 +130,7 @@ export default {
           this.$refs.Popup.popUpError(error.response.data);
         });
     },
-    CreateFromData(customerId) {
+    CreateFromData() {
       let formData = new FormData();
       if (this.selectedFile != null) {
         formData.append('file', this.selectedFile);
@@ -140,7 +138,9 @@ export default {
       }
       formData.append('document.Type', this.document.Type);
       formData.append('document.Date', this.document.Date);
-      formData.append('document.CustomerId', customerId);
+      formData.append('document.Customer.Email', this.customer.Email);
+      formData.append('document.Customer.Name', this.customer.Name);
+
       return formData;
     },
     filterCustomer() {

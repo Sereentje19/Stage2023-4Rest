@@ -19,7 +19,6 @@ namespace Back_end.Services
             _documentService = ds;
         }
 
-
         /// <summary>
         /// Retrieves a customer by their unique identifier (ID).
         /// </summary>
@@ -72,16 +71,20 @@ namespace Back_end.Services
         public void Put(CustomerDocumentDTO customerDocumentDTO)
         {
             Customer oldCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
-            IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
-            List<Customer> allCustomers = _customerRepository.GetAll();
 
-            if (documents.Count() > 1)
+            if (oldCustomer.Email != customerDocumentDTO.Email || oldCustomer.Name != customerDocumentDTO.Name)
             {
-                AddNewCustomer(customerDocumentDTO);
-            }
-            else
-            {
-                UpdateCustomer(allCustomers, customerDocumentDTO, oldCustomer);
+                IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
+                List<Customer> allCustomers = _customerRepository.GetAll();
+
+                if (documents.Count() > 1)
+                {
+                    AddNewCustomer(customerDocumentDTO);
+                }
+                else
+                {
+                    UpdateCustomer(allCustomers, customerDocumentDTO, oldCustomer);
+                }
             }
         }
 

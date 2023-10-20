@@ -102,6 +102,7 @@ namespace Back_end.Repositories
             try
             {
                 _dbSet.Remove(entity);
+                Console.WriteLine("bla");
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
