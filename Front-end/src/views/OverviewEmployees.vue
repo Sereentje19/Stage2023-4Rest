@@ -17,11 +17,11 @@
                     <h3 id="klantnaam">Geschiedenis</h3>
                 </div>
 
-                <div class="overviewEmployee" v-for="(document, i) in displayedDocuments">
-                    <div @click="goToInfoPage(document)" id="itemEmployee">
+                <div class="overviewEmployee" v-for="(customer, i) in displayedDocuments">
+                    <div @click="goToInfoPage(customer)" id="itemEmployee">
                         <div></div>
-                        <div id="klantnaamTekst">{{ document.customerName }}</div>
-                        <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
+                        <div id="klantnaamTekst">{{ customer.name }}</div>
+                        <div id="geldigVanTekst">{{ customer.email }}</div>
                         <button id="buttonGeschiedenis"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                 fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
                                 <path
@@ -81,120 +81,60 @@ export default {
                 totalPages: 0,
                 pageSize: 5,
             },
-            customers: [],
+            customers: [
+                {
+                    customerId: 0,
+                    name: "",
+                    email: ""
+                }
+            ],
             searchField: "",
             dropdown: "0",
         };
     },
     mounted() {
-        this.filterDocuments();
+        this.getAllCustomers();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.Popup.popUpError("Document is geupload!");
         }
     },
     methods: {
-        goToInfoPage(doc) {
+        goToInfoPage(pro) {
             setTimeout(() => {
-                if (doc.isArchived == null) {
-                    this.$router.push("/infopage/document/" + doc.documentId);
-                }
-                else {
-                    this.filterDocuments();
+                if (this.toHistory == false) {
+                    this.$router.push("/info/bruikleen/" + pro.productId);
                 }
             }, 100);
         },
-        toggleCheckbox(doc) {
-            doc.isArchived = this.overviewType === 'Archief' ? false : true;
-
-            axios.put("Document/IsArchived", doc, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwt")
-                }
-            })
-                .then((res) => {
-                }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
-                });
-        },
         handlePageChange(newPage) {
             this.pager.currentPage = newPage;
-            this.filterDocuments();
+            this.getAllCustomers();
         },
-        filterDocuments() {
-            console.log(this.overviewType)
-            axios
-                .get("Document/Filter", {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("jwt"),
-                    },
-                    params: {
-                        searchfield: this.searchField,
-                        overviewType: this.overviewType,
-                        dropdown: this.dropdown,
-                        page: this.pager.currentPage,
-                        pageSize: this.pager.pageSize
-                    },
-                })
+        getAllCustomers() {
+            axios.get("Customer", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                },
+                params: {
+                    page: this.pager.currentPage,
+                    pageSize: this.pager.pageSize
+                },
+            })
                 .then((res) => {
-                    this.documents = res.data.documents;
+                    this.customers = res.data.customers
                     this.pager = res.data.pager;
-                })
-                .catch((error) => {
+                }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");
         },
-        caculationDays(date) {
-            const documentDate = new Date(date);
-            const currentDate = new Date();
-            const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
-            return (ageInDays - (ageInDays + ageInDays));
-        },
-        daysAway(date) {
-            const ageInDays = this.caculationDays(date);
-            const week = 7;
-            const month = 30;
-            const year = 365;
-
-            let unit, value;
-
-            if (ageInDays >= year) {
-                unit = "jaar";
-                value = Math.floor(ageInDays / year);
-            } else if (ageInDays >= month * 2) {
-                unit = "maanden";
-                value = Math.floor(ageInDays / month);
-            } else if (ageInDays >= week * 2) {
-                unit = "weken";
-                value = Math.floor(ageInDays / week);
-            } else {
-                unit = "dagen";
-                value = ageInDays;
-            }
-
-            value = this.toOrFromArchive(value);
-            return `${value} ${unit}`;
-        },
-        toOrFromArchive(value) {
-            if (this.overviewType === 'Archief' && value < 0) {
-                value = Math.abs(value);
-            }
-            else if (this.overviewType === 'Archief' && value > 0) {
-                value = -value
-            }
-            return value
-        },
-        documentDaysFromExpiration(document, days) {
-            const ageInDays = this.caculationDays(document.date);
-            return (ageInDays <= days)
-        },
     },
     computed: {
         displayedDocuments() {
-            return this.documents.slice(0, this.pager.pageSize);
+            return this.customers.slice(0, this.pager.pageSize);
         },
     },
 };

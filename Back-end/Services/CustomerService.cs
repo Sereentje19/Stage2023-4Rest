@@ -19,9 +19,25 @@ namespace Back_end.Services
             _documentService = documentService;
         }
 
-        public IEnumerable<Customer> GetAll()
+        public (IEnumerable<object>, Pager) GetAll(int page, int pageSize)
         {
-            return _customerRepository.GetAll();
+            var customers = _customerRepository.GetAll();
+
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            var pager = new Pager(customers.Count(), page, pageSize);
+
+            var pagedCustomers = customers
+                .Skip(skipCount)
+                .Take(pageSize)
+                .Select(cus => new
+                {
+                    cus.Name,
+                    cus.Email,
+                    cus.CustomerId
+                })
+                .ToList();
+
+            return (pagedCustomers.Cast<object>(), pager);
         }
 
 

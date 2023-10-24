@@ -22,6 +22,7 @@
           <h3 id="klantnaam">Gekocht op</h3>
           <h3 id="geldigVan">Gebruiken tot</h3>
           <h3 id="geldigTot">Serie nummer</h3>
+          <h3 id="geldigTot">In gebruik</h3>
           <h3 id="geldigTot">Geschiedenis</h3>
         </div>
 
@@ -29,9 +30,11 @@
           <div @click="goToInfoPage(product)" id="itemLoan">
             <div></div>
             <div id="klantnaamTekst">{{ product.type }}</div>
-            <div id="geldigVanTekst">{{ formatDate(product.loanDate) }}</div>
-            <div id="geldigTotTekst">{{ formatDate(product.returnDate) }}</div>
+            <div id="geldigVanTekst">{{ formatDate(product.purchaseDate) }}</div>
+            <div id="geldigTotTekst">{{ formatDate(product.expirationDate) }}</div>
             <div id="typeTekst">{{ product.serialNumber }}</div>
+            <div id="typeTekst" v-if="product.returnDate == null || product.returnDate == ''">Ja</div>
+            <div id="typeTekst" v-else>Nee</div>
             <button id="buttonGeschiedenis" @click="goToHistory(product)"><svg xmlns="http://www.w3.org/2000/svg"
                 width="20" height="20" fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
                 <path
@@ -76,11 +79,12 @@ export default {
     return {
       product: [
         {
-          loanDate: "",
+          purchaseDate: "",
           returnDate: "",
           type: "",
           serialNumber: "",
-          productId: 0
+          productId: 0,
+          expirationDate: ""
         }
       ],
       pager: {
@@ -91,6 +95,7 @@ export default {
       },
       searchField: "",
       dropdown: "0",
+      toHistory: false
     };
   },
   mounted() {
@@ -103,11 +108,13 @@ export default {
   methods: {
     goToInfoPage(pro) {
       setTimeout(() => {
-        this.$router.push("/info/bruikleen/" + pro.productId);
-        console.log("bla")
+        if (this.toHistory == false) {
+          this.$router.push("/info/bruikleen/" + pro.productId);
+        }
       }, 100);
     },
     goToHistory(pro) {
+      this.toHistory = true;
       this.$router.push("/geschiedenis/product/" + pro.productId);
     },
     handlePageChange(newPage) {
@@ -127,7 +134,23 @@ export default {
         .then((res) => {
           this.product = res.data.products;
           this.pager = res.data.pager;
-          console.log(res.data)
+
+          for (let i = 0; i < this.product.length; i++) {
+            this.getReturnDate(this.product[i].productId, i);
+          }
+
+        }).catch((error) => {
+          this.$refs.Popup.popUpError(error.response.data);
+        });
+    },
+    getReturnDate(productId, index) {
+      axios.get("LoanHistory/ReturnDate/" + productId, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        }
+      })
+        .then((res) => {
+          this.product[index].returnDate = res.data;
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });

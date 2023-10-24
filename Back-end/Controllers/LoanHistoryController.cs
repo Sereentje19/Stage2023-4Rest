@@ -86,6 +86,21 @@ namespace Back_end.Controllers
             }
         }
 
+        [HttpGet("ReturnDate/{productId}")]
+        public IActionResult GetReturnDatesByProductId(int productId)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var returnDateList = _loanHistoryService.GetReturnDatesByProductId(productId);
+                return Ok(returnDateList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
         [HttpGet("Recent/{productId}")]
         public IActionResult GetFirstByProductId(int productId)
         {

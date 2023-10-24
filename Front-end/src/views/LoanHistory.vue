@@ -13,10 +13,11 @@
             </div>
             <br><br><br>
             <div id="historyItems" v-for="(loanHistory, i) in this.loanHistory">
+                <div id="line"></div>
+
+                <br>
                 <div>{{ formatDate(loanHistory.loanDate) }} - {{ formatDate(loanHistory.returnDate) }}</div>
                 <div>{{ loanHistory.name }}</div>
-                <br>
-                <div id="line"></div>
                 <br>
             </div>
         </div>
@@ -33,10 +34,8 @@
 }
 
 #line {
-    background-color: black;
     width: 420px;
-    height: 1px;
-
+    border-top: 2.5px solid black;
 }
 </style>
 
@@ -85,14 +84,13 @@ export default {
                 .then((res) => {
                     console.log(res.data)
                     this.loanHistory = res.data;
-                    
+
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
         formatDate(date) {
-            if(date == null)
-            {
+            if (date == null) {
                 return "Heden";
             }
             return moment(date).format("DD MMM YYYY");

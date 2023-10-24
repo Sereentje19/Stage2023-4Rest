@@ -26,20 +26,33 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCustomers()
+        public IActionResult GetAllCustomers(int page = 1, int pageSize = 5)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var customers = customerService.GetAll();
-                return Ok(customers);
+                var (pagedCustomers, pager) = customerService.GetAll(page, pageSize);
+
+                var response = new
+                {
+                    Customers = pagedCustomers,
+                    Pager = new
+                    {
+                        pager.TotalItems,
+                        pager.CurrentPage,
+                        pager.PageSize,
+                        pager.TotalPages,
+                    }
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 return StatusCode(401, ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Filters and retrieves a list of customers based on a search field.
         /// </summary>

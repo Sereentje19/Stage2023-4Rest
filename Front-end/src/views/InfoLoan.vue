@@ -194,7 +194,9 @@ export default {
                     .then((res) => {
                         this.filteredCustomers = res.data;
                         console.log(this.filteredCustomers)
-                    }).catch((error) => { });
+                    }).catch((error) => { 
+                        this.$refs.Popup.popUpError(error.response.data);
+                    });
             }
         },
         returnItem() {

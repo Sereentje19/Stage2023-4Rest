@@ -92,7 +92,7 @@ h1 {
 
 #titlesOverviewLoan {
     display: grid;
-    grid-template-columns: 2% 23% 15% 15% 33% 12%;
+    grid-template-columns: 2% 18% 15% 15% 18% 20% 12%;
 }
 
 .overviewContainer {
@@ -110,7 +110,7 @@ h1 {
     border-width: 1px;
     border-style: solid;
     display: grid;
-    grid-template-columns: 2% 23% 15% 15% 33% 4%;
+    grid-template-columns: 2% 18% 15% 15% 18% 20% 4%;
     color: black;
     margin-left: auto;
     border-radius: 3px;

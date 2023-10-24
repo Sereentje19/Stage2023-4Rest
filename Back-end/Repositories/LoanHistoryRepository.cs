@@ -36,6 +36,17 @@ namespace Back_end.Repositories
                 .ToList();
         }
 
+        public DateTime? GetReturnDatesByProductId(int productId)
+        {
+            return _dbSet
+                .Where(l => l.Product.ProductId == productId)
+                .OrderByDescending(l => l.LoanDate)
+                .Select(l => l.ReturnDate)
+                .First();
+        }
+
+
+
         public LoanHistory GetFirstByProductId(int id)
         {
             return _dbSet
