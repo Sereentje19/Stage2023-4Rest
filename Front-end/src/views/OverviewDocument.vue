@@ -6,7 +6,7 @@
         <h1 id="h1Overzicht">{{ overviewType }}</h1>
 
 
-        <select v-model="dropBoxType" id="filterDropDown" @change="filterDocuments">
+        <select v-model="dropdown" id="filterDropDown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
           <option value="1">Vog</option>
           <option value="2">Contract</option>
@@ -100,7 +100,7 @@ export default {
       },
       customers: [],
       searchField: "",
-      dropBoxType: "0",
+      dropdown: "0",
       overviewType: localStorage.getItem("overviewType")
     };
   },
@@ -109,14 +109,13 @@ export default {
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.Popup.popUpError("Document is geupload!");
-      localStorage.setItem('popUpSucces', 'false');
     }
   },
   methods: {
     goToInfoPage(doc) {
       setTimeout(() => {
         if (doc.isArchived == null) {
-          this.$router.push("/infopage/document/" + doc.documentId);
+          this.$router.push("/info/document/" + doc.documentId);
         }
         else {
           this.filterDocuments();
@@ -149,7 +148,7 @@ export default {
           params: {
             searchfield: this.searchField,
             overviewType: this.overviewType,
-            dropBoxType: this.dropBoxType,
+            dropdown: this.dropdown,
             page: this.pager.currentPage,
             pageSize: this.pager.pageSize
           },

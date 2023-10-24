@@ -94,26 +94,6 @@ export default {
     };
   },
   methods: {
-  //   CreateDocument() {
-  //     if (this.document.Type == 0) {
-  //       this.$refs.Popup.popUpError("Selecteer een type!");
-  //     }
-  //     else {
-  //       axios.post("Customer", this.customer, {
-  //         headers: {
-  //           Authorization: "Bearer " + localStorage.getItem("jwt")
-  //         }
-  //       })
-  //         .then((res) => {
-  //           let customerId = res.data;
-  //           console.log(customerId)
-  //           this.postDocument(customerId);
-
-  //         }).catch((error) => {
-  //           this.$refs.Popup.popUpError(error.response.data);
-  //         });
-  //     }
-  //   },
     postDocument() {
       let formData = this.CreateFromData();
 
@@ -132,10 +112,12 @@ export default {
     },
     CreateFromData() {
       let formData = new FormData();
+      
       if (this.selectedFile != null) {
         formData.append('file', this.selectedFile);
         formData.append('document.FileType', this.selectedFile.type);
       }
+
       formData.append('document.Type', this.document.Type);
       formData.append('document.Date', this.document.Date);
       formData.append('document.Customer.Email', this.customer.Email);

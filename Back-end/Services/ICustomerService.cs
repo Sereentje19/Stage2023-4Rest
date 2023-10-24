@@ -5,9 +5,9 @@ namespace Back_end.Services
 {
     public interface ICustomerService
     {
-        CustomerDTO GetById(int id);
         IEnumerable<Customer> GetAll();
-        IEnumerable<Customer> FilterAll(string searchfield);
+        IEnumerable<Customer> GetFilteredCustomers(string searchfield);
+        CustomerDTO GetById(int id);
         int Post(Customer customer);
         void Put(CustomerDocumentDTO customerDocumentDTO);
     }

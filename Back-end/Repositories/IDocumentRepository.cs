@@ -5,13 +5,13 @@ namespace Back_end.Repositories
 {
     public interface IDocumentRepository
     {
-        Task<IEnumerable<Document>> getAll();
-        List<Document> GetFilterDocuments(string searchfield, DocumentType? dropBoxType, string overviewType);
+        IEnumerable<Document> getAll();
+        List<Document> GetFilteredDocuments(string searchfield, DocumentType? dropdown, string overviewType);
         DocumentDTO GetById(int id);
         IEnumerable<Document> GetByCustomerId(int customerId);
-        void Add(Document entity);
-        void Update(EditDocumentRequestDTO entity);
-        void UpdateIsArchived(CheckBoxDTO entity);
+        void Add(Document document);
+        void Update(EditDocumentRequestDTO document);
+        void UpdateIsArchived(CheckBoxDTO document);
         void UpdateCustomerId(int customerId, int documentId);
     }
 }

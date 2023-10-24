@@ -5,8 +5,8 @@ namespace Back_end.Services
 {
     public interface IDocumentService
     {
-        Task<IEnumerable<Document>> GetAll();
-        (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, DocumentType? dropBoxType, int page, int pageSize, string overviewType);
+        IEnumerable<Document> GetAll();
+        (IEnumerable<object>, Pager) GetFilteredDocuments(string searchfield, DocumentType? dropBoxType, int page, int pageSize, string overviewType);
         object GetById(int id);
         IEnumerable<Document> GetByCustomerId(int customerId);
         void Post(Document document);

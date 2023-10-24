@@ -56,6 +56,10 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<ICustomerService, CustomerService>();
     builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
     builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
+    builder.Services.AddScoped<IProductRepository, ProductRepository>();
+    builder.Services.AddScoped<IProductService, ProductService>();
+    builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
+    builder.Services.AddScoped<ILoanHistoryService, LoanHistoryService>();
     builder.Services.AddScoped<IMailService, MailService>();
     builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
     builder.Services.AddHostedService<DocumentExpirationCheckService>();

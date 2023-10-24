@@ -7,16 +7,32 @@ namespace Back_end.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IDocumentRepository _documentService;
+        private readonly IDocumentService _documentService;
 
         /// <summary>
         /// Initializes a new instance of the CustomerService class with the provided CustomerRepository.
         /// </summary>
         /// <param name="cr">The CustomerRepository used for customer-related operations.</param>
-        public CustomerService(ICustomerRepository cr, IDocumentRepository ds)
+        public CustomerService(ICustomerRepository customerRepository, IDocumentService documentService)
         {
-            _customerRepository = cr;
-            _documentService = ds;
+            _customerRepository = customerRepository;
+            _documentService = documentService;
+        }
+
+        public IEnumerable<Customer> GetAll()
+        {
+            return _customerRepository.GetAll();
+        }
+
+
+        /// <summary>
+        /// Filters and retrieves a collection of customers based on a search field.
+        /// </summary>
+        /// <param name="searchfield">The search field to filter customers by.</param>
+        /// <returns>A collection of customers matching the search criteria or an empty list if the searchfield is null or whitespace.</returns>
+        public IEnumerable<Customer> GetFilteredCustomers(string searchfield)
+        {
+            return _customerRepository.GetFilteredCustomers(searchfield);
         }
 
         /// <summary>
@@ -27,19 +43,11 @@ namespace Back_end.Services
         public CustomerDTO GetById(int id)
         {
             Customer cus = _customerRepository.GetById(id);
-            var customerDTO = new CustomerDTO
+            return new CustomerDTO
             {
                 Email = cus.Email,
                 Name = cus.Name
             };
-
-            return customerDTO;
-        }
-
-
-        public IEnumerable<Customer> GetAll()
-        {
-            return _customerRepository.GetAll();
         }
 
         /// <summary>
@@ -52,30 +60,19 @@ namespace Back_end.Services
             return _customerRepository.Add(customer);
         }
 
-
-        /// <summary>
-        /// Filters and retrieves a collection of customers based on a search field.
-        /// </summary>
-        /// <param name="searchfield">The search field to filter customers by.</param>
-        /// <returns>A collection of customers matching the search criteria or an empty list if the searchfield is null or whitespace.</returns>
-        public IEnumerable<Customer> FilterAll(string searchfield)
-        {
-            if (string.IsNullOrWhiteSpace(searchfield))
-            {
-                return new List<Customer>();
-            }
-            return _customerRepository.FilterAll(searchfield);
-        }
-
-
         public void Put(CustomerDocumentDTO customerDocumentDTO)
         {
-            Customer oldCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
+            if (string.IsNullOrWhiteSpace(customerDocumentDTO.Name) || string.IsNullOrEmpty(customerDocumentDTO.Email))
+            {
+                throw new Exception("Naam of email is leeg.");
+            }
 
-            if (oldCustomer.Email != customerDocumentDTO.Email || oldCustomer.Name != customerDocumentDTO.Name)
+            Customer existingCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
+
+            //check if the customer data changed 
+            if (existingCustomer.Email != customerDocumentDTO.Email || existingCustomer.Name != customerDocumentDTO.Name)
             {
                 IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
-                List<Customer> allCustomers = _customerRepository.GetAll();
 
                 if (documents.Count() > 1)
                 {
@@ -83,7 +80,7 @@ namespace Back_end.Services
                 }
                 else
                 {
-                    UpdateCustomer(allCustomers, customerDocumentDTO, oldCustomer);
+                    UpdateCustomer(customerDocumentDTO, existingCustomer);
                 }
             }
         }
@@ -100,8 +97,10 @@ namespace Back_end.Services
             _documentService.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
         }
 
-        private void UpdateCustomer(List<Customer> allCustomers, CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
+        private void UpdateCustomer(CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
         {
+            List<Customer> allCustomers = _customerRepository.GetAll();
+
             var matchingCustomer = allCustomers.FirstOrDefault(c =>
                                 c.Email == customerDocumentDTO.Email &&
                                 c.Name == customerDocumentDTO.Name);

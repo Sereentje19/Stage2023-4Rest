@@ -27,12 +27,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllDocuments()
+        public IActionResult GetAllDocuments()
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var documents = await documentService.GetAll();
+                var documents = documentService.GetAll();
                 return Ok(documents);
             }
             catch (Exception ex)
@@ -42,12 +42,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("Filter")]
-        public IActionResult GetFilterDocuments(string? searchfield, string overviewType, DocumentType? dropBoxType, int page = 1, int pageSize = 5)
+        public IActionResult GetFilteredDocuments(string? searchfield, string overviewType, DocumentType? dropdown, int page = 1, int pageSize = 5)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedDocuments, pager) = documentService.GetFilterDocuments(searchfield, dropBoxType, page, pageSize, overviewType);
+                var (pagedDocuments, pager) = documentService.GetFilteredDocuments(searchfield, dropdown, page, pageSize, overviewType);
 
                 var response = new
                 {
@@ -123,8 +123,8 @@ namespace Back_end.Controllers
                     Date = document.Date,
                     Customer = new Customer()
                     {
-                        Email = document.customer.Email,
-                        Name = document.customer.Name
+                        Email = document.Customer.Email,
+                        Name = document.Customer.Name
                     },
                     FileType = document.FileType
                 };

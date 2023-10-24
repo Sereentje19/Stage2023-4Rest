@@ -13,7 +13,6 @@ namespace Back_end.Models
         [ForeignKey("ProductId")]
         public Product Product { get; set; }
         public DateTime LoanDate { get; set; }
-        public DateTime ReturnDate { get; set; }
-        public bool IsActive { get; set; }
+        public DateTime? ReturnDate { get; set; }
     }
 }

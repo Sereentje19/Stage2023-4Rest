@@ -59,7 +59,7 @@ export default {
                 Type: 0,
                 Date: "",
             },
-            customerDocument:{
+            customerDocument: {
                 CustomerId: 0,
                 Name: '',
                 Email: '',
@@ -100,7 +100,8 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.$router.push("/infopage/document/" + this.id);
+                    localStorage.setItem('popUpSucces', 'true');
+                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
@@ -115,7 +116,8 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.$router.push("/infopage/document/" + this.id);
+                    localStorage.setItem('popUpSucces', 'true');
+                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });

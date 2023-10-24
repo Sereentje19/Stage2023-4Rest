@@ -24,7 +24,41 @@ namespace Back_end.Controllers
             customerService = cs;
             jwtValidationService = jwt;
         }
+
+        [HttpGet]
+        public IActionResult GetAllCustomers()
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var customers = customerService.GetAll();
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
         
+        /// <summary>
+        /// Filters and retrieves a list of customers based on a search field.
+        /// </summary>
+        /// <param name="searchField">The search field used to filter customers.</param>
+        /// <returns>A collection of customers matching the search criteria.</returns>
+        [HttpGet("Filter")]
+        public IActionResult GetFilteredCustomers(string? searchField)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var customers = customerService.GetFilteredCustomers(searchField);
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
 
         /// <summary>
         /// Retrieves a customer by its unique identifier (ID).
@@ -46,40 +80,6 @@ namespace Back_end.Controllers
             }
         }
 
-        /// <summary>
-        /// Filters and retrieves a list of customers based on a search field.
-        /// </summary>
-        /// <param name="searchField">The search field used to filter customers.</param>
-        /// <returns>A collection of customers matching the search criteria.</returns>
-        [HttpGet("Filter")]
-        public IActionResult FilterAll(string? searchField)
-        {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var customers = customerService.FilterAll(searchField);
-                return Ok(customers);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetAllCustomers()
-        {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var customers = customerService.GetAll();
-                return Ok(customers);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
 
         /// <summary>
         /// Adds a new customer to the system.

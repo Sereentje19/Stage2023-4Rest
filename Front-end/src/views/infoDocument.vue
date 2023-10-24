@@ -77,6 +77,10 @@ export default {
   },
   mounted() {
     this.getDocument();
+
+    if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
+      this.$refs.Popup.popUpError("Data is bijgewerkt.");
+    }
   },
   methods: {
     getDocument() {

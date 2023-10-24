@@ -17,20 +17,18 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
-        public async Task<IEnumerable<Document>> GetAll()
+        public IEnumerable<Document> GetAll()
         {
-            return await _documentRepository.getAll();
+            return _documentRepository.getAll();
         }
 
 
-        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, DocumentType? dropBoxType, int page, int pageSize, string overviewType)
+        public (IEnumerable<object>, Pager) GetFilteredDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize, string overviewType)
         {
-            var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType, overviewType);
+            var documents = _documentRepository.GetFilteredDocuments(searchfield, dropdown, overviewType);
 
-            int totalArchivedDocuments = documents.Count();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(totalArchivedDocuments, page, pageSize);
-
+            var pager = new Pager(documents.Count(), page, pageSize);
 
             var pagedDocuments = documents
                 .Skip(skipCount)
@@ -59,7 +57,7 @@ namespace Back_end.Services
             var response = new
             {
                 Document = doc,
-                Customer = doc.customer,
+                Customer = doc.Customer,
                 type = doc.Type.ToString().Replace("_", " "),
             };
             return response;
