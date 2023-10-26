@@ -24,7 +24,7 @@
           <br>
           Email: &nbsp;&nbsp; {{ this.customer.email }}
         </div>
-        <button @click="toEdit('klant')" id="EditButton">Edit</button>
+        <!-- <button @click="toEdit('klant')" id="EditButton">Edit</button> -->
       </ul>
     </div>
     <div class="foto">
