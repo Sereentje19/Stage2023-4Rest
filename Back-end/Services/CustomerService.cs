@@ -19,9 +19,9 @@ namespace Back_end.Services
             _documentService = documentService;
         }
 
-        public (IEnumerable<object>, Pager) GetAll(int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetAll(string searchfield, int page, int pageSize)
         {
-            var customers = _customerRepository.GetAll();
+            var customers = _customerRepository.GetAll(searchfield);
 
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             var pager = new Pager(customers.Count(), page, pageSize);
@@ -115,7 +115,7 @@ namespace Back_end.Services
 
         private void UpdateCustomer(CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
         {
-            List<Customer> allCustomers = _customerRepository.GetAll();
+            List<Customer> allCustomers = _customerRepository.GetAll("");
 
             var matchingCustomer = allCustomers.FirstOrDefault(c =>
                                 c.Email == customerDocumentDTO.Email &&

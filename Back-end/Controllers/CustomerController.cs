@@ -26,12 +26,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCustomers(int page = 1, int pageSize = 5)
+        public IActionResult GetAllCustomers(string? searchfield, int page = 1, int pageSize = 5)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedCustomers, pager) = customerService.GetAll(page, pageSize);
+                var (pagedCustomers, pager) = customerService.GetAll(searchfield, page, pageSize);
 
                 var response = new
                 {

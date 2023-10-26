@@ -8,7 +8,7 @@ namespace Back_end.Repositories
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> GetAll();
+        IEnumerable<Product> GetAll(string searchfield, ProductType? dropdown);
         Product GetById(int id);
     }
 }

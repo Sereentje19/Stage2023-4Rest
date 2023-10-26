@@ -10,6 +10,7 @@ namespace Back_end.Services
     {
         IEnumerable<LoanHistory> GetAll();
         IEnumerable<LoanHistory> GetByProductId(int id);
+        IEnumerable<LoanHistory> GetByCustomerId(int id);
         DateTime? GetReturnDatesByProductId(int productId);
         LoanHistory GetFirstByProductId(int id);
         void ReturnProduct(LoanHistory loanHistory);

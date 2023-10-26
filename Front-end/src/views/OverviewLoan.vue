@@ -6,13 +6,13 @@
         <h1 id="h1Overzicht">Bruikleen</h1>
 
 
-        <select v-model="dropdown" id="filterDropDown" @change="filterDocuments">
+        <select v-model="dropdown" id="filterDropDown" @change="getProducts">
           <option value="0">Selecteer type...</option>
           <option value="1">Laptop</option>
           <option value="2">Monitor</option>
           <option value="3">Stoel</option>
         </select>
-        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
+        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="getProducts" />
       </div>
 
       <div v-if="displayedProducts.length > 0">
@@ -127,6 +127,8 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("jwt")
         },
         params: {
+          searchfield: this.searchField,
+          dropdown: this.dropdown,
           page: this.pager.currentPage,
           pageSize: this.pager.pageSize
         },

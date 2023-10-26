@@ -6,7 +6,7 @@
                 <h1 id="h1Overzicht">Medewerkers</h1>
 
                 <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek"
-                    @input="filterDocuments" />
+                    @input="getAllCustomers" />
             </div>
 
             <div v-if="displayedDocuments.length > 0">
@@ -22,8 +22,9 @@
                         <div></div>
                         <div id="klantnaamTekst">{{ customer.name }}</div>
                         <div id="geldigVanTekst">{{ customer.email }}</div>
-                        <button id="buttonGeschiedenis"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
+                        <button id="buttonGeschiedenis" @click="goToHistory(customer)"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-hourglass" viewBox="0 0 16 16">
                                 <path
                                     d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2h-7z" />
                             </svg></button>
@@ -90,6 +91,7 @@ export default {
             ],
             searchField: "",
             dropdown: "0",
+            toHistory: false
         };
     },
     mounted() {
@@ -103,9 +105,13 @@ export default {
         goToInfoPage(pro) {
             setTimeout(() => {
                 if (this.toHistory == false) {
-                    this.$router.push("/info/bruikleen/" + pro.productId);
+                    // this.$router.push("/info/bruikleen/" + pro.productId);
                 }
             }, 100);
+        },
+        goToHistory(cus) {
+            this.toHistory = true;
+            this.$router.push("/geschiedenis/medewerker/" + cus.customerId);
         },
         handlePageChange(newPage) {
             this.pager.currentPage = newPage;
@@ -117,6 +123,7 @@ export default {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
                 params: {
+                    searchfield: this.searchField,
                     page: this.pager.currentPage,
                     pageSize: this.pager.pageSize
                 },

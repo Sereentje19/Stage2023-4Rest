@@ -22,9 +22,29 @@ namespace Back_end.Repositories
         }
 
 
-        public List<Customer> GetAll()
+        public List<Customer> GetAll(string searchfield)
         {
-            return _dbSet.ToList();
+            return _context.Customers
+                .Where(customer => string.IsNullOrEmpty(searchfield) ||
+                                  customer.Name.Contains(searchfield) ||
+                                  customer.Email.Contains(searchfield))
+                .OrderBy(customer => customer.Name)
+                .ToList(); 
+        }
+
+
+        public IEnumerable<Product> GetAll(string searchfield, ProductType? dropdown)
+        {
+            IQueryable<Product> query = from product in _context.Products
+                                        where (string.IsNullOrEmpty(searchfield) ||
+                                            product.SerialNumber.Contains(searchfield) ||
+                                            product.ExpirationDate.ToString().Contains(searchfield) ||
+                                            product.PurchaseDate.ToString().Contains(searchfield))
+                                        && (dropdown == ProductType.Not_Selected || product.Type == dropdown)
+                                        select product;
+
+            var productList = query.ToList();
+            return productList;
         }
 
 

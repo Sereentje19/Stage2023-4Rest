@@ -86,6 +86,34 @@ namespace Back_end.Controllers
             }
         }
 
+        [HttpGet("CustomerId/{customerId}")]
+        public IActionResult GetByCustomerId(int customerId)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var lh = _loanHistoryService.GetByCustomerId(customerId);
+
+                var LoanHistory = lh
+                .Select(loan => new
+                {
+                    Type = loan.Product.Type.ToString(),
+                    loan.Product.SerialNumber,
+                    loan.LoanDate,
+                    loan.ReturnDate,
+                    loan.Customer.Name,
+                    loan.Customer.Email
+                })
+                .ToList();
+
+                return Ok(LoanHistory);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
         [HttpGet("ReturnDate/{productId}")]
         public IActionResult GetReturnDatesByProductId(int productId)
         {

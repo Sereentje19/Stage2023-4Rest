@@ -24,6 +24,11 @@ namespace Back_end.Services
         {
             return _loanHistoryRepository.GetByProductId(id);
         }
+
+        public IEnumerable<LoanHistory> GetByCustomerId(int id)
+        {
+            return _loanHistoryRepository.GetByCustomerId(id);
+        }
         public DateTime? GetReturnDatesByProductId(int productId)
         {
             return _loanHistoryRepository.GetReturnDatesByProductId(productId);

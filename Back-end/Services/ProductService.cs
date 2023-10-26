@@ -16,9 +16,9 @@ namespace Back_end.Services
             _productRepository = productRepository;
         }
 
-        public (IEnumerable<object>, Pager) GetAll(int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetAll(string searchfield, ProductType? dropdown, int page, int pageSize)
         {
-            IEnumerable<Product> products = _productRepository.GetAll();
+            IEnumerable<Product> products = _productRepository.GetAll(searchfield, dropdown);
 
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             var pager = new Pager(products.Count(), page, pageSize);

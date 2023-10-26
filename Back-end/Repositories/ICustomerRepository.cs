@@ -5,7 +5,7 @@ namespace Back_end.Repositories
 {
     public interface ICustomerRepository
     {
-        List<Customer> GetAll();
+        List<Customer> GetAll(string searchfield);
         IEnumerable<Customer> GetFilteredCustomers(string searchfield);
         Customer GetById(int id);
         int Add(Customer entity);

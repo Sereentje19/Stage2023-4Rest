@@ -8,6 +8,7 @@ import OverviewEmployees from '../views/OverviewEmployees.vue';
 import OverviewLoan from '../views/OverviewLoan.vue';
 import LoanHistory from '../views/LoanHistory.vue';
 import InfoLoan from '../views/InfoLoan.vue';
+import CollegueHistory from '../views/ColleagueHistory.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,7 @@ const router = createRouter({
     { path: '/Edit/:route/:id', component: Edit, props: true},
     { path: '/uploaden/document', component: Uploaden },
     { path: '/geschiedenis/product/:id', component: LoanHistory, props: true },
+    { path: '/geschiedenis/medewerker/:id', component: CollegueHistory, props: true },
     { path: '/info/bruikleen/:id', component: InfoLoan, props: true },
     { path: '/overzicht/document', name: 'Overview', component: Overview ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},

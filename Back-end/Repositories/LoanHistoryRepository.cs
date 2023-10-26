@@ -36,6 +36,16 @@ namespace Back_end.Repositories
                 .ToList();
         }
 
+        public IEnumerable<LoanHistory> GetByCustomerId(int id)
+        {
+            return _dbSet
+                .Include(l => l.Customer)
+                .Include(l => l.Product)
+                .Where(l => l.Customer.CustomerId == id)
+                .OrderByDescending(l => l.LoanDate)
+                .ToList();
+        }
+
         public DateTime? GetReturnDatesByProductId(int productId)
         {
             return _dbSet

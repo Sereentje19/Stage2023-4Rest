@@ -24,12 +24,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult getAllProducts(int page = 1, int pageSize = 5)
+        public IActionResult getAllProducts(string? searchfield, ProductType? dropdown, int page = 1, int pageSize = 5)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedProducts, pager) = _productService.GetAll(page, pageSize);
+                var (pagedProducts, pager) = _productService.GetAll(searchfield, dropdown, page, pageSize);
 
                 var response = new
                 {

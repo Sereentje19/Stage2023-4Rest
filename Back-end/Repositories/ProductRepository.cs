@@ -18,9 +18,18 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Product>();
         }
 
-        public IEnumerable<Product> GetAll()
+        public IEnumerable<Product> GetAll(string searchfield, ProductType? dropdown)
         {
-            return _dbSet.ToList();
+            IQueryable<Product> query = from product in _context.Products
+                                        where (string.IsNullOrEmpty(searchfield) ||
+                                            product.SerialNumber.Contains(searchfield) ||
+                                            product.ExpirationDate.ToString().Contains(searchfield) ||
+                                            product.PurchaseDate.ToString().Contains(searchfield))
+                                        && (dropdown == ProductType.Not_Selected || product.Type == dropdown)
+                                        select product;
+
+            var productList = query.ToList();
+            return productList;
         }
 
         public Product GetById(int id)
