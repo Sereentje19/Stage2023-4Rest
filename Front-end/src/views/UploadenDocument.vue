@@ -4,7 +4,7 @@
     <div class="uploadContainer">
       <div class="leftSide">
         <h1 id="h1">Document uploaden</h1>
-        <div id="drop" ref="dropArea" class="dropArea" @dragover.prevent="handleDragOver" @dragleave="handleDragLeave"
+        <div id="drop" ref="dropArea" class="dropArea" @dragover.prevent="handleDrag(true)" @dragleave="handleDrag(false)"
           @drop.prevent="handleDrop">
           <p id="p" ref="pElement"></p>
           <input type="file" class="file" @change="handleFileChange" style="display: none" />
@@ -49,7 +49,7 @@
           </form>
         </ul>
 
-        <button @click="this.CreateDocument()" class="verstuur">
+        <button @click="this.postDocument()" class="verstuur">
           Verstuur document
         </button>
       </div>
@@ -94,30 +94,8 @@ export default {
     };
   },
   methods: {
-    CreateDocument() {
-      if (this.document.Type == 0) {
-        this.$refs.Popup.popUpError("Selecteer een type!");
-      }
-      else {
-        axios.post("Customer", this.customer, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwt")
-          }
-        })
-          .then((res) => {
-            let customerId = res.data;
-            console.log(customerId)
-            this.postDocument(customerId);
-
-          }).catch((error) => {
-            this.$refs.Popup.popUpError(error.response.data);
-          });
-      }
-    },
-    postDocument(customerId) {
-      console.log(this.document)
-      let formData = this.CreateFromData(customerId);
-      console.log(this.selectedFile)
+    postDocument() {
+      let formData = this.CreateFromData();
 
       axios.post("Document", formData, {
         headers: {
@@ -127,20 +105,24 @@ export default {
       })
         .then((res) => {
           localStorage.setItem('popUpSucces', 'true');
-          this.$router.push({ path: '/Overzicht', query: { activePopup: true } });
+          this.$router.push({ path: '/Overzicht/document', query: { activePopup: true } });
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
     },
-    CreateFromData(customerId) {
+    CreateFromData() {
       let formData = new FormData();
+      
       if (this.selectedFile != null) {
         formData.append('file', this.selectedFile);
         formData.append('document.FileType', this.selectedFile.type);
       }
+
       formData.append('document.Type', this.document.Type);
       formData.append('document.Date', this.document.Date);
-      formData.append('document.CustomerId', customerId);
+      formData.append('document.Customer.Email', this.customer.Email);
+      formData.append('document.Customer.Name', this.customer.Name);
+
       return formData;
     },
     filterCustomer() {
@@ -179,19 +161,22 @@ export default {
         this.isFocused = false;
       }, 200);
     },
-    handleDragOver(e) {
+    handleDrag(e, bool){
       e.preventDefault();
-      this.dropAreaActive = true;
-    },
-    handleDragLeave(e) {
-      e.preventDefault();
-      this.dropAreaActive = false;
+      this.dropAreaActive = bool;
     },
     handleDrop(e) {
       e.preventDefault();
       this.dropAreaActive = false;
       const files = e.dataTransfer.files;
       this.processFile(files[0]);
+    },
+    processFile(file) {
+      if (file) {
+        this.selectedFile = file;
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+      }
     },
   },
 };

@@ -1,18 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../views/Login.vue';
-import Overview from '../views/Overview.vue';
-import Uploaden from '../views/Uploaden.vue';
-import infopage from '../views/Infopage.vue';
-import Edit from '../views/Edit.vue';
+import Overview from '../views/OverviewDocument.vue';
+import Uploaden from '../views/UploadenDocument.vue';
+import infopage from '../views/infoDocument.vue';
+import Edit from '../views/EditDocument.vue';
+import OverviewEmployees from '../views/OverviewEmployees.vue';
+import OverviewLoan from '../views/OverviewLoan.vue';
+import LoanHistory from '../views/LoanHistory.vue';
+import InfoLoan from '../views/InfoLoan.vue';
+import CollegueHistory from '../views/ColleagueHistory.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', component: Login },
-    { path: '/infopage/:id', component: infopage, props: true},
+    { path: '/info/document/:id', component: infopage, props: true},
     { path: '/Edit/:route/:id', component: Edit, props: true},
-    { path: '/uploaden', component: Uploaden },
-    { path: '/overzicht', name: 'Overview', component: Overview ,
+    { path: '/uploaden/document', component: Uploaden },
+    { path: '/geschiedenis/product/:id', component: LoanHistory, props: true },
+    { path: '/geschiedenis/medewerker/:id', component: CollegueHistory, props: true },
+    { path: '/info/bruikleen/:id', component: InfoLoan, props: true },
+    { path: '/overzicht/document', name: 'Overview', component: Overview ,
+    props: route => ({ popup1: route.query.popup1 === 'true' })},
+    { path: '/overzicht/medewerkers', name: 'OverviewMedewerkers', component: OverviewEmployees ,
+    props: route => ({ popup1: route.query.popup1 === 'true' })},
+    { path: '/overzicht/bruikleen', name: 'OverviewBruikleen', component: OverviewLoan ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
   ],
 });

@@ -5,9 +5,10 @@ namespace Back_end.Services
 {
     public interface ICustomerService
     {
-        IEnumerable<Customer> FilterAll(string searchfield);
+        (IEnumerable<object>, Pager) GetAll(string searchfield, int page, int pageSize);
+        IEnumerable<Customer> GetFilteredCustomers(string searchfield);
         CustomerDTO GetById(int id);
         int Post(Customer customer);
-        void Put(Customer customer);
+        void Put(CustomerDocumentDTO customerDocumentDTO);
     }
 }

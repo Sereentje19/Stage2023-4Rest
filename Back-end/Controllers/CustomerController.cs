@@ -25,18 +25,46 @@ namespace Back_end.Controllers
             jwtValidationService = jwt;
         }
 
+        [HttpGet]
+        public IActionResult GetAllCustomers(string? searchfield, int page = 1, int pageSize = 5)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var (pagedCustomers, pager) = customerService.GetAll(searchfield, page, pageSize);
+
+                var response = new
+                {
+                    Customers = pagedCustomers,
+                    Pager = new
+                    {
+                        pager.TotalItems,
+                        pager.CurrentPage,
+                        pager.PageSize,
+                        pager.TotalPages,
+                    }
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
         /// <summary>
         /// Filters and retrieves a list of customers based on a search field.
         /// </summary>
         /// <param name="searchField">The search field used to filter customers.</param>
         /// <returns>A collection of customers matching the search criteria.</returns>
         [HttpGet("Filter")]
-        public IActionResult FilterAll(string searchField)
+        public IActionResult GetFilteredCustomers(string? searchField)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var customers = customerService.FilterAll(searchField);
+                var customers = customerService.GetFilteredCustomers(searchField);
                 return Ok(customers);
             }
             catch (Exception ex)
@@ -65,6 +93,7 @@ namespace Back_end.Controllers
             }
         }
 
+
         /// <summary>
         /// Adds a new customer to the system.
         /// </summary>
@@ -91,12 +120,12 @@ namespace Back_end.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(Customer cus)
+        public IActionResult Put(CustomerDocumentDTO customerDocumentDTO)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                customerService.Put(cus);
+                customerService.Put(customerDocumentDTO);
                 return Ok(new { message = "Customer updated" });
             }
             catch (Exception ex)

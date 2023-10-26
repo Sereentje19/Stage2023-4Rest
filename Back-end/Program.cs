@@ -11,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 AddServices();
-// JWTAuthentication();
 AddCors();
 AddDBConnection();
 ConnectionInterfaces();
@@ -27,27 +26,6 @@ void AddServices()
     builder.Services.AddAuthentication().AddJwtBearer();
     builder.Services.AddHttpContextAccessor();
 }
-
-//JWT Authentication
-void JWTAuthentication()
-{
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-    {
-        // options.Authority = $"http://{builder.Configuration["Auth0:Domain"]}";
-        // options.Audience = builder.Configuration["Auth0:Audience"];
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
-}
-
 
 //cors
 void AddCors()
@@ -78,6 +56,10 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<ICustomerService, CustomerService>();
     builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
     builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
+    builder.Services.AddScoped<IProductRepository, ProductRepository>();
+    builder.Services.AddScoped<IProductService, ProductService>();
+    builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
+    builder.Services.AddScoped<ILoanHistoryService, LoanHistoryService>();
     builder.Services.AddScoped<IMailService, MailService>();
     builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
     builder.Services.AddHostedService<DocumentExpirationCheckService>();

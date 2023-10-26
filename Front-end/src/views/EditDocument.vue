@@ -6,8 +6,8 @@
 
             <form action="/action_page.php">
                 <div class="gegevensEdit" v-if="this.route == 'klant'">
-                    <input v-model="this.customer.Name" :placeholder="this.customer.name" class="NaamEdit" />
-                    <input v-model="this.customer.Email" :placeholder="this.customer.email" class="Email" />
+                    <input v-model="this.customer.name" class="NaamEdit" />
+                    <input v-model="this.customer.email" class="Email" />
                 </div>
                 <div class="gegevensEdit" v-else>
                     <select v-model="this.document.Type" class="Type" name="Type">
@@ -15,7 +15,7 @@
                         <option value="1">Vog</option>
                         <option value="2">Contract</option>
                         <option value="3">Paspoort</option>
-                        <option value="4">id kaart</option>
+                        <option value="4">ID kaart</option>
                         <option value="5">Diploma</option>
                         <option value="6">Certificaat</option>
                         <option value="7">Lease auto</option>
@@ -24,7 +24,7 @@
 
                 </div>
             </form>
-            <button @click="route === 'document' ? putDocument() : putCustomer()" class="verstuurEdit">Verstuur
+            <button @click="route === 'document' ? editDocument() : editCustomer()" class="verstuurEdit">Verstuur
                 document</button>
         </div>
 
@@ -55,73 +55,69 @@ export default {
                 Email: '',
             },
             document: {
-                DocumentId: parseInt(this.id, 10),
+                DocumentId: 0,
                 Type: 0,
                 Date: "",
+            },
+            customerDocument: {
                 CustomerId: 0,
+                Name: '',
+                Email: '',
+                DocumentId: 0,
             },
             filteredCustomers: []
         };
     },
     mounted() {
-        this.getCustomerId();
+        this.getDocument();
     },
     methods: {
-        getCustomerId() {
+        getDocument() {
             axios.get("Document/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
             })
                 .then((res) => {
-                    this.customer.CustomerId = res.data.document.customerId;
-                    this.document.CustomerId = res.data.document.customerId;
+                    this.customer = res.data.customer;
+                    this.document = res.data.document;
                     this.document.Date = res.data.document.date;
                     this.document.Type = res.data.document.type;
-                    console.log(this.document.Date)
-                    this.getCustomerInfo(res.data.document.customerId);
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        getCustomerInfo(customerId) {
-            axios.get("Customer/" + customerId, {
+        editCustomer() {
+            this.customerDocument.DocumentId = this.id;
+            this.customerDocument.CustomerId = this.customer.customerId;
+            this.customerDocument.Email = this.customer.email;
+            this.customerDocument.Name = this.customer.name;
+            console.log(this.customerDocument)
+
+            axios.put("Customer", this.customerDocument, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
             })
                 .then((res) => {
-                    this.customer.Email = res.data.email;
-                    this.customer.Name = res.data.name;
-                    console.log(this.customer);
-
+                    localStorage.setItem('popUpSucces', 'true');
+                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        putCustomer() {
-            console.log(this.customer);
-            axios.put("Customer", this.customer, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwt")
-                }
-            })
-                .then((res) => {
-
-                    this.$router.push("/infopage/" + this.id);
-                }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
-                });
-        },
-        putDocument() {
+        editDocument() {
             this.document.Type = parseInt(this.document.Type, 10);
+            console.log(this.document.DocumentId)
+            this.document.DocumentId = this.id;
             axios.put("Document", this.document, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
             })
                 .then((res) => {
-                    this.$router.push("/infopage/" + this.id);
+                    localStorage.setItem('popUpSucces', 'true');
+                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });

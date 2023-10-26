@@ -5,9 +5,8 @@
       <div id="h1AndButton">
         <h1 id="h1Overzicht">{{ overviewType }}</h1>
 
-        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
 
-        <select v-model="dropBoxType" id="filterDropDown" @change="filterDocuments">
+        <select v-model="dropdown" id="filterDropDown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
           <option value="1">Vog</option>
           <option value="2">Contract</option>
@@ -17,6 +16,8 @@
           <option value="6">Certificaat</option>
           <option value="7">Lease auto</option>
         </select>
+        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
+
       </div>
 
       <div v-if="displayedDocuments.length > 0">
@@ -32,7 +33,7 @@
         </div>
 
         <div class="overview" v-for="(document, i) in displayedDocuments">
-          <div @click="goToInfoPage(document)" :to="{ path: '/infopage/' + document.documentId }" id="item">
+          <div @click="goToInfoPage(document)" id="item">
             <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
               src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
             <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
@@ -99,7 +100,7 @@ export default {
       },
       customers: [],
       searchField: "",
-      dropBoxType: "0",
+      dropdown: "0",
       overviewType: localStorage.getItem("overviewType")
     };
   },
@@ -108,29 +109,21 @@ export default {
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.Popup.popUpError("Document is geupload!");
-      localStorage.setItem('popUpSucces', 'false');
     }
   },
   methods: {
     goToInfoPage(doc) {
       setTimeout(() => {
         if (doc.isArchived == null) {
-          this.$router.push("/infopage/" + doc.documentId);
+          this.$router.push("/info/document/" + doc.documentId);
         }
         else {
           this.filterDocuments();
         }
-      }, 200);
+      }, 100);
     },
     toggleCheckbox(doc) {
-      console.log('Toggled for document ID: ', doc);
-
-      if (this.overviewType == 'Archief') {
-        doc.isArchived = false;
-      }
-      else {
-        doc.isArchived = true;
-      }
+      doc.isArchived = this.overviewType === 'Archief' ? false : true;
 
       axios.put("Document/IsArchived", doc, {
         headers: {
@@ -141,29 +134,12 @@ export default {
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
-
     },
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;
       this.filterDocuments();
     },
-    toArchive() {
-      this.$router.push("/archief");
-    },
-    getCustomerName(id, index) {
-      axios.get("Customer/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwt")
-        }
-      })
-        .then((res) => {
-          this.documents[index].customerName = res.data.name;
-        }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
-        });
-    },
     filterDocuments() {
-      console.log(this.overviewType)
       axios
         .get("Document/Filter", {
           headers: {
@@ -172,7 +148,7 @@ export default {
           params: {
             searchfield: this.searchField,
             overviewType: this.overviewType,
-            dropBoxType: this.dropBoxType,
+            dropdown: this.dropdown,
             page: this.pager.currentPage,
             pageSize: this.pager.pageSize
           },
@@ -180,11 +156,7 @@ export default {
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
-
-          for (let index = 0; index < this.documents.length; index++) {
-            const customerId = this.documents[index].customerId;
-            this.getCustomerName(customerId, index);
-          }
+          console.log(res.data.documents.length)
         })
         .catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -221,15 +193,17 @@ export default {
         value = ageInDays;
       }
 
+      value = this.toOrFromArchive(value);
+      return `${value} ${unit}`;
+    },
+    toOrFromArchive(value) {
       if (this.overviewType === 'Archief' && value < 0) {
         value = Math.abs(value);
       }
-      else if(this.overviewType === 'Archief' && value > 0)
-      {
+      else if (this.overviewType === 'Archief' && value > 0) {
         value = -value
       }
-
-      return `${value} ${unit}`;
+      return value
     },
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);

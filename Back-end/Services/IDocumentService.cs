@@ -5,10 +5,13 @@ namespace Back_end.Services
 {
     public interface IDocumentService
     {
-        (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize, string overviewType);
-        DocumentDTO GetById(int id);
+        IEnumerable<Document> GetAll();
+        (IEnumerable<object>, Pager) GetFilteredDocuments(string searchfield, DocumentType? dropBoxType, int page, int pageSize, string overviewType);
+        object GetById(int id);
+        IEnumerable<Document> GetByCustomerId(int customerId);
         void Post(Document document);
         void Put(EditDocumentRequestDTO document);
         void UpdateIsArchived(CheckBoxDTO entity);
+        void UpdateCustomerId(int customerId, int documentId);
     }
 }

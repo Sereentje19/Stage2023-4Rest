@@ -3,6 +3,7 @@ using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
 using Back_end.Models;
 using Back_end.Models.DTOs;
+using Microsoft.VisualBasic;
 
 namespace Back_end.Controllers
 {
@@ -25,14 +26,28 @@ namespace Back_end.Controllers
             jwtValidationService = jwt;
         }
 
-
-        [HttpGet("Filter")]
-        public IActionResult GetFilterDocuments(string? searchfield, string overviewType, Models.Type? dropBoxType, int page = 1, int pageSize = 5)
+        [HttpGet]
+        public IActionResult GetAllDocuments()
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedDocuments, pager) = documentService.GetFilterDocuments(searchfield, dropBoxType, page, pageSize, overviewType);
+                var documents = documentService.GetAll();
+                return Ok(documents);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpGet("Filter")]
+        public IActionResult GetFilteredDocuments(string? searchfield, string overviewType, DocumentType? dropdown, int page = 1, int pageSize = 5)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var (pagedDocuments, pager) = documentService.GetFilteredDocuments(searchfield, dropdown, page, pageSize, overviewType);
 
                 var response = new
                 {
@@ -65,15 +80,23 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var document = documentService.GetById(id);
-
-                var response = new
-                {
-                    Document = document,
-                    type = document.Type.ToString().Replace("_", " "),
-                };
-
+                var response = documentService.GetById(id);
                 return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpGet("customerId/{customerId}")]
+        public IActionResult GetByCustomerId(int customerId)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                var documents = documentService.GetByCustomerId(customerId);
+                return Ok(documents);
             }
             catch (Exception ex)
             {
@@ -93,11 +116,16 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
+
                 Document doc = new Document
                 {
                     Type = document.Type,
                     Date = document.Date,
-                    CustomerId = document.CustomerId,
+                    Customer = new Customer()
+                    {
+                        Email = document.Customer.Email,
+                        Name = document.Customer.Name
+                    },
                     FileType = document.FileType
                 };
 

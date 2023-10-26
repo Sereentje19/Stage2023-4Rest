@@ -1,66 +1,77 @@
-
 #logoHeader {
-    width: 130px;
-    height: 80px;
-    margin-left: 3px;
-    margin-top: 28px;
-    padding: 0.5% 0% 0% 1%;
-    margin-left: 30px;
+  width: 130px;
+  height: 80px;
+  margin-top: 28px;
+  padding: 0.5% 0% 0% 1%;
 }
 
 a {
-    font-size: 28px;
-    color: white;
+  font-size: 28px;
+  color: white;
+}
+
+#logoHeaderLink{
+  margin-left: 7%;
 }
 
 #buttonsHeader {
-    position: absolute;
-    right: 0px;
-    padding: 50px 40px 0px 0px;
+  position: absolute;
+  right: 5%;
+  padding: 50px 40px 0px 0px;
 }
 
 .header {
-    width: 103%;
-    height: 120px;
-    background-color: #153912;
-    margin-left: -1.5%;
-    margin-top: -1.5%;
-    display: flex;
-    flex-direction: row;
+  width: 100%;
+  height: 120px;
+  background-color: #153912;
+  margin-top: -1.5%;
+  display: flex;
+  flex-direction: row;
 }
 
 
 .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #153912;
-    min-width: 160px;
-    padding-top: 32px;
-    z-index: 1;
-    border-radius: 0px 0px 5px 5px;
-  }
-  
-  .dropdown-content a {
-    color: rgb(255, 255, 255);
-    padding: 10px 10px 10px 10px;
-    text-decoration: none;
-    display: block;
-    background-color: #245521;
-  }
-  .dropdown-content a:last-child{
+  position: relative;
+  display: inline-block;
+}
 
-    border-radius: 0px 0px 5px 5px;
-  }
-  
-  .dropdown-content a:hover {
-    background-color: #133610;
-  }
-  
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
+#dropDownLinks {
+  font-size: 20px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #153912;
+  min-width: 160px;
+  padding-top: 32px;
+  z-index: 1;
+  border-radius: 0px 0px 5px 5px;
+}
+
+.dropdown-content a:first-child {
+  border-top: rgb(11, 92, 17) 1px solid;
+}
+
+.dropdown-content a {
+  color: rgb(255, 255, 255);
+  padding: 5px 0px 5px 20px;
+  text-decoration: none;
+  display: block;
+  background-color: rgb(11, 92, 17);
+  border-left: rgb(11, 92, 17) 1px solid;
+  border-right: rgb(11, 92, 17) 1px solid;
+}
+
+.dropdown-content a:hover {
+  background-color: #153912;
+  color: white;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+#headerItems:hover {
+  color: #bebebe;
+}

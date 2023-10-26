@@ -1,9 +1,9 @@
 <template>
   <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
-    <div class="Error" :class="{ 'SuccessPopup': Message === 'Document is geupload!' }">
+    <div class="Error" :class="{ 'SuccessPopup': colorOfMessage === 'true' }">
       <div>
         <div id="CrossCircle">
-          <div v-if="this.Message == 'Document is geupload!'" id="ErrorItem" class="SuccesPopup">
+          <div v-if="this.colorOfMessage == 'true'" id="ErrorItem" class="SuccesPopup">
             <Check /> &nbsp;&nbsp; Succes
           </div>
           <div v-else id="ErrorItem" class="ErrorPopup">
@@ -11,7 +11,7 @@
           </div>
           <div id="ErrorItemCross">
             <button id="buttonClose" @click="togglePopup('popup2')"
-              :class="{ 'SuccessPopup': Message === 'Document is geupload!' }">
+              :class="{ 'SuccessPopup': colorOfMessage === 'true' }">
               <Cross />
             </button>
           </div>
@@ -42,7 +42,11 @@ export default {
     return {
       activePopup: null,
       Message: '',
+      colorOfMessage: localStorage.getItem('popUpSucces')
     };
+  },
+  mounted() {
+    
   },
   methods: {
     togglePopup(popupName) {
@@ -53,13 +57,16 @@ export default {
       }
     },
     popUpError(error) {
+      console.log(this.colorOfMessage)
       this.closePopup();
       this.Message = error;
       this.togglePopup('popup2');
 
       setTimeout(() => {
         this.closePopup();
+        localStorage.setItem('popUpSucces', 'false');
       }, 4000);
+
     },
     closePopup() {
       this.activePopup = null;

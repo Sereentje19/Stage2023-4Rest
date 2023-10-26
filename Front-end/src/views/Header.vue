@@ -1,28 +1,54 @@
 <template>
-    <div class="header">
-        <a href="/overzicht"><img id="logoHeader" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
+    <div class="header" @click="test">
+        <a id="logoHeaderLink" href="/overzicht/document"><img id="logoHeader" src="../assets/Pictures/Logo-4-rest-IT.png"
+                alt="does not work" /></a>
         <div id="buttonsHeader">
             <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
-                <a class="dropdown-link" href="/overzicht" @click="changeOverviewType('Overzicht')">Overzicht</a>
+                <a id="headerItems" class="dropdown-link" href="/overzicht/document"
+                    @click="changeOverviewType('Overzicht')" @mouseover="changeColor('#bebebe')"
+                    @mouseout="changeColor('white')">
+                    Overzicht
+                    <ArrowDown :color="svgColor" />
+                </a>
                 <div v-if="showDropdown" class="dropdown-content">
-                    <router-link to="/bruikleen">Bruikleen</router-link>
-                    <router-link to="/medewerkers">Medewerkers</router-link>
-                    <a href="/overzicht" @click="changeOverviewType('Lang geldig')">Lang geldig</a>
-                    <a href="/overzicht" @click="changeOverviewType('Archief')">Archief</a>
+                    <a id="dropDownLinks" href="/overzicht/bruikleen">Bruikleen</a>
+                    <a id="dropDownLinks" href="/overzicht/medewerkers">Medewerkers</a>
+                    <a id="dropDownLinks" href="/overzicht/document" @click="changeOverviewType('Lang geldig')">Lang
+                        geldig</a>
+                    <a id="dropDownLinks" href="/overzicht/document" @click="changeOverviewType('Archief')">Archief</a>
                 </div>
             </div> &nbsp; &nbsp; &nbsp;
-            <router-link to="/uploaden">Document uploaden</router-link>
-            &nbsp; &nbsp; &nbsp;
-            <router-link to="/" @click="logOut">Uitloggen</router-link>
+
+
+            <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
+                <a id="headerItems" class="dropdown-link" href="/uploaden/document" @click="changeOverviewType('Overzicht')"
+                    @mouseover="changeColor('#bebebe')" @mouseout="changeColor('white')">
+                    Uploaden
+                    <ArrowDown :color="svgColor" />
+                </a>
+                <div v-if="showDropdown" class="dropdown-content">
+                    <a id="dropDownLinks" href="/uploaden/document">Document</a>
+                    <a id="dropDownLinks" href="/uploaden/medewerker">Medewerker</a>
+                    <a id="dropDownLinks" href="/uploaden/product">Product</a>
+                </div>
+            </div> &nbsp; &nbsp; &nbsp;
+            <router-link id="headerItems" to="/" @click="logOut">Uitloggen</router-link>
         </div>
     </div>
 </template>
 
 <script>
+import ArrowDown from '../components/icons/IconArrowdown.vue';
+import axios from '../../axios-auth.js';
+
 export default {
     name: "Header",
+    components: {
+        ArrowDown
+    },
     data() {
         return {
+            svgColor: "white",
             showDropdown: false
         };
     },
@@ -30,9 +56,26 @@ export default {
         changeOverviewType(type) {
             localStorage.setItem("overviewType", type)
         },
+        changeColor(color) {
+            this.svgColor = color;
+        },
         logOut() {
             localStorage.setItem("jwt", "");
-        }
+        },
+
+        test() {
+            axios
+                .get("Document", {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("jwt"),
+                    },
+                })
+                .then((res) => {
+                })
+                .catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
     }
 };
 

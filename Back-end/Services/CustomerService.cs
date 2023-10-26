@@ -7,28 +7,48 @@ namespace Back_end.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly IDocumentService _documentService;
 
         /// <summary>
         /// Initializes a new instance of the CustomerService class with the provided CustomerRepository.
         /// </summary>
         /// <param name="cr">The CustomerRepository used for customer-related operations.</param>
-        public CustomerService(ICustomerRepository cr)
+        public CustomerService(ICustomerRepository customerRepository, IDocumentService documentService)
         {
-            _customerRepository = cr;
+            _customerRepository = customerRepository;
+            _documentService = documentService;
         }
+
+        public (IEnumerable<object>, Pager) GetAll(string searchfield, int page, int pageSize)
+        {
+            var customers = _customerRepository.GetAll(searchfield);
+
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            var pager = new Pager(customers.Count(), page, pageSize);
+
+            var pagedCustomers = customers
+                .Skip(skipCount)
+                .Take(pageSize)
+                .Select(cus => new
+                {
+                    cus.Name,
+                    cus.Email,
+                    cus.CustomerId
+                })
+                .ToList();
+
+            return (pagedCustomers.Cast<object>(), pager);
+        }
+
 
         /// <summary>
         /// Filters and retrieves a collection of customers based on a search field.
         /// </summary>
         /// <param name="searchfield">The search field to filter customers by.</param>
         /// <returns>A collection of customers matching the search criteria or an empty list if the searchfield is null or whitespace.</returns>
-        public IEnumerable<Customer> FilterAll(string searchfield)
+        public IEnumerable<Customer> GetFilteredCustomers(string searchfield)
         {
-            if (string.IsNullOrWhiteSpace(searchfield))
-            {
-                return new List<Customer>();
-            }
-            return _customerRepository.FilterAll(searchfield);
+            return _customerRepository.GetFilteredCustomers(searchfield);
         }
 
         /// <summary>
@@ -38,7 +58,12 @@ namespace Back_end.Services
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
         public CustomerDTO GetById(int id)
         {
-            return _customerRepository.GetById(id);
+            Customer cus = _customerRepository.GetById(id);
+            return new CustomerDTO
+            {
+                Email = cus.Email,
+                Name = cus.Name
+            };
         }
 
         /// <summary>
@@ -51,13 +76,63 @@ namespace Back_end.Services
             return _customerRepository.Add(customer);
         }
 
-        /// <summary>
-        /// Updates an existing document in the repository.
-        /// </summary>
-        /// <param name="customer">The document entity to be updated.</param>
-        public void Put(Customer customer)
+        public void Put(CustomerDocumentDTO customerDocumentDTO)
         {
-            _customerRepository.Update(customer);
+            if (string.IsNullOrWhiteSpace(customerDocumentDTO.Name) || string.IsNullOrEmpty(customerDocumentDTO.Email))
+            {
+                throw new Exception("Naam of email is leeg.");
+            }
+
+            Customer existingCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
+
+            //check if the customer data changed 
+            if (existingCustomer.Email != customerDocumentDTO.Email || existingCustomer.Name != customerDocumentDTO.Name)
+            {
+                IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
+
+                if (documents.Count() > 1)
+                {
+                    AddNewCustomer(customerDocumentDTO);
+                }
+                else
+                {
+                    UpdateCustomer(customerDocumentDTO, existingCustomer);
+                }
+            }
+        }
+
+        private void AddNewCustomer(CustomerDocumentDTO customerDocumentDTO)
+        {
+            Customer cus = new Customer
+            {
+                Email = customerDocumentDTO.Email,
+                Name = customerDocumentDTO.Name
+            };
+
+            int customerId = _customerRepository.Add(cus);
+            _documentService.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
+        }
+
+        private void UpdateCustomer(CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
+        {
+            List<Customer> allCustomers = _customerRepository.GetAll("");
+
+            var matchingCustomer = allCustomers.FirstOrDefault(c =>
+                                c.Email == customerDocumentDTO.Email &&
+                                c.Name == customerDocumentDTO.Name);
+
+            if (matchingCustomer != null)
+            {
+                customerDocumentDTO.CustomerId = matchingCustomer.CustomerId;
+                _documentService.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
+                _customerRepository.Delete(oldCustomer);
+            }
+            else
+            {
+                oldCustomer.Email = customerDocumentDTO.Email;
+                oldCustomer.Name = customerDocumentDTO.Name;
+                _customerRepository.Update(oldCustomer);
+            }
         }
 
     }

@@ -17,13 +17,18 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
-        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, Models.Type? dropBoxType, int page, int pageSize, string overviewType)
+        public IEnumerable<Document> GetAll()
         {
-            var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType, overviewType);
+            return _documentRepository.getAll();
+        }
 
-            int totalArchivedDocuments = documents.Count();
+
+        public (IEnumerable<object>, Pager) GetFilteredDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize, string overviewType)
+        {
+            var documents = _documentRepository.GetFilteredDocuments(searchfield, dropdown, overviewType);
+
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(totalArchivedDocuments, page, pageSize);
+            var pager = new Pager(documents.Count(), page, pageSize);
 
             var pagedDocuments = documents
                 .Skip(skipCount)
@@ -32,12 +37,12 @@ namespace Back_end.Services
                 {
                     doc.DocumentId,
                     doc.Date,
-                    doc.CustomerId,
-                    Type = doc.Type.ToString().Replace("_", " ")
+                    CustomerName = doc.Customer.Name,
+                    Type = doc.Type.ToString().Replace("_", " "),
                 })
                 .ToList();
 
-             return (pagedDocuments.Cast<object>(), pager);
+            return (pagedDocuments.Cast<object>(), pager);
         }
 
         /// <summary>
@@ -45,9 +50,22 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public DocumentDTO GetById(int id)
+        public object GetById(int id)
         {
-            return _documentRepository.GetById(id);
+            var doc = _documentRepository.GetById(id);
+
+            var response = new
+            {
+                Document = doc,
+                Customer = doc.Customer,
+                type = doc.Type.ToString().Replace("_", " "),
+            };
+            return response;
+        }
+
+        public IEnumerable<Document> GetByCustomerId(int customerId)
+        {
+            return _documentRepository.GetByCustomerId(customerId);
         }
 
         /// <summary>
@@ -71,6 +89,11 @@ namespace Back_end.Services
         public void UpdateIsArchived(CheckBoxDTO entity)
         {
             _documentRepository.UpdateIsArchived(entity);
+        }
+
+        public void UpdateCustomerId(int customerId, int documentId)
+        {
+            _documentRepository.UpdateCustomerId(customerId, documentId);
         }
     }
 }

@@ -9,21 +9,22 @@
           Document
         </div>
         <div id="documentInfo">
-          Documenttype: &nbsp; {{ this.document.type }}
+          Type: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.document.type }}
           <br>
-          VervalDatum: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.document.date) }}
+          Verval datum: &nbsp;&nbsp; {{ formatDate(this.document.date) }}
         </div>
         <button @click="toEdit('document')" id="EditButton">Edit</button>
         <br><br><br>
         <div id="DocumentTitle">
-          klant
+          Medewerker
         </div>
         <div id="documentInfo">
-          Klantnaam: &nbsp;&nbsp; {{ this.customer.name }}
+          Naam: &nbsp; {{ this.customer.name }}
           <br>
-          Klantemail: &nbsp;&nbsp; {{ this.customer.email }}
+          Email: &nbsp;&nbsp; {{ this.customer.email }}
         </div>
-        <button @click="toEdit('klant')" id="EditButton">Edit</button>
+        <!-- <button @click="toEdit('klant')" id="EditButton">Edit</button> -->
       </ul>
     </div>
     <div class="foto">
@@ -75,36 +76,28 @@ export default {
     }
   },
   mounted() {
-    this.getDocuments();
+    this.getDocument();
+
+    if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
+      this.$refs.Popup.popUpError("Data is bijgewerkt.");
+    }
   },
   methods: {
-    getDocuments() {
-      axios.get("Document/" + this.id, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: "Bearer " + localStorage.getItem("jwt")
-        }
-      })
-        .then((res) => {
-          this.document = res.data.document;
-          this.document.type = res.data.type
-          this.getCustomerName(this.document.customerId);
-        }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
-        });
-    },
-    getCustomerName(id) {
-      axios.get("Customer/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwt")
-        }
-      })
-        .then((res) => {
-          this.customer = res.data;
-        }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
-        });
-    },
+    getDocument() {
+            axios.get("Document/" + this.id, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    this.customer = res.data.document.customer;
+                    this.document = res.data.document;
+                    this.document.type = res.data.type
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
     toEdit(route) {
       this.$router.push("/edit/" + route + "/" + this.id);
     },
