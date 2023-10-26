@@ -99,7 +99,7 @@ export default {
                 });
         },
     toEdit(route) {
-      this.$router.push("/edit/" + route + "/" + this.id);
+      this.$router.push("/edit/Document/" + this.id);
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");

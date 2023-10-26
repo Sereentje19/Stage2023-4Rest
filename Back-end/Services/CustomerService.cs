@@ -78,61 +78,68 @@ namespace Back_end.Services
 
         public void Put(CustomerDocumentDTO customerDocumentDTO)
         {
-            if (string.IsNullOrWhiteSpace(customerDocumentDTO.Name) || string.IsNullOrEmpty(customerDocumentDTO.Email))
-            {
-                throw new Exception("Naam of email is leeg.");
-            }
-
-            Customer existingCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
-
-            //check if the customer data changed 
-            if (existingCustomer.Email != customerDocumentDTO.Email || existingCustomer.Name != customerDocumentDTO.Name)
-            {
-                IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
-
-                if (documents.Count() > 1)
-                {
-                    AddNewCustomer(customerDocumentDTO);
-                }
-                else
-                {
-                    UpdateCustomer(customerDocumentDTO, existingCustomer);
-                }
-            }
-        }
-
-        private void AddNewCustomer(CustomerDocumentDTO customerDocumentDTO)
-        {
             Customer cus = new Customer
             {
                 Email = customerDocumentDTO.Email,
                 Name = customerDocumentDTO.Name
             };
+            
+            _customerRepository.Update(cus);
+            // if (string.IsNullOrWhiteSpace(customerDocumentDTO.Name) || string.IsNullOrEmpty(customerDocumentDTO.Email))
+            // {
+            //     throw new Exception("Naam of email is leeg.");
+            // }
 
-            int customerId = _customerRepository.Add(cus);
-            _documentService.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
+            // Customer existingCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
+
+            // //check if the customer data changed 
+            // if (existingCustomer.Email != customerDocumentDTO.Email || existingCustomer.Name != customerDocumentDTO.Name)
+            // {
+            //     IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
+
+            //     if (documents.Count() > 1)
+            //     {
+            //         AddNewCustomer(customerDocumentDTO);
+            //     }
+            //     else
+            //     {
+            //         UpdateCustomer(customerDocumentDTO, existingCustomer);
+            //     }
+            // }
+        }
+
+        private void AddNewCustomer(CustomerDocumentDTO customerDocumentDTO)
+        {
+            // Customer cus = new Customer
+            // {
+            //     Email = customerDocumentDTO.Email,
+            //     Name = customerDocumentDTO.Name
+            // };
+
+            // int customerId = _customerRepository.Add(cus);
+            // _documentService.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
         }
 
         private void UpdateCustomer(CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
         {
-            List<Customer> allCustomers = _customerRepository.GetAll("");
+            // List<Customer> allCustomers = _customerRepository.GetAll("");
 
-            var matchingCustomer = allCustomers.FirstOrDefault(c =>
-                                c.Email == customerDocumentDTO.Email &&
-                                c.Name == customerDocumentDTO.Name);
+            // var matchingCustomer = allCustomers.FirstOrDefault(c =>
+            //                     c.Email == customerDocumentDTO.Email &&
+            //                     c.Name == customerDocumentDTO.Name);
 
-            if (matchingCustomer != null)
-            {
-                customerDocumentDTO.CustomerId = matchingCustomer.CustomerId;
-                _documentService.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
-                _customerRepository.Delete(oldCustomer);
-            }
-            else
-            {
-                oldCustomer.Email = customerDocumentDTO.Email;
-                oldCustomer.Name = customerDocumentDTO.Name;
-                _customerRepository.Update(oldCustomer);
-            }
+            // if (matchingCustomer != null)
+            // {
+            //     customerDocumentDTO.CustomerId = matchingCustomer.CustomerId;
+            //     _documentService.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
+            //     _customerRepository.Delete(oldCustomer);
+            // }
+            // else
+            // {
+            //     oldCustomer.Email = customerDocumentDTO.Email;
+            //     oldCustomer.Name = customerDocumentDTO.Name;
+            //     _customerRepository.Update(oldCustomer);
+            // }
         }
 
     }

@@ -102,10 +102,10 @@ export default {
         }
     },
     methods: {
-        goToInfoPage(pro) {
+        goToInfoPage(cus) {
             setTimeout(() => {
                 if (this.toHistory == false) {
-                    // this.$router.push("/info/bruikleen/" + pro.productId);
+                    this.$router.push("/info/medewerker/" + cus.customerId);
                 }
             }, 100);
         },

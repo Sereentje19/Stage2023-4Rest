@@ -6,18 +6,8 @@
 
             <form action="/action_page.php">
                 <div class="gegevensEdit">
-                    <select v-model="this.document.Type" class="Type" name="Type">
-                        <option value="0">Selecteer type...</option>
-                        <option value="1">Vog</option>
-                        <option value="2">Contract</option>
-                        <option value="3">Paspoort</option>
-                        <option value="4">ID kaart</option>
-                        <option value="5">Diploma</option>
-                        <option value="6">Certificaat</option>
-                        <option value="7">Lease auto</option>
-                    </select>
-                    <input v-model="formattedDate" type="date" class="Date" name="Date" />
-
+                    <input class="Email" v-model="this.customer.name" @input="filterDocuments" />
+                    <input class="Email" v-model="this.customer.email" @input="filterDocuments" />
                 </div>
             </form>
             <button @click="route === 'document' ? editDocument() : editCustomer()" class="verstuurEdit">Aanpassen</button>
