@@ -7,7 +7,7 @@
     border-radius: 5px;
     border: none;
     width: fit-content;
-    margin-left: 250px;
+    margin-top: 30px;
 }
 
 #buttonItem2 {
@@ -17,6 +17,7 @@
     color: #22421f;
     padding: 0px;
 }
+
 
 table {
     width: 100%;
@@ -30,14 +31,28 @@ td {
     padding: 8px;
     padding-left: 20px;
 }
-tr{
+
+#emptyRow {
+    width: 15px;
+    padding: 0;
+    border-left: none;
+}
+
+.row1 {
+    width: 200px;
+}
+
+#topTableRow {
+    border-right: none;
+}
+
+tr {
     cursor: pointer;
 }
 
-tr:first-child
- {
+#topTable {
     text-align: center;
-    cursor: auto;
+    margin-right: 250px;
 }
 
 th {
@@ -53,24 +68,19 @@ tr:nth-child(odd) {
 }
 
 tr:not(:first-child):hover {
-    background-color: #e0e0e0; 
+    background-color: #e0e0e0;
 }
 
 #tableInfoLoan {
     height: 215px;
+    cursor: auto;
     overflow-y: auto;
-}
-
-#customersList {
-    margin-top: -230px;
-    margin-left: 130px;
-    min-width: 500px;
 }
 
 .ZoekVeldLoan {
     font-size: 20px;
     padding-left: 20px;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
     width: 300px;
     height: 40px;
     border-radius: 5px;
@@ -80,7 +90,6 @@ tr:not(:first-child):hover {
 #buttons2 {
     padding: 12px 0px 12px 0px;
     font-size: 19px;
-    margin-left: 250px;
     display: flex;
     flex-direction: row;
 }
@@ -91,17 +100,21 @@ tr:not(:first-child):hover {
 
 #collegue {
     display: flex;
+    flex-direction: column;
+
 }
 
 .InfoLoanContainer {
-    width: 90%;
+    width: 85%;
     margin: auto;
     margin-top: 50px;
     display: flex;
+    flex-direction: column;
 }
 
 #LoanInfo {
     font-size: 20px;
+    display: flex;
 }
 
 #LoanTitle {
@@ -110,7 +123,55 @@ tr:not(:first-child):hover {
 }
 
 #EditButton {
-    color: rgb(82, 81, 81);
-    padding: 5px 0 0 0;
-    font-size: 15px;
+    color: rgb(0, 0, 0);
+    padding: 5px 10px 5px 10px;
+    font-size: 20px;
+    background-color: #e79908;
+}
+
+#leftSide {
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 45%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    margin-bottom: 30px;
+}
+
+#LoanInfoLeftSide {
+    padding: 0px 30px 30px 0px;
+
+}
+
+#Available {
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 45%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    display: flex;
+}
+
+#secondLeftSide {
+    font-size: 25px;
+}
+
+#customersList {
+    width: 600px;
+    margin-left: 50px;
+    margin-top: -300px;
+}
+
+
+#rightSide {
+    background-color: #24232344;
+    border: solid 1px rgb(114, 114, 114);
+    padding: 30px;
+    width: 90%;
+    border-radius: 10px;
+    height: 334px;
+}
+
+#box {
+    display: flex;
 }

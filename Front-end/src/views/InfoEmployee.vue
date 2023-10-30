@@ -13,8 +13,11 @@
                     <br>
                     Email: &nbsp;&nbsp; {{ this.customer.email }}
                 </div>
-                <button @click="toEdit('document')" id="EditButton">Edit</button>
-                <button id="deleteButton">Delete </button>
+                <div id="buttonsEditDelete">
+                    <button @click="toEdit()" id="EditButton">Edit</button>
+                   <div id="stripe"> | &nbsp; </div>
+                    <button @click="deleteCustomer()" id="EditButton">Delete </button>
+                </div>
             </ul>
         </div>
     </div>
@@ -60,13 +63,24 @@ export default {
                 },
             })
                 .then((res) => {
-                    console.log(res.data)
                     this.customer = res.data
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        toEdit(){
+        deleteCustomer(){
+            axios.delete("Customer", this.customer, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                },
+            })
+                .then((res) => {
+                    console.log(res.data)
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
+        toEdit() {
             this.$router.push("/edit/Medewerker/" + this.id);
         },
         formatDate(date) {
@@ -86,6 +100,15 @@ export default {
     padding: 12px;
     border-radius: 5px;
     border: none;
+}
+
+#buttonsEditDelete{
+    display: flex
+}
+
+#stripe{
+    margin-top: 2px;
+    color: rgb(82, 81, 81);
 }
 
 @import '../assets/Css/Info.css';

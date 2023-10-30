@@ -29,3 +29,6 @@
     font-size: 15px;
 }
 
+#EditButton:hover {
+    color: rgb(65, 65, 65);
+}

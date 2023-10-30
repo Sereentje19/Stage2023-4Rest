@@ -20,7 +20,7 @@
 
                 </div>
             </form>
-            <button @click="route === 'document' ? editDocument() : editCustomer()" class="verstuurEdit">Aanpassen</button>
+            <button @click="editDocument()" class="verstuurEdit">Aanpassen</button>
         </div>
 
         <Popup ref="Popup" />
@@ -78,25 +78,6 @@ export default {
                     this.document = res.data.document;
                     this.document.Date = res.data.document.date;
                     this.document.Type = res.data.document.type;
-                }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
-                });
-        },
-        editCustomer() {
-            this.customerDocument.DocumentId = this.id;
-            this.customerDocument.CustomerId = this.customer.customerId;
-            this.customerDocument.Email = this.customer.email;
-            this.customerDocument.Name = this.customer.name;
-            console.log(this.customerDocument)
-
-            axios.put("Customer", this.customerDocument, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwt")
-                }
-            })
-                .then((res) => {
-                    localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });

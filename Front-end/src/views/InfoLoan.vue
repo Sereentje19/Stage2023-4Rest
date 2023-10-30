@@ -1,26 +1,31 @@
 <template>
     <Header></Header>
     <div class="InfoLoanContainer">
-        <div class="info">
-            <ul>
-                <h1>Info</h1>
-                <br>
-                <div id="LoanTitle">
-                    Item
+        <h1>Info</h1>
+        <div id="leftSide">
+            <div id="LoanTitle">
+                Item
+            </div>
+            <div id="LoanInfo">
+                <div id="LoanInfoLeftSide">
+                    Type: <br>
+                    Gekocht op: <br>
+                    Geldig tot: <br>
+                    Serie nummer:
                 </div>
-                <div id="LoanInfo">
-                    Type: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.product.type }}
-                    <br>
-                    Gekocht op: &nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.product.purchaseDate) }}
-                    <br>
-                    Geldig tot: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ formatDate(this.product.expirationDate)
-                    }}
-                    <br>
-                    Serie nummer: &nbsp;&nbsp;{{ this.product.serialNumber }}
+                <div>
+                    {{ this.product.type }} <br>
+                    {{ formatDate(this.product.purchaseDate) }} <br>
+                    {{ formatDate(this.product.expirationDate) }} <br>
+                    {{ this.product.serialNumber }}
                 </div>
-                <button @click="toEdit('document')" id="EditButton">Edit</button>
-                <br><br><br>
+            </div>
+            <button @click="toEdit('document')" id="EditButton">Edit</button>
+        </div>
+
+
+        <div id="box">
+            <div id="Available">
                 <div v-if="this.loanHistory.returnDate == null && this.loanHistory.loanDate != null" id="collegue">
                     <div>
                         <div id="LoanTitle">
@@ -33,50 +38,54 @@
                         </div>
                     </div>
                     <div>
-                        <div>
-                            <button id="buttonItem" @click="confirm">{{ this.product.type }} terugbrengen</button>
-                            <div v-if="this.itemReturned == true" id="buttons2">
-                                <b> Weet je het zeker? &nbsp; &nbsp; &nbsp; </b>
-                                <button id="buttonItem2" @click="returnItem"><b>Ja</b></button>
-                                <button id="buttonItem2" @click="confirm"><b>Nee</b></button>
-                            </div>
+                        <button id="buttonItem" @click="confirm">{{ this.product.type }} terugbrengen</button>
+                        <div v-if="this.itemReturned == true" id="buttons2">
+                            <b> Weet je het zeker? &nbsp; &nbsp; &nbsp; </b>
+                            <button id="buttonItem2" @click="returnItem"><b>Ja</b></button>
+                            <button id="buttonItem2" @click="confirm"><b>Nee</b></button>
                         </div>
                     </div>
                 </div>
                 <div v-else id="collegue">
-                    <div>
-                        <div id="LoanTitle">
-                            Deze {{ this.product.type.toLowerCase() }} is nog beschikbaar.
-                        </div>
-                    </div>
-                    <div>
-                        <div v-if="this.itemLent == false">
-                            <button id="buttonItem" @click="loan">{{ this.product.type }} uitlenen</button>
-                        </div>
-                        <div v-else id="customersList">
-
-                            <input @input="filterCustomer" v-model="searchField" type="search" class="ZoekVeldLoan"
-                                placeholder="Zoek klant" />
-
-                            <div id="tableInfoLoan">
-                                <table>
-                                    <tr>
-                                        <td><b>Name</b></td>
-                                        <td><b>Email</b></td>
-                                    </tr>
-                                    <tr v-for="(customer, i) in this.filteredCustomers" @click="selectCustomer(customer)">
-                                        <td>{{ customer.name }}</td>
-                                        <td>{{ customer.email }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
+                    <div id="secondLeftSide">
+                        Deze {{ this.product.type.toLowerCase() }} is nog beschikbaar.
                     </div>
                 </div>
-            </ul>
+            </div>
+            <div id="customersList">
+
+                <div v-if="this.loanHistory.returnDate != null" id="rightSide">
+                    <input @input="filterCustomer" v-model="searchField" type="search" class="ZoekVeldLoan"
+                        placeholder="Zoek klant" />
+
+                    <table id="topTable">
+                        <tr>
+                            <td class="row1"><b>Name</b></td>
+                            <td id="topTableRow"><b>Email</b></td>
+                            <td id="emptyRow"></td>
+                        </tr>
+                    </table>
+                    <div id="tableInfoLoan">
+                        <table id="bottomTable">
+                            <tr v-for="(customer, i) in this.filteredCustomers" @click="selectCustomer(customer)">
+                                <td class="row1" id="bottomTableRow">{{ customer.name }}</td>
+                                <td id="bottomTableRow">{{ customer.email }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
+    <br><br><br>
+
+
+
+
+
+
+
 
     <Popup ref="Popup" />
 </template>
@@ -143,7 +152,7 @@ export default {
             this.loanHistory.returnDate = null;
             console.log(this.loanHistory)
 
-            axios.post("LoanHistory", this.loanHistory,  {
+            axios.post("LoanHistory", this.loanHistory, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -177,9 +186,10 @@ export default {
                 },
             })
                 .then((res) => {
-                    this.filteredCustomers = res.data;
-                    console.log(this.filteredCustomers)
-                }).catch((error) => { });
+                    this.filteredCustomers = res.data.customers;
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
         },
         filterCustomer() {
             if (this.searchField != "") {
@@ -194,7 +204,7 @@ export default {
                     .then((res) => {
                         this.filteredCustomers = res.data;
                         console.log(this.filteredCustomers)
-                    }).catch((error) => { 
+                    }).catch((error) => {
                         this.$refs.Popup.popUpError(error.response.data);
                     });
             }

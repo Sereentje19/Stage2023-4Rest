@@ -29,7 +29,7 @@ namespace Back_end.Repositories
                                   customer.Name.Contains(searchfield) ||
                                   customer.Email.Contains(searchfield))
                 .OrderBy(customer => customer.Name)
-                .ToList(); 
+                .ToList();
         }
 
 
@@ -126,9 +126,19 @@ namespace Back_end.Repositories
         {
             try
             {
-                Document doc = _context.Documents.Find(customer.CustomerId);
-                doc.Customer = null;
+                Document doc = _context.Documents.SingleOrDefault(d => d.Customer.CustomerId == customer.CustomerId);
+                LoanHistory loan = _context.LoanHistory.SingleOrDefault(l => l.Customer.CustomerId == customer.CustomerId);
 
+                if (doc != null)
+                {
+                    _context.Documents.Remove(doc);
+                }
+
+                if (loan != null)
+                {
+                    _context.LoanHistory.Remove(loan);
+                }
+                
                 _dbSet.Remove(customer);
                 _context.SaveChanges();
             }

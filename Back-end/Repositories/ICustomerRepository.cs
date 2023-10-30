@@ -10,6 +10,6 @@ namespace Back_end.Repositories
         Customer GetById(int id);
         int Add(Customer entity);
         void Update(Customer entity);
-        void Delete(Customer entity);
+        void Delete(Customer customer);
     }
 }

@@ -10,7 +10,7 @@
                     <input class="Email" v-model="this.customer.email" @input="filterDocuments" />
                 </div>
             </form>
-            <button @click="route === 'document' ? editDocument() : editCustomer()" class="verstuurEdit">Aanpassen</button>
+            <button @click="editCustomer()" class="verstuurEdit">Aanpassen</button>
         </div>
 
         <Popup ref="Popup" />
@@ -39,70 +39,39 @@ export default {
                 Name: '',
                 Email: '',
             },
-            document: {
-                DocumentId: 0,
-                Type: 0,
-                Date: "",
-            },
-            customerDocument: {
-                CustomerId: 0,
-                Name: '',
-                Email: '',
-                DocumentId: 0,
-            },
-            filteredCustomers: []
         };
     },
     mounted() {
-        this.getDocument();
+        this.getCustomer();
     },
     methods: {
-        getDocument() {
-            axios.get("Document/" + this.id, {
+        getCustomer() {
+            axios.get("Customer/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
             })
                 .then((res) => {
-                    this.customer = res.data.customer;
-                    this.document = res.data.document;
-                    this.document.Date = res.data.document.date;
-                    this.document.Type = res.data.document.type;
+                    console.log(res.data)
+                    this.customer = res.data;
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
         editCustomer() {
-            this.customerDocument.DocumentId = this.id;
-            this.customerDocument.CustomerId = this.customer.customerId;
-            this.customerDocument.Email = this.customer.email;
-            this.customerDocument.Name = this.customer.name;
-            console.log(this.customerDocument)
+            console.log(this.customer)
 
-            axios.put("Customer", this.customerDocument, {
+            axios.put("Customer", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
-                }
+                },
+                params: {
+                    customer: this.customer,
+                },
             })
                 .then((res) => {
                     localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
-                }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
-                });
-        },
-        editDocument() {
-            this.document.Type = parseInt(this.document.Type, 10);
-            console.log(this.document.DocumentId)
-            this.document.DocumentId = this.id;
-            axios.put("Document", this.document, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwt")
-                }
-            })
-                .then((res) => {
-                    localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
+                    this.$router.push({ path: '/info/medewerker/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });

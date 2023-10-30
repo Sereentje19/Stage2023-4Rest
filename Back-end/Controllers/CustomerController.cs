@@ -120,13 +120,28 @@ namespace Back_end.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(CustomerDocumentDTO customerDocumentDTO)
+        public IActionResult Put(Customer customer)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                customerService.Put(customerDocumentDTO);
+                customerService.Put(customer);
                 return Ok(new { message = "Customer updated" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(Customer? customer)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                customerService.Delete(customer);
+                return Ok(new { message = "Customer deleted" });
             }
             catch (Exception ex)
             {

@@ -57,7 +57,6 @@ export default {
       }
     },
     popUpError(error) {
-      console.log(this.colorOfMessage)
       this.closePopup();
       this.Message = error;
       this.togglePopup('popup2');

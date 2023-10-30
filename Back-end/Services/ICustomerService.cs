@@ -7,8 +7,9 @@ namespace Back_end.Services
     {
         (IEnumerable<object>, Pager) GetAll(string searchfield, int page, int pageSize);
         IEnumerable<Customer> GetFilteredCustomers(string searchfield);
-        CustomerDTO GetById(int id);
+        Customer GetById(int id);
         int Post(Customer customer);
-        void Put(CustomerDocumentDTO customerDocumentDTO);
+        void Put(Customer customers);
+        void Delete(Customer customer);
     }
 }

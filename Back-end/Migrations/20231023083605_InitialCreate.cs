@@ -64,7 +64,7 @@ namespace Back_end.Migrations
                     File = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(24)", nullable: false),
                     IsArchived = table.Column<bool>(type: "bit", nullable: false)
                 },
