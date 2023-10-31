@@ -7,31 +7,28 @@ namespace Back_end.Services
     public class DocumentService : IDocumentService
     {
         private readonly IDocumentRepository _documentRepository;
-        private readonly ICustomerRepository _customerService;
 
         /// <summary>
         /// Initializes a new instance of the DocumentService class with the provided DocumentRepository.
         /// </summary>
         /// <param name="dr">The DocumentRepository used for document-related operations.</param>
-        public DocumentService(IDocumentRepository dr, ICustomerRepository cs)
+        public DocumentService(IDocumentRepository dr)
         {
             _documentRepository = dr;
-            _customerService = cs;
         }
 
         public IEnumerable<Document> GetAll()
         {
-            return _documentRepository.GetAll();
+            return _documentRepository.getAll();
         }
 
-        public (IEnumerable<object>, Pager) GetFilterDocuments(string searchfield, DocumentType? dropBoxType, int page, int pageSize, string overviewType)
+
+        public (IEnumerable<object>, Pager) GetFilteredDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize, string overviewType)
         {
-            var documents = _documentRepository.GetFilterDocuments(searchfield, dropBoxType, overviewType);
+            var documents = _documentRepository.GetFilteredDocuments(searchfield, dropdown, overviewType);
 
-            int totalArchivedDocuments = documents.Count();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(totalArchivedDocuments, page, pageSize);
-
+            var pager = new Pager(documents.Count(), page, pageSize);
 
             var pagedDocuments = documents
                 .Skip(skipCount)
@@ -40,9 +37,8 @@ namespace Back_end.Services
                 {
                     doc.DocumentId,
                     doc.Date,
-                    doc.CustomerId,
+                    CustomerName = doc.Customer.Name,
                     Type = doc.Type.ToString().Replace("_", " "),
-                    CustomerName = _customerService.GetById(doc.CustomerId).Name
                 })
                 .ToList();
 
@@ -57,12 +53,11 @@ namespace Back_end.Services
         public object GetById(int id)
         {
             var doc = _documentRepository.GetById(id);
-            var cus = _customerService.GetById(doc.CustomerId);
 
             var response = new
             {
                 Document = doc,
-                Customer = cus,
+                Customer = doc.Customer,
                 type = doc.Type.ToString().Replace("_", " "),
             };
             return response;
@@ -96,8 +91,14 @@ namespace Back_end.Services
             _documentRepository.UpdateIsArchived(entity);
         }
 
-        public void UpdateCustomerId(int customerId, int documentId){
+        public void UpdateCustomerId(int customerId, int documentId)
+        {
             _documentRepository.UpdateCustomerId(customerId, documentId);
+        }
+
+        public void delete(int id)
+        {
+            _documentRepository.delete(id);
         }
     }
 }

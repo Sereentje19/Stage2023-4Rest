@@ -4,7 +4,7 @@
             <ArrowLeft />
         </button>
         <span>Pagina {{ currentPage }} van {{ totalPages }}</span>
-        <button id="button2" @click="nextPage" :disabled="currentPage === totalPages">
+        <button id="button-pages" @click="nextPage" :disabled="currentPage === totalPages">
             <ArrowRight />
         </button>
     </div>

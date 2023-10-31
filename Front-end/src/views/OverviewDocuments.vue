@@ -1,12 +1,12 @@
 <template>
-  <body class="overviewBody">
+  <body>
     <Header ref="Header"></Header>
-    <div class="overviewContainer">
-      <div id="h1AndButton">
-        <h1 id="h1Overzicht">Bruikleen</h1>
+    <div class="overview-container">
+      <div id="topside">
+        <h1 id="h1-overview">{{ overviewType }}</h1>
 
 
-        <select v-model="dropBoxType" id="filterDropDown" @change="filterDocuments">
+        <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
           <option value="1">Vog</option>
           <option value="2">Contract</option>
@@ -16,31 +16,37 @@
           <option value="6">Certificaat</option>
           <option value="7">Lease auto</option>
         </select>
-        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
+        <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
+          @input="filterDocuments" />
+
       </div>
 
       <div v-if="displayedDocuments.length > 0">
-        <div id="titlesOverviewLoan">
-          <h3></h3>
-          <h3 id="urgentie">Type</h3>
-          <h3 id="klantnaam">Gekocht op</h3>
+        <div id="titles-overview-documents">
+          <h3 id="urgentie">Urgentie</h3>
+          <h3 id="klantnaam">Klantnaam</h3>
           <h3 id="geldigVan">Geldig tot</h3>
-          <h3 id="geldigTot">Serie nummer</h3>
-          <h3 id="geldigTot">Geschiedenis</h3>
+          <h3 v-if="overviewType == 'Archief'" id="geldigTot">Verstreken tijd</h3>
+          <h3 v-else id="geldigTot">Verloopt over</h3>
+          <h3 id="Type">Type document</h3>
+          <h3 v-if="overviewType == 'Archief'" id="Type">Zet terug</h3>
+          <h3 v-else id="Type">Archiveer</h3>
         </div>
 
-        <div class="overviewLoan" v-for="(document, i) in displayedDocuments">
-          <div @click="goToInfoPage(document)" id="itemLoan">
-            <div></div>
+        <div v-for="(document, i) in displayedDocuments">
+          <div @click="goToInfoPage(document)" id="item-documents">
+            <img v-if="documentDaysFromExpiration(document, 35)" id="urgentie-symbool"
+              src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+            <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentie-symbool"
+              src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
+            <img v-else id="urgentie-symbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
             <div id="klantnaamTekst">{{ document.customerName }}</div>
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type }}</div>
-            <button id="buttonGeschiedenis" @change="toggleCheckbox(document)" ><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
-                <path
-                  d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2h-7z" />
-              </svg></button>
+            <div id="checkboxArchive">
+              <input type="checkbox" id="checkboxA" v-model="document.isChecked" @change="toggleCheckbox(document)">
+            </div>
           </div>
         </div>
 
@@ -54,7 +60,7 @@
 
       <br><br><br>
 
-      <Popup ref="Popup" />
+      <PopUpMessage ref="Popup" />
     </div>
 
   </body>
@@ -64,7 +70,7 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
-import Popup from '../views/Popup.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 
@@ -72,7 +78,7 @@ export default {
   name: "Overview",
   components: {
     Pagination,
-    Popup,
+    PopUpMessage,
     Header,
   },
 
@@ -96,7 +102,7 @@ export default {
       },
       customers: [],
       searchField: "",
-      dropBoxType: "0",
+      dropdown: "0",
       overviewType: localStorage.getItem("overviewType")
     };
   },
@@ -104,15 +110,14 @@ export default {
     this.filterDocuments();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-      this.$refs.Popup.popUpError("Document is geupload!");
-      localStorage.setItem('popUpSucces', 'false');
+      this.$refs.Popup.popUpError("Data is bijgewerkt.");
     }
   },
   methods: {
     goToInfoPage(doc) {
       setTimeout(() => {
         if (doc.isArchived == null) {
-          this.$router.push("/infopage/document/" + doc.documentId);
+          this.$router.push("/info/document/" + doc.documentId);
         }
         else {
           this.filterDocuments();
@@ -137,7 +142,6 @@ export default {
       this.filterDocuments();
     },
     filterDocuments() {
-      console.log(this.overviewType)
       axios
         .get("Document/Filter", {
           headers: {
@@ -146,7 +150,7 @@ export default {
           params: {
             searchfield: this.searchField,
             overviewType: this.overviewType,
-            dropBoxType: this.dropBoxType,
+            dropdown: this.dropdown,
             page: this.pager.currentPage,
             pageSize: this.pager.pageSize
           },
@@ -154,6 +158,7 @@ export default {
         .then((res) => {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
+          console.log(res.data.documents.length)
         })
         .catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
@@ -217,6 +222,6 @@ export default {
 
 
 <style>
-@import '../assets/Css/OverviewLoan.css';
+@import '../assets/Css/Overview.css';
 @import '../assets/Css/Main.css';
 </style>

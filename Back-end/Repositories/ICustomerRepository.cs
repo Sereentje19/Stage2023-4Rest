@@ -5,11 +5,11 @@ namespace Back_end.Repositories
 {
     public interface ICustomerRepository
     {
+        List<Customer> GetAll(string searchfield);
+        IEnumerable<Customer> GetFilteredCustomers(string searchfield);
         Customer GetById(int id);
-        List<Customer> GetAll();
-        IEnumerable<Customer> FilterAll(string searchfield);
         int Add(Customer entity);
         void Update(Customer entity);
-        void Delete(Customer entity);
+        void Delete(int id);
     }
 }

@@ -3,6 +3,7 @@ using Back_end.Services;
 using Microsoft.AspNetCore.Cors;
 using Back_end.Models;
 using Back_end.Models.DTOs;
+using Microsoft.VisualBasic;
 
 namespace Back_end.Controllers
 {
@@ -41,12 +42,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("Filter")]
-        public IActionResult GetFilterDocuments(string? searchfield, string overviewType, DocumentType? dropBoxType, int page = 1, int pageSize = 5)
+        public IActionResult GetFilteredDocuments(string? searchfield, string overviewType, DocumentType? dropdown, int page = 1, int pageSize = 5)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedDocuments, pager) = documentService.GetFilterDocuments(searchfield, dropBoxType, page, pageSize, overviewType);
+                var (pagedDocuments, pager) = documentService.GetFilteredDocuments(searchfield, dropdown, page, pageSize, overviewType);
 
                 var response = new
                 {
@@ -115,11 +116,16 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
+
                 Document doc = new Document
                 {
                     Type = document.Type,
                     Date = document.Date,
-                    CustomerId = document.CustomerId,
+                    Customer = new Customer()
+                    {
+                        Email = document.Customer.Email,
+                        Name = document.Customer.Name
+                    },
                     FileType = document.FileType
                 };
 
@@ -169,6 +175,20 @@ namespace Back_end.Controllers
                 jwtValidationService.ValidateToken(HttpContext);
                 documentService.UpdateIsArchived(doc);
                 return Ok(new { message = "Document updated" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+        [HttpDelete("{id}")]
+        public IActionResult delete(int id)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                documentService.delete(id);
+                return Ok(new { message = "Document deleted" });
             }
             catch (Exception ex)
             {

@@ -22,6 +22,36 @@ namespace Back_end.Repositories
         }
 
 
+        public List<Customer> GetAll(string searchfield)
+        {
+            return _context.Customers
+                .Where(customer => string.IsNullOrEmpty(searchfield) ||
+                                  customer.Name.Contains(searchfield) ||
+                                  customer.Email.Contains(searchfield))
+                .OrderBy(customer => customer.Name)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Filters and retrieves a collection of customers based on a search field.
+        /// </summary>
+        /// <param name="searchfield">The search field to filter customers by (can match customer name, email, or ID).</param>
+        /// <returns>A collection of customers matching the search criteria.</returns>
+        public IEnumerable<Customer> GetFilteredCustomers(string searchfield)
+        {
+            if (string.IsNullOrWhiteSpace(searchfield))
+            {
+                return _dbSet.OrderBy(customer => customer.Name).ToList();
+            }
+
+            return _dbSet
+            .Where(customer =>
+                customer.Name.Contains(searchfield) ||
+                customer.Email.Contains(searchfield)
+            )
+            .ToList();
+        }
+
         /// <summary>
         /// Retrieves a customer by their unique identifier (ID).
         /// </summary>
@@ -32,63 +62,42 @@ namespace Back_end.Repositories
             return _dbSet.Find(id);
         }
 
-        public List<Customer> GetAll()
-        {
-            return _dbSet.ToList();
-        }
-
-        /// <summary>
-        /// Filters and retrieves a collection of customers based on a search field.
-        /// </summary>
-        /// <param name="searchfield">The search field to filter customers by (can match customer name, email, or ID).</param>
-        /// <returns>A collection of customers matching the search criteria.</returns>
-        public IEnumerable<Customer> FilterAll(string searchfield)
-        {
-            var filteredCustomers = _dbSet
-            .Where(customer =>
-                customer.Name.Contains(searchfield) ||
-                customer.Email.Contains(searchfield) ||
-                customer.CustomerId.ToString().Contains(searchfield)
-            )
-            .ToList();
-
-            return filteredCustomers;
-        }
 
         /// <summary>
         /// Adds a new customer to the repository.
         /// </summary>
-        /// <param name="entity">The customer entity to be added.</param>
+        /// <param name="customer">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer, or the ID of an existing customer if the same name and email combination is found.</returns>
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
-        public int Add(Customer entity)
+        public int Add(Customer customer)
         {
-            if (string.IsNullOrEmpty(entity.Name) || string.IsNullOrEmpty(entity.Email))
+            if (string.IsNullOrEmpty(customer.Name) || string.IsNullOrEmpty(customer.Email))
             {
                 throw new CustomerAddException("Klant naam of email is leeg.");
             }
 
-            var existingCustomer = _dbSet.FirstOrDefault(c => c.Name == entity.Name && c.Email == entity.Email);
+            //if the customer already exist, don't add it again.
+            var existingCustomer = _dbSet.FirstOrDefault(c => c.Name == customer.Name && c.Email == customer.Email);
 
             if (existingCustomer != null)
             {
                 return existingCustomer.CustomerId;
             }
 
-            _dbSet.Add(entity);
+            _dbSet.Add(customer);
             _context.SaveChanges();
-            return entity.CustomerId;
+            return customer.CustomerId;
         }
 
         /// <summary>
         /// Updates an existing customer in the repository.
         /// </summary>
-        /// <param name="entity">The document entity to be updated.</param>
-        public void Update(Customer entity)
+        /// <param name="customer">The document entity to be updated.</param>
+        public void Update(Customer customer)
         {
             try
             {
-                _context.Update(entity);
+                _dbSet.Update(customer);
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -97,11 +106,23 @@ namespace Back_end.Repositories
             }
         }
 
-        public void Delete(Customer entity)
+        public void Delete(int id)
         {
             try
             {
-                _dbSet.Remove(entity);
+                List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Customer.CustomerId == id).ToList();
+                foreach (var loan in loans)
+                {
+                    _context.LoanHistory.Remove(loan);
+                }
+
+                List<Document> docs = _context.Documents.Where(l => l.Customer.CustomerId == id).ToList();
+                foreach (var doc in docs)
+                {
+                    _context.Documents.Remove(doc);
+                }
+
+                _dbSet.Remove(_dbSet.Find(id));
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)

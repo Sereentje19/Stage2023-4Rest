@@ -1,35 +1,35 @@
 <template>
-    <div id="loginBody">
-      <img id="logoLogin" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" />
-      <div id="loginContainer">
-        <div id="backgroundCircel">
-          <div id="alignmentBody">
-            <div class="cirkel">
-              <div id="profileIcon">
+    <div id="login-body">
+      <img id="logo-login" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" />
+      <div id="login-container">
+        <div id="background-circel">
+          <div id="alignment-body">
+            <div class="circle">
+              <div id="profile-icon">
                 <profile />
               </div>
             </div>
-            <div class="inputContainer">
-              <div id="icon" class="iconProfileFill">
+            <div class="input-container">
+              <div id="icon" class="icon-profile-fill">
                 <profileFill />
               </div>
-              <input id="inputEmail" v-model="this.user.Email" type="text" placeholder="Email" required />
-              <div class="divSpace" id="eyeIcon"></div>
+              <input id="input-email" v-model="this.user.Email" type="text" placeholder="Email" required />
+              <div class="space" id="eye-icon"></div>
             </div>
-            <div class="inputContainer">
-              <div id="icon" class="iconLock">
+            <div class="input-container">
+              <div id="icon" class="icon-lock">
                 <lockClosed />
               </div>
-              <input id="inputWachtwoord" v-model="this.user.Password" :type="this.inputType" placeholder="Wachtwoord" required />
-              <a v-if="this.eyeCon == true" @click="eyeconChange" id="eyeIcon">
+              <input id="input-wachtwoord" v-model="this.user.Password" :type="this.inputType" placeholder="Wachtwoord" required />
+              <a v-if="this.eyeCon == true" @click="eyeconChange" id="eye-icon">
                 <eyeOpen />
               </a>
-              <a v-else-if="this.eyeCon == false" class="eyeconClosed" @click="eyeconChange" id="eyeIcon">
+              <a v-else-if="this.eyeCon == false" class="eyeconClosed" @click="eyeconChange" id="eye-icon">
                 <eyeClosed />
               </a>
             </div>
-            <button @click="login()" class="loginButton" type="button">Login</button>
-            <div id="errorMessage"> 
+            <button @click="login()" class="login-button" type="button">Login</button>
+            <div id="error-message"> 
               {{ this.errorMessage }}
             </div>
           </div>

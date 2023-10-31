@@ -1,0 +1,20 @@
+#item-data {
+    font-size: 20px;
+}
+
+#history-items {
+    font-size: 20px;
+}
+
+#line {
+    width: 420px;
+    border-top: 2.5px solid black;
+}
+
+.history-container {
+    width: 90%;
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+}

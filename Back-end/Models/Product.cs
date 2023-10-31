@@ -10,9 +10,6 @@ namespace Back_end.Models
         public DateTime ExpirationDate { get; set; }
         public DateTime PurchaseDate { get; set; }
         
-        [ForeignKey("CustomerId")]
-        public int CustomerId { get; set; }
-
         [Column(TypeName = "nvarchar(24)")]
         public ProductType Type { get; set; }
         public string? SerialNumber { get; set; }

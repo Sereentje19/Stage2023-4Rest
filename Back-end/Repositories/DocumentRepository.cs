@@ -20,45 +20,57 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Document>();
         }
 
-        public IEnumerable<Document> GetAll()
+        public IEnumerable<Document> getAll()
         {
-            return _dbSet.ToList();
+            return _dbSet
+                .Include(d => d.Customer)
+                .ToList();
         }
 
-        public List<Document> GetFilterDocuments(string searchfield, Models.DocumentType? dropBoxType, string overviewType)
+        public List<Document> GetFilteredDocuments(string searchfield, DocumentType? dropdown, string overviewType)
+        {
+            try
+            {
+                IQueryable<Document> query = from document in _context.Documents
+                                            .Include(d => d.Customer)
+                                             where (string.IsNullOrEmpty(searchfield) ||
+                                                 document.Customer.Name.Contains(searchfield) ||
+                                                 document.Customer.Email.Contains(searchfield))
+                                             && (dropdown == DocumentType.Not_Selected || document.Type == dropdown)
+                                             orderby document.Date
+                                             select document;
+
+                IQueryable<Document> filteredQuery = ApplyOverviewFilter(query, overviewType);
+                var documents = filteredQuery.ToList();
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                return new List<Document>();
+            }
+        }
+
+        private IQueryable<Document> ApplyOverviewFilter(IQueryable<Document> query, string overviewType)
         {
             DateTime now = DateTime.Now;
             DateTime sixWeeksFromNow = now.AddDays(42);
-            DateTime sixWeeksAgo = now.AddDays(-42);
 
-            var query = from document in _context.Documents
-                        join customer in _context.Customers on document.CustomerId equals customer.CustomerId
-                        where string.IsNullOrEmpty(searchfield) ||
-                            customer.Name.Contains(searchfield) ||
-                            customer.Email.Contains(searchfield) ||
-                            customer.CustomerId.ToString().Contains(searchfield)
-                        where dropBoxType == Models.DocumentType.Not_Selected || document.Type.Equals(dropBoxType)
-                        orderby document.Date
-                        select new
-                        {
-                            Document = document
-                        };
-
-            if (overviewType == "Overzicht")
+            if (query.Count() == 0)
             {
-                query = query.Where(item => item.Document.Date <= sixWeeksFromNow && !item.Document.IsArchived);
-            }
-            else if (overviewType == "Archief")
-            {
-                query = query.Where(item => item.Document.IsArchived);
-            }
-            else if (overviewType == "Lang geldig")
-            {
-                query = query.Where(item => item.Document.Date > sixWeeksFromNow && !item.Document.IsArchived);
+                throw new Exception("No documents found.");
             }
 
-            var documents = query.Select(item => item.Document).ToList();
-            return documents;
+            switch (overviewType)
+            {
+                case "Overzicht":
+                    return query.Where(item => item.Date <= sixWeeksFromNow && !item.IsArchived);
+                case "Archief":
+                    return query.Where(item => item.IsArchived);
+                case "Lang geldig":
+                    return query.Where(item => item.Date > sixWeeksFromNow && !item.IsArchived);
+                default:
+                    return query;
+            }
         }
 
 
@@ -69,76 +81,91 @@ namespace Back_end.Repositories
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
         public DocumentDTO GetById(int id)
         {
-            Document doc = _dbSet.Find(id);
+            Document doc = _dbSet
+                .Include(d => d.Customer)
+                .FirstOrDefault(d => d.DocumentId == id);
 
-            var documentDto = new DocumentDTO
+            return new DocumentDTO
             {
                 File = doc.File,
                 FileType = doc.FileType,
                 Date = doc.Date,
-                CustomerId = doc.CustomerId,
-                Type = doc.Type,
+                Customer = doc.Customer,
+                Type = doc.Type
             };
-            return documentDto;
         }
 
         public IEnumerable<Document> GetByCustomerId(int customerId)
         {
-            var documents = _dbSet.Where(d => d.CustomerId == customerId).ToList();
-
-            return documents;
+            return _dbSet
+            .Include(d => d.Customer)
+            .Where(d => d.Customer.CustomerId == customerId)
+            .ToList();
         }
 
 
         /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
-        /// <param name="entity">The document entity to be added.</param>
-        public void Add(Document entity)
+        /// <param name="document">The document entity to be added.</param>
+        public void Add(Document document)
         {
-            _dbSet.Add(entity);
+            if(document.Type == DocumentType.Not_Selected)
+            {
+                throw new DocumentAddException("Selecteer een type.");
+            }
+
+            _dbSet.Add(document);
             _context.SaveChanges();
         }
 
         /// <summary>
         /// Updates an existing document in the repository.
         /// </summary>
-        /// <param name="entity">The document entity to be updated.</param>
-        public void Update(EditDocumentRequestDTO entity)
+        /// <param name="document">The document entity to be updated.</param>
+        public void Update(EditDocumentRequestDTO document)
         {
-            var existingDocument = _dbSet.Find(entity.DocumentId);
+            var existingDocument = _dbSet
+            .Include(d => d.Customer)
+            .Where(d => d.DocumentId == document.DocumentId)
+            .FirstOrDefault();
 
-            if (entity.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(entity.Date.ToString()))
+            if (existingDocument == null)
+            {
+                throw new UpdateDocumentFailedException("Document not found.");
+            }
+            else if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
             {
                 throw new UpdateDocumentFailedException("Datum of type is leeg.");
             }
 
-            _context.Entry(existingDocument).CurrentValues.SetValues(entity);
-            _context.Entry(existingDocument).Property(x => x.File).IsModified = false;
-            // _context.Entry(existingDocument).Property(x => x.CustomerId).IsModified = false;
+            existingDocument.Date = document.Date;
+            existingDocument.Type = document.Type;
+
             _context.SaveChanges();
         }
 
-        public void UpdateIsArchived(CheckBoxDTO entity)
+        public void UpdateIsArchived(CheckBoxDTO document)
         {
-            var existingDocument = _dbSet.Find(entity.DocumentId);
-
-            if (existingDocument != null)
-            {
-                existingDocument.IsArchived = entity.IsArchived;
-                _context.SaveChanges();
-            }
+            var existingDocument = _dbSet.Find(document.DocumentId);
+            existingDocument.IsArchived = document.IsArchived;
+            _context.SaveChanges();
         }
 
         public void UpdateCustomerId(int customerId, int documentId)
         {
-            var existingDocument = _dbSet.Find(documentId);
+            Document existingDocument = _dbSet
+            .Include(d => d.Customer)
+            .FirstOrDefault(d => d.DocumentId == documentId);
 
-            if (existingDocument != null)
-            {
-                existingDocument.CustomerId = customerId;
-                _context.SaveChanges();
-            }
+            existingDocument.Customer.CustomerId = customerId;
+            _context.SaveChanges();
+        }
+
+        public void delete(int id)
+        {
+            _dbSet.Remove(_dbSet.Find(id));
+            _context.SaveChanges();
         }
     }
 }
