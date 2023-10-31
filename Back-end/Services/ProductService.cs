@@ -42,5 +42,15 @@ namespace Back_end.Services
         {
             return _productRepository.GetById(id);
         }
+
+        public void Put(Product product)
+        {
+            _productRepository.Put(product);
+        }
+
+        public void Delete(int id)
+        {
+            _productRepository.Delete(id);
+        }
     }
 }

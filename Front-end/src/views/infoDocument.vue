@@ -98,8 +98,8 @@ export default {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-    toEdit(route) {
-      this.$router.push("/edit/Document/" + this.id);
+    toEdit() {
+      this.$router.push("/edit/document/" + this.id);
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");

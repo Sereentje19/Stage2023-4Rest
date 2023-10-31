@@ -10,5 +10,7 @@ namespace Back_end.Repositories
     {
         IEnumerable<Product> GetAll(string searchfield, ProductType? dropdown);
         Product GetById(int id);
+        void Put(Product product);
+        void Delete(int id);
     }
 }

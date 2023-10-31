@@ -26,12 +26,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCustomers(string? searchfield, int page = 1, int pageSize = 5)
+        public IActionResult GetAllCustomers(string? searchfield, int page, int pageSize)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedCustomers, pager) = customerService.GetAll(searchfield, page, pageSize);
+                var (pagedCustomers, pager) = customerService.GetAllPaged(searchfield, page, pageSize);
 
                 var response = new
                 {
@@ -44,7 +44,6 @@ namespace Back_end.Controllers
                         pager.TotalPages,
                     }
                 };
-
                 return Ok(response);
             }
             catch (Exception ex)

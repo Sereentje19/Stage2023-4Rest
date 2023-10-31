@@ -2,6 +2,27 @@
     <Header></Header>
     <div class="InfoLoanContainer">
         <h1>Info</h1>
+
+
+        <div v-if="isPopUpReturn || isPopUpDelete" class="popup">
+            <div class="popup-content">
+                <div v-if="isPopUpDelete">
+                    Weet je zeker dat je {{ this.product.type.toLowerCase() }} {{ this.product.serialNumber }} wilt
+                    verwijderen
+                    uit de database?
+                </div>
+                <div v-else-if="isPopUpReturn">
+                    Weet je zeker dat je {{ this.product.type.toLowerCase() }} {{ this.product.serialNumber }} wilt
+                    terugbrengen?
+                </div>
+                <div id="EditDeleteButtons">
+                    <button id="buttonItem2" @click="cancel">Cancel</button>
+                    <button id="buttonItem2" @click="confirm">Bevestig</button>
+                </div>
+            </div>
+        </div>
+
+
         <div id="leftSide">
             <div id="LoanTitle">
                 Item
@@ -20,7 +41,10 @@
                     {{ this.product.serialNumber }}
                 </div>
             </div>
-            <button @click="toEdit('document')" id="EditButton">Edit</button>
+            <div id="EditDeleteButtons">
+                <button @click="toEdit()" id="EditButton">Edit</button>
+                <button @click="deleteProduct()" id="DeleteButton">Delete</button>
+            </div>
         </div>
 
 
@@ -38,7 +62,7 @@
                         </div>
                     </div>
                     <div>
-                        <button id="buttonItem" @click="confirm">{{ this.product.type }} terugbrengen</button>
+                        <button id="buttonItem" @click="returnProduct">{{ this.product.type }} terugbrengen</button>
                         <div v-if="this.itemReturned == true" id="buttons2">
                             <b> Weet je het zeker? &nbsp; &nbsp; &nbsp; </b>
                             <button id="buttonItem2" @click="returnItem"><b>Ja</b></button>
@@ -79,13 +103,6 @@
 
     </div>
     <br><br><br>
-
-
-
-
-
-
-
 
     <Popup ref="Popup" />
 </template>
@@ -130,15 +147,15 @@ export default {
                 }
             },
             searchField: "",
-            itemReturned: false,
-            itemLent: false,
-            filteredCustomers: []
+            filteredCustomers: [],
+            isPopUpReturn: false,
+            isPopUpDelete: false
         }
     },
     mounted() {
         this.getLoanhistory();
         this.getProducts();
-        this.getAllCustomers();
+        this.getAllFilteredCustomers();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.Popup.popUpError("Data is bijgewerkt.");
@@ -165,49 +182,23 @@ export default {
                 });
 
         },
-        confirm() {
-            this.itemReturned = !this.itemReturned;
-        },
-        loan() {
-            this.itemLent = !this.itemLent;
-        },
-        getAllCustomers() {
-            if (this.searchField == "") {
-                this.getCustomers();
-            }
-            else {
-                this.filterCustomer();
-            }
-        },
-        getCustomers() {
-            axios.get("Customer", {
+        getAllFilteredCustomers() {
+            axios.get("Customer/Filter", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
+                params: {
+                    searchField: this.searchField,
+                    page: 1,
+                    pageSize: 5
+                }
             })
                 .then((res) => {
-                    this.filteredCustomers = res.data.customers;
+                    this.filteredCustomers = res.data;
+                    console.log(this.filteredCustomers)
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
-        },
-        filterCustomer() {
-            if (this.searchField != "") {
-                axios.get("Customer/Filter", {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("jwt")
-                    },
-                    params: {
-                        searchField: this.searchField
-                    }
-                })
-                    .then((res) => {
-                        this.filteredCustomers = res.data;
-                        console.log(this.filteredCustomers)
-                    }).catch((error) => {
-                        this.$refs.Popup.popUpError(error.response.data);
-                    });
-            }
         },
         returnItem() {
             console.log(this.loanHistory)
@@ -247,12 +238,46 @@ export default {
                 .then((res) => {
                     console.log(res.data)
                     this.product = res.data;
+                    this.product.type = this.product.productType
+
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
+        deleteProducts() {
+            axios.delete("Product/" + this.id, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                },
+            })
+                .then((res) => {
+                }).catch((error) => {
+                    this.$refs.Popup.popUpError(error.response.data);
+                });
+        },
+        confirm() {
+            if (this.isPopUpDelete) {
+                this.isPopUpDelete = false;
+                this.deleteProducts();
+                this.$router.push("/overzicht/bruikleen");
+            }
+            else if (this.isPopUpReturn) {
+                this.isPopUpReturn = false;
+                this.returnItem();
+            }
+        },
         toEdit(route) {
-            this.$router.push("/edit/" + route + "/" + this.id);
+            this.$router.push("/edit/product/" + this.id);
+        },
+        deleteProduct() {
+            this.isPopUpDelete = true;
+        },
+        returnProduct() {
+            this.isPopUpReturn = true;
+        },
+        cancel() {
+            this.isPopUpReturn = false;
+            this.isPopUpDelete = false;
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");

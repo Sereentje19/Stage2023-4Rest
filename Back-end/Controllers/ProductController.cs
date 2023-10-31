@@ -65,10 +65,41 @@ namespace Back_end.Controllers
                     product.PurchaseDate,
                     product.ExpirationDate,
                     product.ProductId,
-                    Type = product.Type.ToString(),
+                    ProductType = product.Type.ToString(),
+                    product.Type,
                 };
 
                 return Ok(pagedproducts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult Put(Product product)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                _productService.Put(product);
+                return Ok(new { message = "Product deleted" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult delete(int id)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                _productService.Delete(id);
+                return Ok(new { message = "Product deleted" });
             }
             catch (Exception ex)
             {

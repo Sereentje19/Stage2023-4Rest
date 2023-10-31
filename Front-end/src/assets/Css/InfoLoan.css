@@ -8,14 +8,8 @@
     border: none;
     width: fit-content;
     margin-top: 30px;
-}
-
-#buttonItem2 {
-    width: fit-content;
-    font-size: 19px;
-    margin-top: auto;
-    color: #22421f;
-    padding: 0px;
+    border-bottom: 1px solid #22421f;
+    border-right: 1px solid #22421f;
 }
 
 
@@ -67,7 +61,7 @@ tr:nth-child(odd) {
     background-color: #fff;
 }
 
-tr:not(:first-child):hover {
+#bottomTable tr:hover {
     background-color: #e0e0e0;
 }
 
@@ -75,6 +69,10 @@ tr:not(:first-child):hover {
     height: 215px;
     cursor: auto;
     overflow-y: auto;
+}
+
+#topTable tr{
+    cursor:default;
 }
 
 .ZoekVeldLoan {
@@ -87,6 +85,20 @@ tr:not(:first-child):hover {
     border: black solid 1px;
 }
 
+#buttonItem2 {
+    width: fit-content;
+    font-size: 18px;
+    margin-top: 25px;
+    color: white;
+    padding: 0px;
+    background-color: #22421f;
+    padding: 5px 15px 5px 15px;
+}
+
+#buttonItem2:hover {
+    background-color: #133610;
+}
+
 #buttons2 {
     padding: 12px 0px 12px 0px;
     font-size: 19px;
@@ -96,6 +108,10 @@ tr:not(:first-child):hover {
 
 #buttonItem:hover {
     background-color: #133610;
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    border-bottom: none;
+    border-right: none;
 }
 
 #collegue {
@@ -120,13 +136,6 @@ tr:not(:first-child):hover {
 #LoanTitle {
     font-size: 30px;
     font-weight: 500;
-}
-
-#EditButton {
-    color: rgb(0, 0, 0);
-    padding: 5px 10px 5px 10px;
-    font-size: 20px;
-    background-color: #e79908;
 }
 
 #leftSide {
@@ -175,3 +184,67 @@ tr:not(:first-child):hover {
 #box {
     display: flex;
 }
+
+#EditDeleteButtons{
+    display: flex;
+}
+
+#EditButton {
+    color: rgb(0, 0, 0);
+    padding: 5px 10px 5px 10px;
+    font-size: 20px;
+    background-color: #e79908;
+    color: white;
+    margin-right: 20px;
+    border-bottom: 1px solid #c07d00;
+    border-right: 1px solid #c07d00;
+}
+
+#DeleteButton {
+    color: rgb(0, 0, 0);
+    padding: 5px 10px 5px 10px;
+    font-size: 20px;
+    background-color: #bd1e1e;
+    color: white;
+    border-bottom: 1px solid #971717;
+    border-right: 1px solid #971717;
+}
+
+#EditButton:hover,
+#DeleteButton:hover {
+    color: white;
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    border-bottom: none;
+    border-right: none;
+}
+
+#EditButton:hover{
+    background-color: #c07d00;
+}
+
+#DeleteButton:hover {
+    background-color: #971717;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5); /* semi-transparent background overlay */
+  }
+  
+  .popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }

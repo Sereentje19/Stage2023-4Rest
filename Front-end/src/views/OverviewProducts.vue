@@ -142,7 +142,7 @@ export default {
           }
 
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+            this.$refs.Popup.popUpError(error.response.data);
         });
     },
     getReturnDate(productId, index) {
@@ -152,9 +152,12 @@ export default {
         }
       })
         .then((res) => {
+          console.log(res.data)
           this.product[index].returnDate = res.data;
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          if (error.response.data != "Sequence contains no elements") {
+            this.$refs.Popup.popUpError(error.response.data);
+          }
         });
     },
     formatDate(date) {

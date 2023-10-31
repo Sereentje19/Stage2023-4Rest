@@ -17,7 +17,12 @@ namespace Back_end.Services
             _customerRepository = customerRepository;
         }
 
-        public (IEnumerable<object>, Pager) GetAll(string searchfield, int page, int pageSize)
+        public List<Customer> GetAll(string searchfield)
+        {
+            return _customerRepository.GetAll(searchfield);
+        }
+
+        public (IEnumerable<object>, Pager) GetAllPaged(string searchfield, int page, int pageSize)
         {
             var customers = _customerRepository.GetAll(searchfield);
 

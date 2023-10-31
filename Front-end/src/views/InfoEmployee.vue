@@ -81,7 +81,7 @@ export default {
                 });
         },
         toEdit() {
-            this.$router.push("/edit/Medewerker/" + this.id);
+            this.$router.push("/edit/medewerker/" + this.id);
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");
