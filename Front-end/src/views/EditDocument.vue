@@ -92,7 +92,7 @@ export default {
             })
                 .then((res) => {
                     localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
+                    this.$router.push({ path: '/info/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
