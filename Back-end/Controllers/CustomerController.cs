@@ -138,9 +138,7 @@ namespace Back_end.Controllers
         {
             try
             {
-                Console.WriteLine(id);
                 jwtValidationService.ValidateToken(HttpContext);
-                // Console.WriteLine(customer.Name + customer.Email + customer.CustomerId);
                 customerService.Delete(id);
                 return Ok(new { message = "Customer deleted" });
             }

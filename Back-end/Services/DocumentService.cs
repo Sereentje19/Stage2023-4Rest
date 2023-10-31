@@ -95,5 +95,10 @@ namespace Back_end.Services
         {
             _documentRepository.UpdateCustomerId(customerId, documentId);
         }
+
+        public void delete(int id)
+        {
+            _documentRepository.delete(id);
+        }
     }
 }

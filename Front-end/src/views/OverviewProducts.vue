@@ -102,7 +102,7 @@ export default {
     this.getProducts();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-      this.$refs.Popup.popUpError("Document is geupload!");
+      this.$refs.Popup.popUpError("Data is bijgewerkt.");
     }
   },
   methods: {

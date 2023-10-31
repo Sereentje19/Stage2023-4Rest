@@ -230,22 +230,12 @@ export default {
                 },
             })
                 .then((res) => {
+                    localStorage.setItem('popUpSucces', 'true');
                     this.$router.push({ path: '/overzicht/bruikleen', query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        // confirm() {
-        //     if (this.isPopUpDelete) {
-        //         this.isPopUpDelete = false;
-        //         this.deleteProducts();
-        //         this.$router.push("/overzicht/bruikleen");
-        //     }
-        //     else if (this.isPopUpReturn) {
-        //         this.isPopUpReturn = false;
-        //         this.returnItem();
-        //     }
-        // },
         toEdit(route) {
             this.$router.push("/edit/product/" + this.id);
         },

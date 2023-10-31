@@ -2,6 +2,9 @@
   <Header></Header>
   <div class="info-container">
     <h1>Info</h1>
+
+    <PopupChoice ref="PopupChoice" @delete="deleteDocument"/>
+
     <div id="leftside">
       <div id="loan-title">
         Document
@@ -56,6 +59,7 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import PopUpMessage from '../views/PopUpMessage.vue';
+import PopupChoice from '../views/PopUpChoice.vue';
 import Header from '../views/Header.vue';
 
 export default {
@@ -65,7 +69,8 @@ export default {
   },
   components: {
     PopUpMessage,
-    Header
+    Header,
+    PopupChoice
   },
   data() {
     return {
@@ -104,6 +109,23 @@ export default {
         }).catch((error) => {
           this.$refs.Popup.popUpError(error.response.data);
         });
+    },
+    deleteDocument() {
+      axios.delete("Document/" + this.id, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        },
+      })
+        .then((res) => {
+          localStorage.setItem('popUpSucces', 'true');
+          this.$router.push({ path: '/overzicht/document', query: { activePopup: true } });
+        }).catch((error) => {
+          this.$refs.Popup.popUpError(error.response.data);
+        });
+    },
+    toPopUpDelete() {
+      this.emitter.emit('isPopUpTrue', { 'eventContent': true })
+      this.emitter.emit('text', { 'eventContent': "Weet je zeker dat je " + this.document.type.toLowerCase() + " van medewerker " + this.customer.name + " wilt verwijderen?" })
     },
     toEdit() {
       this.$router.push("/edit/document/" + this.id);

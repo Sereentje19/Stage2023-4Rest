@@ -87,7 +87,8 @@ export default {
                 },
             })
                 .then((res) => {
-                    this.$router.push({ path: '/info/medewerker/' + this.id, query: { activePopup: true } });
+                    localStorage.setItem('popUpSucces', 'true');
+                    this.$router.push({ path: '/overzicht/medewerkers', query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
