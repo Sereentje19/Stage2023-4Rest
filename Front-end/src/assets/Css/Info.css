@@ -3,6 +3,7 @@
     margin: auto;
     margin-top: 50px;
     display: flex;
+    flex-direction: column;
 }
 
 .foto {
@@ -32,3 +33,4 @@
 #EditButton:hover {
     color: rgb(65, 65, 65);
 }
+

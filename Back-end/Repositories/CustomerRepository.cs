@@ -106,23 +106,26 @@ namespace Back_end.Repositories
             }
         }
 
-        public void Delete(Customer customer)
+        public void Delete(int id)
         {
             try
             {
-                List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Customer.CustomerId == customer.CustomerId).ToList();
+
+                Console.WriteLine("test");
+                List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Customer.CustomerId == id).ToList();
                 foreach (var loan in loans)
                 {
                     _context.LoanHistory.Remove(loan);
                 }
+                Console.WriteLine("test");
 
-                List<Document> docs = _context.Documents.Where(l => l.Customer.CustomerId == customer.CustomerId).ToList();
+                List<Document> docs = _context.Documents.Where(l => l.Customer.CustomerId == id).ToList();
                 foreach (var doc in docs)
                 {
                     _context.Documents.Remove(doc);
                 }
 
-                _dbSet.Remove(customer);
+                _dbSet.Remove(_dbSet.Find(id));
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)

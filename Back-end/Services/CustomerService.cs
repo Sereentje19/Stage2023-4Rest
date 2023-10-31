@@ -78,9 +78,9 @@ namespace Back_end.Services
         {
             _customerRepository.Update(customer);
         }
-        public void Delete(Customer customer)
+        public void Delete(int id)
         {
-            _customerRepository.Delete(customer);
+            _customerRepository.Delete(id);
         }
     }
 }

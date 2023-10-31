@@ -133,13 +133,15 @@ namespace Back_end.Controllers
             }
         }
 
-        [HttpDelete]
-        public IActionResult Delete(Customer? customer)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
             try
             {
+                Console.WriteLine(id);
                 jwtValidationService.ValidateToken(HttpContext);
-                customerService.Delete(customer);
+                // Console.WriteLine(customer.Name + customer.Email + customer.CustomerId);
+                customerService.Delete(id);
                 return Ok(new { message = "Customer deleted" });
             }
             catch (Exception ex)

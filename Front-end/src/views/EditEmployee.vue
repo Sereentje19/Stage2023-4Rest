@@ -13,19 +13,19 @@
             <button @click="editCustomer()" class="verstuurEdit">Aanpassen</button>
         </div>
 
-        <Popup ref="Popup" />
+        <PopUpMessage ref="Popup" />
 
     </div>
 </template>
   
 <script>
 import axios from '../../axios-auth.js'
-import Popup from '../views/popUp.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 export default {
     components: {
-        Popup,
+        PopUpMessage,
         Header
     },
     props: {
@@ -61,12 +61,9 @@ export default {
         editCustomer() {
             console.log(this.customer)
 
-            axios.put("Customer", {
+            axios.put("Customer", this.customer,{
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
-                },
-                params: {
-                    customer: this.customer,
                 },
             })
                 .then((res) => {

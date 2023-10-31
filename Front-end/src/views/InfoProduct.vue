@@ -3,13 +3,11 @@
     <div class="InfoLoanContainer">
         <h1>Info</h1>
 
-
-        <div v-if="isPopUpReturn || isPopUpDelete" class="popup">
+        <!-- <div v-if="isPopUpReturn || isPopUpDelete" class="popup">
             <div class="popup-content">
                 <div v-if="isPopUpDelete">
                     Weet je zeker dat je {{ this.product.type.toLowerCase() }} {{ this.product.serialNumber }} wilt
-                    verwijderen
-                    uit de database?
+                    verwijderen?
                 </div>
                 <div v-else-if="isPopUpReturn">
                     Weet je zeker dat je {{ this.product.type.toLowerCase() }} {{ this.product.serialNumber }} wilt
@@ -20,7 +18,9 @@
                     <button id="buttonItem2" @click="confirm">Bevestig</button>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <PopupChoice ref="PopupChoice" @delete="deleteProducts" @return="returnItem" />
 
 
         <div id="leftSide">
@@ -63,11 +63,6 @@
                     </div>
                     <div>
                         <button id="buttonItem" @click="returnProduct">{{ this.product.type }} terugbrengen</button>
-                        <div v-if="this.itemReturned == true" id="buttons2">
-                            <b> Weet je het zeker? &nbsp; &nbsp; &nbsp; </b>
-                            <button id="buttonItem2" @click="returnItem"><b>Ja</b></button>
-                            <button id="buttonItem2" @click="confirm"><b>Nee</b></button>
-                        </div>
                     </div>
                 </div>
                 <div v-else id="collegue">
@@ -104,14 +99,15 @@
     </div>
     <br><br><br>
 
-    <Popup ref="Popup" />
+    <PopUpMessage ref="Popup" />
 </template>
   
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Popup from '../views/popUp.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
+import PopupChoice from '../views/PopUpChoice.vue';
 
 export default {
     name: "InfoLoan",
@@ -119,8 +115,9 @@ export default {
         id: Number,
     },
     components: {
-        Popup,
-        Header
+        PopUpMessage,
+        Header,
+        PopupChoice
     },
     data() {
         return {
@@ -251,33 +248,33 @@ export default {
                 },
             })
                 .then((res) => {
+                    this.$router.push({ path: '/overzicht/bruikleen', query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        confirm() {
-            if (this.isPopUpDelete) {
-                this.isPopUpDelete = false;
-                this.deleteProducts();
-                this.$router.push("/overzicht/bruikleen");
-            }
-            else if (this.isPopUpReturn) {
-                this.isPopUpReturn = false;
-                this.returnItem();
-            }
-        },
+        // confirm() {
+        //     if (this.isPopUpDelete) {
+        //         this.isPopUpDelete = false;
+        //         this.deleteProducts();
+        //         this.$router.push("/overzicht/bruikleen");
+        //     }
+        //     else if (this.isPopUpReturn) {
+        //         this.isPopUpReturn = false;
+        //         this.returnItem();
+        //     }
+        // },
         toEdit(route) {
             this.$router.push("/edit/product/" + this.id);
         },
         deleteProduct() {
-            this.isPopUpDelete = true;
+            this.emitter.emit('isPopUpTrue', {'eventContent': true});
+            this.emitter.emit('text', {'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt verwijderen?`});
         },
         returnProduct() {
-            this.isPopUpReturn = true;
-        },
-        cancel() {
-            this.isPopUpReturn = false;
-            this.isPopUpDelete = false;
+            this.emitter.emit('isPopUpTrue', {'eventContent': true});
+            this.emitter.emit('toReturn', {'eventContent': true});
+            this.emitter.emit('text', {'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt terugbrengen?`});
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");

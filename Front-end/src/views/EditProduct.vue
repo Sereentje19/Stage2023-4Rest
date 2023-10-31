@@ -20,19 +20,19 @@
             <button @click="editProduct()" class="verstuurEdit">Aanpassen</button>
         </div>
 
-        <Popup ref="Popup" />
+        <PopUpMessage ref="Popup" />
 
     </div>
 </template>
   
 <script>
 import axios from '../../axios-auth.js'
-import Popup from '../views/popUp.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 export default {
     components: {
-        Popup,
+        PopUpMessage,
         Header
     },
     props: {

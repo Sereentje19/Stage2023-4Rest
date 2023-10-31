@@ -42,7 +42,7 @@
 
             <br><br><br>
 
-            <Popup ref="Popup" />
+            <PopUpMessage ref="Popup" />
         </div>
 
     </body>
@@ -52,7 +52,7 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
-import Popup from '../views/Popup.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 
@@ -60,7 +60,7 @@ export default {
     name: "Overview",
     components: {
         Pagination,
-        Popup,
+        PopUpMessage,
         Header,
     },
 

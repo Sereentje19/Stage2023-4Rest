@@ -1,34 +1,39 @@
 <template>
     <Header></Header>
     <div class="InfoContainer">
-        <div class="info">
-            <ul>
-                <h1>Info</h1>
-                <br>
-                <div id="DocumentTitle">
-                    Medewerker
+        <h1>Info</h1>
+
+        <PopupChoice ref="PopupChoice" @delete="deleteCustomer"/>
+
+        <div id="leftSide">
+            <div id="LoanTitle">
+                Medewerker
+            </div>
+            <div id="LoanInfo">
+                <div id="LoanInfoLeftSide">
+                    Name: <br>
+                    Email: <br>
                 </div>
-                <div id="documentInfo">
-                    Naam: &nbsp; {{ this.customer.name }}
-                    <br>
-                    Email: &nbsp;&nbsp; {{ this.customer.email }}
+                <div>
+                    {{ this.customer.name }} <br>
+                    {{ this.customer.email }} <br>
                 </div>
-                <div id="buttonsEditDelete">
-                    <button @click="toEdit()" id="EditButton">Edit</button>
-                   <div id="stripe"> | &nbsp; </div>
-                    <button @click="deleteCustomer()" id="EditButton">Delete </button>
-                </div>
-            </ul>
+            </div>
+            <div id="EditDeleteButtons">
+                <button @click="toEdit()" id="EditButton">Edit</button>
+                <button @click="toPopUpDelete()" id="DeleteButton">Delete</button>
+            </div>
         </div>
     </div>
 
-    <Popup ref="Popup" />
+    <PopupMessage ref="Popup" />
 </template>
   
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Popup from '../views/popUp.vue';
+import PopupMessage from '../views/PopUpMessage.vue';
+import PopupChoice from '../views/PopUpChoice.vue';
 import Header from '../views/Header.vue';
 
 export default {
@@ -37,12 +42,14 @@ export default {
         id: Number,
     },
     components: {
-        Popup,
-        Header
+        PopupMessage,
+        Header,
+        PopupChoice
     },
     data() {
         return {
             customer: {
+                customerId: 0,
                 name: "",
                 email: ""
             },
@@ -68,17 +75,25 @@ export default {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        deleteCustomer(){
-            axios.delete("Customer", this.customer, {
+        toPopUpDelete() {
+            this.emitter.emit('isPopUpTrue', {'eventContent': true})
+            this.emitter.emit('text', {'eventContent': "Weet je zeker dat je " + this.customer.name + " wilt verwijderen?"})
+        },
+        deleteCustomer() {
+            this.isPopUpDelete = false;
+            axios.delete("Customer/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
             })
                 .then((res) => {
-                    console.log(res.data)
+                    this.$router.push({ path: '/info/medewerker/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
+        },
+        cancel() {
+            this.isPopUpDelete = false;
         },
         toEdit() {
             this.$router.push("/edit/medewerker/" + this.id);
@@ -92,7 +107,7 @@ export default {
 </script>
   
 <style>
-#deleteButton {
+/* #deleteButton {
     margin-top: 50px;
     font-size: 20px;
     background-color: rgb(11, 92, 17);
@@ -102,14 +117,14 @@ export default {
     border: none;
 }
 
-#buttonsEditDelete{
+#buttonsEditDelete {
     display: flex
 }
 
-#stripe{
+#stripe {
     margin-top: 2px;
     color: rgb(82, 81, 81);
-}
+} */
 
 @import '../assets/Css/Info.css';
 @import '../assets/Css/Main.css';

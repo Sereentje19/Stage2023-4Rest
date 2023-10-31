@@ -19,6 +19,7 @@
                 <br>
             </div>
         </div>
+        <PopUpMessage ref="Popup" />
     </div>
 </template>
 
@@ -41,7 +42,7 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Popup from '../views/popUp.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 export default {
@@ -50,7 +51,7 @@ export default {
         id: Number,
     },
     components: {
-        Popup,
+        PopUpMessage,
         Header
     },
     data() {
