@@ -76,7 +76,6 @@
   </script>
   
   
-  
   <style>
   @import '../assets/Css/Main.css';
   @import '../assets/Css/Popup.css';

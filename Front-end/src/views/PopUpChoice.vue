@@ -54,42 +54,8 @@ export default {
 
 </script>
   
-<style>
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#button-popup {
-    width: fit-content;
-    font-size: 18px;
-    margin-top: 25px;
-    color: white;
-    padding: 0px;
-    background-color: #22421f;
-    padding: 5px 15px 5px 15px;
-}
-
-#button-popup:hover {
-    background-color: #133610;
-}
-
-</style>
   
+<style>
+@import '../assets/Css/Main.css';
+@import '../assets/Css/Popup.css';
+</style>
