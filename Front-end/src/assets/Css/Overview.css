@@ -1,27 +1,21 @@
-#h1AndButton {
+.overview-container {
+    width: 85%;
+    margin: auto;
+    margin-top: 80px;
+}
+
+#topside {
     display: flex;
     height: 70px;
 }
 
-#buttonArchief {
-    font-size: 25px;
-    height: fit-content;
-    padding: 10px 20px 10px 20px;
-    margin: 0;
-    margin-top: 5px;
-    background-color: #22421f;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    margin-left: 15px;
-    min-width: 145px;
-    text-align: center; 
-    display: flex;
-    justify-content: center;
+#h1-overview {
+    margin: auto auto auto 0;
+    min-width: 280px;
 }
 
-#SearchFieldOverview,
-#filterDropDown{
+#searchfield-overview,
+#filter-dropdown {
     width: 250px;
     height: 35px;
     margin-left: 20px;
@@ -33,75 +27,12 @@
     border: rgb(0, 0, 0) solid 1px;
 }
 
-#buttonArchief:hover{
-    background-color: #133610;
-}
-
-.popup-button {
-    display: block;
-    text-align: center;
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px;
-    cursor: pointer;
-}
-
-h1 {
-    font-size: 50px;
-}
-
-#h1Overzicht {
-    margin: auto auto auto 0;
-    min-width: 280px;
-}
-
-#paging {
-    display: flex;
-    margin-right: auto;
-  
-  }
-
-  #urgentieSymbool {
-    width: 50px;
-    margin-top: 8px;
-    margin-left: 8px;
-}
-
-#klantnaamTekst,
-#typeTekst {
-    max-width: 350px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-#checkboxA{
-    width: 18px;
-    height: 18px;
-}
-
-#klantnaamTekst,
-#geldigVanTekst,
-#geldigTotTekst,
-#checkboxArchive,
-#typeTekst {
-    margin-top: auto;
-    margin-bottom: auto;
-    font-size: large;
-}
-
-#titlesOverview {
+#titles-overview-documents {
     display: grid;
     grid-template-columns: 10% 30% 15% 15% 20% 10%;
 }
 
-.overviewContainer {
-    width: 85%;
-    margin: auto;
-    margin-top: 80px;
-}
-
-#item {
+#item-documents {
     width: 100%;
     height: 55px;
     background-color: white;
@@ -117,6 +48,102 @@ h1 {
     cursor: pointer;
 }
 
-a {
-    text-decoration: none;
+#titles-overview-employee {
+    display: grid;
+    grid-template-columns: 2% 25% 60% 4%;
+}
+
+#item-employees {
+    width: 100%;
+    height: 55px;
+    background-color: white;
+    margin-bottom: 6px;
+    border-color: #868686;
+    border-width: 1px;
+    border-style: solid;
+    display: grid;
+    grid-template-columns: 2% 25% 60% 4%;
+    color: black;
+    margin-left: auto;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#titles-overview-products {
+    display: grid;
+    grid-template-columns: 2% 18% 15% 15% 18% 20% 12%;
+}
+
+#item-products {
+    width: 100%;
+    height: 55px;
+    background-color: white;
+    margin-bottom: 6px;
+    border-color: #868686;
+    border-width: 1px;
+    border-style: solid;
+    display: grid;
+    grid-template-columns: 2% 18% 15% 15% 18% 20% 4%;
+    color: black;
+    margin-left: auto;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#urgentie-symbool {
+    width: 50px;
+    margin-top: 8px;
+    margin-left: 8px;
+}
+
+#button-history{
+    background-color: #22421f;
+    color: white;
+    height: fit-content;
+    padding: 8px 12px 8px 12px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#klantnaamTekst,
+#typeTekst {
+    max-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#checkboxA {
+    width: 18px;
+    height: 18px;
+}
+
+#klantnaamTekst,
+#geldigVanTekst,
+#geldigTotTekst,
+#checkboxArchive,
+#typeTekst {
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: large;
+}
+
+
+
+
+
+/* weet niet of dit nodig is */
+#paging {
+    display: flex;
+    margin-right: auto;
+}
+
+
+.popup-button {
+    display: block;
+    text-align: center;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
 }

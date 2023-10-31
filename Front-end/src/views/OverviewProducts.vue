@@ -1,22 +1,22 @@
 <template>
-  <body class="overviewBody">
+  <body>
     <Header ref="Header"></Header>
-    <div class="overviewContainer">
-      <div id="h1AndButton">
-        <h1 id="h1Overzicht">Bruikleen</h1>
+    <div class="overview-container">
+      <div id="topside">
+        <h1 id="h1-overview">Bruikleen</h1>
 
 
-        <select v-model="dropdown" id="filterDropDown" @change="getProducts">
+        <select v-model="dropdown" id="filter-dropdown" @change="getProducts">
           <option value="0">Selecteer type...</option>
           <option value="1">Laptop</option>
           <option value="2">Monitor</option>
           <option value="3">Stoel</option>
         </select>
-        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="getProducts" />
+        <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek" @input="getProducts" />
       </div>
 
       <div v-if="displayedProducts.length > 0">
-        <div id="titlesOverviewLoan">
+        <div id="titles-overview-products">
           <h3></h3>
           <h3 id="urgentie">Type</h3>
           <h3 id="klantnaam">Gekocht op</h3>
@@ -26,8 +26,8 @@
           <h3 id="geldigTot">Geschiedenis</h3>
         </div>
 
-        <div class="overviewLoan" v-for="(product, i) in displayedProducts">
-          <div @click="goToInfoPage(product)" id="itemLoan">
+        <div v-for="(product, i) in displayedProducts">
+          <div @click="goToInfoPage(product)" id="item-products">
             <div></div>
             <div id="klantnaamTekst">{{ product.type }}</div>
             <div id="geldigVanTekst">{{ formatDate(product.purchaseDate) }}</div>
@@ -35,7 +35,7 @@
             <div id="typeTekst">{{ product.serialNumber }}</div>
             <div id="typeTekst" v-if="product.returnDate == null || product.returnDate == ''">Ja</div>
             <div id="typeTekst" v-else>Nee</div>
-            <button id="buttonGeschiedenis" @click="goToHistory(product)"><svg xmlns="http://www.w3.org/2000/svg"
+            <button id="button-history" @click="goToHistory(product)"><svg xmlns="http://www.w3.org/2000/svg"
                 width="20" height="20" fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
                 <path
                   d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2h-7z" />
@@ -53,7 +53,7 @@
 
       <br><br><br>
 
-      <Popup ref="Popup" />
+      <PopUpMessage ref="Popup" />
     </div>
 
   </body>
@@ -63,7 +63,7 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
-import Popup from '../views/Popup.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 
@@ -71,7 +71,7 @@ export default {
   name: "Overview",
   components: {
     Pagination,
-    Popup,
+    PopUpMessage,
     Header,
   },
 
@@ -102,7 +102,7 @@ export default {
     this.getProducts();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-      this.$refs.Popup.popUpError("Document is geupload!");
+      this.$refs.Popup.popUpError("Data is bijgewerkt.");
     }
   },
   methods: {
@@ -142,7 +142,7 @@ export default {
           }
 
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+            this.$refs.Popup.popUpError(error.response.data);
         });
     },
     getReturnDate(productId, index) {
@@ -152,9 +152,12 @@ export default {
         }
       })
         .then((res) => {
+          console.log(res.data)
           this.product[index].returnDate = res.data;
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          if (error.response.data != "Sequence contains no elements") {
+            this.$refs.Popup.popUpError(error.response.data);
+          }
         });
     },
     formatDate(date) {
@@ -171,6 +174,6 @@ export default {
 
 
 <style>
-@import '../assets/Css/OverviewLoan.css';
+@import '../assets/Css/Overview.css';
 @import '../assets/Css/Main.css';
 </style>

@@ -26,12 +26,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCustomers(string? searchfield, int page = 1, int pageSize = 5)
+        public IActionResult GetAllCustomers(string? searchfield, int page, int pageSize)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedCustomers, pager) = customerService.GetAll(searchfield, page, pageSize);
+                var (pagedCustomers, pager) = customerService.GetAllPaged(searchfield, page, pageSize);
 
                 var response = new
                 {
@@ -44,7 +44,6 @@ namespace Back_end.Controllers
                         pager.TotalPages,
                     }
                 };
-
                 return Ok(response);
             }
             catch (Exception ex)
@@ -120,13 +119,28 @@ namespace Back_end.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(CustomerDocumentDTO customerDocumentDTO)
+        public IActionResult Put(Customer customer)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                customerService.Put(customerDocumentDTO);
+                customerService.Put(customer);
                 return Ok(new { message = "Customer updated" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                customerService.Delete(id);
+                return Ok(new { message = "Customer deleted" });
             }
             catch (Exception ex)
             {

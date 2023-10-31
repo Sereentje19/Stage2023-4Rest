@@ -29,24 +29,8 @@ namespace Back_end.Repositories
                                   customer.Name.Contains(searchfield) ||
                                   customer.Email.Contains(searchfield))
                 .OrderBy(customer => customer.Name)
-                .ToList(); 
+                .ToList();
         }
-
-
-        public IEnumerable<Product> GetAll(string searchfield, ProductType? dropdown)
-        {
-            IQueryable<Product> query = from product in _context.Products
-                                        where (string.IsNullOrEmpty(searchfield) ||
-                                            product.SerialNumber.Contains(searchfield) ||
-                                            product.ExpirationDate.ToString().Contains(searchfield) ||
-                                            product.PurchaseDate.ToString().Contains(searchfield))
-                                        && (dropdown == ProductType.Not_Selected || product.Type == dropdown)
-                                        select product;
-
-            var productList = query.ToList();
-            return productList;
-        }
-
 
         /// <summary>
         /// Filters and retrieves a collection of customers based on a search field.
@@ -57,7 +41,7 @@ namespace Back_end.Repositories
         {
             if (string.IsNullOrWhiteSpace(searchfield))
             {
-                return new List<Customer>();
+                return _dbSet.OrderBy(customer => customer.Name).ToList();
             }
 
             return _dbSet
@@ -122,14 +106,23 @@ namespace Back_end.Repositories
             }
         }
 
-        public void Delete(Customer customer)
+        public void Delete(int id)
         {
             try
             {
-                Document doc = _context.Documents.Find(customer.CustomerId);
-                doc.Customer = null;
+                List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Customer.CustomerId == id).ToList();
+                foreach (var loan in loans)
+                {
+                    _context.LoanHistory.Remove(loan);
+                }
 
-                _dbSet.Remove(customer);
+                List<Document> docs = _context.Documents.Where(l => l.Customer.CustomerId == id).ToList();
+                foreach (var doc in docs)
+                {
+                    _context.Documents.Remove(doc);
+                }
+
+                _dbSet.Remove(_dbSet.Find(id));
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)

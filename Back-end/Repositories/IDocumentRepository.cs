@@ -13,5 +13,6 @@ namespace Back_end.Repositories
         void Update(EditDocumentRequestDTO document);
         void UpdateIsArchived(CheckBoxDTO document);
         void UpdateCustomerId(int customerId, int documentId);
+        void delete(int id);
     }
 }

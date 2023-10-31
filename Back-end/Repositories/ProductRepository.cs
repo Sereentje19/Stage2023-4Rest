@@ -36,5 +36,23 @@ namespace Back_end.Repositories
         {
             return _dbSet.Find(id);
         }
+
+        public void Put(Product product)
+        {
+            _dbSet.Update(product);
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Product.ProductId == id).ToList();
+            foreach (var loan in loans)
+            {
+                _context.LoanHistory.Remove(loan);
+            }
+
+            _dbSet.Remove(_dbSet.Find(id));
+            _context.SaveChanges();
+        }
     }
 }

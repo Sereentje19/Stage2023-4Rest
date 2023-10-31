@@ -181,5 +181,19 @@ namespace Back_end.Controllers
                 return StatusCode(401, ex.Message);
             }
         }
+        [HttpDelete("{id}")]
+        public IActionResult delete(int id)
+        {
+            try
+            {
+                jwtValidationService.ValidateToken(HttpContext);
+                documentService.delete(id);
+                return Ok(new { message = "Document deleted" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
     }
 }

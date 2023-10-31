@@ -161,5 +161,11 @@ namespace Back_end.Repositories
             existingDocument.Customer.CustomerId = customerId;
             _context.SaveChanges();
         }
+
+        public void delete(int id)
+        {
+            _dbSet.Remove(_dbSet.Find(id));
+            _context.SaveChanges();
+        }
     }
 }

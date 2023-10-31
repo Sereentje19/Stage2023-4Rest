@@ -1,28 +1,28 @@
 <template>
-    <body class="overviewBody">
+    <body>
         <Header ref="Header"></Header>
-        <div class="overviewContainer">
-            <div id="h1AndButton">
-                <h1 id="h1Overzicht">Medewerkers</h1>
+        <div class="overview-container">
+            <div id="topside">
+                <h1 id="h1-overview">Medewerkers</h1>
 
-                <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek"
+                <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
                     @input="getAllCustomers" />
             </div>
 
             <div v-if="displayedDocuments.length > 0">
-                <div id="titlesOverviewEmployee">
+                <div id="titles-overview-employee">
                     <h3></h3>
                     <h3 id="urgentie">Naam</h3>
                     <h3 id="klantnaam">Email</h3>
                     <h3 id="klantnaam">Geschiedenis</h3>
                 </div>
 
-                <div class="overviewEmployee" v-for="(customer, i) in displayedDocuments">
-                    <div @click="goToInfoPage(customer)" id="itemEmployee">
+                <div v-for="(customer, i) in displayedDocuments">
+                    <div @click="goToInfoPage(customer)" id="item-employees">
                         <div></div>
                         <div id="klantnaamTekst">{{ customer.name }}</div>
                         <div id="geldigVanTekst">{{ customer.email }}</div>
-                        <button id="buttonGeschiedenis" @click="goToHistory(customer)"><svg
+                        <button id="button-history" @click="goToHistory(customer)"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-hourglass" viewBox="0 0 16 16">
                                 <path
@@ -42,7 +42,7 @@
 
             <br><br><br>
 
-            <Popup ref="Popup" />
+            <PopUpMessage ref="Popup" />
         </div>
 
     </body>
@@ -52,7 +52,7 @@
 import axios from '../../axios-auth.js';
 import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
-import Popup from '../views/Popup.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 
@@ -60,7 +60,7 @@ export default {
     name: "Overview",
     components: {
         Pagination,
-        Popup,
+        PopUpMessage,
         Header,
     },
 
@@ -98,14 +98,14 @@ export default {
         this.getAllCustomers();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-            this.$refs.Popup.popUpError("Document is geupload!");
+            this.$refs.Popup.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
-        goToInfoPage(pro) {
+        goToInfoPage(cus) {
             setTimeout(() => {
                 if (this.toHistory == false) {
-                    // this.$router.push("/info/bruikleen/" + pro.productId);
+                    this.$router.push("/info/medewerker/" + cus.customerId);
                 }
             }, 100);
         },
@@ -149,7 +149,7 @@ export default {
   
   
 <style>
-@import '../assets/Css/OverviewEmployee.css';
+@import '../assets/Css/Overview.css';
 @import '../assets/Css/Main.css';
 </style>
   

@@ -7,19 +7,22 @@ namespace Back_end.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IDocumentService _documentService;
 
         /// <summary>
         /// Initializes a new instance of the CustomerService class with the provided CustomerRepository.
         /// </summary>
         /// <param name="cr">The CustomerRepository used for customer-related operations.</param>
-        public CustomerService(ICustomerRepository customerRepository, IDocumentService documentService)
+        public CustomerService(ICustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
-            _documentService = documentService;
         }
 
-        public (IEnumerable<object>, Pager) GetAll(string searchfield, int page, int pageSize)
+        public List<Customer> GetAll(string searchfield)
+        {
+            return _customerRepository.GetAll(searchfield);
+        }
+
+        public (IEnumerable<object>, Pager) GetAllPaged(string searchfield, int page, int pageSize)
         {
             var customers = _customerRepository.GetAll(searchfield);
 
@@ -56,14 +59,9 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public CustomerDTO GetById(int id)
+        public Customer GetById(int id)
         {
-            Customer cus = _customerRepository.GetById(id);
-            return new CustomerDTO
-            {
-                Email = cus.Email,
-                Name = cus.Name
-            };
+            return _customerRepository.GetById(id);
         }
 
         /// <summary>
@@ -76,64 +74,13 @@ namespace Back_end.Services
             return _customerRepository.Add(customer);
         }
 
-        public void Put(CustomerDocumentDTO customerDocumentDTO)
+        public void Put(Customer customer)
         {
-            if (string.IsNullOrWhiteSpace(customerDocumentDTO.Name) || string.IsNullOrEmpty(customerDocumentDTO.Email))
-            {
-                throw new Exception("Naam of email is leeg.");
-            }
-
-            Customer existingCustomer = _customerRepository.GetById(customerDocumentDTO.CustomerId);
-
-            //check if the customer data changed 
-            if (existingCustomer.Email != customerDocumentDTO.Email || existingCustomer.Name != customerDocumentDTO.Name)
-            {
-                IEnumerable<Document> documents = _documentService.GetByCustomerId(customerDocumentDTO.CustomerId);
-
-                if (documents.Count() > 1)
-                {
-                    AddNewCustomer(customerDocumentDTO);
-                }
-                else
-                {
-                    UpdateCustomer(customerDocumentDTO, existingCustomer);
-                }
-            }
+            _customerRepository.Update(customer);
         }
-
-        private void AddNewCustomer(CustomerDocumentDTO customerDocumentDTO)
+        public void Delete(int id)
         {
-            Customer cus = new Customer
-            {
-                Email = customerDocumentDTO.Email,
-                Name = customerDocumentDTO.Name
-            };
-
-            int customerId = _customerRepository.Add(cus);
-            _documentService.UpdateCustomerId(customerId, customerDocumentDTO.DocumentId);
+            _customerRepository.Delete(id);
         }
-
-        private void UpdateCustomer(CustomerDocumentDTO customerDocumentDTO, Customer oldCustomer)
-        {
-            List<Customer> allCustomers = _customerRepository.GetAll("");
-
-            var matchingCustomer = allCustomers.FirstOrDefault(c =>
-                                c.Email == customerDocumentDTO.Email &&
-                                c.Name == customerDocumentDTO.Name);
-
-            if (matchingCustomer != null)
-            {
-                customerDocumentDTO.CustomerId = matchingCustomer.CustomerId;
-                _documentService.UpdateCustomerId(matchingCustomer.CustomerId, customerDocumentDTO.DocumentId);
-                _customerRepository.Delete(oldCustomer);
-            }
-            else
-            {
-                oldCustomer.Email = customerDocumentDTO.Email;
-                oldCustomer.Name = customerDocumentDTO.Name;
-                _customerRepository.Update(oldCustomer);
-            }
-        }
-
     }
 }

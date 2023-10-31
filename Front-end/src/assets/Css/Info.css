@@ -1,8 +1,9 @@
-.InfoContainer {
-    width: 90%;
+.info-container {
+    width: 85%;
     margin: auto;
     margin-top: 50px;
     display: flex;
+    flex-direction: column;
 }
 
 .foto {
@@ -14,18 +15,201 @@
     margin-left: auto;
 }
 
-#documentInfo {
-    font-size: 20px;
-}
-
-#DocumentTitle {
+#document-title {
     font-size: 30px;
     font-weight: 500;
 }
 
-#EditButton {
-    color: rgb(82, 81, 81);
-    padding: 5px 0 0 0;
-    font-size: 15px;
+
+#loan-title {
+    font-size: 25px;
+    font-weight: 700;
 }
 
+#leftside {
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 45%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    margin-bottom: 30px;
+}
+
+#loan-info {
+    font-size: 20px;
+    display: flex;
+}
+
+#loan-info-leftside {
+    padding: 0px 30px 30px 0px;
+
+}
+
+#box{
+    display: flex;
+}
+
+#edit-button {
+    color: rgb(0, 0, 0);
+    padding: 5px 10px 5px 10px;
+    font-size: 20px;
+    background-color: #e79908;
+    color: white;
+    margin-right: 20px;
+    border-bottom: 1px solid #c07d00;
+    border-right: 1px solid #c07d00;
+}
+
+#delete-button {
+    color: rgb(0, 0, 0);
+    padding: 5px 10px 5px 10px;
+    font-size: 20px;
+    background-color: #bd1e1e;
+    color: white;
+    border-bottom: 1px solid #971717;
+    border-right: 1px solid #971717;
+}
+
+#edit-button:hover,
+#delete-button:hover {
+    color: white;
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    border-bottom: none;
+    border-right: none;
+}
+
+#edit-button:hover{
+    background-color: #c07d00;
+}
+
+#delete-button:hover {
+    background-color: #971717;
+}
+
+#product-availability {
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 45%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    display: flex;
+}
+
+#employee {
+    display: flex;
+    flex-direction: column;
+}
+
+#button-item {
+    font-size: 20px;
+    background-color: #22421f;
+    color: white;
+    padding: 12px;
+    font-size: 25px;
+    border-radius: 5px;
+    border: none;
+    width: fit-content;
+    margin-top: 30px;
+    border-bottom: 1px solid #22421f;
+    border-right: 1px solid #22421f;
+}
+
+#button-item:hover {
+    background-color: #133610;
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    border-bottom: none;
+    border-right: none;
+}
+
+#second-leftside {
+    font-size: 25px;
+}
+
+#customers-list {
+    width: 600px;
+    margin-left: 50px;
+    margin-top: -300px;
+}
+
+#rightside {
+    background-color: #24232344;
+    border: solid 1px rgb(114, 114, 114);
+    padding: 30px;
+    width: 90%;
+    border-radius: 10px;
+    height: 334px;
+}
+
+.searchfield-loanhistory {
+    font-size: 20px;
+    padding-left: 20px;
+    margin-bottom: 30px;
+    width: 300px;
+    height: 40px;
+    border-radius: 5px;
+    border: black solid 1px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    padding-left: 20px;
+}
+
+tr {
+    cursor: pointer;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#top-table tr{
+    cursor:default;
+}
+
+#top-table {
+    text-align: center;
+    margin-right: 250px;
+}
+
+.first-row {
+    width: 200px;
+}
+
+#second-row {
+    border-right: none;
+}
+
+#empty-row {
+    width: 15px;
+    padding: 0;
+    border-left: none;
+}
+
+#bottom-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+#table-info-loan {
+    height: 215px;
+    cursor: auto;
+    overflow-y: auto;
+}

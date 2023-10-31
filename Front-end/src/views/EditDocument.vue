@@ -1,16 +1,12 @@
 <template>
     <div>
         <Header></Header>
-        <div class="uploadContainerEdit">
-            <h1 id="h1">Edit {{ this.route }}</h1>
+        <div class="upload-container-edit">
+            <h1 id="h1">Edit Document</h1>
 
-            <form action="/action_page.php">
-                <div class="gegevensEdit" v-if="this.route == 'klant'">
-                    <input v-model="this.customer.name" class="NaamEdit" />
-                    <input v-model="this.customer.email" class="Email" />
-                </div>
-                <div class="gegevensEdit" v-else>
-                    <select v-model="this.document.Type" class="Type" name="Type">
+            <form>
+                <div class="gegevens-edit">
+                    <select v-model="this.document.Type" class="Type">
                         <option value="0">Selecteer type...</option>
                         <option value="1">Vog</option>
                         <option value="2">Contract</option>
@@ -20,31 +16,29 @@
                         <option value="6">Certificaat</option>
                         <option value="7">Lease auto</option>
                     </select>
-                    <input v-model="formattedDate" type="date" class="Date" name="Date" />
+                    <input v-model="formattedDate" type="date" class="Date" />
 
                 </div>
             </form>
-            <button @click="route === 'document' ? editDocument() : editCustomer()" class="verstuurEdit">Verstuur
-                document</button>
+            <button @click="editDocument()" class="verstuur-edit">Aanpassen</button>
         </div>
 
-        <Popup ref="Popup" />
+        <PopUpMessage ref="Popup" />
 
     </div>
 </template>
   
 <script>
 import axios from '../../axios-auth.js'
-import Popup from '../views/popUp.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 export default {
     components: {
-        Popup,
+        PopUpMessage,
         Header
     },
     props: {
-        route: String,
         id: Number
     },
     data() {
@@ -87,29 +81,10 @@ export default {
                     this.$refs.Popup.popUpError(error.response.data);
                 });
         },
-        editCustomer() {
-            this.customerDocument.DocumentId = this.id;
-            this.customerDocument.CustomerId = this.customer.customerId;
-            this.customerDocument.Email = this.customer.email;
-            this.customerDocument.Name = this.customer.name;
-            console.log(this.customerDocument)
-
-            axios.put("Customer", this.customerDocument, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwt")
-                }
-            })
-                .then((res) => {
-                    localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
-                }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
-                });
-        },
         editDocument() {
             this.document.Type = parseInt(this.document.Type, 10);
-            console.log(this.document.DocumentId)
             this.document.DocumentId = this.id;
+
             axios.put("Document", this.document, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -117,7 +92,7 @@ export default {
             })
                 .then((res) => {
                     localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/infopage/document/' + this.id, query: { activePopup: true } });
+                    this.$router.push({ path: '/info/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.Popup.popUpError(error.response.data);
                 });

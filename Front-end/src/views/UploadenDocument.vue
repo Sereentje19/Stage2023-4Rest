@@ -1,10 +1,10 @@
 <template>
   <div>
     <Header></Header>
-    <div class="uploadContainer">
-      <div class="leftSide">
+    <div class="upload-container">
+      <div class="leftside">
         <h1 id="h1">Document uploaden</h1>
-        <div id="drop" ref="dropArea" class="dropArea" @dragover.prevent="handleDrag(true)" @dragleave="handleDrag(false)"
+        <div id="drop" ref="dropArea" class="drop-area" @dragover.prevent="handleDrag(true)" @dragleave="handleDrag(false)"
           @drop.prevent="handleDrop">
           <p id="p" ref="pElement"></p>
           <input type="file" class="file" @change="handleFileChange" style="display: none" />
@@ -15,27 +15,27 @@
 
 
         <label class="overlay">
-          <div id="selectDocument"> Selecteer document</div>
-          <img id="folderImage" src="../assets/Pictures/folder.png">
+          <div id="select-document"> Selecteer document</div>
+          <img id="folder-image" src="../assets/Pictures/folder.png">
           <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
         </label>
       </div>
 
-      <div class="rightSide">
+      <div class="rightside">
         <ul>
           <form class="gegevens" action="/action_page.php">
             <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
               class="Zoek" placeholder="Zoek klant" name="Naam" />
 
-            <ul id="myUL" v-show="isFocused && filteredCustomers.length > 0">
+            <ul id="ul" v-show="isFocused && filteredCustomers.length > 0">
               <li v-for="customer in filteredCustomers" :key="customer.id">
                 <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
               </li>
             </ul>
 
-            <input v-model="this.customer.Name" type="text" class="Naam" placeholder="Naam klant" name="Zoek" />
-            <input v-model="this.customer.Email" type="text" class="Email" placeholder="Email klant" name="Email" />
-            <select v-model="this.document.Type" class="Type" name="Type">
+            <input v-model="this.customer.Name" type="text" class="name" placeholder="Naam klant" name="Zoek" />
+            <input v-model="this.customer.Email" type="text" class="email" placeholder="Email klant" name="Email" />
+            <select v-model="this.document.Type" class="type" name="Type">
               <option value="0">Selecteer document...</option>
               <option value="1">Vog</option>
               <option value="2">Contract</option>
@@ -45,7 +45,7 @@
               <option value="6">Certificaat</option>
               <option value="7">Lease auto</option>
             </select>
-            <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="Date" name="Date" />
+            <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="date" name="Date" />
           </form>
         </ul>
 
@@ -55,19 +55,19 @@
       </div>
     </div>
 
-    <Popup ref="Popup" />
+    <PopUpMessage ref="PopUp" />
 
   </div>
 </template>
 
 <script>
 import axios from '../../axios-auth.js'
-import Popup from '../views/popUp.vue';
+import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
 
 export default {
   components: {
-    Popup,
+    PopUpMessage,
     Header
   },
   data() {
@@ -112,7 +112,7 @@ export default {
     },
     CreateFromData() {
       let formData = new FormData();
-      
+
       if (this.selectedFile != null) {
         formData.append('file', this.selectedFile);
         formData.append('document.FileType', this.selectedFile.type);
@@ -161,7 +161,7 @@ export default {
         this.isFocused = false;
       }, 200);
     },
-    handleDrag(e, bool){
+    handleDrag(e, bool) {
       e.preventDefault();
       this.dropAreaActive = bool;
     },

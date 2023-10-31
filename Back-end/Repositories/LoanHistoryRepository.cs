@@ -56,7 +56,6 @@ namespace Back_end.Repositories
         }
 
 
-
         public LoanHistory GetFirstByProductId(int id)
         {
             return _dbSet
