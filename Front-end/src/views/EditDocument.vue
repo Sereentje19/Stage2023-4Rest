@@ -1,12 +1,12 @@
 <template>
     <div>
         <Header></Header>
-        <div class="uploadContainerEdit">
-            <h1 id="h1">Edit {{ this.route }}</h1>
+        <div class="upload-container-edit">
+            <h1 id="h1">Edit Document</h1>
 
-            <form action="/action_page.php">
-                <div class="gegevensEdit">
-                    <select v-model="this.document.Type" class="Type" name="Type">
+            <form>
+                <div class="gegevens-edit">
+                    <select v-model="this.document.Type" class="Type">
                         <option value="0">Selecteer type...</option>
                         <option value="1">Vog</option>
                         <option value="2">Contract</option>
@@ -16,11 +16,11 @@
                         <option value="6">Certificaat</option>
                         <option value="7">Lease auto</option>
                     </select>
-                    <input v-model="formattedDate" type="date" class="Date" name="Date" />
+                    <input v-model="formattedDate" type="date" class="Date" />
 
                 </div>
             </form>
-            <button @click="editDocument()" class="verstuurEdit">Aanpassen</button>
+            <button @click="editDocument()" class="verstuur-edit">Aanpassen</button>
         </div>
 
         <PopUpMessage ref="Popup" />
@@ -39,7 +39,6 @@ export default {
         Header
     },
     props: {
-        route: String,
         id: Number
     },
     data() {
@@ -84,8 +83,8 @@ export default {
         },
         editDocument() {
             this.document.Type = parseInt(this.document.Type, 10);
-            console.log(this.document.DocumentId)
             this.document.DocumentId = this.id;
+
             axios.put("Document", this.document, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

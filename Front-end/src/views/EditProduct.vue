@@ -1,23 +1,23 @@
 <template>
     <div>
         <Header></Header>
-        <div class="uploadContainerEdit">
+        <div class="upload-container-edit">
             <h1 id="h1">Edit {{ this.route }}</h1>
 
             <form>
-                <div class="gegevensEdit">
-                    <select v-model="this.product.type" class="Type" name="Type">
+                <div class="gegevens-edit">
+                    <select v-model="this.product.type" class="Type">
                         <option value="0">Selecteer type...</option>
                         <option value="1">Laptop</option>
                         <option value="2">Monitor</option>
                         <option value="3">Stoel</option>
                     </select>
-                    <input v-model="this.product.purchaseDate" type="date" class="Date" name="Date" />
-                    <input v-model="this.product.expirationDate" type="date" class="Date" name="Date" />
+                    <input v-model="this.product.purchaseDate" type="date" class="Date"/>
+                    <input v-model="this.product.expirationDate" type="date" class="Date"/>
                     <input class="Email" v-model="this.product.serialNumber" @input="filterDocuments" />
                 </div>
             </form>
-            <button @click="editProduct()" class="verstuurEdit">Aanpassen</button>
+            <button @click="editProduct()" class="verstuur-edit">Aanpassen</button>
         </div>
 
         <PopUpMessage ref="Popup" />

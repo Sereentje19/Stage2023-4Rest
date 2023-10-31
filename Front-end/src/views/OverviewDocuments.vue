@@ -1,12 +1,12 @@
 <template>
-  <body class="overviewBody">
+  <body>
     <Header ref="Header"></Header>
-    <div class="overviewContainer">
-      <div id="h1AndButton">
-        <h1 id="h1Overzicht">{{ overviewType }}</h1>
+    <div class="overview-container">
+      <div id="topside">
+        <h1 id="h1-overview">{{ overviewType }}</h1>
 
 
-        <select v-model="dropdown" id="filterDropDown" @change="filterDocuments">
+        <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
           <option value="1">Vog</option>
           <option value="2">Contract</option>
@@ -16,12 +16,13 @@
           <option value="6">Certificaat</option>
           <option value="7">Lease auto</option>
         </select>
-        <input id="SearchFieldOverview" v-model="searchField" type="search" placeholder="Zoek" @input="filterDocuments" />
+        <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
+          @input="filterDocuments" />
 
       </div>
 
       <div v-if="displayedDocuments.length > 0">
-        <div id="titlesOverview">
+        <div id="titles-overview-documents">
           <h3 id="urgentie">Urgentie</h3>
           <h3 id="klantnaam">Klantnaam</h3>
           <h3 id="geldigVan">Geldig tot</h3>
@@ -32,19 +33,20 @@
           <h3 v-else id="Type">Archiveer</h3>
         </div>
 
-        <div class="overview" v-for="(document, i) in displayedDocuments">
-          <div @click="goToInfoPage(document)" id="item">
-            <img v-if="documentDaysFromExpiration(document, 35)" id="urgentieSymbool"
+        <div v-for="(document, i) in displayedDocuments">
+          <div @click="goToInfoPage(document)" id="item-documents">
+            <img v-if="documentDaysFromExpiration(document, 35)" id="urgentie-symbool"
               src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
-            <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentieSymbool"
+            <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentie-symbool"
               src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
-            <img v-else id="urgentieSymbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+            <img v-else id="urgentie-symbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
             <div id="klantnaamTekst">{{ document.customerName }}</div>
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type }}</div>
-            <div id="checkboxArchive"><input type="checkbox" id="checkboxA" v-model="document.isChecked"
-                @change="toggleCheckbox(document)"></div>
+            <div id="checkboxArchive">
+              <input type="checkbox" id="checkboxA" v-model="document.isChecked" @change="toggleCheckbox(document)">
+            </div>
           </div>
         </div>
 

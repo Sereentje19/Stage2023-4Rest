@@ -1,17 +1,17 @@
 <template>
     <div class="popup-container" :class="{ 'active': activePopup === 'popup2' }">
-      <div class="Error" :class="{ 'SuccessPopup': colorOfMessage === 'true' }">
+      <div class="error" :class="{ 'success-popup': colorOfMessage === 'true' }">
         <div>
-          <div id="CrossCircle">
-            <div v-if="this.colorOfMessage == 'true'" id="ErrorItem" class="SuccesPopup">
+          <div id="cross-circle">
+            <div v-if="this.colorOfMessage == 'true'" id="error-item" class="success-popup">
               <Check /> &nbsp;&nbsp; Succes
             </div>
-            <div v-else id="ErrorItem" class="ErrorPopup">
+            <div v-else id="error-item">
               <CrossCircle /> &nbsp;&nbsp; Error
             </div>
-            <div id="ErrorItemCross">
-              <button id="buttonClose" @click="togglePopup('popup2')"
-                :class="{ 'SuccessPopup': colorOfMessage === 'true' }">
+            <div id="error-item-cross">
+              <button id="button-close" @click="togglePopup('popup2')"
+                :class="{ 'success-popup': colorOfMessage === 'true' }">
                 <Cross />
               </button>
             </div>

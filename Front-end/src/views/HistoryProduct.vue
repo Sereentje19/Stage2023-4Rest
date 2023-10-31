@@ -1,10 +1,10 @@
 
 <template>
     <Header></Header>
-    <div class="InfoContainer">
+    <div class="history-container">
         <div class="info">
             <h1>Leen geschiedenis</h1>
-            <div id="ItemData">
+            <div id="item-data">
                 <div>Type: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.loanHistory[0].type }}</div>
                 <div>Serie nummer: &nbsp; {{ this.loanHistory[0].serialNumber }}</div>
@@ -12,7 +12,7 @@
                 <div>Gebruiken tot: &nbsp;&nbsp; {{ formatDate(this.loanHistory[0].expirationDate) }}</div>
             </div>
             <br><br><br>
-            <div id="historyItems" v-for="(loanHistory, i) in this.loanHistory">
+            <div id="history-items" v-for="(loanHistory, i) in this.loanHistory">
                 <div id="line"></div>
 
                 <br>
@@ -24,22 +24,6 @@
         <PopUpMessage ref="Popup" />
     </div>
 </template>
-
-<style>
-#ItemData {
-    font-size: 20px;
-}
-
-#historyItems {
-    font-size: 20px;
-}
-
-#line {
-    width: 420px;
-    border-top: 2.5px solid black;
-}
-</style>
-
 
 <script>
 import axios from '../../axios-auth.js';
@@ -100,3 +84,9 @@ export default {
 }
 
 </script>
+
+<style>
+@import '../assets/Css/History.css';
+@import '../assets/Css/Main.css';
+</style>
+  

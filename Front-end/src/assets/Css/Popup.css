@@ -1,8 +1,8 @@
-.SuccessPopup {
+.success-popup {
   background-color: #10b473 !important;
 }
 
-#CrossCircle {
+#cross-circle {
   display: flex;
   color: white;
   font-weight: 500;
@@ -10,24 +10,24 @@
   min-width: 300px;
 }
 
-#ErrorItem {
+#error-item {
   margin-top: auto;
   margin-bottom: auto;
   display: flex;
 }
 
-#ErrorItemCross {
+#error-item-cross {
   margin-left: auto;
   margin-bottom: -5px;
 }
 
 
-#buttonClose {
+#button-close {
   background-color: #d85353;
   border: none;
 }
 
-.Error {
+.error {
   background-color: #d85353;
   padding: 10px;
   border-radius: 7px;

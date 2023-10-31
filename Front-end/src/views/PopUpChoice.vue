@@ -4,9 +4,9 @@
             <div>
                 {{ this.toDelete }}
             </div>
-            <div id="EditDeleteButtons">
-                <button id="buttonItem2" @click="cancel()">Cancel</button>
-                <button id="buttonItem2" @click="confirm()">Bevestig</button>
+            <div id="box">
+                <button id="button-popup" @click="cancel()">Cancel</button>
+                <button id="button-popup" @click="confirm()">Bevestig</button>
             </div>
         </div>
     </div>
@@ -76,5 +76,20 @@ export default {
     flex-direction: column;
     align-items: center;
 }
+
+#button-popup {
+    width: fit-content;
+    font-size: 18px;
+    margin-top: 25px;
+    color: white;
+    padding: 0px;
+    background-color: #22421f;
+    padding: 5px 15px 5px 15px;
+}
+
+#button-popup:hover {
+    background-color: #133610;
+}
+
 </style>
   

@@ -1,21 +1,21 @@
 <template>
     <div class="header" @click="test">
-        <a id="logoHeaderLink" href="/overzicht/document"><img id="logoHeader" src="../assets/Pictures/Logo-4-rest-IT.png"
+        <a id="logo-header-link" href="/overzicht/document"><img id="logo-header" src="../assets/Pictures/Logo-4-rest-IT.png"
                 alt="does not work" /></a>
-        <div id="buttonsHeader">
+        <div id="header-buttons">
             <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
-                <a id="headerItems" class="dropdown-link" href="/overzicht/document"
+                <a id="header-items" class="dropdown-link" href="/overzicht/document"
                     @click="changeOverviewType('Overzicht')" @mouseover="changeColor('#bebebe')"
                     @mouseout="changeColor('white')">
                     Overzicht
                     <ArrowDown :color="svgColor" />
                 </a>
                 <div v-if="showDropdown" class="dropdown-content">
-                    <a id="dropDownLinks" href="/overzicht/bruikleen">Bruikleen</a>
-                    <a id="dropDownLinks" href="/overzicht/medewerkers">Medewerkers</a>
-                    <a id="dropDownLinks" href="/overzicht/document" @click="changeOverviewType('Lang geldig')">Lang
+                    <a id="dropdown-links" href="/overzicht/bruikleen">Bruikleen</a>
+                    <a id="dropdown-links" href="/overzicht/medewerkers">Medewerkers</a>
+                    <a id="dropdown-links" href="/overzicht/document" @click="changeOverviewType('Lang geldig')">Lang
                         geldig</a>
-                    <a id="dropDownLinks" href="/overzicht/document" @click="changeOverviewType('Archief')">Archief</a>
+                    <a id="dropdown-links" href="/overzicht/document" @click="changeOverviewType('Archief')">Archief</a>
                 </div>
             </div> &nbsp; &nbsp; &nbsp;
 
@@ -27,9 +27,9 @@
                     <ArrowDown :color="svgColor" />
                 </a>
                 <div v-if="showDropdown" class="dropdown-content">
-                    <a id="dropDownLinks" href="/uploaden/document">Document</a>
-                    <a id="dropDownLinks" href="/uploaden/medewerker">Medewerker</a>
-                    <a id="dropDownLinks" href="/uploaden/product">Product</a>
+                    <a id="dropdown-links" href="/uploaden/document">Document</a>
+                    <a id="dropdown-links" href="/uploaden/medewerker">Medewerker</a>
+                    <a id="dropdown-links" href="/uploaden/product">Product</a>
                 </div>
             </div> &nbsp; &nbsp; &nbsp;
             <router-link id="headerItems" to="/" @click="logOut">Uitloggen</router-link>

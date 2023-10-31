@@ -1,3 +1,19 @@
+.upload-container-edit {
+  width: 85%;
+  margin: auto;
+  margin-top: 50px;
+  display: flex;
+  margin-bottom: 50px;
+  flex-direction: column;
+}
+
+.gegevens-edit {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 2px;
+}
+
 #myUL {
     list-style-type: none;
     padding: 0;
@@ -19,22 +35,7 @@
     cursor: pointer;
   }
   
-  .uploadContainerEdit {
-    width: 85%;
-    margin: auto;
-    margin-top: 50px;
-    display: flex;
-    margin-bottom: 50px;
-    flex-direction: column;
-  }
-  
-  
-  .gegevensEdit {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    margin-top: 2px;
-  }
+ 
   
   
   #searchOutput {
@@ -77,7 +78,7 @@
     border-radius: 5px;
   }
   
-  .verstuurEdit {
+  .verstuur-edit {
     font-size: 20px;
     background-color: #22421f;
     color: white;
@@ -90,6 +91,6 @@
   }
   
   
-  .verstuurEdit:hover {
+  .verstuur-edit:hover {
     background-color: #133610;
   }

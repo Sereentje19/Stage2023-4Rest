@@ -1,16 +1,16 @@
 <template>
     <div>
         <Header></Header>
-        <div class="uploadContainerEdit">
+        <div class="upload-container-edit">
             <h1 id="h1">Edit {{ this.route }}</h1>
 
-            <form action="/action_page.php">
-                <div class="gegevensEdit">
+            <form>
+                <div class="gegevens-edit">
                     <input class="Email" v-model="this.customer.name" @input="filterDocuments" />
                     <input class="Email" v-model="this.customer.email" @input="filterDocuments" />
                 </div>
             </form>
-            <button @click="editCustomer()" class="verstuurEdit">Aanpassen</button>
+            <button @click="editCustomer()" class="verstuur-edit">Aanpassen</button>
         </div>
 
         <PopUpMessage ref="Popup" />

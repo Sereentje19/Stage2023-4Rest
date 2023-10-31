@@ -1,25 +1,3 @@
-#logoHeader {
-  width: 130px;
-  height: 80px;
-  margin-top: 28px;
-  padding: 0.5% 0% 0% 1%;
-}
-
-a {
-  font-size: 28px;
-  color: white;
-}
-
-#logoHeaderLink{
-  margin-left: 7%;
-}
-
-#buttonsHeader {
-  position: absolute;
-  right: 5%;
-  padding: 50px 40px 0px 0px;
-}
-
 .header {
   width: 100%;
   height: 120px;
@@ -29,14 +7,39 @@ a {
   flex-direction: row;
 }
 
+#logo-header {
+  width: 130px;
+  height: 80px;
+  margin-top: 28px;
+  padding: 0.5% 0% 0% 1%;
+}
+
+#logo-header-link{
+  margin-left: 7%;
+}
+
+#header-buttons {
+  position: absolute;
+  right: 5%;
+  padding: 50px 40px 0px 0px;
+}
+
+#header-items:hover {
+  color: #bebebe;
+}
+
+a {
+  font-size: 28px;
+  color: white;
+}
+
+#dropdown-links {
+  font-size: 20px;
+}
 
 .dropdown {
   position: relative;
   display: inline-block;
-}
-
-#dropDownLinks {
-  font-size: 20px;
 }
 
 .dropdown-content {
@@ -70,8 +73,4 @@ a {
 
 .dropdown:hover .dropdown-content {
   display: block;
-}
-
-#headerItems:hover {
-  color: #bebebe;
 }

@@ -1,34 +1,16 @@
 <template>
     <Header></Header>
-    <div class="InfoLoanContainer">
+    <div class="info-container">
         <h1>Info</h1>
-
-        <!-- <div v-if="isPopUpReturn || isPopUpDelete" class="popup">
-            <div class="popup-content">
-                <div v-if="isPopUpDelete">
-                    Weet je zeker dat je {{ this.product.type.toLowerCase() }} {{ this.product.serialNumber }} wilt
-                    verwijderen?
-                </div>
-                <div v-else-if="isPopUpReturn">
-                    Weet je zeker dat je {{ this.product.type.toLowerCase() }} {{ this.product.serialNumber }} wilt
-                    terugbrengen?
-                </div>
-                <div id="EditDeleteButtons">
-                    <button id="buttonItem2" @click="cancel">Cancel</button>
-                    <button id="buttonItem2" @click="confirm">Bevestig</button>
-                </div>
-            </div>
-        </div> -->
 
         <PopupChoice ref="PopupChoice" @delete="deleteProducts" @return="returnItem" />
 
-
-        <div id="leftSide">
-            <div id="LoanTitle">
+        <div id="leftside">
+            <div id="loan-title">
                 Item
             </div>
-            <div id="LoanInfo">
-                <div id="LoanInfoLeftSide">
+            <div id="loan-info">
+                <div id="loan-info-leftside">
                     Type: <br>
                     Gekocht op: <br>
                     Geldig tot: <br>
@@ -41,54 +23,54 @@
                     {{ this.product.serialNumber }}
                 </div>
             </div>
-            <div id="EditDeleteButtons">
-                <button @click="toEdit()" id="EditButton">Edit</button>
-                <button @click="deleteProduct()" id="DeleteButton">Delete</button>
+            <div id="box">
+                <button @click="toEdit()" id="edit-button">Edit</button>
+                <button @click="deleteProduct()" id="delete-button">Delete</button>
             </div>
         </div>
 
 
         <div id="box">
-            <div id="Available">
-                <div v-if="this.loanHistory.returnDate == null && this.loanHistory.loanDate != null" id="collegue">
+            <div id="product-availability">
+                <div v-if="this.loanHistory.returnDate == null && this.loanHistory.loanDate != null" id="employee">
                     <div>
-                        <div id="LoanTitle">
+                        <div id="loan-title">
                             Uitgeleend aan medewerker
                         </div>
-                        <div id="LoanInfo">
+                        <div id="loan-info">
                             Naam: &nbsp; {{ this.loanHistory.customer.name }}
                             <br>
                             Email: &nbsp;&nbsp; {{ this.loanHistory.customer.email }}
                         </div>
                     </div>
                     <div>
-                        <button id="buttonItem" @click="returnProduct">{{ this.product.type }} terugbrengen</button>
+                        <button id="button-item" @click="returnProduct">{{ this.product.type }} terugbrengen</button>
                     </div>
                 </div>
-                <div v-else id="collegue">
-                    <div id="secondLeftSide">
+                <div v-else id="employee">
+                    <div id="second-leftside">
                         Deze {{ this.product.type.toLowerCase() }} is nog beschikbaar.
                     </div>
                 </div>
             </div>
-            <div id="customersList">
+            <div id="customers-list">
 
-                <div v-if="this.loanHistory.returnDate != null" id="rightSide">
-                    <input @input="filterCustomer" v-model="searchField" type="search" class="ZoekVeldLoan"
+                <div v-if="this.loanHistory.returnDate != null" id="rightside">
+                    <input @input="filterCustomer" v-model="searchField" type="search" class="searchfield-loanhistory"
                         placeholder="Zoek klant" />
 
-                    <table id="topTable">
+                    <table id="top-table">
                         <tr>
-                            <td class="row1"><b>Name</b></td>
-                            <td id="topTableRow"><b>Email</b></td>
-                            <td id="emptyRow"></td>
+                            <td class="first-row"><b>Name</b></td>
+                            <td id="second-row"><b>Email</b></td>
+                            <td id="empty-row"></td>
                         </tr>
                     </table>
-                    <div id="tableInfoLoan">
-                        <table id="bottomTable">
+                    <div id="table-info-loan">
+                        <table id="bottom-table">
                             <tr v-for="(customer, i) in this.filteredCustomers" @click="selectCustomer(customer)">
-                                <td class="row1" id="bottomTableRow">{{ customer.name }}</td>
-                                <td id="bottomTableRow">{{ customer.email }}</td>
+                                <td class="first-row">{{ customer.name }}</td>
+                                <td>{{ customer.email }}</td>
                             </tr>
                         </table>
                     </div>
@@ -285,7 +267,7 @@ export default {
 </script>
   
 <style>
-@import '../assets/Css/InfoLoan.css';
+@import '../assets/Css/Info.css';
 @import '../assets/Css/Main.css';
 </style>
   

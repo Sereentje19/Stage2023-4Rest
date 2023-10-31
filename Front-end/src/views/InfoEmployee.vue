@@ -1,16 +1,16 @@
 <template>
     <Header></Header>
-    <div class="InfoContainer">
+    <div class="info-container">
         <h1>Info</h1>
 
         <PopupChoice ref="PopupChoice" @delete="deleteCustomer"/>
 
-        <div id="leftSide">
-            <div id="LoanTitle">
+        <div id="leftside">
+            <div id="loan-title">
                 Medewerker
             </div>
-            <div id="LoanInfo">
-                <div id="LoanInfoLeftSide">
+            <div id="loan-info">
+                <div id="loan-info-leftside">
                     Name: <br>
                     Email: <br>
                 </div>
@@ -19,9 +19,9 @@
                     {{ this.customer.email }} <br>
                 </div>
             </div>
-            <div id="EditDeleteButtons">
-                <button @click="toEdit()" id="EditButton">Edit</button>
-                <button @click="toPopUpDelete()" id="DeleteButton">Delete</button>
+            <div id="box">
+                <button @click="toEdit()" id="edit-button">Edit</button>
+                <button @click="toPopUpDelete()" id="delete-button">Delete</button>
             </div>
         </div>
     </div>
@@ -107,25 +107,6 @@ export default {
 </script>
   
 <style>
-/* #deleteButton {
-    margin-top: 50px;
-    font-size: 20px;
-    background-color: rgb(11, 92, 17);
-    color: white;
-    padding: 12px;
-    border-radius: 5px;
-    border: none;
-}
-
-#buttonsEditDelete {
-    display: flex
-}
-
-#stripe {
-    margin-top: 2px;
-    color: rgb(82, 81, 81);
-} */
-
 @import '../assets/Css/Info.css';
 @import '../assets/Css/Main.css';
 </style>
