@@ -37,7 +37,7 @@ const router = createRouter({
     { path: '/uploaden/document', component: UploadenDocument },
     { path: '/geschiedenis/product/:id', component: HistoryProduct, props: true },
     { path: '/geschiedenis/medewerker/:id', component: HistoryEmployee, props: true },
-    { path: '/overzicht/document', name: 'Overview', component: OverviewDocuments ,
+    { path: '/overzicht/documenten', name: 'Overview', component: OverviewDocuments ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
     { path: '/overzicht/medewerkers', name: 'OverviewMedewerkers', component: OverviewEmployees ,
     props: route => ({ popup1: route.query.popup1 === 'true' })},

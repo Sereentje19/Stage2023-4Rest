@@ -96,15 +96,21 @@
   height: 45px;
   font-size: 25px;
   background-color: #22421f;
-  border: none;
   color: white;
   margin-left: 10%;
   cursor: pointer;
   display: unset;
+  border-bottom: 3px solid #133610;
+  border-right: 3px solid #133610;
 }
 
 .login-button:hover {
   background-color: #133610;
+  border-radius: 4px;
+  border-left: 3px solid rgb(150, 172, 144);
+  border-top: 3px solid rgb(150, 172, 144);
+  border-bottom: none;
+  border-right: none;
 }
 
 #error-message {

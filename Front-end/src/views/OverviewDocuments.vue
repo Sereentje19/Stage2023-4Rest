@@ -3,7 +3,8 @@
     <Header ref="Header"></Header>
     <div class="overview-container">
       <div id="topside">
-        <h1 id="h1-overview">{{ overviewType }}</h1>
+        <h1 id="h1-overview" v-if="overviewType == 'Overzicht'">Documenten</h1>
+        <h1 id="h1-overview" v-else>{{ overviewType }}</h1>
 
 
         <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
