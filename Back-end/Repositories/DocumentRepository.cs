@@ -57,7 +57,7 @@ namespace Back_end.Repositories
 
             if (query.Count() == 0)
             {
-                throw new Exception("No documents found.");
+                throw new Exception("Geen document gevonden. Probeer het later onpnieuw.");
             }
 
             switch (overviewType)
@@ -102,9 +102,21 @@ namespace Back_end.Repositories
         /// <param name="document">The document entity to be added.</param>
         public void AddDocument(Document document)
         {
-            if(document.Type == DocumentType.Not_Selected)
+            if (document.Type == DocumentType.Not_Selected)
             {
                 throw new DocumentAddException("Selecteer een type.");
+            }
+            else if (string.IsNullOrWhiteSpace(document.Customer.Name) || string.IsNullOrWhiteSpace(document.Customer.Email))
+            {
+                throw new CustomerAddException("Klant naam of email is leeg.");
+            }
+
+            var existingCustomer = _context.Customers
+            .SingleOrDefault(l => l.Name == document.Customer.Name && l.Email == document.Customer.Email);
+
+            if (existingCustomer != null)
+            {
+                document.Customer = existingCustomer;
             }
 
             _dbSet.Add(document);
@@ -124,7 +136,7 @@ namespace Back_end.Repositories
 
             if (existingDocument == null)
             {
-                throw new UpdateDocumentFailedException("Document not found.");
+                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
             }
             else if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
             {
@@ -140,13 +152,26 @@ namespace Back_end.Repositories
         public void UpdateIsArchived(CheckBoxDTO document)
         {
             var existingDocument = _dbSet.Find(document.DocumentId);
+
+            if (existingDocument == null)
+            {
+                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
+            }
+
             existingDocument.IsArchived = document.IsArchived;
             _context.SaveChanges();
         }
 
         public void DeleteDocument(int id)
         {
-            _dbSet.Remove(_dbSet.Find(id));
+            Document doc =_dbSet.Find(id);
+
+            if (doc == null)
+            {
+                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
+            }
+
+            _dbSet.Remove(doc);
             _context.SaveChanges();
         }
     }

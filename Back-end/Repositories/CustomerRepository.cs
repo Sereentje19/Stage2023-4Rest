@@ -102,7 +102,7 @@ namespace Back_end.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de klantgegevens.");
+                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de medewerkergegevens.");
             }
         }
 
@@ -127,7 +127,7 @@ namespace Back_end.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de klantgegevens.");
+                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de medewerkergegevens.");
             }
         }
     }
