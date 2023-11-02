@@ -32,7 +32,7 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var documents = documentService.GetAll();
+                var documents = documentService.GetAllDocuments();
                 return Ok(documents);
             }
             catch (Exception ex)
@@ -75,12 +75,12 @@ namespace Back_end.Controllers
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document and its type information if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetDocumentById(int id)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var response = documentService.GetById(id);
+                var response = documentService.GetDocumentById(id);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -89,21 +89,6 @@ namespace Back_end.Controllers
             }
         }
 
-        // [HttpGet("{customerId}")]
-        // public IActionResult GetByCustomerId(int customerId)
-        // {
-        //     try
-        //     {
-        //         jwtValidationService.ValidateToken(HttpContext);
-        //         var documents = documentService.GetByCustomerId(customerId);
-        //         return Ok(documents);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return StatusCode(401, ex.Message);
-        //     }
-        // }
-
         /// <summary>
         /// Uploads a new document and associates it with the provided document information.
         /// </summary>
@@ -111,7 +96,7 @@ namespace Back_end.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public IActionResult Post([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
+        public IActionResult PostDocument([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
         {
             try
             {
@@ -138,7 +123,7 @@ namespace Back_end.Controllers
                     }
                 }
 
-                documentService.Post(doc);
+                documentService.PostDocument(doc);
                 return Ok(new { message = "Document created" });
             }
             catch (Exception ex)
@@ -153,12 +138,12 @@ namespace Back_end.Controllers
         /// <param name="doc">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(EditDocumentRequestDTO doc)
+        public IActionResult PutDocument(EditDocumentRequestDTO doc)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                documentService.Put(doc);
+                documentService.PutDocument(doc);
                 return Ok(new { message = "Document updated" });
             }
             catch (Exception ex)
@@ -183,12 +168,12 @@ namespace Back_end.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult delete(int id)
+        public IActionResult DeleteDocument(int id)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                documentService.delete(id);
+                documentService.DeleteDocument(id);
                 return Ok(new { message = "Document deleted" });
             }
             catch (Exception ex)

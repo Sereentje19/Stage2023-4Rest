@@ -18,7 +18,7 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Product>();
         }
 
-        public IEnumerable<Product> GetAll(string searchfield, ProductType? dropdown)
+        public IEnumerable<Product> GetAllProducts(string searchfield, ProductType? dropdown)
         {
             IQueryable<Product> query = from product in _context.Products
                                         where (string.IsNullOrEmpty(searchfield) ||
@@ -32,18 +32,18 @@ namespace Back_end.Repositories
             return productList;
         }
 
-        public Product GetById(int id)
+        public Product GetProductById(int id)
         {
             return _dbSet.Find(id);
         }
 
-        public void Put(Product product)
+        public void PutProduct(Product product)
         {
             _dbSet.Update(product);
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void DeleteProduct(int id)
         {
             List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Product.ProductId == id).ToList();
             foreach (var loan in loans)

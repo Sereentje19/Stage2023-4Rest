@@ -16,31 +16,27 @@ namespace Back_end.Services
             _loanHistoryRepository = loanHistoryRepository;
         }
 
-        public IEnumerable<LoanHistory> GetAll()
+        public IEnumerable<LoanHistory> GetLoanHistoryByProductId(int id)
         {
-            return _loanHistoryRepository.GetAll();
-        }
-        public IEnumerable<LoanHistory> GetByProductId(int id)
-        {
-            return _loanHistoryRepository.GetByProductId(id);
+            return _loanHistoryRepository.GetLoanHistoryByProductId(id);
         }
 
-        public IEnumerable<LoanHistory> GetByCustomerId(int id)
+        public IEnumerable<LoanHistory> GetLoanHistoryByCustomerId(int id)
         {
-            return _loanHistoryRepository.GetByCustomerId(id);
+            return _loanHistoryRepository.GetLoanHistoryByCustomerId(id);
         }
         public DateTime? GetReturnDatesByProductId(int productId)
         {
             return _loanHistoryRepository.GetReturnDatesByProductId(productId);
         }
-        public LoanHistory GetFirstByProductId(int id)
+        public LoanHistory GetLatestLoanHistoryByProductId(int id)
         {
-            return _loanHistoryRepository.GetFirstByProductId(id);
+            return _loanHistoryRepository.GetLatestLoanHistoryByProductId(id);
         }
 
-        public void ReturnProduct(LoanHistory loanHistory)
+        public void UpdateLoanHistory(LoanHistory loanHistory)
         {
-            _loanHistoryRepository.ReturnProduct(loanHistory);
+            _loanHistoryRepository.UpdateLoanHistory(loanHistory);
         }
         public void PostLoanHistory(LoanHistory loanHistory)
         {

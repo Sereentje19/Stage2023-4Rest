@@ -16,9 +16,9 @@ namespace Back_end.Services
             _productRepository = productRepository;
         }
 
-        public (IEnumerable<object>, Pager) GetAll(string searchfield, ProductType? dropdown, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize)
         {
-            IEnumerable<Product> products = _productRepository.GetAll(searchfield, dropdown);
+            IEnumerable<Product> products = _productRepository.GetAllProducts(searchfield, dropdown);
 
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             var pager = new Pager(products.Count(), page, pageSize);
@@ -38,19 +38,19 @@ namespace Back_end.Services
             return (pagedproducts.Cast<object>(), pager);
         }
 
-        public Product GetById(int id)
+        public Product GetProductById(int id)
         {
-            return _productRepository.GetById(id);
+            return _productRepository.GetProductById(id);
         }
 
-        public void Put(Product product)
+        public void PutProduct(Product product)
         {
-            _productRepository.Put(product);
+            _productRepository.PutProduct(product);
         }
 
-        public void Delete(int id)
+        public void DeleteProduct(int id)
         {
-            _productRepository.Delete(id);
+            _productRepository.DeleteProduct(id);
         }
     }
 }

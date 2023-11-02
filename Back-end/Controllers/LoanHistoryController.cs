@@ -29,12 +29,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("product/{product-id}")]
-        public IActionResult getByProductId([FromRoute(Name = "product-id")] int productId)
+        public IActionResult getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var loanHistory = _loanHistoryService.GetByProductId(productId);
+                var loanHistory = _loanHistoryService.GetLoanHistoryByProductId(productId);
 
                 var pagedLoanHistory = loanHistory
                 .Select(loan => new
@@ -59,12 +59,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("customer/{customer-id}")]
-        public IActionResult GetByCustomerId([FromRoute(Name = "customer-id")] int customerId)
+        public IActionResult GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var lh = _loanHistoryService.GetByCustomerId(customerId);
+                var lh = _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
 
                 var LoanHistory = lh
                 .Select(loan => new
@@ -102,23 +102,13 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("recent/{product-id}")]
-        public IActionResult GetFirstByProductId([FromRoute(Name = "product-id")] int productId)
+        public IActionResult GetLatestLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var loanHistory = _loanHistoryService.GetFirstByProductId(productId);
-
-                var pagedLoanHistory = new
-                {
-                    loanHistory.LoanDate,
-                    loanHistory.ReturnDate,
-                    loanHistory.Customer,
-                    loanHistory.LoanHistoryId,
-                    loanHistory.Product,
-                };
-
-                return Ok(pagedLoanHistory);
+                var loanHistory = _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
+                return Ok(loanHistory);
             }
             catch (Exception ex)
             {
@@ -127,13 +117,13 @@ namespace Back_end.Controllers
         }
 
         [HttpPut]
-        public IActionResult ReturnProduct(LoanHistory loanHistory)
+        public IActionResult UpdateLoanHistory(LoanHistory loanHistory)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                _loanHistoryService.ReturnProduct(loanHistory);
-                return Ok(new { message = "Product terug gebracht." });
+                _loanHistoryService.UpdateLoanHistory(loanHistory);
+                return Ok(new { message = "Product updated" });
             }
             catch (Exception ex)
             {
@@ -148,7 +138,7 @@ namespace Back_end.Controllers
             {
                 jwtValidationService.ValidateToken(HttpContext);
                 _loanHistoryService.PostLoanHistory(lh);
-                return Ok(new { message = "Product uitgeleend." });
+                return Ok(new { message = "Product created" });
             }
             catch (Exception ex)
             {

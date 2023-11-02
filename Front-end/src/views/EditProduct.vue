@@ -61,8 +61,7 @@ export default {
             })
                 .then((res) => {
                     console.log(res.data)
-                    this.product = res.data;
-                    this.product.type = res.data.type
+                    this.product = res.data.product;
                     this.formatDates();
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);

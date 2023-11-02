@@ -216,8 +216,8 @@ export default {
             })
                 .then((res) => {
                     console.log(res.data)
-                    this.product = res.data;
-                    this.product.type = this.product.productType
+                    this.product = res.data.product;
+                    this.product.type = res.data.productType
 
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);

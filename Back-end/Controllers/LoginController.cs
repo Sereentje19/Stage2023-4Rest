@@ -37,7 +37,7 @@ namespace Back_end.Controllers
         {
             try
             {
-                User currentUser = loginService.checkCredentials(user);
+                User currentUser = loginService.CheckCredentials(user);
                 var token = jwtValidationService.GenerateToken();
                 return Ok(token);
             }

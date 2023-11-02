@@ -26,12 +26,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllPagedCustomers(string? searchfield, int page, int pageSize)
+        public IActionResult GetPagedCustomers(string? searchfield, int page, int pageSize)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedCustomers, pager) = customerService.GetAllPagedCustomers(searchfield, page, pageSize);
+                var (pagedCustomers, pager) = customerService.GetPagedCustomers(searchfield, page, pageSize);
 
                 var response = new
                 {
@@ -78,12 +78,12 @@ namespace Back_end.Controllers
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetCustomerById(int id)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var customer = customerService.GetById(id);
+                var customer = customerService.GetCustomerById(id);
                 return Ok(customer);
             }
             catch (Exception ex)
@@ -99,13 +99,13 @@ namespace Back_end.Controllers
         /// <param name="cus">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer if successful; otherwise, an error message.</returns>
         [HttpPost]
-        public IActionResult Post(Customer cus)
+        public IActionResult PostCustomer(Customer cus)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                int result = customerService.Post(cus);
-                return Ok(result);
+                int id = customerService.PostCustomer(cus);
+                return Ok(id);
             }
             catch (Exception ex)
             {
@@ -119,12 +119,12 @@ namespace Back_end.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult Put(Customer customer)
+        public IActionResult PutCustomer(Customer customer)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                customerService.Put(customer);
+                customerService.PutCustomer(customer);
                 return Ok(new { message = "Customer updated" });
             }
             catch (Exception ex)
@@ -134,12 +134,12 @@ namespace Back_end.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteCustomer(int id)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                customerService.Delete(id);
+                customerService.DeleteCustomer(id);
                 return Ok(new { message = "Customer deleted" });
             }
             catch (Exception ex)

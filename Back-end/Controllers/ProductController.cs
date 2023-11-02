@@ -31,7 +31,7 @@ namespace Back_end.Controllers
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedProducts, pager) = _productService.GetAll(searchfield, dropdown, page, pageSize);
+                var (pagedProducts, pager) = _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
 
                 var response = new
                 {
@@ -54,24 +54,20 @@ namespace Back_end.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult getById(int id)
+        public IActionResult getProductById(int id)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                Product product = _productService.GetById(id);
+                Product product = _productService.GetProductById(id);
 
-                var pagedproducts = new
+                var response = new
                 {
-                    product.SerialNumber,
-                    product.PurchaseDate,
-                    product.ExpirationDate,
-                    product.ProductId,
+                    product,
                     ProductType = product.Type.ToString(),
-                    product.Type,
                 };
 
-                return Ok(pagedproducts);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -80,13 +76,13 @@ namespace Back_end.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(Product product)
+        public IActionResult PutProduct(Product product)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                _productService.Put(product);
-                return Ok(new { message = "Product deleted" });
+                _productService.PutProduct(product);
+                return Ok(new { message = "Product updated" });
             }
             catch (Exception ex)
             {
@@ -95,12 +91,12 @@ namespace Back_end.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult delete(int id)
+        public IActionResult DeleteProduct(int id)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                _productService.Delete(id);
+                _productService.DeleteProduct(id);
                 return Ok(new { message = "Product deleted" });
             }
             catch (Exception ex)

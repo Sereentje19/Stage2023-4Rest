@@ -20,7 +20,7 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Document>();
         }
 
-        public IEnumerable<Document> getAll()
+        public IEnumerable<Document> getAllDocuments()
         {
             return _dbSet
                 .Include(d => d.Customer)
@@ -79,7 +79,7 @@ namespace Back_end.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public DocumentDTO GetById(int id)
+        public DocumentDTO GetDocumentById(int id)
         {
             Document doc = _dbSet
                 .Include(d => d.Customer)
@@ -95,20 +95,12 @@ namespace Back_end.Repositories
             };
         }
 
-        public IEnumerable<Document> GetByCustomerId(int customerId)
-        {
-            return _dbSet
-            .Include(d => d.Customer)
-            .Where(d => d.Customer.CustomerId == customerId)
-            .ToList();
-        }
-
 
         /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
         /// <param name="document">The document entity to be added.</param>
-        public void Add(Document document)
+        public void AddDocument(Document document)
         {
             if(document.Type == DocumentType.Not_Selected)
             {
@@ -123,7 +115,7 @@ namespace Back_end.Repositories
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public void Update(EditDocumentRequestDTO document)
+        public void UpdateDocument(EditDocumentRequestDTO document)
         {
             var existingDocument = _dbSet
             .Include(d => d.Customer)
@@ -152,17 +144,7 @@ namespace Back_end.Repositories
             _context.SaveChanges();
         }
 
-        public void UpdateCustomerId(int customerId, int documentId)
-        {
-            Document existingDocument = _dbSet
-            .Include(d => d.Customer)
-            .FirstOrDefault(d => d.DocumentId == documentId);
-
-            existingDocument.Customer.CustomerId = customerId;
-            _context.SaveChanges();
-        }
-
-        public void delete(int id)
+        public void DeleteDocument(int id)
         {
             _dbSet.Remove(_dbSet.Find(id));
             _context.SaveChanges();

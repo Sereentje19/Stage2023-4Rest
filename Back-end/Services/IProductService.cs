@@ -8,9 +8,9 @@ namespace Back_end.Services
 {
     public interface IProductService
     {
-        (IEnumerable<object>, Pager) GetAll(string searchfield, ProductType? dropdown, int page, int pageSize);
-        Product GetById(int id);
-        void Put(Product product);
-        void Delete(int id);
+        (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize);
+        Product GetProductById(int id);
+        void PutProduct(Product product);
+        void DeleteProduct(int id);
     }
 }
