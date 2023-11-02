@@ -42,7 +42,7 @@
 
             <br><br><br>
 
-            <PopUpMessage ref="Popup" />
+            <PopUpMessage ref="PopUpMessage" />
         </div>
 
     </body>
@@ -98,7 +98,7 @@ export default {
         this.getAllCustomers();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-            this.$refs.Popup.popUpError("Data is bijgewerkt.");
+            this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
@@ -118,7 +118,7 @@ export default {
             this.getAllCustomers();
         },
         getAllCustomers() {
-            axios.get("Customer", {
+            axios.get("customer", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -132,7 +132,7 @@ export default {
                     this.customers = res.data.customers
                     this.pager = res.data.pager;
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         formatDate(date) {

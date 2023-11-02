@@ -13,7 +13,7 @@
             <button @click="editCustomer()" class="verstuur-edit">Aanpassen</button>
         </div>
 
-        <PopUpMessage ref="Popup" />
+        <PopUpMessage ref="PopUpMessage" />
 
     </div>
 </template>
@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         getCustomer() {
-            axios.get("Customer/" + this.id, {
+            axios.get("customer/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -55,13 +55,13 @@ export default {
                     console.log(res.data)
                     this.customer = res.data;
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         editCustomer() {
             console.log(this.customer)
 
-            axios.put("Customer", this.customer,{
+            axios.put("customer", this.customer,{
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -70,7 +70,7 @@ export default {
                     localStorage.setItem('popUpSucces', 'true');
                     this.$router.push({ path: '/info/medewerker/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
     },

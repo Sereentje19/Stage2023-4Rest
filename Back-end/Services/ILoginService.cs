@@ -5,6 +5,6 @@ namespace Back_end.Services
 {
     public interface ILoginService
     {
-        User checkCredentials(LoginRequestDTO user);
+        User CheckCredentials(LoginRequestDTO user);
     }
 }

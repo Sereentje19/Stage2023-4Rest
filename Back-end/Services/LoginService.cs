@@ -24,9 +24,9 @@ namespace Back_end.Services
         /// <returns>
         /// The user object if the credentials are valid; otherwise, returns null.
         /// </returns>
-        public User checkCredentials(LoginRequestDTO user)
+        public User CheckCredentials(LoginRequestDTO user)
         {
-            return _loginRepository.checkCredentials(user);
+            return _loginRepository.CheckCredentials(user);
         }
     }
 }

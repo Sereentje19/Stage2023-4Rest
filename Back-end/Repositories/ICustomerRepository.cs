@@ -7,9 +7,9 @@ namespace Back_end.Repositories
     {
         List<Customer> GetAll(string searchfield);
         IEnumerable<Customer> GetFilteredCustomers(string searchfield);
-        Customer GetById(int id);
-        int Add(Customer entity);
-        void Update(Customer entity);
-        void Delete(int id);
+        Customer GetCustomerById(int id);
+        int AddCustomer(Customer entity);
+        void UpdateCustomer(Customer entity);
+        void DeleteCustomer(int id);
     }
 }

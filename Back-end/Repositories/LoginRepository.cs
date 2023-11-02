@@ -27,7 +27,7 @@ namespace Back_end.Repositories
         /// <param name="user">The user object containing email and password for validation.</param>
         /// <returns>The user object if valid credentials are found; otherwise, throws exceptions for incorrect email or password.</returns>
         /// <exception cref="Exception">Thrown when the email or password is incorrect.</exception>
-        public User checkCredentials(LoginRequestDTO user)
+        public User CheckCredentials(LoginRequestDTO user)
         {
             User matchingUser = _dbSet.FirstOrDefault(u => u.Email == user.Email);
 

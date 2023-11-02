@@ -16,41 +16,46 @@ namespace Back_end.Services
             _productRepository = productRepository;
         }
 
-        public (IEnumerable<object>, Pager) GetAll(string searchfield, ProductType? dropdown, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize)
         {
-            IEnumerable<Product> products = _productRepository.GetAll(searchfield, dropdown);
+            IEnumerable<Product> products = _productRepository.GetAllProducts(searchfield, dropdown);
 
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             var pager = new Pager(products.Count(), page, pageSize);
-            
-                var pagedproducts = products
-                .Skip(skipCount)
-                .Take(pageSize)
-                .Select(pro => new
-                {
-                    pro.SerialNumber,
-                    pro.PurchaseDate,
-                    pro.ExpirationDate,
-                    pro.ProductId,
-                    Type = pro.Type.ToString(),
-                })
-                .ToList();
+
+            var pagedproducts = products
+            .Skip(skipCount)
+            .Take(pageSize)
+            .Select(pro => new
+            {
+                pro.SerialNumber,
+                pro.PurchaseDate,
+                pro.ExpirationDate,
+                pro.ProductId,
+                Type = pro.Type.ToString(),
+            })
+            .ToList();
             return (pagedproducts.Cast<object>(), pager);
         }
 
-        public Product GetById(int id)
+        public Product GetProductById(int id)
         {
-            return _productRepository.GetById(id);
+            return _productRepository.GetProductById(id);
         }
 
-        public void Put(Product product)
+        public void PostProduct(Product product)
         {
-            _productRepository.Put(product);
+            _productRepository.AddProduct(product);
         }
 
-        public void Delete(int id)
+        public void PutProduct(Product product)
         {
-            _productRepository.Delete(id);
+            _productRepository.PutProduct(product);
+        }
+
+        public void DeleteProduct(int id)
+        {
+            _productRepository.DeleteProduct(id);
         }
     }
 }

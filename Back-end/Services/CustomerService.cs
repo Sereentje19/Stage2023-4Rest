@@ -17,12 +17,7 @@ namespace Back_end.Services
             _customerRepository = customerRepository;
         }
 
-        public List<Customer> GetAll(string searchfield)
-        {
-            return _customerRepository.GetAll(searchfield);
-        }
-
-        public (IEnumerable<object>, Pager) GetAllPaged(string searchfield, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetPagedCustomers(string searchfield, int page, int pageSize)
         {
             var customers = _customerRepository.GetAll(searchfield);
 
@@ -59,9 +54,9 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public Customer GetById(int id)
+        public Customer GetCustomerById(int id)
         {
-            return _customerRepository.GetById(id);
+            return _customerRepository.GetCustomerById(id);
         }
 
         /// <summary>
@@ -69,18 +64,18 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="customer">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer.</returns>
-        public int Post(Customer customer)
+        public int PostCustomer(Customer customer)
         {
-            return _customerRepository.Add(customer);
+            return _customerRepository.AddCustomer(customer);
         }
 
-        public void Put(Customer customer)
+        public void PutCustomer(Customer customer)
         {
-            _customerRepository.Update(customer);
+            _customerRepository.UpdateCustomer(customer);
         }
-        public void Delete(int id)
+        public void DeleteCustomer(int id)
         {
-            _customerRepository.Delete(id);
+            _customerRepository.DeleteCustomer(id);
         }
     }
 }

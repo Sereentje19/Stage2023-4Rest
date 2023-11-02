@@ -23,7 +23,7 @@
             <button @click="editDocument()" class="verstuur-edit">Aanpassen</button>
         </div>
 
-        <PopUpMessage ref="Popup" />
+        <PopUpMessage ref="PopUpMessage" />
 
     </div>
 </template>
@@ -67,7 +67,7 @@ export default {
     },
     methods: {
         getDocument() {
-            axios.get("Document/" + this.id, {
+            axios.get("document/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -78,14 +78,14 @@ export default {
                     this.document.Date = res.data.document.date;
                     this.document.Type = res.data.document.type;
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         editDocument() {
             this.document.Type = parseInt(this.document.Type, 10);
             this.document.DocumentId = this.id;
 
-            axios.put("Document", this.document, {
+            axios.put("document", this.document, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -94,7 +94,7 @@ export default {
                     localStorage.setItem('popUpSucces', 'true');
                     this.$router.push({ path: '/info/document/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
     },

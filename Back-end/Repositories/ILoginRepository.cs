@@ -5,6 +5,6 @@ namespace Back_end.Repositories
 {
     public interface ILoginRepository
     {
-        User checkCredentials(LoginRequestDTO user);
+        User CheckCredentials(LoginRequestDTO user);
     }
 }

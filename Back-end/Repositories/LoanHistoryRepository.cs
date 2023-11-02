@@ -18,15 +18,8 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<LoanHistory>();
         }
 
-        public IEnumerable<LoanHistory> GetAll()
-        {
-            return _dbSet
-                .Include(l => l.Customer)
-                .Include(l => l.Product)
-                .ToList();
-        }
 
-        public IEnumerable<LoanHistory> GetByProductId(int id)
+        public IEnumerable<LoanHistory> GetLoanHistoryByProductId(int id)
         {
             return _dbSet
                 .Include(l => l.Customer)
@@ -36,7 +29,7 @@ namespace Back_end.Repositories
                 .ToList();
         }
 
-        public IEnumerable<LoanHistory> GetByCustomerId(int id)
+        public IEnumerable<LoanHistory> GetLoanHistoryByCustomerId(int id)
         {
             return _dbSet
                 .Include(l => l.Customer)
@@ -52,21 +45,21 @@ namespace Back_end.Repositories
                 .Where(l => l.Product.ProductId == productId)
                 .OrderByDescending(l => l.LoanDate)
                 .Select(l => l.ReturnDate)
-                .First();
+                .FirstOrDefault();
         }
 
 
-        public LoanHistory GetFirstByProductId(int id)
+        public LoanHistory GetLatestLoanHistoryByProductId(int id)
         {
             return _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
                 .OrderByDescending(l => l.LoanDate)
-                .First();
+                .FirstOrDefault();
         }
 
-        public void ReturnProduct(LoanHistory lh)
+        public void UpdateLoanHistory(LoanHistory lh)
         {
             if (lh == null)
             {

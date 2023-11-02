@@ -1,10 +1,10 @@
 <template>
-    <div class="header" @click="test">
-        <a id="logo-header-link" href="/overzicht/document"><img id="logo-header"
+    <div class="header">
+        <a id="logo-header-link" href="/overzicht/documenten"><img id="logo-header"
                 src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
         <div id="header-buttons">
             <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
-                <a id="header-items" class="dropdown-link" href="/overzicht/document"
+                <a id="header-items" class="dropdown-link" href="/overzicht/documenten"
                     @click="changeOverviewType('Overzicht')" @mouseover="changeColor('#bebebe')"
                     @mouseout="changeColor('white')">
                     Overzicht
@@ -14,9 +14,10 @@
                     <div id="box-shadow">
                         <a id="dropdown-links" href="/overzicht/bruikleen">Bruikleen</a>
                         <a id="dropdown-links" href="/overzicht/medewerkers">Medewerkers</a>
-                        <a id="dropdown-links" href="/overzicht/document" @click="changeOverviewType('Lang geldig')">Lang
+                        <a id="dropdown-links" href="/overzicht/documenten" @click="changeOverviewType('Overzicht')">Documenten</a>
+                        <a id="dropdown-links" href="/overzicht/documenten" @click="changeOverviewType('Lang geldig')">Lang
                             geldig</a>
-                        <a id="dropdown-links" href="/overzicht/document" @click="changeOverviewType('Archief')">Archief</a>
+                        <a id="dropdown-links" href="/overzicht/documenten" @click="changeOverviewType('Archief')">Archief</a>
                     </div>
                 </div>
             </div> &nbsp; &nbsp; &nbsp;
@@ -66,20 +67,6 @@ export default {
         },
         logOut() {
             localStorage.setItem("jwt", "");
-        },
-
-        test() {
-            axios
-                .get("Document", {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("jwt"),
-                    },
-                })
-                .then((res) => {
-                })
-                .catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
-                });
         },
     }
 };

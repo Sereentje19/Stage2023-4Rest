@@ -8,12 +8,11 @@ namespace Back_end.Repositories
 {
     public interface ILoanHistoryRepository
     {
-        IEnumerable<LoanHistory> GetAll();
-        IEnumerable<LoanHistory> GetByProductId(int id);
-        IEnumerable<LoanHistory> GetByCustomerId(int id);
+        IEnumerable<LoanHistory> GetLoanHistoryByProductId(int id);
+        IEnumerable<LoanHistory> GetLoanHistoryByCustomerId(int id);
         DateTime? GetReturnDatesByProductId(int productId);
-        LoanHistory GetFirstByProductId(int id);
-        void ReturnProduct(LoanHistory loanHistory);
+        LoanHistory GetLatestLoanHistoryByProductId(int id);
+        void UpdateLoanHistory(LoanHistory loanHistory);
         void PostLoanHistory(LoanHistory loanHistory);
     }
 }

@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <PopUpMessage ref="Popup" />
+  <PopUpMessage ref="PopUpMessage" />
 </template>
 
 <script>
@@ -91,12 +91,12 @@ export default {
     this.getDocument();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-      this.$refs.Popup.popUpError("Data is bijgewerkt.");
+      this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
     }
   },
   methods: {
     getDocument() {
-      axios.get("Document/" + this.id, {
+      axios.get("document/" + this.id, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt")
         }
@@ -107,20 +107,20 @@ export default {
           this.document = res.data.document;
           this.document.type = res.data.type
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     deleteDocument() {
-      axios.delete("Document/" + this.id, {
+      axios.delete("document/" + this.id, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt")
         },
       })
         .then((res) => {
           localStorage.setItem('popUpSucces', 'true');
-          this.$router.push({ path: '/overzicht/document', query: { activePopup: true } });
+          this.$router.push({ path: '/overzicht/documenten', query: { activePopup: true } });
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     toPopUpDelete() {

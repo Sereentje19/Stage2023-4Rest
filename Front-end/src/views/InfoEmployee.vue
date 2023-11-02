@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <PopupMessage ref="Popup" />
+    <PopupMessage ref="PopUpMessage" />
 </template>
   
 <script>
@@ -59,12 +59,12 @@ export default {
         this.getAllCustomers();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-            this.$refs.Popup.popUpError("Data is bijgewerkt.");
+            this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
         getAllCustomers() {
-            axios.get("Customer/" + this.id, {
+            axios.get("customer/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -72,7 +72,7 @@ export default {
                 .then((res) => {
                     this.customer = res.data
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         toPopUpDelete() {
@@ -81,7 +81,7 @@ export default {
         },
         deleteCustomer() {
             this.isPopUpDelete = false;
-            axios.delete("Customer/" + this.id, {
+            axios.delete("customer/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -90,7 +90,7 @@ export default {
                     localStorage.setItem('popUpSucces', 'true');
                     this.$router.push({ path: '/overzicht/medewerkers', query: { activePopup: true } });
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         cancel() {

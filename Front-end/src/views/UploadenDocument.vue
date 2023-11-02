@@ -4,8 +4,8 @@
     <div class="upload-container">
       <div class="leftside">
         <h1 id="h1">Document uploaden</h1>
-        <div id="drop" ref="dropArea" class="drop-area" @dragover.prevent="handleDrag(true)" @dragleave="handleDrag(false)"
-          @drop.prevent="handleDrop">
+        <div id="drop" ref="dropArea" class="drop-area" @dragover.prevent="handleDrag(true)"
+          @dragleave="handleDrag(false)" @drop.prevent="handleDrop">
           <p id="p" ref="pElement"></p>
           <input type="file" class="file" @change="handleFileChange" style="display: none" />
         </div>
@@ -23,7 +23,7 @@
 
       <div class="rightside">
         <ul>
-          <form class="gegevens" action="/action_page.php">
+          <form class="gegevens">
             <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
               class="Zoek" placeholder="Zoek klant" name="Naam" />
 
@@ -33,8 +33,8 @@
               </li>
             </ul>
 
-            <input v-model="this.customer.Name" type="text" class="name" placeholder="Naam klant" name="Zoek" />
-            <input v-model="this.customer.Email" type="text" class="email" placeholder="Email klant" name="Email" />
+            <input v-model="this.customer.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
+            <input v-model="this.customer.Email" type="text" class="email" placeholder="Email" name="Email" />
             <select v-model="this.document.Type" class="type" name="Type">
               <option value="0">Selecteer document...</option>
               <option value="1">Vog</option>
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <PopUpMessage ref="PopUp" />
+    <PopUpMessage ref="PopUpMessage" />
 
   </div>
 </template>
@@ -97,7 +97,7 @@ export default {
     postDocument() {
       let formData = this.CreateFromData();
 
-      axios.post("Document", formData, {
+      axios.post("document", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -105,9 +105,9 @@ export default {
       })
         .then((res) => {
           localStorage.setItem('popUpSucces', 'true');
-          this.$router.push({ path: '/Overzicht/document', query: { activePopup: true } });
+          this.$router.push({ path: '/Overzicht/documenten', query: { activePopup: true } });
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     CreateFromData() {
@@ -127,7 +127,7 @@ export default {
     },
     filterCustomer() {
       if (this.searchField != "") {
-        axios.get("Customer/Filter", {
+        axios.get("customer/filter", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwt")
           },
@@ -138,7 +138,9 @@ export default {
           .then((res) => {
             this.filteredCustomers = res.data;
             console.log(this.filteredCustomers)
-          }).catch((error) => { });
+          }).catch((error) => {
+            this.$refs.PopUpMessage.popUpError(error.response.data);
+          });
       }
     },
     fillCustomer(cus) {

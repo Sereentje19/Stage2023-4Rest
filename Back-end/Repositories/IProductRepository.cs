@@ -8,9 +8,10 @@ namespace Back_end.Repositories
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> GetAll(string searchfield, ProductType? dropdown);
-        Product GetById(int id);
-        void Put(Product product);
-        void Delete(int id);
+        IEnumerable<Product> GetAllProducts(string searchfield, ProductType? dropdown);
+        Product GetProductById(int id);
+        void AddProduct(Product product);
+        void PutProduct(Product product);
+        void DeleteProduct(int id);
     }
 }

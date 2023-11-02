@@ -17,9 +17,9 @@ namespace Back_end.Services
             _documentRepository = dr;
         }
 
-        public IEnumerable<Document> GetAll()
+        public IEnumerable<Document> GetAllDocuments()
         {
-            return _documentRepository.getAll();
+            return _documentRepository.getAllDocuments();
         }
 
 
@@ -50,9 +50,9 @@ namespace Back_end.Services
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public object GetById(int id)
+        public object GetDocumentById(int id)
         {
-            var doc = _documentRepository.GetById(id);
+            var doc = _documentRepository.GetDocumentById(id);
 
             var response = new
             {
@@ -63,27 +63,22 @@ namespace Back_end.Services
             return response;
         }
 
-        public IEnumerable<Document> GetByCustomerId(int customerId)
-        {
-            return _documentRepository.GetByCustomerId(customerId);
-        }
-
         /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
         /// <param name="document">The document entity to be added.</param>
-        public void Post(Document document)
+        public void PostDocument(Document document)
         {
-            _documentRepository.Add(document);
+            _documentRepository.AddDocument(document);
         }
 
         /// <summary>
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public void Put(EditDocumentRequestDTO document)
+        public void PutDocument(EditDocumentRequestDTO document)
         {
-            _documentRepository.Update(document);
+            _documentRepository.UpdateDocument(document);
         }
 
         public void UpdateIsArchived(CheckBoxDTO entity)
@@ -91,14 +86,9 @@ namespace Back_end.Services
             _documentRepository.UpdateIsArchived(entity);
         }
 
-        public void UpdateCustomerId(int customerId, int documentId)
+        public void DeleteDocument(int id)
         {
-            _documentRepository.UpdateCustomerId(customerId, documentId);
-        }
-
-        public void delete(int id)
-        {
-            _documentRepository.delete(id);
+            _documentRepository.DeleteDocument(id);
         }
     }
 }

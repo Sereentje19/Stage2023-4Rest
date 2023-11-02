@@ -57,7 +57,7 @@ namespace Back_end.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public Customer GetById(int id)
+        public Customer GetCustomerById(int id)
         {
             return _dbSet.Find(id);
         }
@@ -69,9 +69,9 @@ namespace Back_end.Repositories
         /// <param name="customer">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer, or the ID of an existing customer if the same name and email combination is found.</returns>
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
-        public int Add(Customer customer)
+        public int AddCustomer(Customer customer)
         {
-            if (string.IsNullOrEmpty(customer.Name) || string.IsNullOrEmpty(customer.Email))
+            if (string.IsNullOrWhiteSpace(customer.Name) || string.IsNullOrWhiteSpace(customer.Email))
             {
                 throw new CustomerAddException("Klant naam of email is leeg.");
             }
@@ -93,7 +93,7 @@ namespace Back_end.Repositories
         /// Updates an existing customer in the repository.
         /// </summary>
         /// <param name="customer">The document entity to be updated.</param>
-        public void Update(Customer customer)
+        public void UpdateCustomer(Customer customer)
         {
             try
             {
@@ -102,11 +102,11 @@ namespace Back_end.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de klantgegevens.");
+                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de medewerkergegevens.");
             }
         }
 
-        public void Delete(int id)
+        public void DeleteCustomer(int id)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace Back_end.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de klantgegevens.");
+                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de medewerkergegevens.");
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Back_end.Repositories
             _dbSet = _context.Set<Document>();
         }
 
-        public IEnumerable<Document> getAll()
+        public IEnumerable<Document> getAllDocuments()
         {
             return _dbSet
                 .Include(d => d.Customer)
@@ -57,7 +57,7 @@ namespace Back_end.Repositories
 
             if (query.Count() == 0)
             {
-                throw new Exception("No documents found.");
+                throw new Exception("Geen document gevonden. Probeer het later onpnieuw.");
             }
 
             switch (overviewType)
@@ -79,7 +79,7 @@ namespace Back_end.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public DocumentDTO GetById(int id)
+        public DocumentDTO GetDocumentById(int id)
         {
             Document doc = _dbSet
                 .Include(d => d.Customer)
@@ -95,24 +95,28 @@ namespace Back_end.Repositories
             };
         }
 
-        public IEnumerable<Document> GetByCustomerId(int customerId)
-        {
-            return _dbSet
-            .Include(d => d.Customer)
-            .Where(d => d.Customer.CustomerId == customerId)
-            .ToList();
-        }
-
 
         /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
         /// <param name="document">The document entity to be added.</param>
-        public void Add(Document document)
+        public void AddDocument(Document document)
         {
-            if(document.Type == DocumentType.Not_Selected)
+            if (document.Type == DocumentType.Not_Selected)
             {
                 throw new DocumentAddException("Selecteer een type.");
+            }
+            else if (string.IsNullOrWhiteSpace(document.Customer.Name) || string.IsNullOrWhiteSpace(document.Customer.Email))
+            {
+                throw new CustomerAddException("Klant naam of email is leeg.");
+            }
+
+            var existingCustomer = _context.Customers
+            .SingleOrDefault(l => l.Name == document.Customer.Name && l.Email == document.Customer.Email);
+
+            if (existingCustomer != null)
+            {
+                document.Customer = existingCustomer;
             }
 
             _dbSet.Add(document);
@@ -123,7 +127,7 @@ namespace Back_end.Repositories
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public void Update(EditDocumentRequestDTO document)
+        public void UpdateDocument(EditDocumentRequestDTO document)
         {
             var existingDocument = _dbSet
             .Include(d => d.Customer)
@@ -132,7 +136,7 @@ namespace Back_end.Repositories
 
             if (existingDocument == null)
             {
-                throw new UpdateDocumentFailedException("Document not found.");
+                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
             }
             else if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
             {
@@ -148,23 +152,26 @@ namespace Back_end.Repositories
         public void UpdateIsArchived(CheckBoxDTO document)
         {
             var existingDocument = _dbSet.Find(document.DocumentId);
+
+            if (existingDocument == null)
+            {
+                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
+            }
+
             existingDocument.IsArchived = document.IsArchived;
             _context.SaveChanges();
         }
 
-        public void UpdateCustomerId(int customerId, int documentId)
+        public void DeleteDocument(int id)
         {
-            Document existingDocument = _dbSet
-            .Include(d => d.Customer)
-            .FirstOrDefault(d => d.DocumentId == documentId);
+            Document doc =_dbSet.Find(id);
 
-            existingDocument.Customer.CustomerId = customerId;
-            _context.SaveChanges();
-        }
+            if (doc == null)
+            {
+                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
+            }
 
-        public void delete(int id)
-        {
-            _dbSet.Remove(_dbSet.Find(id));
+            _dbSet.Remove(doc);
             _context.SaveChanges();
         }
     }

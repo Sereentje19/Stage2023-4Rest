@@ -53,7 +53,7 @@
 
       <br><br><br>
 
-      <PopUpMessage ref="Popup" />
+      <PopUpMessage ref="PopUpMessage" />
     </div>
 
   </body>
@@ -102,7 +102,7 @@ export default {
     this.getProducts();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-      this.$refs.Popup.popUpError("Data is bijgewerkt.");
+      this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
     }
   },
   methods: {
@@ -122,7 +122,7 @@ export default {
       this.getProducts();
     },
     getProducts() {
-      axios.get("Product", {
+      axios.get("product", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt")
         },
@@ -142,11 +142,11 @@ export default {
           }
 
         }).catch((error) => {
-            this.$refs.Popup.popUpError(error.response.data);
+            this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     getReturnDate(productId, index) {
-      axios.get("LoanHistory/ReturnDate/" + productId, {
+      axios.get("loan-history/date/" + productId, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt")
         }
@@ -155,9 +155,9 @@ export default {
           console.log(res.data)
           this.product[index].returnDate = res.data;
         }).catch((error) => {
-          if (error.response.data != "Sequence contains no elements") {
-            this.$refs.Popup.popUpError(error.response.data);
-          }
+          // if (error.response.data != "Sequence contains no elements") {
+            this.$refs.PopUpMessage.popUpError(error.response.data);
+          // }
         });
     },
     formatDate(date) {
