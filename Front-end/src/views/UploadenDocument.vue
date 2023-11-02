@@ -4,8 +4,8 @@
     <div class="upload-container">
       <div class="leftside">
         <h1 id="h1">Document uploaden</h1>
-        <div id="drop" ref="dropArea" class="drop-area" @dragover.prevent="handleDrag(true)" @dragleave="handleDrag(false)"
-          @drop.prevent="handleDrop">
+        <div id="drop" ref="dropArea" class="drop-area" @dragover.prevent="handleDrag(true)"
+          @dragleave="handleDrag(false)" @drop.prevent="handleDrop">
           <p id="p" ref="pElement"></p>
           <input type="file" class="file" @change="handleFileChange" style="display: none" />
         </div>
@@ -23,7 +23,7 @@
 
       <div class="rightside">
         <ul>
-          <form class="gegevens" action="/action_page.php">
+          <form class="gegevens">
             <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
               class="Zoek" placeholder="Zoek klant" name="Naam" />
 
@@ -33,8 +33,8 @@
               </li>
             </ul>
 
-            <input v-model="this.customer.Name" type="text" class="name" placeholder="Naam klant" name="Zoek" />
-            <input v-model="this.customer.Email" type="text" class="email" placeholder="Email klant" name="Email" />
+            <input v-model="this.customer.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
+            <input v-model="this.customer.Email" type="text" class="email" placeholder="Email" name="Email" />
             <select v-model="this.document.Type" class="type" name="Type">
               <option value="0">Selecteer document...</option>
               <option value="1">Vog</option>
@@ -138,7 +138,9 @@ export default {
           .then((res) => {
             this.filteredCustomers = res.data;
             console.log(this.filteredCustomers)
-          }).catch((error) => { });
+          }).catch((error) => {
+            this.$refs.PopUpMessage.popUpError(error.response.data);
+          });
       }
     },
     fillCustomer(cus) {

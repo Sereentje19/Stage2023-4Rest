@@ -44,6 +44,7 @@ namespace Back_end.Controllers
                         pager.TotalPages,
                     }
                 };
+
                 return Ok(response);
             }
             catch (Exception ex)

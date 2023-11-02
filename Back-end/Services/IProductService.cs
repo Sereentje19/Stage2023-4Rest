@@ -10,6 +10,7 @@ namespace Back_end.Services
     {
         (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize);
         Product GetProductById(int id);
+        void PostProduct(Product product);
         void PutProduct(Product product);
         void DeleteProduct(int id);
     }

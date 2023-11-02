@@ -37,6 +37,21 @@ namespace Back_end.Repositories
             return _dbSet.Find(id);
         }
 
+        public void AddProduct(Product product)
+        {
+            if (string.IsNullOrWhiteSpace(product.SerialNumber))
+            {
+                throw new Exception("Serie nummer is leeg.");
+            }
+            else if(product.Type == ProductType.Not_Selected)
+            {
+                throw new Exception("Type is leeg.");
+            }
+
+            _dbSet.Add(product);
+            _context.SaveChanges();
+        }
+
         public void PutProduct(Product product)
         {
             _dbSet.Update(product);

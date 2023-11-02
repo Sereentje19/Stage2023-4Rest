@@ -10,6 +10,7 @@ namespace Back_end.Repositories
     {
         IEnumerable<Product> GetAllProducts(string searchfield, ProductType? dropdown);
         Product GetProductById(int id);
+        void AddProduct(Product product);
         void PutProduct(Product product);
         void DeleteProduct(int id);
     }

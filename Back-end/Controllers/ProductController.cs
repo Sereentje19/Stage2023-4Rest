@@ -75,6 +75,22 @@ namespace Back_end.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult PostProduct(Product product)
+        {
+            try
+            {
+                Console.WriteLine(product.SerialNumber);
+                jwtValidationService.ValidateToken(HttpContext);
+                _productService.PostProduct(product);
+                return Ok(new { message = "Product created" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(401, ex.Message);
+            }
+        }
+
         [HttpPut]
         public IActionResult PutProduct(Product product)
         {

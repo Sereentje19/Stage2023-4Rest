@@ -99,7 +99,7 @@ a {
   width: 350px;
 }
 
-#ul li #searchList {
+#ul li #searchList{
   border: 1px solid rgb(155, 155, 155);
   border-top: none;
   background-color: #f6f6f6;
@@ -141,6 +141,10 @@ a {
 
 .Zoek {
   margin-left: auto;
+}
+
+.Zoek-employee,
+.Zoek {
   width: 350px;
   background-color: #f4f4f4;
   font-size: 20px;
@@ -154,21 +158,30 @@ a {
 }
 
 
-.verstuur {
-  margin-left: auto;
+.verstuur,
+.verstuur-employee {
   font-size: 20px;
   background-color: #264923;
   color: white;
   padding: 12px;
   font-size: 25px;
   border-radius: 5px;
-  margin-right: 0;
   border-bottom: 3px solid #11300e;
   border-right: 3px solid #133610;
 }
 
+.verstuur{
+  margin-left: auto;
+  margin-right: 0;
+}
 
-.verstuur:hover {
+
+ul{
+  padding: 0;
+}
+
+.verstuur:hover,
+.verstuur-employee:hover {
   border-left: 3px solid #afaeae;
   border-top: 3px solid #afaeae;
   border-bottom: none;
@@ -177,3 +190,7 @@ a {
   background-color: #133610;
 }
 
+#upload-employee{
+  left: 0;
+  margin-right: auto;
+}

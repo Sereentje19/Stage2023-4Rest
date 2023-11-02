@@ -22,25 +22,30 @@ namespace Back_end.Services
 
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             var pager = new Pager(products.Count(), page, pageSize);
-            
-                var pagedproducts = products
-                .Skip(skipCount)
-                .Take(pageSize)
-                .Select(pro => new
-                {
-                    pro.SerialNumber,
-                    pro.PurchaseDate,
-                    pro.ExpirationDate,
-                    pro.ProductId,
-                    Type = pro.Type.ToString(),
-                })
-                .ToList();
+
+            var pagedproducts = products
+            .Skip(skipCount)
+            .Take(pageSize)
+            .Select(pro => new
+            {
+                pro.SerialNumber,
+                pro.PurchaseDate,
+                pro.ExpirationDate,
+                pro.ProductId,
+                Type = pro.Type.ToString(),
+            })
+            .ToList();
             return (pagedproducts.Cast<object>(), pager);
         }
 
         public Product GetProductById(int id)
         {
             return _productRepository.GetProductById(id);
+        }
+
+        public void PostProduct(Product product)
+        {
+            _productRepository.AddProduct(product);
         }
 
         public void PutProduct(Product product)

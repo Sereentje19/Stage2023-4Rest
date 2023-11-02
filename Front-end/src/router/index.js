@@ -14,6 +14,8 @@ import InfoEmployee from '../views/InfoEmployee.vue';
 
 //Uploaden
 import UploadenDocument from '../views/UploadenDocument.vue';
+import UploadenEmployee from '../views/UploadenEmployee.vue';
+import UploadenProduct from '../views/UploadenProduct.vue';
 
 //History
 import HistoryProduct from '../views/HistoryProduct.vue';
@@ -34,14 +36,16 @@ const router = createRouter({
     { path: '/info/document/:id', component: InfoDocument, props: true},
     { path: '/info/bruikleen/:id', component: InfoProduct, props: true },
     { path: '/info/medewerker/:id', component: InfoEmployee, props: true },
-    { path: '/uploaden/document', component: UploadenDocument },
     { path: '/geschiedenis/product/:id', component: HistoryProduct, props: true },
     { path: '/geschiedenis/medewerker/:id', component: HistoryEmployee, props: true },
-    { path: '/overzicht/documenten', name: 'Overview', component: OverviewDocuments ,
+    { path: '/uploaden/document', component: UploadenDocument },
+    { path: '/uploaden/medewerker', component: UploadenEmployee },
+    { path: '/uploaden/product', component: UploadenProduct },
+    { path: '/overzicht/documenten', name: 'Overview', component: OverviewDocuments,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
-    { path: '/overzicht/medewerkers', name: 'OverviewMedewerkers', component: OverviewEmployees ,
+    { path: '/overzicht/medewerkers', name: 'OverviewMedewerkers', component: OverviewEmployees,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
-    { path: '/overzicht/bruikleen', name: 'OverviewBruikleen', component: OverviewProducts ,
+    { path: '/overzicht/bruikleen', name: 'OverviewBruikleen', component: OverviewProducts,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
   ],
 });
