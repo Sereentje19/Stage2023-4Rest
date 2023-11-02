@@ -20,7 +20,7 @@
             <button @click="editProduct()" class="verstuur-edit">Aanpassen</button>
         </div>
 
-        <PopUpMessage ref="Popup" />
+        <PopUpMessage ref="PopUpMessage" />
 
     </div>
 </template>
@@ -54,7 +54,7 @@ export default {
     },
     methods: {
         getProduct() {
-            axios.get("Product/" + this.id, {
+            axios.get("product/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -65,14 +65,14 @@ export default {
                     this.product.type = res.data.type
                     this.formatDates();
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         editProduct() {
             console.log(this.product)
             this.product.type = parseInt(this.product.type, 10);
 
-            axios.put("Product", this.product,{
+            axios.put("product", this.product,{
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -84,7 +84,7 @@ export default {
                     localStorage.setItem('popUpSucces', 'true');
                     this.$router.push({ path: '/info/bruikleen/' + this.id, query: { activePopup: true } });
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         formatDates() {

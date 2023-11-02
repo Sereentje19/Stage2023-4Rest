@@ -1,5 +1,5 @@
 <template>
-    <div class="header" @click="test">
+    <div class="header">
         <a id="logo-header-link" href="/overzicht/documenten"><img id="logo-header"
                 src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
         <div id="header-buttons">
@@ -67,20 +67,6 @@ export default {
         },
         logOut() {
             localStorage.setItem("jwt", "");
-        },
-
-        test() {
-            axios
-                .get("Document", {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("jwt"),
-                    },
-                })
-                .then((res) => {
-                })
-                .catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
-                });
         },
     }
 };

@@ -61,7 +61,7 @@
 
       <br><br><br>
 
-      <PopUpMessage ref="Popup" />
+      <PopUpMessage ref="PopUpMessage" />
     </div>
 
   </body>
@@ -111,7 +111,7 @@ export default {
     this.filterDocuments();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-      this.$refs.Popup.popUpError("Data is bijgewerkt.");
+      this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
     }
   },
   methods: {
@@ -128,14 +128,14 @@ export default {
     toggleCheckbox(doc) {
       doc.isArchived = this.overviewType === 'Archief' ? false : true;
 
-      axios.put("Document/IsArchived", doc, {
+      axios.put("document/archive", doc, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt")
         }
       })
         .then((res) => {
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     handlePageChange(newPage) {
@@ -144,7 +144,7 @@ export default {
     },
     filterDocuments() {
       axios
-        .get("Document/Filter", {
+        .get("document/filter", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwt"),
           },
@@ -162,7 +162,7 @@ export default {
           console.log(res.data.documents.length)
         })
         .catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     formatDate(date) {

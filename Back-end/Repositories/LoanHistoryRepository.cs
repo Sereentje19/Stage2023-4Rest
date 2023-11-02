@@ -52,7 +52,7 @@ namespace Back_end.Repositories
                 .Where(l => l.Product.ProductId == productId)
                 .OrderByDescending(l => l.LoanDate)
                 .Select(l => l.ReturnDate)
-                .First();
+                .FirstOrDefault();
         }
 
 
@@ -63,7 +63,7 @@ namespace Back_end.Repositories
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
                 .OrderByDescending(l => l.LoanDate)
-                .First();
+                .FirstOrDefault();
         }
 
         public void ReturnProduct(LoanHistory lh)

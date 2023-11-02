@@ -81,7 +81,7 @@
     </div>
     <br><br><br>
 
-    <PopUpMessage ref="Popup" />
+    <PopUpMessage ref="PopUpMessage" />
 </template>
   
 <script>
@@ -137,7 +137,7 @@ export default {
         this.getAllFilteredCustomers();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
-            this.$refs.Popup.popUpError("Data is bijgewerkt.");
+            this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
@@ -148,7 +148,7 @@ export default {
             this.loanHistory.returnDate = null;
             console.log(this.loanHistory)
 
-            axios.post("LoanHistory", this.loanHistory, {
+            axios.post("loan-history", this.loanHistory, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -157,12 +157,12 @@ export default {
                     this.getLoanhistory();
                 })
                 .catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
 
         },
         getAllFilteredCustomers() {
-            axios.get("Customer/Filter", {
+            axios.get("customer/filter", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -176,12 +176,12 @@ export default {
                     this.filteredCustomers = res.data;
                     console.log(this.filteredCustomers)
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         returnItem() {
             console.log(this.loanHistory)
-            axios.put("LoanHistory", this.loanHistory, {
+            axios.put("loan-history", this.loanHistory, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -189,11 +189,11 @@ export default {
                 .then((res) => {
                     this.getLoanhistory();
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         getLoanhistory() {
-            axios.get("LoanHistory/Recent/" + this.id, {
+            axios.get("loan-history/recent/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -204,12 +204,12 @@ export default {
                     this.loanHistory.product.productId = res.data.productId
                 }).catch((error) => {
                     if (this.loanHistory.loanDate != "") {
-                        this.$refs.Popup.popUpError(error.response.data);
+                        this.$refs.PopUpMessage.popUpError(error.response.data);
                     }
                 });
         },
         getProducts() {
-            axios.get("Product/" + this.id, {
+            axios.get("product/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -220,11 +220,11 @@ export default {
                     this.product.type = this.product.productType
 
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         deleteProducts() {
-            axios.delete("Product/" + this.id, {
+            axios.delete("product/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -233,7 +233,7 @@ export default {
                     localStorage.setItem('popUpSucces', 'true');
                     this.$router.push({ path: '/overzicht/bruikleen', query: { activePopup: true } });
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         toEdit(route) {

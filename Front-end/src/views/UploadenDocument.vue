@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <PopUpMessage ref="PopUp" />
+    <PopUpMessage ref="PopUpMessage" />
 
   </div>
 </template>
@@ -97,7 +97,7 @@ export default {
     postDocument() {
       let formData = this.CreateFromData();
 
-      axios.post("Document", formData, {
+      axios.post("document", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -105,9 +105,9 @@ export default {
       })
         .then((res) => {
           localStorage.setItem('popUpSucces', 'true');
-          this.$router.push({ path: '/Overzicht/document', query: { activePopup: true } });
+          this.$router.push({ path: '/Overzicht/documenten', query: { activePopup: true } });
         }).catch((error) => {
-          this.$refs.Popup.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     CreateFromData() {
@@ -127,7 +127,7 @@ export default {
     },
     filterCustomer() {
       if (this.searchField != "") {
-        axios.get("Customer/Filter", {
+        axios.get("customer/filter", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwt")
           },

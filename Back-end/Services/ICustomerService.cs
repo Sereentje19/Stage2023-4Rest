@@ -6,7 +6,7 @@ namespace Back_end.Services
     public interface ICustomerService
     {
         List<Customer> GetAll(string searchfield);
-        (IEnumerable<object>, Pager) GetAllPaged(string searchfield, int page, int pageSize);
+        (IEnumerable<object>, Pager) GetAllPagedCustomers(string searchfield, int page, int pageSize);
         IEnumerable<Customer> GetFilteredCustomers(string searchfield);
         Customer GetById(int id);
         int Post(Customer customer);

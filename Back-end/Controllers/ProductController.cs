@@ -1,12 +1,14 @@
 using System;
 using Back_end.Models;
 using Back_end.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Back_end.Controllers
 {
+    [EnableCors("ApiCorsPolicy")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("product")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

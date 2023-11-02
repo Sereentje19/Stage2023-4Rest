@@ -5,11 +5,17 @@
         <div class="info">
             <h1>Leen geschiedenis</h1>
             <div id="item-data">
-                <div>Type: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div v-if="loanHistory.length > 0"> 
+                    <div>Type: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.loanHistory[0].type }}</div>
                 <div>Serie nummer: &nbsp; {{ this.loanHistory[0].serialNumber }}</div>
                 <div>Gekocht op: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.loanHistory[0].purchaseDate) }}</div>
                 <div>Gebruiken tot: &nbsp;&nbsp; {{ formatDate(this.loanHistory[0].expirationDate) }}</div>
+                </div>
+                <div v-else>
+                    Dit product is nog niet uitgeleend.
+                </div>
+           
             </div>
             <br><br><br>
             <div id="history-items" v-for="(loanHistory, i) in this.loanHistory">
@@ -21,7 +27,7 @@
                 <br>
             </div>
         </div>
-        <PopUpMessage ref="Popup" />
+        <PopUpMessage ref="PopUpMessage" />
     </div>
 </template>
 
@@ -61,7 +67,7 @@ export default {
     },
     methods: {
         getLoanHistory() {
-            axios.get("LoanHistory/" + this.id, {
+            axios.get("loan-history/product/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -69,9 +75,10 @@ export default {
                 .then((res) => {
                     console.log(res.data)
                     this.loanHistory = res.data;
+                    this.loanHistory.type = res.data.Type;
 
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         formatDate(date) {

@@ -5,8 +5,13 @@
         <div class="info">
             <h1>Leen geschiedenis</h1>
             <div id="item-data">
-                <div>Naam: &nbsp; {{ this.loanHistory[0].name }}</div>
-                <div>Email: &nbsp; {{ this.loanHistory[0].email }} </div>
+                <div v-if="loanHistory.length > 0">
+                    <div>Naam: &nbsp; {{ loanHistory[0].name }}</div>
+                    <div>Email: &nbsp; {{ loanHistory[0].email }} </div>
+                </div>
+                <div v-else>
+                    Er is nog geen product uitgeleend aan deze medewerker.
+                </div>
             </div>
             <br><br><br>
             <div id="history-items" v-for="(loanHistory, i) in this.loanHistory">
@@ -19,7 +24,7 @@
                 <br>
             </div>
         </div>
-        <PopUpMessage ref="Popup" />
+        <PopUpMessage ref="PopUpMessage" />
     </div>
 </template>
 
@@ -45,16 +50,11 @@ export default {
                     loanDate: "",
                     returnDate: "",
                     product: {
-                        productId: 0,
                         type: "",
                         serialNumber: "",
-                        expirationDate: "",
-                        purchaseDate: "",
                     },
-                    customer: {
-                        name: "",
-                        email: ""
-                    }
+                    name: "",
+                    email: ""
                 }
             ],
         }
@@ -64,7 +64,7 @@ export default {
     },
     methods: {
         getLoanHistory() {
-            axios.get("LoanHistory/CustomerId/" + this.id, {
+            axios.get("loan-history/customer/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -72,9 +72,10 @@ export default {
                 .then((res) => {
                     console.log(res.data)
                     this.loanHistory = res.data;
+                    console.log(this.loanHistory)
 
                 }).catch((error) => {
-                    this.$refs.Popup.popUpError(error.response.data);
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         formatDate(date) {

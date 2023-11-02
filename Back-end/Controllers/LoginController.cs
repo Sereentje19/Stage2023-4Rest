@@ -9,7 +9,7 @@ namespace Back_end.Controllers
 {
     [EnableCors("ApiCorsPolicy")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("login")]
     public class LoginController : ControllerBase
     {
         private readonly ILoginService loginService;

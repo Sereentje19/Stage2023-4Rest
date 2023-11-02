@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Back_end.Models;
 using Back_end.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Back_end.Controllers
 {
+    [EnableCors("ApiCorsPolicy")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("loan-history")]
     public class LoanHistoryController : ControllerBase
     {
         private readonly ILoanHistoryService _loanHistoryService;
@@ -26,38 +28,8 @@ namespace Back_end.Controllers
             jwtValidationService = jwt;
         }
 
-        [HttpGet]
-        public IActionResult GetLoanHistory()
-        {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var loanHistory = _loanHistoryService.GetAll();
-
-                var pagedloanHistory = loanHistory
-                .Select(loan => new
-                {
-                    Type = loan.Product.Type.ToString(),
-                    loan.Product.SerialNumber,
-                    loan.Product.ProductId,
-                    loan.Product.ExpirationDate,
-                    loan.Product.PurchaseDate,
-                    loan.LoanDate,
-                    loan.ReturnDate,
-                    loan.Customer.Name
-                })
-                .ToList();
-
-                return Ok(pagedloanHistory);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
-
-        [HttpGet("{productId}")]
-        public IActionResult getByProductId(int productId)
+        [HttpGet("product/{product-id}")]
+        public IActionResult getByProductId([FromRoute(Name = "product-id")] int productId)
         {
             try
             {
@@ -86,8 +58,8 @@ namespace Back_end.Controllers
             }
         }
 
-        [HttpGet("CustomerId/{customerId}")]
-        public IActionResult GetByCustomerId(int customerId)
+        [HttpGet("customer/{customer-id}")]
+        public IActionResult GetByCustomerId([FromRoute(Name = "customer-id")] int customerId)
         {
             try
             {
@@ -114,8 +86,8 @@ namespace Back_end.Controllers
             }
         }
 
-        [HttpGet("ReturnDate/{productId}")]
-        public IActionResult GetReturnDatesByProductId(int productId)
+        [HttpGet("date/{product-id}")]
+        public IActionResult GetReturnDatesByProductId([FromRoute(Name = "product-id")] int productId)
         {
             try
             {
@@ -129,8 +101,8 @@ namespace Back_end.Controllers
             }
         }
 
-        [HttpGet("Recent/{productId}")]
-        public IActionResult GetFirstByProductId(int productId)
+        [HttpGet("recent/{product-id}")]
+        public IActionResult GetFirstByProductId([FromRoute(Name = "product-id")] int productId)
         {
             try
             {

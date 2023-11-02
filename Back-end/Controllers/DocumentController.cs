@@ -9,7 +9,7 @@ namespace Back_end.Controllers
 {
     [EnableCors("ApiCorsPolicy")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("document")]
     public class DocumentController : ControllerBase
     {
         private readonly IDocumentService documentService;
@@ -41,7 +41,7 @@ namespace Back_end.Controllers
             }
         }
 
-        [HttpGet("Filter")]
+        [HttpGet("filter")]
         public IActionResult GetFilteredDocuments(string? searchfield, string overviewType, DocumentType? dropdown, int page = 1, int pageSize = 5)
         {
             try
@@ -89,20 +89,20 @@ namespace Back_end.Controllers
             }
         }
 
-        [HttpGet("customerId/{customerId}")]
-        public IActionResult GetByCustomerId(int customerId)
-        {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var documents = documentService.GetByCustomerId(customerId);
-                return Ok(documents);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
+        // [HttpGet("{customerId}")]
+        // public IActionResult GetByCustomerId(int customerId)
+        // {
+        //     try
+        //     {
+        //         jwtValidationService.ValidateToken(HttpContext);
+        //         var documents = documentService.GetByCustomerId(customerId);
+        //         return Ok(documents);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return StatusCode(401, ex.Message);
+        //     }
+        // }
 
         /// <summary>
         /// Uploads a new document and associates it with the provided document information.
@@ -167,7 +167,7 @@ namespace Back_end.Controllers
             }
         }
 
-        [HttpPut("IsArchived")]
+        [HttpPut("archive")]
         public IActionResult PutIsArchived(CheckBoxDTO doc)
         {
             try
@@ -181,6 +181,7 @@ namespace Back_end.Controllers
                 return StatusCode(401, ex.Message);
             }
         }
+
         [HttpDelete("{id}")]
         public IActionResult delete(int id)
         {

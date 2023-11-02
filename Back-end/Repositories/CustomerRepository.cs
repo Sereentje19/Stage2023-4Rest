@@ -71,7 +71,7 @@ namespace Back_end.Repositories
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
         public int Add(Customer customer)
         {
-            if (string.IsNullOrEmpty(customer.Name) || string.IsNullOrEmpty(customer.Email))
+            if (string.IsNullOrWhiteSpace(customer.Name) || string.IsNullOrWhiteSpace(customer.Email))
             {
                 throw new CustomerAddException("Klant naam of email is leeg.");
             }

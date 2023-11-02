@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     login() {
-      axios.post("Login", this.user)
+      axios.post("login", this.user)
         .then((res) => {
           axios.defaults.headers.common['Authorization'] = "Bearer " + res.data;
           localStorage.setItem("jwt", res.data)

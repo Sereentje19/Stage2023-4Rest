@@ -8,7 +8,7 @@ namespace Back_end.Controllers
 {
     [EnableCors("ApiCorsPolicy")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("customer")]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService customerService;
@@ -26,12 +26,12 @@ namespace Back_end.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCustomers(string? searchfield, int page, int pageSize)
+        public IActionResult GetAllPagedCustomers(string? searchfield, int page, int pageSize)
         {
             try
             {
                 jwtValidationService.ValidateToken(HttpContext);
-                var (pagedCustomers, pager) = customerService.GetAllPaged(searchfield, page, pageSize);
+                var (pagedCustomers, pager) = customerService.GetAllPagedCustomers(searchfield, page, pageSize);
 
                 var response = new
                 {
@@ -57,7 +57,7 @@ namespace Back_end.Controllers
         /// </summary>
         /// <param name="searchField">The search field used to filter customers.</param>
         /// <returns>A collection of customers matching the search criteria.</returns>
-        [HttpGet("Filter")]
+        [HttpGet("filter")]
         public IActionResult GetFilteredCustomers(string? searchField)
         {
             try
