@@ -17,7 +17,7 @@ BuildApp();
 
 //services
 void AddServices()
-{
+{ 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.AddControllersWithViews();
