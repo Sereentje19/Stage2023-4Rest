@@ -28,97 +28,62 @@ namespace Stage4rest2023.Controllers
         [HttpGet]
         public IActionResult getAllProducts(string? searchfield, ProductType? dropdown, int page = 1, int pageSize = 5)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var (pagedProducts, pager) = _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
+            jwtValidationService.ValidateToken(HttpContext);
+            var (pagedProducts, pager) = _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
 
-                var response = new
+            var response = new
+            {
+                Products = pagedProducts,
+                Pager = new
                 {
-                    Products = pagedProducts,
-                    Pager = new
-                    {
-                        pager.TotalItems,
-                        pager.CurrentPage,
-                        pager.PageSize,
-                        pager.TotalPages,
-                    }
-                };
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
         public IActionResult getProductById(int id)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                Product product = _productService.GetProductById(id);
+            jwtValidationService.ValidateToken(HttpContext);
+            Product product = _productService.GetProductById(id);
 
-                var response = new
-                {
-                    product,
-                    ProductType = product.Type.ToString(),
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
+            var response = new
             {
-                return StatusCode(401, ex.Message);
-            }
+                product,
+                ProductType = product.Type.ToString(),
+            };
+
+            return Ok(response);
         }
 
         [HttpPost]
         public IActionResult PostProduct(Product product)
         {
-            try
-            {
-                Console.WriteLine(product.SerialNumber);
-                jwtValidationService.ValidateToken(HttpContext);
-                _productService.PostProduct(product);
-                return Ok(new { message = "Product created" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            Console.WriteLine(product.SerialNumber);
+            jwtValidationService.ValidateToken(HttpContext);
+            _productService.PostProduct(product);
+            return Ok(new { message = "Product created" });
         }
 
         [HttpPut]
         public IActionResult PutProduct(Product product)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                _productService.PutProduct(product);
-                return Ok(new { message = "Product updated" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            _productService.PutProduct(product);
+            return Ok(new { message = "Product updated" });
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                _productService.DeleteProduct(id);
-                return Ok(new { message = "Product deleted" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            _productService.DeleteProduct(id);
+            return Ok(new { message = "Product deleted" });
         }
     }
 }

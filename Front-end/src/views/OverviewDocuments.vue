@@ -3,8 +3,7 @@
     <Header ref="Header"></Header>
     <div class="overview-container">
       <div id="topside">
-        <h1 id="h1-overview" v-if="overviewType == 'Overzicht'">Documenten</h1>
-        <h1 id="h1-overview" v-else>{{ overviewType }}</h1>
+        <h1 id="h1-overview">Documenten</h1>
 
 
         <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
@@ -27,11 +26,9 @@
           <h3 id="urgentie">Urgentie</h3>
           <h3 id="klantnaam">Klantnaam</h3>
           <h3 id="geldigVan">Geldig tot</h3>
-          <h3 v-if="overviewType == 'Archief'" id="geldigTot">Verstreken tijd</h3>
-          <h3 v-else id="geldigTot">Verloopt over</h3>
+          <h3 id="geldigTot">Verloopt over</h3>
           <h3 id="Type">Type document</h3>
-          <h3 v-if="overviewType == 'Archief'" id="Type">Zet terug</h3>
-          <h3 v-else id="Type">Archiveer</h3>
+          <h3 id="Type">Archiveer</h3>
         </div>
 
         <div v-for="(document, i) in displayedDocuments">
@@ -109,7 +106,6 @@ export default {
       customers: [],
       searchField: "",
       dropdown: "0",
-      overviewType: localStorage.getItem("overviewType")
     };
   },
   mounted() {
@@ -131,7 +127,7 @@ export default {
       }, 100);
     },
     toggleCheckbox(doc) {
-      doc.isArchived = this.overviewType === 'Archief' ? false : true;
+      doc.isArchived = true;
 
       axios.put("document/archive", doc, {
         headers: {
@@ -149,13 +145,12 @@ export default {
     },
     filterDocuments() {
       axios
-        .get("document/filter", {
+        .get("document", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwt"),
           },
           params: {
             searchfield: this.searchField,
-            overviewType: this.overviewType,
             dropdown: this.dropdown,
             page: this.pager.currentPage,
             pageSize: this.pager.pageSize
@@ -201,17 +196,7 @@ export default {
         value = ageInDays;
       }
 
-      value = this.toOrFromArchive(value);
       return `${value} ${unit}`;
-    },
-    toOrFromArchive(value) {
-      if (this.overviewType === 'Archief' && value < 0) {
-        value = Math.abs(value);
-      }
-      else if (this.overviewType === 'Archief' && value > 0) {
-        value = -value
-      }
-      return value
     },
     documentDaysFromExpiration(document, days) {
       const ageInDays = this.caculationDays(document.date);

@@ -19,23 +19,9 @@ namespace Stage4rest2023.Services
 
         public (IEnumerable<object>, Pager) GetPagedCustomers(string searchfield, int page, int pageSize)
         {
-            var customers = _customerRepository.GetAll(searchfield);
-
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(customers.Count(), page, pageSize);
-
-            var pagedCustomers = customers
-                .Skip(skipCount)
-                .Take(pageSize)
-                .Select(cus => new
-                {
-                    cus.Name,
-                    cus.Email,
-                    cus.CustomerId
-                })
-                .ToList();
-
-            return (pagedCustomers.Cast<object>(), pager);
+            var (pagedCustomers, numberOdcustomers) = _customerRepository.GetAllCustomers(searchfield, page, pageSize);
+            var pager = new Pager(numberOdcustomers, page, pageSize);
+            return (pagedCustomers, pager);
         }
 
 

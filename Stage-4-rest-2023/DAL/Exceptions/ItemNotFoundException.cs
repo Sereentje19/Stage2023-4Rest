@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Stage4rest2023.Exceptions
 {
-    public class UpdateDocumentFailedException : Exception
+    public class ItemNotFoundException : Exception
     {
-        public UpdateDocumentFailedException(string message)
+        public ItemNotFoundException(string message)
         : base(message)
         {
 

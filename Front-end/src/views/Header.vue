@@ -14,10 +14,10 @@
                     <div id="box-shadow">
                         <a id="dropdown-links" href="/overzicht/bruikleen">Bruikleen</a>
                         <a id="dropdown-links" href="/overzicht/medewerkers">Medewerkers</a>
-                        <a id="dropdown-links" href="/overzicht/documenten" @click="changeOverviewType('Overzicht')">Documenten</a>
-                        <a id="dropdown-links" href="/overzicht/documenten" @click="changeOverviewType('Lang geldig')">Lang
+                        <a id="dropdown-links" href="/overzicht/documenten">Documenten</a>
+                        <a id="dropdown-links" href="/overzicht/documenten/lang-geldig">Lang
                             geldig</a>
-                        <a id="dropdown-links" href="/overzicht/documenten" @click="changeOverviewType('Archief')">Archief</a>
+                        <a id="dropdown-links" href="/overzicht/documenten/archief">Archief</a>
                     </div>
                 </div>
             </div> &nbsp; &nbsp; &nbsp;
@@ -59,9 +59,6 @@ export default {
         };
     },
     methods: {
-        changeOverviewType(type) {
-            localStorage.setItem("overviewType", type)
-        },
         changeColor(color) {
             this.svgColor = color;
         },

@@ -28,29 +28,22 @@ namespace Stage4rest2023.Controllers
         [HttpGet]
         public IActionResult GetPagedCustomers(string? searchfield, int page, int pageSize)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var (pagedCustomers, pager) = customerService.GetPagedCustomers(searchfield, page, pageSize);
+            jwtValidationService.ValidateToken(HttpContext);
+            var (pagedCustomers, pager) = customerService.GetPagedCustomers(searchfield, page, pageSize);
 
-                var response = new
+            var response = new
+            {
+                Customers = pagedCustomers,
+                Pager = new
                 {
-                    Customers = pagedCustomers,
-                    Pager = new
-                    {
-                        pager.TotalItems,
-                        pager.CurrentPage,
-                        pager.PageSize,
-                        pager.TotalPages,
-                    }
-                };
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            return Ok(response);
         }
 
         /// <summary>
@@ -61,16 +54,9 @@ namespace Stage4rest2023.Controllers
         [HttpGet("filter")]
         public IActionResult GetFilteredCustomers(string? searchField)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var customers = customerService.GetFilteredCustomers(searchField);
-                return Ok(customers);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            var customers = customerService.GetFilteredCustomers(searchField);
+            return Ok(customers);
         }
 
         /// <summary>
@@ -81,16 +67,9 @@ namespace Stage4rest2023.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCustomerById(int id)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var customer = customerService.GetCustomerById(id);
-                return Ok(customer);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            var customer = customerService.GetCustomerById(id);
+            return Ok(customer);
         }
 
 
@@ -102,16 +81,9 @@ namespace Stage4rest2023.Controllers
         [HttpPost]
         public IActionResult PostCustomer(Customer cus)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                int id = customerService.PostCustomer(cus);
-                return Ok(id);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            int id = customerService.PostCustomer(cus);
+            return Ok(id);
         }
 
         /// <summary>
@@ -122,31 +94,17 @@ namespace Stage4rest2023.Controllers
         [HttpPut]
         public IActionResult PutCustomer(Customer customer)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                customerService.PutCustomer(customer);
-                return Ok(new { message = "Customer updated" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            customerService.PutCustomer(customer);
+            return Ok(new { message = "Customer updated" });
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteCustomer(int id)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                customerService.DeleteCustomer(id);
-                return Ok(new { message = "Customer deleted" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            customerService.DeleteCustomer(id);
+            return Ok(new { message = "Customer deleted" });
         }
     }
 }

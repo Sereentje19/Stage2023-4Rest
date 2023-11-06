@@ -37,15 +37,11 @@ namespace Stage4rest2023.Repositories
                 {
                     return matchingUser;
                 }
-                else
-                {
-                    throw new InvalidCredentialsException("Wachtwoord is incorrect!");
-                }
+
+                throw new InvalidCredentialsException("Wachtwoord is incorrect!");
             }
-            else
-            {
-                throw new InvalidCredentialsException("Email is incorrect!");
-            }
+
+            throw new InvalidCredentialsException("Email is incorrect!");
         }
     }
 }

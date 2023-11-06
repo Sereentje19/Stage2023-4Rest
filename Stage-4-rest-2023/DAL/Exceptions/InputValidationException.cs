@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Stage4rest2023.Exceptions
 {
-    public class DocumentAddException : Exception
+    public class InputValidationException : Exception
     {
-        public DocumentAddException(string message)
+        public InputValidationException(string message)
         : base(message)
         {
 

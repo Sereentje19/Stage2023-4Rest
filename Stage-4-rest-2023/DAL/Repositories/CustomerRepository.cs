@@ -22,15 +22,27 @@ namespace Stage4rest2023.Repositories
         }
 
 
-        public List<Customer> GetAll(string searchfield)
+        public (IEnumerable<object>, int) GetAllCustomers(string searchfield, int page, int pageSize)
         {
-            return _context.Customers
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            
+            int numberOfCustomers = _context.Customers
+                .Count(customer => string.IsNullOrEmpty(searchfield) ||
+                                   customer.Name.Contains(searchfield) ||
+                                   customer.Email.Contains(searchfield));
+            
+            IEnumerable<Customer> customerList = _context.Customers
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
-                                  customer.Name.Contains(searchfield) ||
-                                  customer.Email.Contains(searchfield))
+                                   customer.Name.Contains(searchfield) ||
+                                   customer.Email.Contains(searchfield))
                 .OrderBy(customer => customer.Name)
+                .Skip(skipCount)
+                .Take(pageSize)
                 .ToList();
+
+            return (customerList, numberOfCustomers);
         }
+
 
         /// <summary>
         /// Filters and retrieves a collection of customers based on a search field.
@@ -39,17 +51,17 @@ namespace Stage4rest2023.Repositories
         /// <returns>A collection of customers matching the search criteria.</returns>
         public IEnumerable<Customer> GetFilteredCustomers(string searchfield)
         {
-            if (string.IsNullOrWhiteSpace(searchfield))
+            IQueryable<Customer> customers = _dbSet;
+
+            if (!string.IsNullOrWhiteSpace(searchfield))
             {
-                return _dbSet.OrderBy(customer => customer.Name).ToList();
+                customers.Where(customer =>
+                    customer.Name.Contains(searchfield) ||
+                    customer.Email.Contains(searchfield)
+                );
             }
 
-            return _dbSet
-            .Where(customer =>
-                customer.Name.Contains(searchfield) ||
-                customer.Email.Contains(searchfield)
-            )
-            .ToList();
+            return customers.OrderBy(customer => customer.Name).ToList();
         }
 
         /// <summary>
@@ -59,7 +71,14 @@ namespace Stage4rest2023.Repositories
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
         public Customer GetCustomerById(int id)
         {
-            return _dbSet.Find(id);
+            Customer customer = _dbSet.Find(id);
+
+            if (customer == null)
+            {
+                throw new ItemNotFoundException("geen medewerker gevonden.");
+            }
+
+            return customer;
         }
 
 
@@ -71,22 +90,29 @@ namespace Stage4rest2023.Repositories
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
         public int AddCustomer(Customer customer)
         {
-            if (string.IsNullOrWhiteSpace(customer.Name) || string.IsNullOrWhiteSpace(customer.Email))
+            try
             {
-                throw new CustomerAddException("Klant naam of email is leeg.");
+                if (string.IsNullOrWhiteSpace(customer.Name) || string.IsNullOrWhiteSpace(customer.Email))
+                {
+                    throw new InputValidationException("Klant naam of email is leeg.");
+                }
+
+                //if the customer already exist, don't add it again.
+                var existingCustomer = _dbSet.FirstOrDefault(c => c.Name == customer.Name && c.Email == customer.Email);
+
+                if (existingCustomer == null)
+                {
+                    _dbSet.Add(customer);
+                    _context.SaveChanges();
+                }
+
+                return customer.CustomerId;
             }
-
-            //if the customer already exist, don't add it again.
-            var existingCustomer = _dbSet.FirstOrDefault(c => c.Name == customer.Name && c.Email == customer.Email);
-
-            if (existingCustomer != null)
+            catch (DbUpdateConcurrencyException)
             {
-                return existingCustomer.CustomerId;
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
             }
-
-            _dbSet.Add(customer);
-            _context.SaveChanges();
-            return customer.CustomerId;
         }
 
         /// <summary>
@@ -102,7 +128,8 @@ namespace Stage4rest2023.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de medewerkergegevens.");
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
             }
         }
 
@@ -127,7 +154,8 @@ namespace Stage4rest2023.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new DbUpdateConcurrencyException("Er is een conflict opgetreden bij het bijwerken van de medewerkergegevens.");
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
             }
         }
     }

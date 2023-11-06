@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Stage4rest2023.Models;
 using Microsoft.EntityFrameworkCore;
+using Stage4rest2023.Exceptions;
 
 namespace Stage4rest2023.Repositories
 {
@@ -21,12 +22,12 @@ namespace Stage4rest2023.Repositories
         public IEnumerable<Product> GetAllProducts(string searchfield, ProductType? dropdown)
         {
             IQueryable<Product> query = from product in _context.Products
-                                        where (string.IsNullOrEmpty(searchfield) ||
-                                            product.SerialNumber.Contains(searchfield) ||
-                                            product.ExpirationDate.ToString().Contains(searchfield) ||
-                                            product.PurchaseDate.ToString().Contains(searchfield))
-                                        && (dropdown == ProductType.Not_Selected || product.Type == dropdown)
-                                        select product;
+                where (string.IsNullOrEmpty(searchfield) ||
+                       product.SerialNumber.Contains(searchfield) ||
+                       product.ExpirationDate.ToString().Contains(searchfield) ||
+                       product.PurchaseDate.ToString().Contains(searchfield))
+                      && (dropdown == ProductType.Not_Selected || product.Type == dropdown)
+                select product;
 
             var productList = query.ToList();
             return productList;
@@ -39,35 +40,59 @@ namespace Stage4rest2023.Repositories
 
         public void AddProduct(Product product)
         {
-            if (string.IsNullOrWhiteSpace(product.SerialNumber))
+            try
             {
-                throw new Exception("Serie nummer is leeg.");
-            }
-            else if(product.Type == ProductType.Not_Selected)
-            {
-                throw new Exception("Type is leeg.");
-            }
+                if (string.IsNullOrWhiteSpace(product.SerialNumber))
+                {
+                    throw new InputValidationException("Serie nummer is leeg.");
+                }
+                else if (product.Type == ProductType.Not_Selected)
+                {
+                    throw new InputValidationException("Type is leeg.");
+                }
 
-            _dbSet.Add(product);
-            _context.SaveChanges();
+                _dbSet.Add(product);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
+            }
         }
 
         public void PutProduct(Product product)
         {
-            _dbSet.Update(product);
-            _context.SaveChanges();
+            try
+            {
+                _dbSet.Update(product);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
+            }
         }
 
         public void DeleteProduct(int id)
         {
-            List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Product.ProductId == id).ToList();
-            foreach (var loan in loans)
+            try
             {
-                _context.LoanHistory.Remove(loan);
-            }
+                List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Product.ProductId == id).ToList();
+                foreach (var loan in loans)
+                {
+                    _context.LoanHistory.Remove(loan);
+                }
 
-            _dbSet.Remove(_dbSet.Find(id));
-            _context.SaveChanges();
+                _dbSet.Remove(_dbSet.Find(id));
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
+            }
         }
     }
 }

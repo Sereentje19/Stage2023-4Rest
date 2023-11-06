@@ -27,15 +27,14 @@ namespace Stage4rest2023.Services
         /// <returns>The MIME part representing the embedded image.</returns>
         private MimePart SetImage(byte[] image, string fileType)
         {
-            var imagePart = new MimePart()
+            MimePart imageAttachment = new MimePart(fileType)
             {
                 Content = new MimeContent(new MemoryStream(image), ContentEncoding.Default),
-                ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
                 ContentTransferEncoding = ContentEncoding.Base64,
-                FileName = fileType,
-                ContentId = MimeUtils.GenerateMessageId()
+                FileName = "image.jpg"
             };
-            return imagePart;
+            return imageAttachment;
         }
 
         /// <summary>
@@ -49,28 +48,26 @@ namespace Stage4rest2023.Services
         /// <param name="image">The byte array representing the embedded image.</param>
         private void SetBody(int weeks, string customerName, DateTime date, DocumentType type, MimeMessage emailMessage, byte[] image, string fileType)
         {
-            BodyBuilder emailBodyBuilder = new BodyBuilder
+            emailMessage.Body = new TextPart("plain")
             {
-                HtmlBody = $@"<html>
-                            <style>
-                            .email-image {{ width: 200px;  }} 
-                            </style>
-                            <body>
-                            <p>Het volgende document zal over {weeks} weken komen te vervallen:</p>
-                            <p>Naam: {customerName}</p>
-                            <p>Verloop datum: {date:dd-MM-yyyy}</p>
-                            <p>Type document: {type.ToString().Replace("_", " ")}</p>
-                            <img src=""cid:imageId"" class=""email-image"">
-                            </body>
-                            </html>"
+                Text = $"Het volgende document zal over {weeks} weken komen te vervallen:" +
+                       $"\nNaam: {customerName}" +
+                       $"\nVerloop datum: {date:dd-MM-yyyy}" +
+                       $"\nType document: {type.ToString().Replace("_", " ")}\n\n"
             };
+            
+            // Add the image as an attachment
+            MimePart imageAttachment = SetImage(image, fileType);
 
-            MimePart imagePart = SetImage(image, fileType);
-
-            emailBodyBuilder.HtmlBody = emailBodyBuilder.HtmlBody.Replace("src=\"cid:imageId\"", $"src=\"cid:{imagePart.ContentId}\"");
-            emailBodyBuilder.LinkedResources.Add(imagePart);
-            emailMessage.Body = emailBodyBuilder.ToMessageBody();
+            // Attach the image to the email
+            emailMessage.Body = new Multipart("mixed")
+            {
+                emailMessage.Body,
+                imageAttachment
+            };
         }
+            
+
 
         /// <summary>
         /// Connects to the SMTP server, authenticates, and sends the email message.

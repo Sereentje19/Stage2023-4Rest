@@ -27,52 +27,123 @@ namespace Stage4rest2023.Repositories
                 .ToList();
         }
 
-        public List<Document> GetFilteredDocuments(string searchfield, DocumentType? dropdown, string overviewType)
+        public (IEnumerable<object>, int) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown,
+            int page, int pageSize)
         {
-            try
-            {
-                IQueryable<Document> query = from document in _context.Documents
-                                            .Include(d => d.Customer)
-                                             where (string.IsNullOrEmpty(searchfield) ||
-                                                 document.Customer.Name.Contains(searchfield) ||
-                                                 document.Customer.Email.Contains(searchfield))
-                                             && (dropdown == DocumentType.Not_Selected || document.Type == dropdown)
-                                             orderby document.Date
-                                             select document;
-
-                IQueryable<Document> filteredQuery = ApplyOverviewFilter(query, overviewType);
-                var documents = filteredQuery.ToList();
-                return documents;
-            }
-            catch (Exception ex)
-            {
-                return new List<Document>();
-            }
-        }
-
-        private IQueryable<Document> ApplyOverviewFilter(IQueryable<Document> query, string overviewType)
-        {
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
             DateTime now = DateTime.Now;
             DateTime sixWeeksFromNow = now.AddDays(42);
 
-            if (query.Count() == 0)
-            {
-                throw new Exception("Geen document gevonden. Probeer het later onpnieuw.");
-            }
+            int numberOfCustomers = _context.Documents
+                .Include(d => d.Customer)
+                .Count(document => (string.IsNullOrEmpty(searchfield) ||
+                                    document.Customer.Name.Contains(searchfield) ||
+                                    document.Customer.Email.Contains(searchfield))
+                                   && (dropdown == DocumentType.Not_Selected ||
+                                       document.Type == dropdown) &&
+                                   (document.Date <= sixWeeksFromNow && !document.IsArchived));
 
-            switch (overviewType)
-            {
-                case "Overzicht":
-                    return query.Where(item => item.Date <= sixWeeksFromNow && !item.IsArchived);
-                case "Archief":
-                    return query.Where(item => item.IsArchived);
-                case "Lang geldig":
-                    return query.Where(item => item.Date > sixWeeksFromNow && !item.IsArchived);
-                default:
-                    return query;
-            }
+            IEnumerable<DocumentOverviewDTO> documentList = _context.Documents
+                .Include(d => d.Customer)
+                .Where(document => (string.IsNullOrEmpty(searchfield) ||
+                                    document.Customer.Name.Contains(searchfield) ||
+                                    document.Customer.Email.Contains(searchfield))
+                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown) &&
+                                   (document.Date <= sixWeeksFromNow && !document.IsArchived))
+                .OrderBy(document => document.Date)
+                .Skip(skipCount)
+                .Take(pageSize)
+                .Select(doc => new DocumentOverviewDTO()
+                {
+                    DocumentId = doc.DocumentId,
+                    CustomerId = doc.Customer.CustomerId,
+                    Date = doc.Date,
+                    CustomerName = doc.Customer.Name,
+                    IsArchived = doc.IsArchived,
+                    Type = doc.Type.ToString(), 
+                })
+                .ToList();
+
+            return (documentList, numberOfCustomers);
         }
 
+        public (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
+            int page, int pageSize)
+        {
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+
+            int numberOfCustomers = _context.Documents
+                .Include(d => d.Customer)
+                .Count(document => (string.IsNullOrEmpty(searchfield) ||
+                                    document.Customer.Name.Contains(searchfield) ||
+                                    document.Customer.Email.Contains(searchfield))
+                                   && (dropdown == DocumentType.Not_Selected ||
+                                       document.Type == dropdown) &&
+                                   document.IsArchived);
+
+            IEnumerable<DocumentOverviewDTO> documentList = _context.Documents
+                .Include(d => d.Customer)
+                .Where(document => (string.IsNullOrEmpty(searchfield) ||
+                                    document.Customer.Name.Contains(searchfield) ||
+                                    document.Customer.Email.Contains(searchfield))
+                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown) &&
+                                   document.IsArchived)
+                .OrderBy(document => document.Date)
+                .Skip(skipCount)
+                .Take(pageSize)
+                .Select(doc => new DocumentOverviewDTO()
+                {
+                    DocumentId = doc.DocumentId,
+                    CustomerId = doc.Customer.CustomerId,
+                    Date = doc.Date,
+                    CustomerName = doc.Customer.Name,
+                    IsArchived = doc.IsArchived,
+                    Type = doc.Type.ToString(), 
+                })
+                .ToList();
+
+            return (documentList, numberOfCustomers);
+        }
+
+        public (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
+            int page, int pageSize)
+        {
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            DateTime now = DateTime.Now;
+            DateTime sixWeeksFromNow = now.AddDays(42);
+
+            int numberOfCustomers = _context.Documents
+                .Include(d => d.Customer)
+                .Count(document => (string.IsNullOrEmpty(searchfield) ||
+                                    document.Customer.Name.Contains(searchfield) ||
+                                    document.Customer.Email.Contains(searchfield))
+                                   && (dropdown == DocumentType.Not_Selected ||
+                                       document.Type == dropdown) &&
+                                   (document.Date > sixWeeksFromNow && !document.IsArchived));
+
+            IEnumerable<DocumentOverviewDTO> documentList = _context.Documents
+                .Include(d => d.Customer)
+                .Where(document => (string.IsNullOrEmpty(searchfield) ||
+                                    document.Customer.Name.Contains(searchfield) ||
+                                    document.Customer.Email.Contains(searchfield))
+                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown) &&
+                                   (document.Date > sixWeeksFromNow && !document.IsArchived))
+                .OrderBy(document => document.Date)
+                .Skip(skipCount)
+                .Take(pageSize)
+                .Select(doc => new DocumentOverviewDTO()
+                {
+                    DocumentId = doc.DocumentId,
+                    CustomerId = doc.Customer.CustomerId,
+                    Date = doc.Date,
+                    CustomerName = doc.Customer.Name,
+                    IsArchived = doc.IsArchived,
+                    Type = doc.Type.ToString(), 
+                })
+                .ToList();
+
+            return (documentList, numberOfCustomers);
+        }
 
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
@@ -102,25 +173,34 @@ namespace Stage4rest2023.Repositories
         /// <param name="document">The document entity to be added.</param>
         public void AddDocument(Document document)
         {
-            if (document.Type == DocumentType.Not_Selected)
+            try
             {
-                throw new DocumentAddException("Selecteer een type.");
+                if (document.Type == DocumentType.Not_Selected)
+                {
+                    throw new InputValidationException("Selecteer een type.");
+                }
+                else if (string.IsNullOrWhiteSpace(document.Customer.Name) ||
+                         string.IsNullOrWhiteSpace(document.Customer.Email))
+                {
+                    throw new InputValidationException("Klant naam of email is leeg.");
+                }
+
+                var existingCustomer = _context.Customers
+                    .SingleOrDefault(l => l.Name == document.Customer.Name && l.Email == document.Customer.Email);
+
+                if (existingCustomer != null)
+                {
+                    document.Customer = existingCustomer;
+                }
+
+                _dbSet.Add(document);
+                _context.SaveChanges();
             }
-            else if (string.IsNullOrWhiteSpace(document.Customer.Name) || string.IsNullOrWhiteSpace(document.Customer.Email))
+            catch (DbUpdateConcurrencyException)
             {
-                throw new CustomerAddException("Klant naam of email is leeg.");
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
             }
-
-            var existingCustomer = _context.Customers
-            .SingleOrDefault(l => l.Name == document.Customer.Name && l.Email == document.Customer.Email);
-
-            if (existingCustomer != null)
-            {
-                document.Customer = existingCustomer;
-            }
-
-            _dbSet.Add(document);
-            _context.SaveChanges();
         }
 
         /// <summary>
@@ -129,50 +209,74 @@ namespace Stage4rest2023.Repositories
         /// <param name="document">The document entity to be updated.</param>
         public void UpdateDocument(EditDocumentRequestDTO document)
         {
-            var existingDocument = _dbSet
-            .Include(d => d.Customer)
-            .Where(d => d.DocumentId == document.DocumentId)
-            .FirstOrDefault();
-
-            if (existingDocument == null)
+            try
             {
-                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
+                var existingDocument = _dbSet
+                    .Include(d => d.Customer)
+                    .Where(d => d.DocumentId == document.DocumentId)
+                    .FirstOrDefault();
+
+                if (existingDocument == null)
+                {
+                    throw new ItemNotFoundException("Geen document gevonden. Probeer het later onpnieuw.");
+                }
+                else if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
+                {
+                    throw new InputValidationException("Datum of type is leeg.");
+                }
+
+                existingDocument.Date = document.Date;
+                existingDocument.Type = document.Type;
+
+                _context.SaveChanges();
             }
-            else if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
+            catch (DbUpdateConcurrencyException)
             {
-                throw new UpdateDocumentFailedException("Datum of type is leeg.");
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
             }
-
-            existingDocument.Date = document.Date;
-            existingDocument.Type = document.Type;
-
-            _context.SaveChanges();
         }
 
         public void UpdateIsArchived(CheckBoxDTO document)
         {
-            var existingDocument = _dbSet.Find(document.DocumentId);
-
-            if (existingDocument == null)
+            try
             {
-                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
-            }
+                var existingDocument = _dbSet.Find(document.DocumentId);
 
-            existingDocument.IsArchived = document.IsArchived;
-            _context.SaveChanges();
+                if (existingDocument == null)
+                {
+                    throw new ItemNotFoundException("Geen document gevonden. Probeer het later onpnieuw.");
+                }
+
+                existingDocument.IsArchived = document.IsArchived;
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
+            }
         }
 
         public void DeleteDocument(int id)
         {
-            Document doc =_dbSet.Find(id);
-
-            if (doc == null)
+            try
             {
-                throw new UpdateDocumentFailedException("Geen document gevonden. Probeer het later onpnieuw.");
-            }
+                Document doc = _dbSet.Find(id);
 
-            _dbSet.Remove(doc);
-            _context.SaveChanges();
+                if (doc == null)
+                {
+                    throw new ItemNotFoundException("Geen document gevonden. Probeer het later onpnieuw.");
+                }
+
+                _dbSet.Remove(doc);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
+            }
         }
     }
 }

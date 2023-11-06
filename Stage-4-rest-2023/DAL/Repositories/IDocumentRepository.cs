@@ -6,7 +6,16 @@ namespace Stage4rest2023.Repositories
     public interface IDocumentRepository
     {
         IEnumerable<Document> getAllDocuments();
-        List<Document> GetFilteredDocuments(string searchfield, DocumentType? dropdown, string overviewType);
+
+        (IEnumerable<object>, int) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown,
+            int page, int pageSize);
+
+        (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
+            int page, int pageSize);
+
+        (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
+            int page, int pageSize);
+
         DocumentDTO GetDocumentById(int id);
         void AddDocument(Document document);
         void UpdateDocument(EditDocumentRequestDTO document);

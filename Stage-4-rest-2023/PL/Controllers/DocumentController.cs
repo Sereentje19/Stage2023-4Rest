@@ -3,7 +3,6 @@ using Stage4rest2023.Services;
 using Microsoft.AspNetCore.Cors;
 using Stage4rest2023.Models;
 using Stage4rest2023.Models.DTOs;
-using Microsoft.VisualBasic;
 
 namespace Stage4rest2023.Controllers
 {
@@ -26,47 +25,82 @@ namespace Stage4rest2023.Controllers
             jwtValidationService = jwt;
         }
 
+        // [HttpGet]
+        // public IActionResult GetAllDocuments()
+        // {
+        //     jwtValidationService.ValidateToken(HttpContext);
+        //     var documents = documentService.GetAllDocuments();
+        //     return Ok(documents);
+        // }
+
         [HttpGet]
-        public IActionResult GetAllDocuments()
+        public IActionResult GetFilteredPagedDocuments(string? searchfield, DocumentType? dropdown,
+            int page = 1, int pageSize = 5)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var documents = documentService.GetAllDocuments();
-                return Ok(documents);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
-        }
+            jwtValidationService.ValidateToken(HttpContext);
+            var (pagedDocuments, pager) =
+                documentService.GetFilteredPagedDocuments(searchfield, dropdown, page, pageSize);
 
-        [HttpGet("filter")]
-        public IActionResult GetFilteredDocuments(string? searchfield, string overviewType, DocumentType? dropdown, int page = 1, int pageSize = 5)
-        {
-            try
+            var response = new
             {
-                jwtValidationService.ValidateToken(HttpContext);
-                var (pagedDocuments, pager) = documentService.GetFilteredDocuments(searchfield, dropdown, page, pageSize, overviewType);
-
-                var response = new
+                Documents = pagedDocuments,
+                Pager = new
                 {
-                    Documents = pagedDocuments,
-                    Pager = new
-                    {
-                        pager.TotalItems,
-                        pager.CurrentPage,
-                        pager.PageSize,
-                        pager.TotalPages,
-                    }
-                };
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
 
-                return Ok(response);
-            }
-            catch (Exception ex)
+            return Ok(response);
+        }
+        
+        [HttpGet("archive")]
+        public IActionResult GetArchivedPagedDocuments(string? searchfield, DocumentType? dropdown,
+            int page = 1, int pageSize = 5)
+        {
+            jwtValidationService.ValidateToken(HttpContext);
+            var (pagedDocuments, pager) =
+                documentService.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
+
+            var response = new
             {
-                return StatusCode(401, ex.Message);
-            }
+                Documents = pagedDocuments,
+                Pager = new
+                {
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
+
+            return Ok(response);
+        }
+        
+        [HttpGet("long-valid")]
+        public IActionResult GetLongValidPagedDocuments(string? searchfield, DocumentType? dropdown,
+            int page = 1, int pageSize = 5)
+        {
+            jwtValidationService.ValidateToken(HttpContext);
+            var (pagedDocuments, pager) =
+                documentService.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
+
+            
+            var response = new
+            {
+                Documents = pagedDocuments,
+                Pager = new
+                {
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -77,16 +111,9 @@ namespace Stage4rest2023.Controllers
         [HttpGet("{id}")]
         public IActionResult GetDocumentById(int id)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var response = documentService.GetDocumentById(id);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            var response = documentService.GetDocumentById(id);
+            return Ok(response);
         }
 
         /// <summary>
@@ -98,38 +125,31 @@ namespace Stage4rest2023.Controllers
         [HttpPost]
         public IActionResult PostDocument([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
         {
-            try
+            jwtValidationService.ValidateToken(HttpContext);
+
+            Document doc = new Document
             {
-                jwtValidationService.ValidateToken(HttpContext);
-
-                Document doc = new Document
+                Type = document.Type,
+                Date = document.Date,
+                Customer = new Customer()
                 {
-                    Type = document.Type,
-                    Date = document.Date,
-                    Customer = new Customer()
-                    {
-                        Email = document.Customer.Email,
-                        Name = document.Customer.Name
-                    },
-                    FileType = document.FileType
-                };
+                    Email = document.Customer.Email,
+                    Name = document.Customer.Name
+                },
+                FileType = document.FileType
+            };
 
-                if (file != null)
+            if (file != null)
+            {
+                using (var memoryStream = new MemoryStream())
                 {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        file.CopyTo(memoryStream);
-                        doc.File = memoryStream.ToArray();
-                    }
+                    file.CopyTo(memoryStream);
+                    doc.File = memoryStream.ToArray();
                 }
+            }
 
-                documentService.PostDocument(doc);
-                return Ok(new { message = "Document created" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            documentService.PostDocument(doc);
+            return Ok(new { message = "Document created" });
         }
 
         /// <summary>
@@ -140,46 +160,25 @@ namespace Stage4rest2023.Controllers
         [HttpPut]
         public IActionResult PutDocument(EditDocumentRequestDTO doc)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                documentService.PutDocument(doc);
-                return Ok(new { message = "Document updated" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            documentService.PutDocument(doc);
+            return Ok(new { message = "Document updated" });
         }
 
         [HttpPut("archive")]
         public IActionResult PutIsArchived(CheckBoxDTO doc)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                documentService.UpdateIsArchived(doc);
-                return Ok(new { message = "Document updated" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            documentService.UpdateIsArchived(doc);
+            return Ok(new { message = "Document updated" });
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteDocument(int id)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                documentService.DeleteDocument(id);
-                return Ok(new { message = "Document deleted" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            documentService.DeleteDocument(id);
+            return Ok(new { message = "Document deleted" });
         }
     }
 }

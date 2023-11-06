@@ -89,7 +89,7 @@ namespace Stage4rest2023.Services
 
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
-                throw new InvalidJwtTokenException("inloggen vereist");
+                throw new TokenValidationException("Inloggen vereist");
             }
 
             return authHeader.Substring("Bearer ".Length);

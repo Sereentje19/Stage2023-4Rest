@@ -23,26 +23,23 @@ namespace Stage4rest2023.Services
         }
 
 
-        public (IEnumerable<object>, Pager) GetFilteredDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize, string overviewType)
+        public (IEnumerable<object>, Pager) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            var documents = _documentRepository.GetFilteredDocuments(searchfield, dropdown, overviewType);
-
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(documents.Count(), page, pageSize);
-
-            var pagedDocuments = documents
-                .Skip(skipCount)
-                .Take(pageSize)
-                .Select(doc => new
-                {
-                    doc.DocumentId,
-                    doc.Date,
-                    CustomerName = doc.Customer.Name,
-                    Type = doc.Type.ToString().Replace("_", " "),
-                })
-                .ToList();
-
-            return (pagedDocuments.Cast<object>(), pager);
+            var (documentList, numberOfDocuments) = _documentRepository.GetFilteredPagedDocuments(searchfield, dropdown, page, pageSize);
+            var pager = new Pager(numberOfDocuments, page, pageSize);
+            return (documentList, pager);
+        }
+        public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        {
+            var (documentList, numberOfDocuments) = _documentRepository.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
+            var pager = new Pager(numberOfDocuments, page, pageSize);
+            return (documentList, pager);
+        }
+        public (IEnumerable<object>, Pager) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        {
+            var (documentList, numberOfDocuments) = _documentRepository.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
+            var pager = new Pager(numberOfDocuments, page, pageSize);
+            return (documentList, pager);
         }
 
         /// <summary>

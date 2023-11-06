@@ -61,36 +61,52 @@ namespace Stage4rest2023.Repositories
 
         public void UpdateLoanHistory(LoanHistory lh)
         {
-            if (lh == null)
+            try
             {
-                throw new Exception("geen item gevonden.");
+                if (lh == null)
+                {
+                    throw new Exception("geen item gevonden.");
+                }
+
+                LoanHistory loanHistory = new LoanHistory
+                {
+                    Product = _context.Products.Find(lh.Product.ProductId),
+                    Customer = lh.Customer,
+                    ReturnDate = DateTime.Now,
+                    LoanDate = lh.LoanDate,
+                    LoanHistoryId = lh.LoanHistoryId
+                };
+
+                _dbSet.Update(loanHistory);
+                _context.SaveChanges();
             }
-
-            LoanHistory loanHistory = new LoanHistory
+            catch (DbUpdateConcurrencyException)
             {
-                Product = _context.Products.Find(lh.Product.ProductId),
-                Customer = lh.Customer,
-                ReturnDate = DateTime.Now,
-                LoanDate = lh.LoanDate,
-                LoanHistoryId = lh.LoanHistoryId
-            };
-
-            _dbSet.Update(loanHistory);
-            _context.SaveChanges();
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
+            }
         }
 
         public void PostLoanHistory(LoanHistory lh)
         {
-            LoanHistory loanHistory = new LoanHistory
+            try
             {
-                Product = _context.Products.Find(lh.Product.ProductId),
-                Customer = _context.Customers.Find(lh.Customer.CustomerId),
-                ReturnDate = lh.ReturnDate,
-                LoanDate = lh.LoanDate
-            };
+                LoanHistory loanHistory = new LoanHistory
+                {
+                    Product = _context.Products.Find(lh.Product.ProductId),
+                    Customer = _context.Customers.Find(lh.Customer.CustomerId),
+                    ReturnDate = lh.ReturnDate,
+                    LoanDate = lh.LoanDate
+                };
 
-            _dbSet.Add(loanHistory);
-            _context.SaveChanges();
+                _dbSet.Add(loanHistory);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(
+                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
+            }
         }
     }
 }

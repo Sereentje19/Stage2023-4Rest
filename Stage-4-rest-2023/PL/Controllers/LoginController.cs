@@ -35,16 +35,9 @@ namespace Stage4rest2023.Controllers
         [HttpPost]
         public ActionResult Login([FromBody] LoginRequestDTO user)
         {
-            try
-            {
-                User currentUser = loginService.CheckCredentials(user);
-                var token = jwtValidationService.GenerateToken();
-                return Ok(token);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            User currentUser = loginService.CheckCredentials(user);
+            var token = jwtValidationService.GenerateToken();
+            return Ok(token);
         }
     }
 }

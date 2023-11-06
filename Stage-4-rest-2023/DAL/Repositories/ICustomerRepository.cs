@@ -5,7 +5,7 @@ namespace Stage4rest2023.Repositories
 {
     public interface ICustomerRepository
     {
-        List<Customer> GetAll(string searchfield);
+        (IEnumerable<object>, int) GetAllCustomers(string searchfield, int page, int pageSize);
         IEnumerable<Customer> GetFilteredCustomers(string searchfield);
         Customer GetCustomerById(int id);
         int AddCustomer(Customer entity);

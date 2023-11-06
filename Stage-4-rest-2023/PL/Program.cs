@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Stage4rest2023.Services;
 using Microsoft.AspNetCore.Hosting;
 using System.Net;
+using System.Net.Mime;
+using Stage4rest2023.Exceptions;
+using Microsoft.Extensions.Logging;
+
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -65,19 +69,29 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<IMailService, MailService>();
     builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
     builder.Services.AddHostedService<DocumentExpirationCheckService>();
+    
 }
 
 
 void BuildApp()
 {
     var app = builder.Build();
-
+    
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+    
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();
+        // app.UseExceptionHandler("/error-development");
+        // app.UseDeveloperExceptionPage();
+
     }
+    // else
+    // {
+    //     app.UseExceptionHandler("/error");
+    // }
 
     app.UseHttpsRedirection();
     app.UseRouting();
@@ -93,4 +107,5 @@ void BuildApp()
     // Set the URL and port
     app.Urls.Add("http://localhost:5050");
     app.Run();
+    GC.WaitForPendingFinalizers();
 }

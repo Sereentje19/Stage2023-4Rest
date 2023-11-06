@@ -31,12 +31,10 @@ namespace Stage4rest2023.Controllers
         [HttpGet("product/{product-id}")]
         public IActionResult getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var loanHistory = _loanHistoryService.GetLoanHistoryByProductId(productId);
+            jwtValidationService.ValidateToken(HttpContext);
+            var loanHistory = _loanHistoryService.GetLoanHistoryByProductId(productId);
 
-                var pagedLoanHistory = loanHistory
+            var pagedLoanHistory = loanHistory
                 .Select(loan => new
                 {
                     Type = loan.Product.Type.ToString(),
@@ -50,23 +48,16 @@ namespace Stage4rest2023.Controllers
                 })
                 .ToList();
 
-                return Ok(pagedLoanHistory);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            return Ok(pagedLoanHistory);
         }
 
         [HttpGet("customer/{customer-id}")]
         public IActionResult GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var lh = _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
+            jwtValidationService.ValidateToken(HttpContext);
+            var lh = _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
 
-                var LoanHistory = lh
+            var LoanHistory = lh
                 .Select(loan => new
                 {
                     Type = loan.Product.Type.ToString(),
@@ -78,72 +69,39 @@ namespace Stage4rest2023.Controllers
                 })
                 .ToList();
 
-                return Ok(LoanHistory);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            return Ok(LoanHistory);
         }
 
         [HttpGet("date/{product-id}")]
         public IActionResult GetReturnDatesByProductId([FromRoute(Name = "product-id")] int productId)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var returnDateList = _loanHistoryService.GetReturnDatesByProductId(productId);
-                return Ok(returnDateList);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            var returnDateList = _loanHistoryService.GetReturnDatesByProductId(productId);
+            return Ok(returnDateList);
         }
 
         [HttpGet("recent/{product-id}")]
         public IActionResult GetLatestLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                var loanHistory = _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
-                return Ok(loanHistory);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            var loanHistory = _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
+            return Ok(loanHistory);
         }
 
         [HttpPut]
         public IActionResult UpdateLoanHistory(LoanHistory loanHistory)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                _loanHistoryService.UpdateLoanHistory(loanHistory);
-                return Ok(new { message = "Product updated" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            _loanHistoryService.UpdateLoanHistory(loanHistory);
+            return Ok(new { message = "Product updated" });
         }
 
         [HttpPost]
         public IActionResult PostLoanHistory([FromBody] LoanHistory? lh)
         {
-            try
-            {
-                jwtValidationService.ValidateToken(HttpContext);
-                _loanHistoryService.PostLoanHistory(lh);
-                return Ok(new { message = "Product created" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(401, ex.Message);
-            }
+            jwtValidationService.ValidateToken(HttpContext);
+            _loanHistoryService.PostLoanHistory(lh);
+            return Ok(new { message = "Product created" });
         }
     }
 }
