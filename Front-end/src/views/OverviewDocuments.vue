@@ -157,9 +157,11 @@ export default {
           },
         })
         .then((res) => {
+          console.log(res.data)
           this.documents = res.data.documents;
           this.pager = res.data.pager;
-          console.log(res.data.documents.length)
+          console.log(this.pager)
+          console.log(this.documents)
         })
         .catch((error) => {
           this.$refs.PopUpMessage.popUpError(error.response.data);

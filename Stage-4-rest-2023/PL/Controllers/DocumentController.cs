@@ -41,6 +41,10 @@ namespace Stage4rest2023.Controllers
             var (pagedDocuments, pager) =
                 documentService.GetFilteredPagedDocuments(searchfield, dropdown, page, pageSize);
 
+            Console.WriteLine("blabla" + pager.PageSize + pager.TotalPages);
+
+            Console.WriteLine("test1" + pagedDocuments.Count());
+            
             var response = new
             {
                 Documents = pagedDocuments,
@@ -52,10 +56,16 @@ namespace Stage4rest2023.Controllers
                     pager.TotalPages,
                 }
             };
+            for (int i = response.Documents.Count(); i >= 0; i--)
+            {
+                Console.WriteLine("test2" + response.Documents);
+            }
+            
+            Console.WriteLine("test3" + response.Documents.Count());
 
             return Ok(response);
         }
-        
+
         [HttpGet("archive")]
         public IActionResult GetArchivedPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
@@ -78,7 +88,7 @@ namespace Stage4rest2023.Controllers
 
             return Ok(response);
         }
-        
+
         [HttpGet("long-valid")]
         public IActionResult GetLongValidPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
@@ -87,7 +97,7 @@ namespace Stage4rest2023.Controllers
             var (pagedDocuments, pager) =
                 documentService.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
 
-            
+
             var response = new
             {
                 Documents = pagedDocuments,

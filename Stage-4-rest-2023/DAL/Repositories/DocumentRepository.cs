@@ -26,124 +26,83 @@ namespace Stage4rest2023.Repositories
                 .Include(d => d.Customer)
                 .ToList();
         }
-
-        public (IEnumerable<object>, int) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown,
-            int page, int pageSize)
+        
+        public IQueryable<DocumentOverviewDTO> QueryGetDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-            DateTime now = DateTime.Now;
-            DateTime sixWeeksFromNow = now.AddDays(42);
-
-            int numberOfCustomers = _context.Documents
-                .Include(d => d.Customer)
-                .Count(document => (string.IsNullOrEmpty(searchfield) ||
-                                    document.Customer.Name.Contains(searchfield) ||
-                                    document.Customer.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_Selected ||
-                                       document.Type == dropdown) &&
-                                   (document.Date <= sixWeeksFromNow && !document.IsArchived));
-
-            IEnumerable<DocumentOverviewDTO> documentList = _context.Documents
+            return _context.Documents
                 .Include(d => d.Customer)
                 .Where(document => (string.IsNullOrEmpty(searchfield) ||
                                     document.Customer.Name.Contains(searchfield) ||
                                     document.Customer.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown) &&
-                                   (document.Date <= sixWeeksFromNow && !document.IsArchived))
-                .OrderBy(document => document.Date)
-                .Skip(skipCount)
-                .Take(pageSize)
-                .Select(doc => new DocumentOverviewDTO()
+                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown))
+                .Select(doc => new DocumentOverviewDTO
                 {
                     DocumentId = doc.DocumentId,
                     CustomerId = doc.Customer.CustomerId,
                     Date = doc.Date,
                     CustomerName = doc.Customer.Name,
                     IsArchived = doc.IsArchived,
-                    Type = doc.Type.ToString(), 
-                })
-                .ToList();
+                    Type = doc.Type.ToString().Replace("_", " "),
+                });
+        }
 
+        public (IEnumerable<object>, int) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        {
+            DateTime now = DateTime.Now;
+            DateTime sixWeeksFromNow = now.AddDays(42);            
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+
+            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, page, pageSize);
+            
+            int numberOfCustomers = query.ToList().Count();
+            IEnumerable<DocumentOverviewDTO> documentList =  query
+                .Where(item => item.Date <= sixWeeksFromNow && !item.IsArchived)
+                .OrderBy(document => document.Date)
+                .Skip(skipCount)
+                .Take(pageSize)
+                .ToList();
+            
             return (documentList, numberOfCustomers);
         }
+        
 
         public (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
 
-            int numberOfCustomers = _context.Documents
-                .Include(d => d.Customer)
-                .Count(document => (string.IsNullOrEmpty(searchfield) ||
-                                    document.Customer.Name.Contains(searchfield) ||
-                                    document.Customer.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_Selected ||
-                                       document.Type == dropdown) &&
-                                   document.IsArchived);
-
-            IEnumerable<DocumentOverviewDTO> documentList = _context.Documents
-                .Include(d => d.Customer)
-                .Where(document => (string.IsNullOrEmpty(searchfield) ||
-                                    document.Customer.Name.Contains(searchfield) ||
-                                    document.Customer.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown) &&
-                                   document.IsArchived)
+            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, page, pageSize);
+            
+            int numberOfCustomers = query.ToList().Count();
+            IEnumerable<DocumentOverviewDTO> documentList =  query
+                .Where(item => item.IsArchived)
                 .OrderBy(document => document.Date)
                 .Skip(skipCount)
                 .Take(pageSize)
-                .Select(doc => new DocumentOverviewDTO()
-                {
-                    DocumentId = doc.DocumentId,
-                    CustomerId = doc.Customer.CustomerId,
-                    Date = doc.Date,
-                    CustomerName = doc.Customer.Name,
-                    IsArchived = doc.IsArchived,
-                    Type = doc.Type.ToString(), 
-                })
                 .ToList();
-
+            
             return (documentList, numberOfCustomers);
         }
 
         public (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize)
         {
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
             DateTime now = DateTime.Now;
-            DateTime sixWeeksFromNow = now.AddDays(42);
+            DateTime sixWeeksFromNow = now.AddDays(42);            
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
 
-            int numberOfCustomers = _context.Documents
-                .Include(d => d.Customer)
-                .Count(document => (string.IsNullOrEmpty(searchfield) ||
-                                    document.Customer.Name.Contains(searchfield) ||
-                                    document.Customer.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_Selected ||
-                                       document.Type == dropdown) &&
-                                   (document.Date > sixWeeksFromNow && !document.IsArchived));
-
-            IEnumerable<DocumentOverviewDTO> documentList = _context.Documents
-                .Include(d => d.Customer)
-                .Where(document => (string.IsNullOrEmpty(searchfield) ||
-                                    document.Customer.Name.Contains(searchfield) ||
-                                    document.Customer.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown) &&
-                                   (document.Date > sixWeeksFromNow && !document.IsArchived))
+            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, page, pageSize);
+            
+            int numberOfCustomers = query.ToList().Count();
+            IEnumerable<DocumentOverviewDTO> documentList =  query
+                .Where(item => item.Date > sixWeeksFromNow && !item.IsArchived)
                 .OrderBy(document => document.Date)
                 .Skip(skipCount)
                 .Take(pageSize)
-                .Select(doc => new DocumentOverviewDTO()
-                {
-                    DocumentId = doc.DocumentId,
-                    CustomerId = doc.Customer.CustomerId,
-                    Date = doc.Date,
-                    CustomerName = doc.Customer.Name,
-                    IsArchived = doc.IsArchived,
-                    Type = doc.Type.ToString(), 
-                })
                 .ToList();
-
             return (documentList, numberOfCustomers);
         }
+
 
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
