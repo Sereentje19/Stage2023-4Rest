@@ -5,7 +5,6 @@ namespace Stage4rest2023.Repositories
 {
     public interface IDocumentRepository
     {
-        IEnumerable<Document> getAllDocuments();
 
         (IEnumerable<object>, int) GetPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);

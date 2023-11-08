@@ -19,7 +19,7 @@ namespace Stage4rest2023.Repositories
             _dbSet = _context.Set<Product>();
         }
 
-        public IEnumerable<Product> GetAllProducts(string searchfield, ProductType? dropdown)
+        public (IEnumerable<object>, int) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize)
         {
             IQueryable<Product> query = from product in _context.Products
                 where (string.IsNullOrEmpty(searchfield) ||
@@ -28,9 +28,16 @@ namespace Stage4rest2023.Repositories
                        product.PurchaseDate.ToString().Contains(searchfield))
                       && (dropdown == ProductType.Not_Selected || product.Type == dropdown)
                 select product;
-
-            var productList = query.ToList();
-            return productList;
+            
+            int numberOfProducts = query.Count();
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            
+            var productList = query
+                .Skip(skipCount)
+                .Take(pageSize)
+                .ToList();
+            
+            return (productList, numberOfProducts);
         }
 
         public Product GetProductById(int id)

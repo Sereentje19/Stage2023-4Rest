@@ -21,28 +21,24 @@ namespace Stage4rest2023.Repositories
             _dbSet = _context.Set<Customer>();
         }
 
-
         public (IEnumerable<object>, int) GetAllCustomers(string searchfield, int page, int pageSize)
         {
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-            
-            int numberOfCustomers = _context.Customers
-                .Count(customer => string.IsNullOrEmpty(searchfield) ||
-                                   customer.Name.Contains(searchfield) ||
-                                   customer.Email.Contains(searchfield));
-            
-            IEnumerable<Customer> customerList = _context.Customers
+            IQueryable<Customer> query = _context.Customers
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
                                    customer.Name.Contains(searchfield) ||
                                    customer.Email.Contains(searchfield))
-                .OrderBy(customer => customer.Name)
+                .OrderBy(customer => customer.Name);
+            
+            int numberOfCustomers = query.Count();
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            
+            IEnumerable<Customer> customerList = query
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToList();
 
             return (customerList, numberOfCustomers);
         }
-
 
         /// <summary>
         /// Filters and retrieves a collection of customers based on a search field.

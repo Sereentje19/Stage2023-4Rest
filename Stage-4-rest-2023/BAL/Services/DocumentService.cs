@@ -17,12 +17,6 @@ namespace Stage4rest2023.Services
             _documentRepository = dr;
         }
 
-        public IEnumerable<Document> GetAllDocuments()
-        {
-            return _documentRepository.getAllDocuments();
-        }
-
-
         public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
             var (documentList, numberOfDocuments) = _documentRepository.GetPagedDocuments(searchfield, dropdown, page, pageSize);
@@ -47,17 +41,9 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public object GetDocumentById(int id)
+        public DocumentDTO GetDocumentById(int id)
         {
-            var doc = _documentRepository.GetDocumentById(id);
-
-            var response = new
-            {
-                Document = doc,
-                Customer = doc.Customer,
-                type = doc.Type.ToString().Replace("_", " "),
-            };
-            return response;
+            return _documentRepository.GetDocumentById(id);
         }
 
         /// <summary>

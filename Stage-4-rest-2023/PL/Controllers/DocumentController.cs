@@ -25,26 +25,13 @@ namespace Stage4rest2023.Controllers
             jwtValidationService = jwt;
         }
 
-        // [HttpGet]
-        // public IActionResult GetAllDocuments()
-        // {
-        //     jwtValidationService.ValidateToken(HttpContext);
-        //     var documents = documentService.GetAllDocuments();
-        //     return Ok(documents);
-        // }
-
         [HttpGet]
         public IActionResult GetFilteredPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var (pagedDocuments, pager) =
-                documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
+            var (pagedDocuments, pager) = documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
 
-            Console.WriteLine("blabla" + pager.PageSize + pager.TotalPages);
-
-            Console.WriteLine("test1" + pagedDocuments.Count());
-            
             var response = new
             {
                 Documents = pagedDocuments,
@@ -56,12 +43,6 @@ namespace Stage4rest2023.Controllers
                     pager.TotalPages,
                 }
             };
-            for (int i = response.Documents.Count(); i >= 0; i--)
-            {
-                Console.WriteLine("test2" + response.Documents);
-            }
-            
-            Console.WriteLine("test3" + response.Documents.Count());
 
             return Ok(response);
         }
@@ -97,7 +78,6 @@ namespace Stage4rest2023.Controllers
             var (pagedDocuments, pager) =
                 documentService.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
 
-
             var response = new
             {
                 Documents = pagedDocuments,
@@ -122,7 +102,15 @@ namespace Stage4rest2023.Controllers
         public IActionResult GetDocumentById(int id)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var response = documentService.GetDocumentById(id);
+            var doc = documentService.GetDocumentById(id);
+            
+            var response = new
+            {
+                Document = doc,
+                doc.Customer,
+                type = doc.Type.ToString().Replace("_", " "),
+            };
+            
             return Ok(response);
         }
 

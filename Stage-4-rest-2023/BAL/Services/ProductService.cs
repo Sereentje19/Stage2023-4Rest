@@ -18,24 +18,9 @@ namespace Stage4rest2023.Services
 
         public (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize)
         {
-            IEnumerable<Product> products = _productRepository.GetAllProducts(searchfield, dropdown);
-
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-            var pager = new Pager(products.Count(), page, pageSize);
-
-            var pagedproducts = products
-            .Skip(skipCount)
-            .Take(pageSize)
-            .Select(pro => new
-            {
-                pro.SerialNumber,
-                pro.PurchaseDate,
-                pro.ExpirationDate,
-                pro.ProductId,
-                Type = pro.Type.ToString(),
-            })
-            .ToList();
-            return (pagedproducts.Cast<object>(), pager);
+            var (products, numberOfProducts) = _productRepository.GetAllProducts(searchfield, dropdown, page, pageSize);
+            var pager = new Pager(numberOfProducts, page, pageSize);
+            return (products, pager);
         }
 
         public Product GetProductById(int id)

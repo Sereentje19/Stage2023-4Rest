@@ -19,15 +19,8 @@ namespace Stage4rest2023.Repositories
             _context = context;
             _dbSet = _context.Set<Document>();
         }
-
-        public IEnumerable<Document> getAllDocuments()
-        {
-            return _dbSet
-                .Include(d => d.Customer)
-                .ToList();
-        }
         
-        public IQueryable<DocumentOverviewDTO> QueryGetDocuments(string searchfield, DocumentType? dropdown)
+        public IQueryable<DocumentOverviewDTO> QueryGetDocuments(string searchfield, DocumentType? dropdown, Func<DocumentOverviewDTO, bool> filter)
         {
             return _context.Documents
                 .Include(d => d.Customer)
@@ -35,6 +28,7 @@ namespace Stage4rest2023.Repositories
                                     document.Customer.Name.Contains(searchfield) ||
                                     document.Customer.Email.Contains(searchfield))
                                    && (dropdown == DocumentType.Not_Selected || document.Type == dropdown))
+                .OrderBy(document => document.Date)
                 .Select(doc => new DocumentOverviewDTO
                 {
                     DocumentId = doc.DocumentId,
@@ -49,12 +43,13 @@ namespace Stage4rest2023.Repositories
         private (IEnumerable<DocumentOverviewDTO>, int) GetPagedDocumentsInternal(string searchfield, DocumentType? dropdown, int page, int pageSize, Func<DocumentOverviewDTO, bool> filter)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown);
-            int numberOfCustomers = query.Count();
+            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, filter);
+            // query.Where(filter);
 
+            int numberOfCustomers = query.Where(filter).Count();
+            
             IEnumerable<DocumentOverviewDTO> documentList = query
                 .Where(filter)
-                .OrderBy(document => document.Date)
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToList();
