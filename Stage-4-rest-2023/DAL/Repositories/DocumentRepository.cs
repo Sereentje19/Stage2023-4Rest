@@ -27,7 +27,7 @@ namespace Stage4rest2023.Repositories
                 .ToList();
         }
         
-        public IQueryable<DocumentOverviewDTO> QueryGetDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        public IQueryable<DocumentOverviewDTO> QueryGetDocuments(string searchfield, DocumentType? dropdown)
         {
             return _context.Documents
                 .Include(d => d.Customer)
@@ -46,62 +46,39 @@ namespace Stage4rest2023.Repositories
                 });
         }
 
-        public (IEnumerable<object>, int) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        private (IEnumerable<DocumentOverviewDTO>, int) GetPagedDocumentsInternal(string searchfield, DocumentType? dropdown, int page, int pageSize, Func<DocumentOverviewDTO, bool> filter)
         {
-            DateTime now = DateTime.Now;
-            DateTime sixWeeksFromNow = now.AddDays(42);            
             int skipCount = Math.Max(0, (page - 1) * pageSize);
+            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown);
+            int numberOfCustomers = query.Count();
 
-            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, page, pageSize);
-            
-            int numberOfCustomers = query.ToList().Count();
-            IEnumerable<DocumentOverviewDTO> documentList =  query
-                .Where(item => item.Date <= sixWeeksFromNow && !item.IsArchived)
+            IEnumerable<DocumentOverviewDTO> documentList = query
+                .Where(filter)
                 .OrderBy(document => document.Date)
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToList();
-            
+
             return (documentList, numberOfCustomers);
         }
         
-
-        public (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
-            int page, int pageSize)
+        public (IEnumerable<object>, int) GetPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-
-            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, page, pageSize);
-            
-            int numberOfCustomers = query.ToList().Count();
-            IEnumerable<DocumentOverviewDTO> documentList =  query
-                .Where(item => item.IsArchived)
-                .OrderBy(document => document.Date)
-                .Skip(skipCount)
-                .Take(pageSize)
-                .ToList();
-            
-            return (documentList, numberOfCustomers);
+            DateTime sixWeeksFromNow = DateTime.Now.AddDays(42);
+            return GetPagedDocumentsInternal(searchfield, dropdown, page, pageSize, item => item.Date <= sixWeeksFromNow && !item.IsArchived);
         }
 
-        public (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
-            int page, int pageSize)
+        public (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            DateTime now = DateTime.Now;
-            DateTime sixWeeksFromNow = now.AddDays(42);            
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
-
-            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, page, pageSize);
-            
-            int numberOfCustomers = query.ToList().Count();
-            IEnumerable<DocumentOverviewDTO> documentList =  query
-                .Where(item => item.Date > sixWeeksFromNow && !item.IsArchived)
-                .OrderBy(document => document.Date)
-                .Skip(skipCount)
-                .Take(pageSize)
-                .ToList();
-            return (documentList, numberOfCustomers);
+            return GetPagedDocumentsInternal(searchfield, dropdown, page, pageSize, item => item.IsArchived);
         }
+
+        public (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        {
+            DateTime sixWeeksFromNow = DateTime.Now.AddDays(42);
+            return GetPagedDocumentsInternal(searchfield, dropdown, page, pageSize, item => item.Date > sixWeeksFromNow && !item.IsArchived);
+        }
+
 
 
         /// <summary>

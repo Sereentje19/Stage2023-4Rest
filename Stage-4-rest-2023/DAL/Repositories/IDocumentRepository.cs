@@ -7,7 +7,7 @@ namespace Stage4rest2023.Repositories
     {
         IEnumerable<Document> getAllDocuments();
 
-        (IEnumerable<object>, int) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown,
+        (IEnumerable<object>, int) GetPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
 
         (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,

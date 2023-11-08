@@ -23,9 +23,9 @@ namespace Stage4rest2023.Services
         }
 
 
-        public (IEnumerable<object>, Pager) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            var (documentList, numberOfDocuments) = _documentRepository.GetFilteredPagedDocuments(searchfield, dropdown, page, pageSize);
+            var (documentList, numberOfDocuments) = _documentRepository.GetPagedDocuments(searchfield, dropdown, page, pageSize);
             var pager = new Pager(numberOfDocuments, page, pageSize);
             return (documentList, pager);
         }

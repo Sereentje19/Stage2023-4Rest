@@ -39,7 +39,7 @@ namespace Stage4rest2023.Controllers
         {
             jwtValidationService.ValidateToken(HttpContext);
             var (pagedDocuments, pager) =
-                documentService.GetFilteredPagedDocuments(searchfield, dropdown, page, pageSize);
+                documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
 
             Console.WriteLine("blabla" + pager.PageSize + pager.TotalPages);
 

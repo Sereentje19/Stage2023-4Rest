@@ -10,7 +10,7 @@ namespace Stage4rest2023.Services
             int pageSize);
         public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
-        public (IEnumerable<object>, Pager) GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown,
+        public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
         object GetDocumentById(int id);
         void PostDocument(Document document);
