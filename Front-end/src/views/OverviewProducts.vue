@@ -134,6 +134,7 @@ export default {
         },
       })
         .then((res) => {
+          console.log(res.data)
           this.product = res.data.products;
           this.pager = res.data.pager;
 

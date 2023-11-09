@@ -8,14 +8,14 @@
                 <ul>
                     <form class="gegevens">
                         <select v-model="this.product.type" class="Type">
-                        <option value="0">Selecteer type...</option>
-                        <option value="1">Laptop</option>
-                        <option value="2">Monitor</option>
-                        <option value="3">Stoel</option>
-                    </select>
-                    <input v-model="this.product.purchaseDate" type="date" class="Date"/>
-                    <input v-model="this.product.expirationDate" type="date" class="Date"/>
-                    <input class="Email" v-model="this.product.serialNumber" placeholder="Serie nummer"/>
+                            <option value="0">Selecteer type...</option>
+                            <option value="1">Laptop</option>
+                            <option value="2">Monitor</option>
+                            <option value="3">Stoel</option>
+                        </select>
+                        <input v-model="this.product.purchaseDate" type="date" class="Date" />
+                        <input v-model="this.product.expirationDate" type="date" class="Date" />
+                        <input class="Email" v-model="this.product.serialNumber" placeholder="Serie nummer" />
                     </form>
                 </ul>
 
@@ -52,6 +52,7 @@ export default {
     },
     methods: {
         PostCustomer() {
+            this.product.type = parseInt(this.product.type, 10);
             axios.post("product", this.product, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

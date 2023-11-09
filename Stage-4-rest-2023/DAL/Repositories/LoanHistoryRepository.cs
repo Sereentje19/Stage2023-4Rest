@@ -62,11 +62,23 @@ namespace Stage4rest2023.Repositories
 
         public DateTime? GetReturnDatesByProductId(int productId)
         {
-            return _dbSet
+            int loanHistoryId = _dbSet
+                .Where(l => l.Product.ProductId == productId)
+                .Select(l => l.LoanHistoryId)
+                .FirstOrDefault();
+
+            if (loanHistoryId == 0)
+            {
+                return DateTime.Now;
+            }
+
+            DateTime? returnDate = _dbSet
                 .Where(l => l.Product.ProductId == productId)
                 .OrderByDescending(l => l.LoanDate)
                 .Select(l => l.ReturnDate)
                 .FirstOrDefault();
+
+            return returnDate;
         }
 
 
