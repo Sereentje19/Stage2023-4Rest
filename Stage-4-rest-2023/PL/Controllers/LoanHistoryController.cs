@@ -6,6 +6,7 @@ using Stage4rest2023.Models;
 using Stage4rest2023.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Stage4rest2023.Models.DTOs;
 
 namespace Stage4rest2023.Controllers
 {
@@ -32,51 +33,23 @@ namespace Stage4rest2023.Controllers
         public IActionResult getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var loanHistory = _loanHistoryService.GetLoanHistoryByProductId(productId);
-
-            var pagedLoanHistory = loanHistory
-                .Select(loan => new
-                {
-                    Type = loan.Product.Type.ToString(),
-                    loan.Product.SerialNumber,
-                    loan.Product.ProductId,
-                    loan.Product.ExpirationDate,
-                    loan.Product.PurchaseDate,
-                    loan.LoanDate,
-                    loan.ReturnDate,
-                    loan.Customer.Name
-                })
-                .ToList();
-
-            return Ok(pagedLoanHistory);
+            IEnumerable<LoanHistoryDTO> loanHistory = _loanHistoryService.GetLoanHistoryByProductId(productId);
+            return Ok(loanHistory);
         }
 
         [HttpGet("customer/{customer-id}")]
         public IActionResult GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var lh = _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
-
-            var LoanHistory = lh
-                .Select(loan => new
-                {
-                    Type = loan.Product.Type.ToString(),
-                    loan.Product.SerialNumber,
-                    loan.LoanDate,
-                    loan.ReturnDate,
-                    loan.Customer.Name,
-                    loan.Customer.Email
-                })
-                .ToList();
-
-            return Ok(LoanHistory);
+            IEnumerable<LoanHistoryDTO> lh = _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
+            return Ok(lh);
         }
 
         [HttpGet("date/{product-id}")]
         public IActionResult GetReturnDatesByProductId([FromRoute(Name = "product-id")] int productId)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var returnDateList = _loanHistoryService.GetReturnDatesByProductId(productId);
+            DateTime? returnDateList = _loanHistoryService.GetReturnDatesByProductId(productId);
             return Ok(returnDateList);
         }
 
@@ -84,7 +57,7 @@ namespace Stage4rest2023.Controllers
         public IActionResult GetLatestLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var loanHistory = _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
+            LoanHistory loanHistory = _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
             return Ok(loanHistory);
         }
 

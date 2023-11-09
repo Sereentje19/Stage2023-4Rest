@@ -8,7 +8,6 @@ namespace Stage4rest2023.Services
 {
     public class MailService : IMailService
     {
-        private string toEmail = "serena.kenter@4-rest.nl";
         private readonly MailSettings _mailSettings;
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace Stage4rest2023.Services
         /// <param name="image">The byte array representing the embedded image.</param>
         private void SetBody(int weeks, string customerName, DateTime date, DocumentType type, MimeMessage emailMessage, byte[] image, string fileType)
         {
-            emailMessage.Body = new TextPart("plain")
+            TextPart textPart = new TextPart("plain")
             {
                 Text = $"Het volgende document zal over {weeks} weken komen te vervallen:" +
                        $"\nNaam: {customerName}" +
@@ -56,15 +55,17 @@ namespace Stage4rest2023.Services
                        $"\nType document: {type.ToString().Replace("_", " ")}\n\n"
             };
             
+            Multipart multipart = new Multipart("mixed");
+            multipart.Add(textPart);
+            
             // Add the image as an attachment
-            MimePart imageAttachment = SetImage(image, fileType);
-
-            // Attach the image to the email
-            emailMessage.Body = new Multipart("mixed")
+            if (image != null)
             {
-                emailMessage.Body,
-                imageAttachment
-            };
+                MimePart imageAttachment = SetImage(image, fileType);
+                multipart.Add(imageAttachment);
+            }
+
+            emailMessage.Body = multipart;
         }
             
 
@@ -100,7 +101,7 @@ namespace Stage4rest2023.Services
                 {
                     MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
                     emailMessage.From.Add(emailFrom);
-                    MailboxAddress emailTo = new MailboxAddress("serena", toEmail);
+                    MailboxAddress emailTo = new MailboxAddress("Administratie", _mailSettings.ReceiverEmail);
                     emailMessage.To.Add(emailTo);
                     emailMessage.Subject = "Document vervalt Binnenkort!";
 

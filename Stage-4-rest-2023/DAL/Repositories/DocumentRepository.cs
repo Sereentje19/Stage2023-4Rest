@@ -44,8 +44,6 @@ namespace Stage4rest2023.Repositories
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, filter);
-            // query.Where(filter);
-
             int numberOfCustomers = query.Where(filter).Count();
             
             IEnumerable<DocumentOverviewDTO> documentList = query
@@ -73,8 +71,6 @@ namespace Stage4rest2023.Repositories
             DateTime sixWeeksFromNow = DateTime.Now.AddDays(42);
             return GetPagedDocumentsInternal(searchfield, dropdown, page, pageSize, item => item.Date > sixWeeksFromNow && !item.IsArchived);
         }
-
-
 
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
@@ -110,13 +106,14 @@ namespace Stage4rest2023.Repositories
                 {
                     throw new InputValidationException("Selecteer een type.");
                 }
-                else if (string.IsNullOrWhiteSpace(document.Customer.Name) ||
-                         string.IsNullOrWhiteSpace(document.Customer.Email))
+
+                if (string.IsNullOrWhiteSpace(document.Customer.Name) ||
+                    string.IsNullOrWhiteSpace(document.Customer.Email))
                 {
                     throw new InputValidationException("Klant naam of email is leeg.");
                 }
 
-                var existingCustomer = _context.Customers
+                Customer existingCustomer = _context.Customers
                     .SingleOrDefault(l => l.Name == document.Customer.Name && l.Email == document.Customer.Email);
 
                 if (existingCustomer != null)
@@ -142,7 +139,7 @@ namespace Stage4rest2023.Repositories
         {
             try
             {
-                var existingDocument = _dbSet
+                Document existingDocument = _dbSet
                     .Include(d => d.Customer)
                     .Where(d => d.DocumentId == document.DocumentId)
                     .FirstOrDefault();
@@ -151,7 +148,8 @@ namespace Stage4rest2023.Repositories
                 {
                     throw new ItemNotFoundException("Geen document gevonden. Probeer het later onpnieuw.");
                 }
-                else if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
+
+                if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
                 {
                     throw new InputValidationException("Datum of type is leeg.");
                 }
@@ -172,7 +170,7 @@ namespace Stage4rest2023.Repositories
         {
             try
             {
-                var existingDocument = _dbSet.Find(document.DocumentId);
+                Document existingDocument = _dbSet.Find(document.DocumentId);
 
                 if (existingDocument == null)
                 {

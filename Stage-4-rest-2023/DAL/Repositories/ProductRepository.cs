@@ -21,13 +21,12 @@ namespace Stage4rest2023.Repositories
 
         public (IEnumerable<object>, int) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize)
         {
-            IQueryable<Product> query = from product in _context.Products
-                where (string.IsNullOrEmpty(searchfield) ||
-                       product.SerialNumber.Contains(searchfield) ||
-                       product.ExpirationDate.ToString().Contains(searchfield) ||
-                       product.PurchaseDate.ToString().Contains(searchfield))
-                      && (dropdown == ProductType.Not_Selected || product.Type == dropdown)
-                select product;
+            IQueryable<Product> query = _context.Products
+                .Where(product => (string.IsNullOrEmpty(searchfield) ||
+                                   product.SerialNumber.Contains(searchfield) ||
+                                   product.ExpirationDate.ToString().Contains(searchfield) ||
+                                   product.PurchaseDate.ToString().Contains(searchfield))
+                                  && (dropdown == ProductType.Not_Selected || product.Type == dropdown));
             
             int numberOfProducts = query.Count();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
@@ -53,7 +52,8 @@ namespace Stage4rest2023.Repositories
                 {
                     throw new InputValidationException("Serie nummer is leeg.");
                 }
-                else if (product.Type == ProductType.Not_Selected)
+
+                if (product.Type == ProductType.Not_Selected)
                 {
                     throw new InputValidationException("Type is leeg.");
                 }
@@ -87,7 +87,7 @@ namespace Stage4rest2023.Repositories
             try
             {
                 List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Product.ProductId == id).ToList();
-                foreach (var loan in loans)
+                foreach (LoanHistory loan in loans)
                 {
                     _context.LoanHistory.Remove(loan);
                 }

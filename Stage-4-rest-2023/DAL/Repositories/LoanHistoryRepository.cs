@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Stage4rest2023.Models;
 using Microsoft.EntityFrameworkCore;
+using Stage4rest2023.Models.DTOs;
 
 namespace Stage4rest2023.Repositories
 {
@@ -19,23 +20,43 @@ namespace Stage4rest2023.Repositories
         }
 
 
-        public IEnumerable<LoanHistory> GetLoanHistoryByProductId(int id)
+        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByProductId(int id)
         {
             return _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
                 .OrderByDescending(l => l.LoanDate)
+                .Select(loan => new LoanHistoryDTO
+                {
+                    Type = loan.Product.Type.ToString(),
+                    SerialNumber = loan.Product.SerialNumber,
+                    Name = loan.Customer.Name,
+                    ExpirationDate = loan.Product.ExpirationDate,
+                    PurchaseDate = loan.Product.PurchaseDate,
+                    LoanDate = loan.LoanDate,
+                    ReturnDate = loan.ReturnDate,
+                    ProductId = loan.Product.ProductId,
+                })
                 .ToList();
         }
 
-        public IEnumerable<LoanHistory> GetLoanHistoryByCustomerId(int id)
+        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByCustomerId(int id)
         {
             return _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Customer.CustomerId == id)
                 .OrderByDescending(l => l.LoanDate)
+                .Select(loan => new LoanHistoryDTO
+                {
+                    Type = loan.Product.Type.ToString(),
+                    SerialNumber = loan.Product.SerialNumber,
+                    Name = loan.Customer.Name,
+                    Email = loan.Customer.Email,
+                    LoanDate = loan.LoanDate,
+                    ReturnDate = loan.ReturnDate,
+                })
                 .ToList();
         }
 

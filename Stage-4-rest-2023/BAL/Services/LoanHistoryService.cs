@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Stage4rest2023.Models;
+using Stage4rest2023.Models.DTOs;
 using Stage4rest2023.Repositories;
 
 namespace Stage4rest2023.Services
@@ -16,12 +17,12 @@ namespace Stage4rest2023.Services
             _loanHistoryRepository = loanHistoryRepository;
         }
 
-        public IEnumerable<LoanHistory> GetLoanHistoryByProductId(int id)
+        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByProductId(int id)
         {
             return _loanHistoryRepository.GetLoanHistoryByProductId(id);
         }
 
-        public IEnumerable<LoanHistory> GetLoanHistoryByCustomerId(int id)
+        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByCustomerId(int id)
         {
             return _loanHistoryRepository.GetLoanHistoryByCustomerId(id);
         }

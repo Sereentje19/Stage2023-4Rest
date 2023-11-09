@@ -43,7 +43,7 @@ namespace Stage4rest2023.Services
                     }
                 }
 
-                var delay = TimeSpan.FromDays(1);
+                TimeSpan delay = TimeSpan.FromDays(1);
                 await Task.Delay(delay, stoppingToken);
             }
         }
@@ -58,18 +58,18 @@ namespace Stage4rest2023.Services
             NotificationContext dbContext = serviceProvider.GetRequiredService<NotificationContext>();
             var mailService = serviceProvider.GetRequiredService<IMailService>();
 
-            var targetDate6Weeks = DateTime.Now.AddDays(6 * 7);
-            var targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
+            DateTime targetDate6Weeks = DateTime.Now.AddDays(6 * 7);
+            DateTime targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
 
-            var expiringDocuments = dbContext.Documents
+            List<Document> expiringDocuments = dbContext.Documents
                         .Include(d => d.Customer)
                         .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
                         .ToList();
 
-            foreach (var document in expiringDocuments)
+            foreach (Document document in expiringDocuments)
             {
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
-                var customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.Customer.CustomerId);
+                Customer customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.Customer.CustomerId);
 
                 mailService.SendEmail(customer.Name, document.FileType, document.Date, document.Type, document.File, weeks);
             }

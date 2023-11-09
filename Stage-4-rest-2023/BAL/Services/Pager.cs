@@ -18,7 +18,7 @@ namespace Stage4rest2023.Services
             int currentPage = 1,
             int pageSize = 5)
         {
-            var totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
+             Int32 totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
 
             if (currentPage < 1)
             {

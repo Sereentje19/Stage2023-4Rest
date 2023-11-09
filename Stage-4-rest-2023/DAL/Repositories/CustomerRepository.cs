@@ -94,7 +94,7 @@ namespace Stage4rest2023.Repositories
                 }
 
                 //if the customer already exist, don't add it again.
-                var existingCustomer = _dbSet.FirstOrDefault(c => c.Name == customer.Name && c.Email == customer.Email);
+                Customer existingCustomer = _dbSet.FirstOrDefault(c => c.Name == customer.Name && c.Email == customer.Email);
 
                 if (existingCustomer == null)
                 {
@@ -134,13 +134,13 @@ namespace Stage4rest2023.Repositories
             try
             {
                 List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Customer.CustomerId == id).ToList();
-                foreach (var loan in loans)
+                foreach (LoanHistory loan in loans)
                 {
                     _context.LoanHistory.Remove(loan);
                 }
 
                 List<Document> docs = _context.Documents.Where(l => l.Customer.CustomerId == id).ToList();
-                foreach (var doc in docs)
+                foreach (Document doc in docs)
                 {
                     _context.Documents.Remove(doc);
                 }

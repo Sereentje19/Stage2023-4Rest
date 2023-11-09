@@ -20,19 +20,19 @@ namespace Stage4rest2023.Services
         public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
             var (documentList, numberOfDocuments) = _documentRepository.GetPagedDocuments(searchfield, dropdown, page, pageSize);
-            var pager = new Pager(numberOfDocuments, page, pageSize);
+            Pager pager = new Pager(numberOfDocuments, page, pageSize);
             return (documentList, pager);
         }
         public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
             var (documentList, numberOfDocuments) = _documentRepository.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
-            var pager = new Pager(numberOfDocuments, page, pageSize);
+            Pager pager = new Pager(numberOfDocuments, page, pageSize);
             return (documentList, pager);
         }
         public (IEnumerable<object>, Pager) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
             var (documentList, numberOfDocuments) = _documentRepository.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
-            var pager = new Pager(numberOfDocuments, page, pageSize);
+            Pager pager = new Pager(numberOfDocuments, page, pageSize);
             return (documentList, pager);
         }
 

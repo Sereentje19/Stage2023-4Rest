@@ -55,7 +55,7 @@ namespace Stage4rest2023.Controllers
         public IActionResult GetFilteredCustomers(string? searchField)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var customers = customerService.GetFilteredCustomers(searchField);
+            IEnumerable<Customer> customers = customerService.GetFilteredCustomers(searchField);
             return Ok(customers);
         }
 
@@ -68,7 +68,7 @@ namespace Stage4rest2023.Controllers
         public IActionResult GetCustomerById(int id)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var customer = customerService.GetCustomerById(id);
+            Customer customer = customerService.GetCustomerById(id);
             return Ok(customer);
         }
 

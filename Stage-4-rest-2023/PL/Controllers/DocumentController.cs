@@ -102,7 +102,7 @@ namespace Stage4rest2023.Controllers
         public IActionResult GetDocumentById(int id)
         {
             jwtValidationService.ValidateToken(HttpContext);
-            var doc = documentService.GetDocumentById(id);
+            DocumentDTO doc = documentService.GetDocumentById(id);
             
             var response = new
             {

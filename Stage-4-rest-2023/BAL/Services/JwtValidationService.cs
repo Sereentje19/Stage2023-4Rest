@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Stage4rest2023.Exceptions;
 using Microsoft.Extensions.Configuration;
@@ -31,10 +32,10 @@ namespace Stage4rest2023.Services
         /// <returns>The generated JWT token as a string.</returns>
         public string GenerateToken()
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+            JwtSecurityToken token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 null,
                 expires: DateTime.Now.AddMinutes(30),
@@ -59,10 +60,10 @@ namespace Stage4rest2023.Services
             try
             {
                 string jwtToken = ExtractJwtToken(context);
-                var tokenValidationParameters = ConfigureTokenValidationParameters();
+                TokenValidationParameters tokenValidationParameters = ConfigureTokenValidationParameters();
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var claimsPrincipal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out _);
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out _);
 
                 return claimsPrincipal.Identity.Name;
             }

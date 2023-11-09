@@ -19,8 +19,8 @@ namespace Stage4rest2023.Services
 
         public (IEnumerable<object>, Pager) GetPagedCustomers(string searchfield, int page, int pageSize)
         {
-            var (pagedCustomers, numberOdcustomers) = _customerRepository.GetAllCustomers(searchfield, page, pageSize);
-            var pager = new Pager(numberOdcustomers, page, pageSize);
+            var (pagedCustomers, numberOfcustomers) = _customerRepository.GetAllCustomers(searchfield, page, pageSize);
+            Pager pager = new Pager(numberOfcustomers, page, pageSize);
             return (pagedCustomers, pager);
         }
 

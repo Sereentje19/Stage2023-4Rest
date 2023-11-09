@@ -19,7 +19,7 @@ namespace Stage4rest2023.Services
         public (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize)
         {
             var (products, numberOfProducts) = _productRepository.GetAllProducts(searchfield, dropdown, page, pageSize);
-            var pager = new Pager(numberOfProducts, page, pageSize);
+            Pager pager = new Pager(numberOfProducts, page, pageSize);
             return (products, pager);
         }
 
