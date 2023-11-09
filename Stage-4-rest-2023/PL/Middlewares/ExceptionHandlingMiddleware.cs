@@ -36,23 +36,23 @@ public class ExceptionHandlingMiddleware
         {
             Success = false
         };
-        
+
         switch (exception)
         {
             case ApplicationException:
             case InputValidationException:
                 response.StatusCode = (int)HttpStatusCode.BadRequest; //400
-                errorResponse.Message = exception.Message; 
+                errorResponse.Message = exception.Message;
                 break;
             case TokenValidationException:
                 response.StatusCode = (int)HttpStatusCode.Unauthorized; //401
                 errorResponse.Message = exception.Message;
                 break;
-            case InvalidCredentialsException: 
+            case InvalidCredentialsException:
                 response.StatusCode = (int)HttpStatusCode.Forbidden; //403
-                errorResponse.Message = exception.Message; 
+                errorResponse.Message = exception.Message;
                 break;
-            case ItemNotFoundException _: 
+            case ItemNotFoundException _:
                 response.StatusCode = (int)HttpStatusCode.NotFound; //404
                 errorResponse.Message = exception.Message;
                 break;

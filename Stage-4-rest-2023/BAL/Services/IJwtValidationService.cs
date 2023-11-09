@@ -5,7 +5,6 @@ namespace Stage4rest2023.Services
 {
     public interface IJwtValidationService
     {
-        // string ValidateToken(HttpContext context);
         string GenerateToken(LoginRequestDTO user);
     }
 }

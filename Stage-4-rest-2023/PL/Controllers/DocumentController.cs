@@ -13,24 +13,21 @@ namespace Stage4rest2023.Controllers
     public class DocumentController : ControllerBase
     {
         private readonly IDocumentService documentService;
-        private readonly IJwtValidationService jwtValidationService;
 
         /// <summary>
         /// Initializes a new instance of the DocumentController class.
         /// </summary>
         /// <param name="ds">The document service for managing documents.</param>
         /// <param name="jwt">The JWT validation service for token validation.</param>
-        public DocumentController(IDocumentService ds, IJwtValidationService jwt)
+        public DocumentController(IDocumentService ds)
         {
             documentService = ds;
-            jwtValidationService = jwt;
         }
 
         [HttpGet]
         public IActionResult GetFilteredPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             var (pagedDocuments, pager) = documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
 
             var response = new
@@ -52,7 +49,6 @@ namespace Stage4rest2023.Controllers
         public IActionResult GetArchivedPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             var (pagedDocuments, pager) =
                 documentService.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
 
@@ -75,7 +71,6 @@ namespace Stage4rest2023.Controllers
         public IActionResult GetLongValidPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             var (pagedDocuments, pager) =
                 documentService.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
 
@@ -102,7 +97,6 @@ namespace Stage4rest2023.Controllers
         [HttpGet("{id}")]
         public IActionResult GetDocumentById(int id)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             DocumentDTO doc = documentService.GetDocumentById(id);
             
             var response = new
@@ -124,8 +118,6 @@ namespace Stage4rest2023.Controllers
         [HttpPost]
         public IActionResult PostDocument([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
-
             Document doc = new Document
             {
                 Type = document.Type,
@@ -159,7 +151,6 @@ namespace Stage4rest2023.Controllers
         [HttpPut]
         public IActionResult PutDocument(EditDocumentRequestDTO doc)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             documentService.PutDocument(doc);
             return Ok(new { message = "Document updated" });
         }
@@ -167,7 +158,6 @@ namespace Stage4rest2023.Controllers
         [HttpPut("archive")]
         public IActionResult PutIsArchived(CheckBoxDTO doc)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             documentService.UpdateIsArchived(doc);
             return Ok(new { message = "Document updated" });
         }
@@ -175,7 +165,6 @@ namespace Stage4rest2023.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteDocument(int id)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             documentService.DeleteDocument(id);
             return Ok(new { message = "Document deleted" });
         }

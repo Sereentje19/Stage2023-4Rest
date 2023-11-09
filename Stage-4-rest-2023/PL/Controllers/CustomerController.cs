@@ -12,23 +12,20 @@ namespace Stage4rest2023.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService customerService;
-        private readonly IJwtValidationService jwtValidationService;
 
         /// <summary>
         /// Initializes a new instance of the CustomerController class.
         /// </summary>
         /// <param name="cs">The customer service for managing customers.</param>
         /// <param name="jwt">The JWT validation service for token validation.</param>
-        public CustomerController(ICustomerService cs, IJwtValidationService jwt)
+        public CustomerController(ICustomerService cs)
         {
             customerService = cs;
-            jwtValidationService = jwt;
         }
 
         [HttpGet]
         public IActionResult GetPagedCustomers(string? searchfield, int page, int pageSize)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             var (pagedCustomers, pager) = customerService.GetPagedCustomers(searchfield, page, pageSize);
 
             var response = new
@@ -54,7 +51,6 @@ namespace Stage4rest2023.Controllers
         [HttpGet("filter")]
         public IActionResult GetFilteredCustomers(string? searchField)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             IEnumerable<Customer> customers = customerService.GetFilteredCustomers(searchField);
             return Ok(customers);
         }
@@ -67,7 +63,6 @@ namespace Stage4rest2023.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCustomerById(int id)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             Customer customer = customerService.GetCustomerById(id);
             return Ok(customer);
         }
@@ -81,7 +76,6 @@ namespace Stage4rest2023.Controllers
         [HttpPost]
         public IActionResult PostCustomer(Customer cus)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             int id = customerService.PostCustomer(cus);
             return Ok(id);
         }
@@ -94,7 +88,6 @@ namespace Stage4rest2023.Controllers
         [HttpPut]
         public IActionResult PutCustomer(Customer customer)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             customerService.PutCustomer(customer);
             return Ok(new { message = "Customer updated" });
         }
@@ -102,7 +95,6 @@ namespace Stage4rest2023.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteCustomer(int id)
         {
-            // jwtValidationService.ValidateToken(HttpContext);
             customerService.DeleteCustomer(id);
             return Ok(new { message = "Customer deleted" });
         }

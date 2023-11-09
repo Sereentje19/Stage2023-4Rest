@@ -16,11 +16,10 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
-var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
-var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
 
 
 AddServices();
+AddAuthentication();
 AddCors();
 AddDBConnection();
 ConnectionInterfaces();
@@ -33,8 +32,15 @@ void AddServices()
     builder.Services.AddSwaggerGen();
     builder.Services.AddControllersWithViews();
     builder.Services.AddCors();
-    // builder.Services.AddAuthentication().AddJwtBearer();
+    builder.Services.AddHttpContextAccessor();
+}
 
+//add authentication
+void AddAuthentication()
+{
+    var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
+    var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+    
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
@@ -49,10 +55,7 @@ void AddServices()
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
             };
         });
-
-    builder.Services.AddHttpContextAccessor();
 }
-
 
 //cors
 void AddCors()
@@ -110,7 +113,6 @@ void BuildApp()
     app.UseCors("ApiCorsPolicy");
     app.UseAuthentication();
     app.UseAuthorization();
-    // app.UseMiddleware<TokenValidationMiddleware>();
     app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
