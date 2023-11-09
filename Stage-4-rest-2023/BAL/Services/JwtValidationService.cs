@@ -5,13 +5,15 @@ using Stage4rest2023.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
+using Stage4rest2023.Models;
+using Stage4rest2023.Models.DTOs;
 
 namespace Stage4rest2023.Services
 {
     public class JwtValidationService : IJwtValidationService
     {
         private readonly IConfiguration _configuration;
-        public static string SecretKey { get; } = "iRAW38828BzlnM3tJFcPiuCmZdUcM9ng";
+        public static string SecretKey => "iRAW38828BzlnM3tJFcPiuCmZdUcM9ng";
 
         /// <summary>
         /// Initializes a new instance of the JwtValidationService class with the provided configuration.
@@ -30,19 +32,27 @@ namespace Stage4rest2023.Services
         /// and signing key, and sets an expiration time of 30 minutes from the current time.
         /// </remarks>
         /// <returns>The generated JWT token as a string.</returns>
-        public string GenerateToken()
+        public string GenerateToken(LoginRequestDTO user)
         {
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            JwtSecurityToken token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+            List<Claim> claims = new List<Claim>
+            {
+                new(ClaimTypes.Name, user.Email), // Add the username or any other user information
+                // Add any other claims you want to include in the token
+            };
+            
+            JwtSecurityToken token = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
-                null,
+                claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        
 
         /// <summary>
         /// Validates and decodes a JSON Web Token (JWT) extracted from the HTTP context's Authorization header.
@@ -61,10 +71,10 @@ namespace Stage4rest2023.Services
             {
                 string jwtToken = ExtractJwtToken(context);
                 TokenValidationParameters tokenValidationParameters = ConfigureTokenValidationParameters();
-
+        
                 JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
                 ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out _);
-
+        
                 return claimsPrincipal.Identity.Name;
             }
             catch (Exception)

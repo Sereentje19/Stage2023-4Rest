@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Stage4rest2023.Models;
-using Microsoft.AspNetCore.Authorization;
 using Stage4rest2023.Services;
 using Microsoft.AspNetCore.Cors;
 using Stage4rest2023.Models.DTOs;
@@ -10,6 +8,7 @@ namespace Stage4rest2023.Controllers
     [EnableCors("ApiCorsPolicy")]
     [ApiController]
     [Route("login")]
+    [Authorize]
     public class LoginController : ControllerBase
     {
         private readonly ILoginService loginService;
@@ -36,7 +35,7 @@ namespace Stage4rest2023.Controllers
         public ActionResult Login([FromBody] LoginRequestDTO user)
         {
             loginService.CheckCredentials(user);
-            String token = jwtValidationService.GenerateToken();
+            String token = jwtValidationService.GenerateToken(user);
             return Ok(token);
         }
     }
