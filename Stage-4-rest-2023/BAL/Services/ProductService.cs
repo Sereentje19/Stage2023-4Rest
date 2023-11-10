@@ -16,31 +16,63 @@ namespace Stage4rest2023.Services
             _productRepository = productRepository;
         }
 
-        public (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize)
+        /// <summary>
+        /// Retrieves a paged list of products based on specified criteria.
+        /// </summary>
+        /// <param name="searchfield">The search criteria.</param>
+        /// <param name="dropdown">The product type filter.</param>
+        /// <param name="page">The current page number.</param>
+        /// <param name="pageSize">The number of products per page.</param>
+        /// <returns>
+        /// A tuple containing a collection of products and pagination information.
+        /// </returns>
+        public async Task<(IEnumerable<object>, Pager)> GetAllProducts(string searchfield, ProductType? dropdown,
+            int page, int pageSize)
         {
-            var (products, numberOfProducts) = _productRepository.GetAllProducts(searchfield, dropdown, page, pageSize);
+            var (products, numberOfProducts) =
+                await _productRepository.GetAllProducts(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfProducts, page, pageSize);
             return (products, pager);
         }
 
-        public Product GetProductById(int id)
+        /// <summary>
+        /// Retrieves a product based on the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>The product with the specified ID.</returns>
+        public async Task<Product> GetProductById(int id)
         {
-            return _productRepository.GetProductById(id);
+            return await _productRepository.GetProductById(id);
         }
 
-        public void PostProduct(Product product)
+        /// <summary>
+        /// Adds a new product to the system.
+        /// </summary>
+        /// <param name="product">The Product object to be added.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task PostProduct(Product product)
         {
-            _productRepository.AddProduct(product);
+            await _productRepository.AddProduct(product);
         }
 
-        public void PutProduct(Product product)
+        /// <summary>
+        /// Updates an existing product in the system.
+        /// </summary>
+        /// <param name="product">The Product object containing updated information.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task PutProduct(Product product)
         {
-            _productRepository.PutProduct(product);
+            await _productRepository.PutProduct(product);
         }
 
-        public void DeleteProduct(int id)
+        /// <summary>
+        /// Deletes a product based on the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the product to be deleted.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task DeleteProduct(int id)
         {
-            _productRepository.DeleteProduct(id);
+            await _productRepository.DeleteProduct(id);
         }
     }
 }

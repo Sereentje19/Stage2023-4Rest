@@ -10,10 +10,6 @@ namespace Stage4rest2023.Services
     {
         private readonly MailSettings _mailSettings;
 
-        /// <summary>
-        /// Initializes a new instance of the MailService class.
-        /// </summary>
-        /// <param name="mailSettingsOptions">The configuration options for email settings.</param>
         public MailService(IOptions<MailSettings> mailSettingsOptions)
         {
             _mailSettings = mailSettingsOptions.Value;

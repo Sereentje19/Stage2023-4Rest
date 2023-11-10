@@ -5,24 +5,31 @@ using System.Threading.Tasks;
 using Stage4rest2023.Models;
 using Microsoft.EntityFrameworkCore;
 using Stage4rest2023.Models.DTOs;
+using DbContext = Stage4rest2023.Models.DbContext;
 
 namespace Stage4rest2023.Repositories
 {
     public class LoanHistoryRepository : ILoanHistoryRepository
     {
-        private readonly NotificationContext _context;
+        private readonly DbContext _context;
         private readonly DbSet<LoanHistory> _dbSet;
 
-        public LoanHistoryRepository(NotificationContext context)
+        public LoanHistoryRepository(DbContext context)
         {
             _context = context;
             _dbSet = _context.Set<LoanHistory>();
         }
 
-
-        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByProductId(int id)
+        /// <summary>
+        /// Retrieves a collection of loan history records for a specific product ID.
+        /// </summary>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>
+        /// A collection of LoanHistoryDTO representing loan history for the specified product.
+        /// </returns>
+        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByProductId(int id)
         {
-            return _dbSet
+            return await _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
@@ -38,12 +45,19 @@ namespace Stage4rest2023.Repositories
                     ReturnDate = loan.ReturnDate,
                     ProductId = loan.Product.ProductId,
                 })
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByCustomerId(int id)
+        /// <summary>
+        /// Retrieves a collection of loan history records for a specific customer ID.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>
+        /// A collection of LoanHistoryDTO representing loan history for the specified customer.
+        /// </returns>
+        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByCustomerId(int id)
         {
-            return _dbSet
+            return await _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Customer.CustomerId == id)
@@ -57,89 +71,91 @@ namespace Stage4rest2023.Repositories
                     LoanDate = loan.LoanDate,
                     ReturnDate = loan.ReturnDate,
                 })
-                .ToList();
+                .ToListAsync();
         }
 
-        public DateTime? GetReturnDatesByProductId(int productId)
+        /// <summary>
+        /// Retrieves the return date for a specific product ID.
+        /// </summary>
+        /// <param name="productId">The ID of the product.</param>
+        /// <returns>
+        /// Nullable DateTime representing the return date for the specified product.
+        /// </returns>
+        public async Task<DateTime?> GetReturnDatesByProductId(int productId)
         {
-            int loanHistoryId = _dbSet
+            int loanHistoryId = await _dbSet
                 .Where(l => l.Product.ProductId == productId)
                 .Select(l => l.LoanHistoryId)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (loanHistoryId == 0)
             {
                 return DateTime.Now;
             }
 
-            DateTime? returnDate = _dbSet
+            DateTime? returnDate = await _dbSet
                 .Where(l => l.Product.ProductId == productId)
                 .OrderByDescending(l => l.LoanDate)
                 .Select(l => l.ReturnDate)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             return returnDate;
         }
 
-
-        public LoanHistory GetLatestLoanHistoryByProductId(int id)
+        /// <summary>
+        /// Retrieves the latest loan history record for a specific product ID.
+        /// </summary>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>
+        /// The latest LoanHistory record for the specified product.
+        /// </returns>
+        public async Task<LoanHistory> GetLatestLoanHistoryByProductId(int id)
         {
-            return _dbSet
+            return await _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
                 .OrderByDescending(l => l.LoanDate)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public void UpdateLoanHistory(LoanHistory lh)
+        /// <summary>
+        /// Updates an existing loan history record.
+        /// </summary>
+        /// <param name="lh">The LoanHistory object containing updated information.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task UpdateLoanHistory(LoanHistory lh)
         {
-            try
+            LoanHistory loanHistory = new LoanHistory
             {
-                if (lh == null)
-                {
-                    throw new Exception("geen item gevonden.");
-                }
+                Product = await _context.Products.FindAsync(lh.Product.ProductId),
+                Customer = lh.Customer,
+                ReturnDate = DateTime.Now,
+                LoanDate = lh.LoanDate,
+                LoanHistoryId = lh.LoanHistoryId
+            };
 
-                LoanHistory loanHistory = new LoanHistory
-                {
-                    Product = _context.Products.Find(lh.Product.ProductId),
-                    Customer = lh.Customer,
-                    ReturnDate = DateTime.Now,
-                    LoanDate = lh.LoanDate,
-                    LoanHistoryId = lh.LoanHistoryId
-                };
-
-                _dbSet.Update(loanHistory);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw new DbUpdateConcurrencyException(
-                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
-            }
+            _dbSet.Update(loanHistory);
+            await _context.SaveChangesAsync();
         }
 
-        public void PostLoanHistory(LoanHistory lh)
+        /// <summary>
+        /// Adds a new loan history record.
+        /// </summary>
+        /// <param name="lh">The LoanHistory object to be added.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task PostLoanHistory(LoanHistory lh)
         {
-            try
+            LoanHistory loanHistory = new LoanHistory
             {
-                LoanHistory loanHistory = new LoanHistory
-                {
-                    Product = _context.Products.Find(lh.Product.ProductId),
-                    Customer = _context.Customers.Find(lh.Customer.CustomerId),
-                    ReturnDate = lh.ReturnDate,
-                    LoanDate = lh.LoanDate
-                };
+                Product = await _context.Products.FindAsync(lh.Product.ProductId),
+                Customer = await _context.Customers.FindAsync(lh.Customer.CustomerId),
+                ReturnDate = lh.ReturnDate,
+                LoanDate = lh.LoanDate
+            };
 
-                _dbSet.Add(loanHistory);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw new DbUpdateConcurrencyException(
-                    "Er is een conflict opgetreden bij het bijwerken van de gegevens.");
-            }
+            await _dbSet.AddAsync(loanHistory);
+            await _context.SaveChangesAsync();
         }
     }
 }

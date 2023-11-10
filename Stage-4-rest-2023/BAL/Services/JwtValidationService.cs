@@ -14,23 +14,16 @@ namespace Stage4rest2023.Services
     {
         private readonly IConfiguration _configuration;
 
-        /// <summary>
-        /// Initializes a new instance of the JwtValidationService class with the provided configuration.
-        /// </summary>
-        /// <param name="configuration">The configuration containing JWT settings.</param>
         public JwtValidationService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-
+        
         /// <summary>
-        /// Generates a JSON Web Token (JWT) with the specified claims and expiration time.
+        /// Generates a JSON Web Token (JWT) for the specified user.
         /// </summary>
-        /// <remarks>
-        /// This method creates a JWT token using the provided configuration settings for the issuer, audience,
-        /// and signing key, and sets an expiration time of 30 minutes from the current time.
-        /// </remarks>
-        /// <returns>The generated JWT token as a string.</returns>
+        /// <param name="user">The LoginRequestDTO containing user information.</param>
+        /// <returns>The generated JWT as a string.</returns>
         public string GenerateToken(LoginRequestDTO user)
         {
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

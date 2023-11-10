@@ -13,20 +13,25 @@ namespace Stage4rest2023.Controllers
     {
         private readonly IProductService _productService;
 
-        /// <summary>
-        /// Initializes a new instance of the CustomerController class.
-        /// </summary>
-        /// <param name="cs">The customer service for managing customers.</param>
-        /// <param name="jwt">The JWT validation service for token validation.</param>
         public ProductController(IProductService productService)
         {
             _productService = productService;
         }
 
+        /// <summary>
+        /// Retrieves a paged list of products based on specified search criteria and pagination parameters.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for product details.</param>
+        /// <param name="dropdown">The product type filter.</param>
+        /// <param name="page">The current page number.</param>
+        /// <param name="pageSize">The number of products per page.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing paged products and pagination details.
+        /// </returns>
         [HttpGet]
-        public IActionResult getAllProducts(string? searchfield, ProductType? dropdown, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> getAllProducts(string? searchfield, ProductType? dropdown, int page = 1, int pageSize = 5)
         {
-            var (pagedProducts, pager) = _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
+            var (pagedProducts, pager) = await _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
 
             var response = new
             {
@@ -43,10 +48,17 @@ namespace Stage4rest2023.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Retrieves a product based on the specified product ID.
+        /// </summary>
+        /// <param name="id">The ID of the product to retrieve.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing details of the specified product.
+        /// </returns>
         [HttpGet("{id}")]
-        public IActionResult getProductById(int id)
+        public async Task<IActionResult> getProductById(int id)
         {
-            Product product = _productService.GetProductById(id);
+            Product product = await _productService.GetProductById(id);
 
             var response = new
             {
@@ -57,24 +69,45 @@ namespace Stage4rest2023.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Creates a new product entry.
+        /// </summary>
+        /// <param name="product">The Product object containing information for the new entry.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
         [HttpPost]
-        public IActionResult PostProduct(Product product)
+        public async Task<IActionResult> PostProduct(Product product)
         {
-            _productService.PostProduct(product);
+            await _productService.PostProduct(product);
             return Ok(new { message = "Product created" });
         }
 
+        /// <summary>
+        /// Updates product information.
+        /// </summary>
+        /// <param name="product">The Product object containing updated information.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
         [HttpPut]
-        public IActionResult PutProduct(Product product)
+        public async Task<IActionResult> PutProduct(Product product)
         {
-            _productService.PutProduct(product);
+            await _productService.PutProduct(product);
             return Ok(new { message = "Product updated" });
         }
 
+        /// <summary>
+        /// Deletes a product based on the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the product to be deleted.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
         [HttpDelete("{id}")]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            _productService.DeleteProduct(id);
+            await _productService.DeleteProduct(id);
             return Ok(new { message = "Product deleted" });
         }
     }

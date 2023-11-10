@@ -11,18 +11,13 @@ namespace Stage4rest2023.Controllers
     [Authorize]
     public class LoginController : ControllerBase
     {
-        private readonly ILoginService loginService;
-        private readonly IJwtValidationService jwtValidationService;
+        private readonly ILoginService _loginService;
+        private readonly IJwtValidationService _jwtValidationService;
 
-        /// <summary>
-        /// Initializes a new instance of the LoginController class.
-        /// </summary>
-        /// <param name="ls">The login service for user authentication.</param>
-        /// <param name="jwt">The JWT validation service for token generation.</param>
-        public LoginController(ILoginService ls, IJwtValidationService jwt)
+        public LoginController(ILoginService loginService, IJwtValidationService jwtValidationService)
         {
-            loginService = ls;
-            jwtValidationService = jwt;
+            _loginService = loginService;
+            _jwtValidationService = jwtValidationService;
         }
 
         /// <summary>
@@ -32,10 +27,10 @@ namespace Stage4rest2023.Controllers
         /// <returns>An authentication token if login is successful; otherwise, an error message.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Login([FromBody] LoginRequestDTO user)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO user)
         {
-            loginService.CheckCredentials(user);
-            String token = jwtValidationService.GenerateToken(user);
+            await _loginService.CheckCredentials(user);
+            String token = _jwtValidationService.GenerateToken(user);
             return Ok(token);
         }
     }

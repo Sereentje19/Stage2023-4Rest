@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Stage4rest2023.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using DbContext = Stage4rest2023.Models.DbContext;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,7 +74,7 @@ void AddCors()
 //db connection
 void AddDBConnection()
 {
-    builder.Services.AddDbContext<NotificationContext>(options =>
+    builder.Services.AddDbContext<DbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
             options => options.EnableRetryOnFailure()));
 }

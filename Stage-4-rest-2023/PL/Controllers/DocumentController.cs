@@ -12,23 +12,28 @@ namespace Stage4rest2023.Controllers
     [Authorize]
     public class DocumentController : ControllerBase
     {
-        private readonly IDocumentService documentService;
+        private readonly IDocumentService _documentService;
 
-        /// <summary>
-        /// Initializes a new instance of the DocumentController class.
-        /// </summary>
-        /// <param name="ds">The document service for managing documents.</param>
-        /// <param name="jwt">The JWT validation service for token validation.</param>
-        public DocumentController(IDocumentService ds)
+        public DocumentController(IDocumentService documentService)
         {
-            documentService = ds;
+            _documentService = documentService;
         }
 
+        /// <summary>
+        /// Retrieves a paged list of documents based on specified search criteria and pagination parameters.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for document details.</param>
+        /// <param name="dropdown">The document type filter.</param>
+        /// <param name="page">The current page number.</param>
+        /// <param name="pageSize">The number of documents per page.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing paged documents and pagination details.
+        /// </returns>
         [HttpGet]
         public IActionResult GetFilteredPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
-            var (pagedDocuments, pager) = documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
+            var (pagedDocuments, pager) = _documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
 
             var response = new
             {
@@ -45,12 +50,22 @@ namespace Stage4rest2023.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Retrieves a paged list of archived documents based on specified search criteria and pagination parameters.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for archived document details.</param>
+        /// <param name="dropdown">The document type filter.</param>
+        /// <param name="page">The current page number.</param>
+        /// <param name="pageSize">The number of archived documents per page.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing paged archived documents and pagination details.
+        /// </returns>
         [HttpGet("archive")]
         public IActionResult GetArchivedPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
             var (pagedDocuments, pager) =
-                documentService.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
+                _documentService.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
 
             var response = new
             {
@@ -67,12 +82,22 @@ namespace Stage4rest2023.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Retrieves a paged list of long-valid documents based on specified search criteria and pagination parameters.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for long-valid document details.</param>
+        /// <param name="dropdown">The document type filter.</param>
+        /// <param name="page">The current page number.</param>
+        /// <param name="pageSize">The number of long-valid documents per page.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing paged long-valid documents and pagination details.
+        /// </returns>
         [HttpGet("long-valid")]
         public IActionResult GetLongValidPagedDocuments(string? searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
             var (pagedDocuments, pager) =
-                documentService.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
+                _documentService.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
 
             var response = new
             {
@@ -95,9 +120,9 @@ namespace Stage4rest2023.Controllers
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document and its type information if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
-        public IActionResult GetDocumentById(int id)
+        public async Task<IActionResult> GetDocumentById(int id)
         {
-            DocumentDTO doc = documentService.GetDocumentById(id);
+            DocumentDTO doc = await _documentService.GetDocumentById(id);
             
             var response = new
             {
@@ -116,7 +141,7 @@ namespace Stage4rest2023.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public IActionResult PostDocument([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
+        public async Task<IActionResult> PostDocument([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
         {
             Document doc = new Document
             {
@@ -139,7 +164,7 @@ namespace Stage4rest2023.Controllers
                 }
             }
 
-            documentService.PostDocument(doc);
+            await _documentService.PostDocument(doc);
             return Ok(new { message = "Document created" });
         }
 
@@ -149,23 +174,37 @@ namespace Stage4rest2023.Controllers
         /// <param name="doc">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult PutDocument(EditDocumentRequestDTO doc)
+        public async Task<IActionResult> PutDocument(EditDocumentRequestDTO doc)
         {
-            documentService.PutDocument(doc);
+            await _documentService.PutDocument(doc);
             return Ok(new { message = "Document updated" });
         }
 
+        /// <summary>
+        /// Updates the archived status of a document based on the provided CheckBoxDTO.
+        /// </summary>
+        /// <param name="doc">The CheckBoxDTO containing document information and archived status.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
         [HttpPut("archive")]
-        public IActionResult PutIsArchived(CheckBoxDTO doc)
+        public async Task<IActionResult> PutIsArchived(CheckBoxDTO doc)
         {
-            documentService.UpdateIsArchived(doc);
+            await _documentService.UpdateIsArchived(doc);
             return Ok(new { message = "Document updated" });
         }
 
+        /// <summary>
+        /// Deletes a document based on the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the document to be deleted.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
         [HttpDelete("{id}")]
-        public IActionResult DeleteDocument(int id)
+        public async Task<IActionResult> DeleteDocument(int id)
         {
-            documentService.DeleteDocument(id);
+            await _documentService.DeleteDocument(id);
             return Ok(new { message = "Document deleted" });
         }
     }

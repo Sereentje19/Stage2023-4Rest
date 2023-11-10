@@ -8,31 +8,33 @@ namespace Stage4rest2023.Services
     {
         private readonly ICustomerRepository _customerRepository;
 
-        /// <summary>
-        /// Initializes a new instance of the CustomerService class with the provided CustomerRepository.
-        /// </summary>
-        /// <param name="cr">The CustomerRepository used for customer-related operations.</param>
         public CustomerService(ICustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
         }
 
-        public (IEnumerable<object>, Pager) GetPagedCustomers(string searchfield, int page, int pageSize)
+        /// <summary>
+        /// Retrieves a paged list of customers based on the specified search field.
+        /// </summary>
+        /// <param name="searchfield">The search criteria.</param>
+        /// <param name="page">The current page number.</param>
+        /// <param name="pageSize">The number of customers per page.</param>
+        /// <returns>A tuple containing paged customers and pagination information.</returns>
+        public async Task<(IEnumerable<object>, Pager)> GetPagedCustomers(string searchfield, int page, int pageSize)
         {
-            var (pagedCustomers, numberOfcustomers) = _customerRepository.GetAllCustomers(searchfield, page, pageSize);
+            var (pagedCustomers, numberOfcustomers) = await _customerRepository.GetAllCustomers(searchfield, page, pageSize);
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
             return (pagedCustomers, pager);
         }
 
-
         /// <summary>
-        /// Filters and retrieves a collection of customers based on a search field.
+        /// Retrieves a filtered list of customers based on the specified search field.
         /// </summary>
-        /// <param name="searchfield">The search field to filter customers by.</param>
-        /// <returns>A collection of customers matching the search criteria or an empty list if the searchfield is null or whitespace.</returns>
-        public IEnumerable<Customer> GetFilteredCustomers(string searchfield)
+        /// <param name="searchfield">The search criteria.</param>
+        /// <returns>A collection of matching Customer objects.</returns>
+        public async Task<IEnumerable<Customer>> GetFilteredCustomers(string searchfield)
         {
-            return _customerRepository.GetFilteredCustomers(searchfield);
+            return await _customerRepository.GetFilteredCustomers(searchfield);
         }
 
         /// <summary>
@@ -40,9 +42,9 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public Customer GetCustomerById(int id)
+        public async Task<Customer> GetCustomerById(int id)
         {
-            return _customerRepository.GetCustomerById(id);
+            return await _customerRepository.GetCustomerById(id);
         }
 
         /// <summary>
@@ -50,18 +52,29 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="customer">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer.</returns>
-        public int PostCustomer(Customer customer)
+        public async Task<int> PostCustomer(Customer customer)
         {
-            return _customerRepository.AddCustomer(customer);
+            return await _customerRepository.AddCustomer(customer);
         }
 
-        public void PutCustomer(Customer customer)
+        /// <summary>
+        /// Updates an existing customer's information.
+        /// </summary>
+        /// <param name="customer">The Customer object containing updated information.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task PutCustomer(Customer customer)
         {
-            _customerRepository.UpdateCustomer(customer);
+            await _customerRepository.UpdateCustomer(customer);
         }
-        public void DeleteCustomer(int id)
+        
+        /// <summary>
+        /// Deletes a customer based on the provided ID.
+        /// </summary>
+        /// <param name="id">The ID of the customer to be deleted.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task DeleteCustomer(int id)
         {
-            _customerRepository.DeleteCustomer(id);
+            await _customerRepository.DeleteCustomer(id);
         }
     }
 }

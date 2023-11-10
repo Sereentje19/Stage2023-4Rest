@@ -15,10 +15,10 @@ namespace Stage4rest2023.Repositories
         (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
 
-        DocumentDTO GetDocumentById(int id);
-        void AddDocument(Document document);
-        void UpdateDocument(EditDocumentRequestDTO document);
-        void UpdateIsArchived(CheckBoxDTO document);
-        void DeleteDocument(int id);
+        Task<DocumentDTO> GetDocumentById(int id);
+        Task AddDocument(Document document);
+        Task UpdateDocument(EditDocumentRequestDTO document);
+        Task UpdateIsArchived(CheckBoxDTO document);
+        Task DeleteDocument(int id);
     }
 }

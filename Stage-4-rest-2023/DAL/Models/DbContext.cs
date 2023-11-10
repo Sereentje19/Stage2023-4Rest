@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Stage4rest2023.Models
 {
-    public class NotificationContext : DbContext
+    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        public NotificationContext(DbContextOptions<NotificationContext> options) : base(options)
+        public DbContext(DbContextOptions<DbContext> options) : base(options)
         {}
 
         public DbSet<User> Users { get; set; }

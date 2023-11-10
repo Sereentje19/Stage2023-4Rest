@@ -11,22 +11,26 @@ namespace Stage4rest2023.Controllers
     [Authorize]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerService customerService;
+        private readonly ICustomerService _customerService;
 
-        /// <summary>
-        /// Initializes a new instance of the CustomerController class.
-        /// </summary>
-        /// <param name="cs">The customer service for managing customers.</param>
-        /// <param name="jwt">The JWT validation service for token validation.</param>
-        public CustomerController(ICustomerService cs)
+        public CustomerController(ICustomerService customerService)
         {
-            customerService = cs;
+            _customerService = customerService;
         }
-
+        
+        /// <summary>
+        /// Retrieves a paged list of customers based on specified search criteria and pagination parameters.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for customer names or emails.</param>
+        /// <param name="page">The current page number.</param>
+        /// <param name="pageSize">The number of customers per page.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing paged customers and pagination details.
+        /// </returns>
         [HttpGet]
-        public IActionResult GetPagedCustomers(string? searchfield, int page, int pageSize)
+        public async Task<IActionResult> GetPagedCustomers(string? searchfield, int page, int pageSize)
         {
-            var (pagedCustomers, pager) = customerService.GetPagedCustomers(searchfield, page, pageSize);
+            var (pagedCustomers, pager) = await _customerService.GetPagedCustomers(searchfield, page, pageSize);
 
             var response = new
             {
@@ -49,9 +53,9 @@ namespace Stage4rest2023.Controllers
         /// <param name="searchField">The search field used to filter customers.</param>
         /// <returns>A collection of customers matching the search criteria.</returns>
         [HttpGet("filter")]
-        public IActionResult GetFilteredCustomers(string? searchField)
+        public async Task<IActionResult> GetFilteredCustomers(string? searchField)
         {
-            IEnumerable<Customer> customers = customerService.GetFilteredCustomers(searchField);
+            IEnumerable<Customer> customers = await _customerService.GetFilteredCustomers(searchField);
             return Ok(customers);
         }
 
@@ -61,12 +65,11 @@ namespace Stage4rest2023.Controllers
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
-        public IActionResult GetCustomerById(int id)
+        public async Task<IActionResult> GetCustomerById(int id)
         {
-            Customer customer = customerService.GetCustomerById(id);
+            Customer customer = await _customerService.GetCustomerById(id);
             return Ok(customer);
         }
-
 
         /// <summary>
         /// Adds a new customer to the system.
@@ -74,9 +77,9 @@ namespace Stage4rest2023.Controllers
         /// <param name="cus">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer if successful; otherwise, an error message.</returns>
         [HttpPost]
-        public IActionResult PostCustomer(Customer cus)
+        public  async Task<IActionResult>  PostCustomer(Customer cus)
         {
-            int id = customerService.PostCustomer(cus);
+            int id = await _customerService.PostCustomer(cus);
             return Ok(id);
         }
 
@@ -86,16 +89,23 @@ namespace Stage4rest2023.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public IActionResult PutCustomer(Customer customer)
+        public async Task<IActionResult> PutCustomer(Customer customer)
         {
-            customerService.PutCustomer(customer);
+            await _customerService.PutCustomer(customer);
             return Ok(new { message = "Customer updated" });
         }
 
+        /// <summary>
+        /// Deletes a customer based on the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the customer to be deleted.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
         [HttpDelete("{id}")]
-        public IActionResult DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
-            customerService.DeleteCustomer(id);
+            await _customerService.DeleteCustomer(id);
             return Ok(new { message = "Customer deleted" });
         }
     }

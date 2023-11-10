@@ -9,11 +9,11 @@ namespace Stage4rest2023.Services
 {
     public interface ILoanHistoryService
     {
-        IEnumerable<LoanHistoryDTO> GetLoanHistoryByProductId(int id);
-        IEnumerable<LoanHistoryDTO> GetLoanHistoryByCustomerId(int id);
-        DateTime? GetReturnDatesByProductId(int productId);
-        LoanHistory GetLatestLoanHistoryByProductId(int id);
-        void UpdateLoanHistory(LoanHistory loanHistory);
-        void PostLoanHistory(LoanHistory loanHistory);
+        Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByProductId(int id);
+        Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByCustomerId(int id);
+        Task<DateTime?> GetReturnDatesByProductId(int productId);
+        Task<LoanHistory> GetLatestLoanHistoryByProductId(int id);
+        Task UpdateLoanHistory(LoanHistory loanHistory);
+        Task PostLoanHistory(LoanHistory loanHistory);
     }
 }

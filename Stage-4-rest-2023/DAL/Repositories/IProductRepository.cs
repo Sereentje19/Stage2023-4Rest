@@ -8,10 +8,10 @@ namespace Stage4rest2023.Repositories
 {
     public interface IProductRepository
     {
-        (IEnumerable<object>, int) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize);
-        Product GetProductById(int id);
-        void AddProduct(Product product);
-        void PutProduct(Product product);
-        void DeleteProduct(int id);
+        Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize);
+        Task<Product> GetProductById(int id);
+        Task AddProduct(Product product);
+        Task PutProduct(Product product);
+        Task DeleteProduct(int id);
     }
 }

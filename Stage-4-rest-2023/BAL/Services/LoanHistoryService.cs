@@ -17,31 +17,64 @@ namespace Stage4rest2023.Services
             _loanHistoryRepository = loanHistoryRepository;
         }
 
-        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByProductId(int id)
+        /// <summary>
+        /// Retrieves loan history records based on the specified product ID.
+        /// </summary>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>A collection of LoanHistoryDTO representing loan history for the product.</returns>
+        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByProductId(int id)
         {
-            return _loanHistoryRepository.GetLoanHistoryByProductId(id);
+            return await _loanHistoryRepository.GetLoanHistoryByProductId(id);
         }
 
-        public IEnumerable<LoanHistoryDTO> GetLoanHistoryByCustomerId(int id)
+        /// <summary>
+        /// Retrieves loan history records based on the specified customer ID.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>A collection of LoanHistoryDTO representing loan history for the customer.</returns>
+        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByCustomerId(int id)
         {
-            return _loanHistoryRepository.GetLoanHistoryByCustomerId(id);
-        }
-        public DateTime? GetReturnDatesByProductId(int productId)
-        {
-            return _loanHistoryRepository.GetReturnDatesByProductId(productId);
-        }
-        public LoanHistory GetLatestLoanHistoryByProductId(int id)
-        {
-            return _loanHistoryRepository.GetLatestLoanHistoryByProductId(id);
+            return await _loanHistoryRepository.GetLoanHistoryByCustomerId(id);
         }
 
-        public void UpdateLoanHistory(LoanHistory loanHistory)
+        /// <summary>
+        /// Retrieves return dates for a specific product ID.
+        /// </summary>
+        /// <param name="productId">The ID of the product.</param>
+        /// <returns>Nullable DateTime representing the return date.</returns>
+        public async Task<DateTime?> GetReturnDatesByProductId(int productId)
         {
-            _loanHistoryRepository.UpdateLoanHistory(loanHistory);
+            return await _loanHistoryRepository.GetReturnDatesByProductId(productId);
         }
-        public void PostLoanHistory(LoanHistory loanHistory)
+
+        /// <summary>
+        /// Retrieves the latest loan history record based on the specified product ID.
+        /// </summary>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>The latest LoanHistory record for the product.</returns>
+        public async Task<LoanHistory> GetLatestLoanHistoryByProductId(int id)
         {
-            _loanHistoryRepository.PostLoanHistory(loanHistory);
+            return await _loanHistoryRepository.GetLatestLoanHistoryByProductId(id);
+        }
+
+        /// <summary>
+        /// Updates an existing loan history record.
+        /// </summary>
+        /// <param name="loanHistory">The LoanHistory object containing updated information.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task UpdateLoanHistory(LoanHistory loanHistory)
+        {
+            await _loanHistoryRepository.UpdateLoanHistory(loanHistory);
+        }
+
+        /// <summary>
+        /// Posts a new loan history record.
+        /// </summary>
+        /// <param name="loanHistory">The LoanHistory object to be added.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task PostLoanHistory(LoanHistory loanHistory)
+        {
+            await _loanHistoryRepository.PostLoanHistory(loanHistory);
         }
     }
 }

@@ -14,56 +14,93 @@ namespace Stage4rest2023.Controllers
     {
         private readonly ILoanHistoryService _loanHistoryService;
 
-        /// <summary>
-        /// Initializes a new instance of the CustomerController class.
-        /// </summary>
-        /// <param name="cs">The customer service for managing customers.</param>
-        /// <param name="jwt">The JWT validation service for token validation.</param>
         public LoanHistoryController(ILoanHistoryService loanHistoryService)
         {
             _loanHistoryService = loanHistoryService;
         }
 
+        /// <summary>
+        /// Retrieves loan history based on the specified product ID.
+        /// </summary>
+        /// <param name="productId">The ID of the product to retrieve loan history for.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing loan history details for the specified product.
+        /// </returns>
         [HttpGet("product/{product-id}")]
-        public IActionResult getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
+        public async Task<IActionResult> getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
-            IEnumerable<LoanHistoryDTO> loanHistory = _loanHistoryService.GetLoanHistoryByProductId(productId);
+            IEnumerable<LoanHistoryDTO> loanHistory = await _loanHistoryService.GetLoanHistoryByProductId(productId);
             return Ok(loanHistory);
         }
 
+        /// <summary>
+        /// Retrieves loan history based on the specified customer ID.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer to retrieve loan history for.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing loan history details for the specified customer.
+        /// </returns>
         [HttpGet("customer/{customer-id}")]
-        public IActionResult GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId)
+        public async Task<IActionResult> GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId)
         {
-            IEnumerable<LoanHistoryDTO> lh = _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
+            IEnumerable<LoanHistoryDTO> lh = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
             return Ok(lh);
         }
 
+        /// <summary>
+        /// Retrieves the return dates of a product based on the specified product ID.
+        /// </summary>
+        /// <param name="productId">The ID of the product to retrieve return dates for.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing the return dates for the specified product.
+        /// </returns>
         [HttpGet("date/{product-id}")]
-        public IActionResult GetReturnDatesByProductId([FromRoute(Name = "product-id")] int productId)
+        public async Task<IActionResult> GetReturnDatesByProductId([FromRoute(Name = "product-id")] int productId)
         {
-            DateTime? returnDateList = _loanHistoryService.GetReturnDatesByProductId(productId);
+            DateTime? returnDateList = await _loanHistoryService.GetReturnDatesByProductId(productId);
             return Ok(returnDateList);
         }
 
+        /// <summary>
+        /// Retrieves the latest loan history for a product based on the specified product ID.
+        /// </summary>
+        /// <param name="productId">The ID of the product to retrieve the latest loan history for.</param>
+        /// <returns>
+        /// ActionResult with a JSON response containing the latest loan history for the specified product.
+        /// </returns>
         [HttpGet("recent/{product-id}")]
-        public IActionResult GetLatestLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
+        public async Task<IActionResult> GetLatestLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
-            LoanHistory loanHistory = _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
+            LoanHistory loanHistory = await _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
             return Ok(loanHistory);
         }
 
-        [HttpPut]
-        public IActionResult UpdateLoanHistory(LoanHistory loanHistory)
+        /// <summary>
+        /// Creates a new loan history entry.
+        /// </summary>
+        /// <param name="lh">The LoanHistory object containing information for the new entry.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
+        [HttpPost]
+        public async Task<IActionResult> PostLoanHistory([FromBody] LoanHistory? lh)
         {
-            _loanHistoryService.UpdateLoanHistory(loanHistory);
-            return Ok(new { message = "Product updated" });
+            await _loanHistoryService.PostLoanHistory(lh);
+            return Ok(new { message = "Product created" });
         }
 
-        [HttpPost]
-        public IActionResult PostLoanHistory([FromBody] LoanHistory? lh)
+        /// <summary>
+        /// Updates loan history information.
+        /// </summary>
+        /// <param name="loanHistory">The LoanHistory object containing updated information.</param>
+        /// <returns>
+        /// ActionResult with a JSON response indicating the success of the operation.
+        /// </returns>
+        [HttpPut]
+        public async Task<IActionResult> UpdateLoanHistory(LoanHistory loanHistory)
         {
-            _loanHistoryService.PostLoanHistory(lh);
-            return Ok(new { message = "Product created" });
+            await _loanHistoryService.UpdateLoanHistory(loanHistory);
+            return Ok(new { message = "Product updated" });
         }
     }
 }

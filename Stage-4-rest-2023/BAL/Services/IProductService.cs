@@ -8,10 +8,10 @@ namespace Stage4rest2023.Services
 {
     public interface IProductService
     {
-        (IEnumerable<object>, Pager) GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize);
-        Product GetProductById(int id);
-        void PostProduct(Product product);
-        void PutProduct(Product product);
-        void DeleteProduct(int id);
+        Task<(IEnumerable<object>, Pager)> GetAllProducts(string searchfield, ProductType? dropdown, int page, int pageSize);
+        Task<Product> GetProductById(int id);
+        Task PostProduct(Product product);
+        Task PutProduct(Product product);
+        Task DeleteProduct(int id);
     }
 }

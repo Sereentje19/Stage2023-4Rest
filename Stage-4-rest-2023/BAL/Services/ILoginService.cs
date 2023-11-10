@@ -5,6 +5,6 @@ namespace Stage4rest2023.Services
 {
     public interface ILoginService
     {
-        User CheckCredentials(LoginRequestDTO user);
+        Task<User> CheckCredentials(LoginRequestDTO user);
     }
 }

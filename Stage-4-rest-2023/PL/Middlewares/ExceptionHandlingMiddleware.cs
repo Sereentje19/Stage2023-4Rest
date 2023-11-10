@@ -15,6 +15,13 @@ public class ExceptionHandlingMiddleware
         _logger = logger;
     }
 
+    /// <summary>
+    /// Invokes the next middleware in the pipeline and catches any exceptions that may occur.
+    /// </summary>
+    /// <param name="httpContext">The HttpContext for the current request.</param>
+    /// <returns>
+    /// Task representing the asynchronous execution of the middleware.
+    /// </returns>
     public async Task InvokeAsync(HttpContext httpContext)
     {
         try
@@ -27,6 +34,14 @@ public class ExceptionHandlingMiddleware
         }
     }
 
+    /// <summary>
+    /// Handles exceptions by setting the appropriate HTTP status code and returning an error response.
+    /// </summary>
+    /// <param name="context">The HttpContext for the current request.</param>
+    /// <param name="exception">The exception that occurred.</param>
+    /// <returns>
+    /// Task representing the asynchronous handling of the exception.
+    /// </returns>
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";

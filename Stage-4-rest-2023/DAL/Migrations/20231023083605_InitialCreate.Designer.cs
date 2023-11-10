@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using DbContext = Stage4rest2023.Models.DbContext;
 
 #nullable disable
 
 namespace Stage4rest2023.Migrations
 {
-    [DbContext(typeof(NotificationContext))]
+    [DbContext(typeof(DbContext))]
     [Migration("20231023083605_InitialCreate")]
     partial class InitialCreate
     {

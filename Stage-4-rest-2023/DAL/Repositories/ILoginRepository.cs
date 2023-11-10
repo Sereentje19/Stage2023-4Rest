@@ -5,6 +5,6 @@ namespace Stage4rest2023.Repositories
 {
     public interface ILoginRepository
     {
-        User CheckCredentials(LoginRequestDTO user);
+        Task<User> CheckCredentials(LoginRequestDTO user);
     }
 }

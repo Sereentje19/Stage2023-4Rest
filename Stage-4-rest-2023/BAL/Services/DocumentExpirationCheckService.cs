@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using DbContext = Stage4rest2023.Models.DbContext;
 
 namespace Stage4rest2023.Services
 {
@@ -11,11 +12,6 @@ namespace Stage4rest2023.Services
         private readonly IServiceProvider _provider;
         private readonly ILogger<DocumentExpirationCheckService> _logger;
 
-        /// <summary>
-        /// Initializes a new instance of the DocumentExpirationCheckService class with the provided dependencies.
-        /// </summary>
-        /// <param name="provider">The service provider for dependency injection.</param>
-        /// <param name="logger">The logger used for logging.</param>
         public DocumentExpirationCheckService(IServiceProvider provider, ILogger<DocumentExpirationCheckService> logger)
         {
             _provider = provider;
@@ -55,21 +51,21 @@ namespace Stage4rest2023.Services
         /// <returns>A task representing the processing of expiring documents.</returns>
         private async Task ProcessExpiringDocumentsAsync(IServiceProvider serviceProvider)
         {
-            NotificationContext dbContext = serviceProvider.GetRequiredService<NotificationContext>();
+            DbContext dbContext = serviceProvider.GetRequiredService<DbContext>();
             var mailService = serviceProvider.GetRequiredService<IMailService>();
 
             DateTime targetDate6Weeks = DateTime.Now.AddDays(6 * 7);
             DateTime targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
 
-            List<Document> expiringDocuments = dbContext.Documents
+            List<Document> expiringDocuments = await dbContext.Documents
                         .Include(d => d.Customer)
                         .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
-                        .ToList();
+                        .ToListAsync();
 
             foreach (Document document in expiringDocuments)
             {
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
-                Customer customer = dbContext.Customers.FirstOrDefault(c => c.CustomerId == document.Customer.CustomerId);
+                Customer customer = await dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == document.Customer.CustomerId);
 
                 mailService.SendEmail(customer.Name, document.FileType, document.Date, document.Type, document.File, weeks);
             }

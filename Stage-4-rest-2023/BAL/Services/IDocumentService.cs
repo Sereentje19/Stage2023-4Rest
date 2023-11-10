@@ -11,10 +11,10 @@ namespace Stage4rest2023.Services
             int page, int pageSize);
         public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
-        DocumentDTO GetDocumentById(int id);
-        void PostDocument(Document document);
-        void PutDocument(EditDocumentRequestDTO document);
-        void UpdateIsArchived(CheckBoxDTO entity);
-        void DeleteDocument(int id);
+        Task<DocumentDTO> GetDocumentById(int id);
+        Task PostDocument(Document document);
+        Task PutDocument(EditDocumentRequestDTO document);
+        Task UpdateIsArchived(CheckBoxDTO entity);
+        Task DeleteDocument(int id);
     }
 }

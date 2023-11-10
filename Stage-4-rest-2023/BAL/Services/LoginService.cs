@@ -8,13 +8,9 @@ namespace Stage4rest2023.Services
     {
         private readonly ILoginRepository _loginRepository;
 
-        /// <summary>
-        /// Initializes a new instance of the LoginService class with the provided login repository.
-        /// </summary>
-        /// <param name="lr">The login repository responsible for database interactions.</param>
-        public LoginService(ILoginRepository lr)
+        public LoginService(ILoginRepository loginRepository)
         {
-            _loginRepository = lr;
+            _loginRepository = loginRepository;
         }
 
         /// <summary>
@@ -24,9 +20,9 @@ namespace Stage4rest2023.Services
         /// <returns>
         /// The user object if the credentials are valid; otherwise, returns null.
         /// </returns>
-        public User CheckCredentials(LoginRequestDTO user)
+        public async Task<User> CheckCredentials(LoginRequestDTO user)
         {
-            return _loginRepository.CheckCredentials(user);
+            return await _loginRepository.CheckCredentials(user);
         }
     }
 }

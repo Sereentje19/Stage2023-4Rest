@@ -1,15 +1,18 @@
+using LeanSharp;
+using Stage4rest2023.Exceptions;
 using Stage4rest2023.Models;
 using Stage4rest2023.Models.DTOs;
+using Stage4rest2023.Models.Responses;
 
 namespace Stage4rest2023.Repositories
 {
     public interface ICustomerRepository
     {
-        (IEnumerable<object>, int) GetAllCustomers(string searchfield, int page, int pageSize);
-        IEnumerable<Customer> GetFilteredCustomers(string searchfield);
-        Customer GetCustomerById(int id);
-        int AddCustomer(Customer entity);
-        void UpdateCustomer(Customer entity);
-        void DeleteCustomer(int id);
+        Task<(IEnumerable<object>, int)> GetAllCustomers(string searchfield, int page, int pageSize);
+        Task<IEnumerable<Customer>> GetFilteredCustomers(string searchfield);
+        Task<Customer> GetCustomerById(int id);
+        Task<int> AddCustomer(Customer customer);
+        Task UpdateCustomer(Customer entity);
+        Task DeleteCustomer(int id);
     }
 }
