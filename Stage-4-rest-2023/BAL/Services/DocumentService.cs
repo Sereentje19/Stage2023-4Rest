@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
 using Stage4rest2023.Repositories;
 using Stage4rest2023.Models;
 using Stage4rest2023.Models.DTOs;
-using Document = Stage4rest2023.Models.Document;
 
 namespace Stage4rest2023.Services
 {

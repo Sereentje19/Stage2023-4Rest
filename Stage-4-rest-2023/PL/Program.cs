@@ -1,9 +1,16 @@
 using Stage4rest2023.Models;
 using Stage4rest2023.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Stage4rest2023.Services;
+using Microsoft.AspNetCore.Hosting;
+using System.Net;
+using System.Net.Mime;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Stage4rest2023.Exceptions;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using DbContext = Stage4rest2023.Models.DbContext;
 
@@ -15,8 +22,8 @@ ConfigurationManager configuration = builder.Configuration;
 AddServices();
 AddAuthentication();
 AddCors();
+AddDBConnection();
 ConnectionInterfaces();
-AddDbConnection();
 BuildApp();
 
 //services
@@ -54,9 +61,9 @@ void AddAuthentication()
 //cors
 void AddCors()
 {
-    builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", b =>
+    builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
     {
-        b.WithOrigins("http://localhost:5173")
+        builder.WithOrigins("http://localhost:5173")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -65,11 +72,11 @@ void AddCors()
 
 
 //db connection
-void AddDbConnection()
+void AddDBConnection()
 {
     builder.Services.AddDbContext<DbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-            opt => opt.EnableRetryOnFailure()));
+            options => options.EnableRetryOnFailure()));
 }
 
 //connect interfaces
@@ -77,23 +84,17 @@ void ConnectionInterfaces()
 {
     builder.Services.AddScoped<IDocumentService, DocumentService>();
     builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-    
     builder.Services.AddScoped<ILoginService, LoginService>();
     builder.Services.AddScoped<ILoginRepository, LoginRepository>();
-    
     builder.Services.AddScoped<IEmployeeService, EmployeeService>();
     builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-    
+    builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
     builder.Services.AddScoped<IProductRepository, ProductRepository>();
     builder.Services.AddScoped<IProductService, ProductService>();
-    
     builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
     builder.Services.AddScoped<ILoanHistoryService, LoanHistoryService>();
-    
     builder.Services.AddScoped<IMailService, MailService>();
     builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-    
-    builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
     builder.Services.AddHostedService<DocumentExpirationCheckService>();
 }
 
