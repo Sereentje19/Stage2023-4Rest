@@ -155,7 +155,7 @@ namespace Stage4rest2023.Repositories
                 throw new InputValidationException("Klant naam of email is leeg.");
             }
 
-            Employee existingEmployee = await _context.Customers
+            Employee existingEmployee = await _context.Employees
                 .SingleOrDefaultAsync(l => l.Name == document.Employee.Name && l.Email == document.Employee.Email);
 
             if (existingEmployee != null)

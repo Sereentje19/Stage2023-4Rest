@@ -65,7 +65,7 @@ namespace Stage4rest2023.Services
             foreach (Document document in expiringDocuments)
             {
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
-                Employee employee = await dbContext.Customers.FirstOrDefaultAsync(c => c.EmployeeId == document.Employee.EmployeeId);
+                Employee employee = await dbContext.Employees.FirstOrDefaultAsync(c => c.EmployeeId == document.Employee.EmployeeId);
 
                 mailService.SendEmail(employee.Name, document.FileType, document.Date, document.Type, document.File, weeks);
             }

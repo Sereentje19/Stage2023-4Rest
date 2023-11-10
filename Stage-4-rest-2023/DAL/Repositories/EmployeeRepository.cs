@@ -32,7 +32,7 @@ namespace Stage4rest2023.Repositories
         /// </returns>
         public async Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page, int pageSize)
         {
-            IQueryable<Employee> query = _context.Customers
+            IQueryable<Employee> query = _context.Employees
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
                                    customer.Name.Contains(searchfield) ||
                                    customer.Email.Contains(searchfield))

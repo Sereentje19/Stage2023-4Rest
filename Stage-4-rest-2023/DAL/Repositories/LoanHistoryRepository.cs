@@ -149,7 +149,7 @@ namespace Stage4rest2023.Repositories
             LoanHistory loanHistory = new LoanHistory
             {
                 Product = await _context.Products.FindAsync(lh.Product.ProductId),
-                Employee = await _context.Customers.FindAsync(lh.Employee.EmployeeId),
+                Employee = await _context.Employees.FindAsync(lh.Employee.EmployeeId),
                 ReturnDate = lh.ReturnDate,
                 LoanDate = lh.LoanDate
             };
