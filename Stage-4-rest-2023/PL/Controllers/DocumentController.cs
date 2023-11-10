@@ -174,7 +174,7 @@ namespace Stage4rest2023.Controllers
         /// <param name="doc">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public async Task<IActionResult> PutDocument(EditDocumentRequestDTO doc)
+        public async Task<IActionResult> PutDocument(EditDocumentRequest doc)
         {
             await _documentService.PutDocument(doc);
             return Ok(new { message = "Document updated" });
@@ -188,7 +188,7 @@ namespace Stage4rest2023.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPut("archive")]
-        public async Task<IActionResult> PutIsArchived(CheckBoxDTO doc)
+        public async Task<IActionResult> PutIsArchived(CheckBoxRequest doc)
         {
             await _documentService.UpdateIsArchived(doc);
             return Ok(new { message = "Document updated" });

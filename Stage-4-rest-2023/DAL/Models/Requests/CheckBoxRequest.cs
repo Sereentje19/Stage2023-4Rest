@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Stage4rest2023.Models.DTOs
 {
-    public class CheckBoxDTO
+    public class CheckBoxRequest
     {
-        public int DocumentId { get; set; }
-        public bool IsArchived { get; set; }
+        public int DocumentId { get; }
+        public bool IsArchived { get; }
     }
 }

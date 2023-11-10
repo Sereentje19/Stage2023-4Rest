@@ -22,7 +22,7 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="id">The ID of the product.</param>
         /// <returns>A collection of LoanHistoryDTO representing loan history for the product.</returns>
-        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByProductId(int id)
+        public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByProductId(int id)
         {
             return await _loanHistoryRepository.GetLoanHistoryByProductId(id);
         }
@@ -32,7 +32,7 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="id">The ID of the customer.</param>
         /// <returns>A collection of LoanHistoryDTO representing loan history for the customer.</returns>
-        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByCustomerId(int id)
+        public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByCustomerId(int id)
         {
             return await _loanHistoryRepository.GetLoanHistoryByCustomerId(id);
         }

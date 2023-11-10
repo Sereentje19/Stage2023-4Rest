@@ -27,14 +27,14 @@ namespace Stage4rest2023.Repositories
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified product.
         /// </returns>
-        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByProductId(int id)
+        public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByProductId(int id)
         {
             return await _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
                 .OrderByDescending(l => l.LoanDate)
-                .Select(loan => new LoanHistoryDTO
+                .Select(loan => new LoanHistoryResponse
                 {
                     Type = loan.Product.Type.ToString(),
                     SerialNumber = loan.Product.SerialNumber,
@@ -55,14 +55,14 @@ namespace Stage4rest2023.Repositories
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified customer.
         /// </returns>
-        public async Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByCustomerId(int id)
+        public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByCustomerId(int id)
         {
             return await _dbSet
                 .Include(l => l.Customer)
                 .Include(l => l.Product)
                 .Where(l => l.Customer.CustomerId == id)
                 .OrderByDescending(l => l.LoanDate)
-                .Select(loan => new LoanHistoryDTO
+                .Select(loan => new LoanHistoryResponse
                 {
                     Type = loan.Product.Type.ToString(),
                     SerialNumber = loan.Product.SerialNumber,

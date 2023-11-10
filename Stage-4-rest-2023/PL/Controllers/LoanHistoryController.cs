@@ -29,7 +29,7 @@ namespace Stage4rest2023.Controllers
         [HttpGet("product/{product-id}")]
         public async Task<IActionResult> getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
         {
-            IEnumerable<LoanHistoryDTO> loanHistory = await _loanHistoryService.GetLoanHistoryByProductId(productId);
+            IEnumerable<LoanHistoryResponse> loanHistory = await _loanHistoryService.GetLoanHistoryByProductId(productId);
             return Ok(loanHistory);
         }
 
@@ -43,7 +43,7 @@ namespace Stage4rest2023.Controllers
         [HttpGet("customer/{customer-id}")]
         public async Task<IActionResult> GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId)
         {
-            IEnumerable<LoanHistoryDTO> lh = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
+            IEnumerable<LoanHistoryResponse> lh = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
             return Ok(lh);
         }
 

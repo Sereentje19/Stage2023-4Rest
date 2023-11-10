@@ -24,8 +24,8 @@ namespace Stage4rest2023.Repositories
         /// <param name="dropdown">The document type filter.</param>
         /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>An IQueryable of DocumentOverviewDTO representing the document overviews.</returns>
-        public IQueryable<DocumentOverviewDTO> QueryGetDocuments(string searchfield, DocumentType? dropdown,
-            Func<DocumentOverviewDTO, bool> filter)
+        public IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, DocumentType? dropdown,
+            Func<DocumentOverviewResponse, bool> filter)
         {
             return _context.Documents
                 .Include(d => d.Customer)
@@ -34,7 +34,7 @@ namespace Stage4rest2023.Repositories
                                     document.Customer.Email.Contains(searchfield))
                                    && (dropdown == DocumentType.Not_Selected || document.Type == dropdown))
                 .OrderBy(document => document.Date)
-                .Select(doc => new DocumentOverviewDTO
+                .Select(doc => new DocumentOverviewResponse
                 {
                     DocumentId = doc.DocumentId,
                     CustomerId = doc.Customer.CustomerId,
@@ -55,13 +55,13 @@ namespace Stage4rest2023.Repositories
         /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>A tuple containing a collection of document overviews and the total number of document overviews.</returns>
         private (IEnumerable<object>, int) GetPagedDocumentsInternal(string searchfield,
-            DocumentType? dropdown, int page, int pageSize, Func<DocumentOverviewDTO, bool> filter)
+            DocumentType? dropdown, int page, int pageSize, Func<DocumentOverviewResponse, bool> filter)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            IQueryable<DocumentOverviewDTO> query = QueryGetDocuments(searchfield, dropdown, filter);
+            IQueryable<DocumentOverviewResponse> query = QueryGetDocuments(searchfield, dropdown, filter);
             int numberOfCustomers = query.Where(filter).Count();
 
-            IEnumerable<DocumentOverviewDTO> documentList = query
+            IEnumerable<DocumentOverviewResponse> documentList = query
                 .Where(filter)
                 .Skip(skipCount)
                 .Take(pageSize)
@@ -171,7 +171,7 @@ namespace Stage4rest2023.Repositories
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public async Task UpdateDocument(EditDocumentRequestDTO document)
+        public async Task UpdateDocument(EditDocumentRequest document)
         {
             Document existingDocument = await _dbSet
                 .Include(d => d.Customer)
@@ -194,7 +194,7 @@ namespace Stage4rest2023.Repositories
         /// </summary>
         /// <param name="document">The CheckBoxDTO containing document information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateIsArchived(CheckBoxDTO document)
+        public async Task UpdateIsArchived(CheckBoxRequest document)
         {
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
             existingDocument.IsArchived = document.IsArchived;

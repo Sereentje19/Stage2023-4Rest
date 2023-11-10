@@ -1,6 +1,6 @@
 ﻿namespace Stage4rest2023.Models.DTOs;
 
-public class DocumentOverviewDTO
+public class DocumentOverviewResponse
 {
     public int DocumentId { get; set; }
     public DateTime Date { get; set; }

@@ -13,8 +13,8 @@ namespace Stage4rest2023.Services
             int page, int pageSize);
         Task<DocumentDTO> GetDocumentById(int id);
         Task PostDocument(Document document);
-        Task PutDocument(EditDocumentRequestDTO document);
-        Task UpdateIsArchived(CheckBoxDTO entity);
+        Task PutDocument(EditDocumentRequest document);
+        Task UpdateIsArchived(CheckBoxRequest entity);
         Task DeleteDocument(int id);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Stage4rest2023.Models.DTOs;
 
-public class LoanHistoryDTO
+public class LoanHistoryResponse
 {
     public string? Type { get; set; }
     public string? SerialNumber { get; set; }

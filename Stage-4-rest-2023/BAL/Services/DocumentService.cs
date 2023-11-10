@@ -81,7 +81,7 @@ namespace Stage4rest2023.Services
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public async Task PutDocument(EditDocumentRequestDTO document)
+        public async Task PutDocument(EditDocumentRequest document)
         {
             await _documentRepository.UpdateDocument(document);
         }
@@ -91,7 +91,7 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="entity">The CheckBoxDTO containing update information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateIsArchived(CheckBoxDTO entity)
+        public async Task UpdateIsArchived(CheckBoxRequest entity)
         {
             await _documentRepository.UpdateIsArchived(entity);
         }

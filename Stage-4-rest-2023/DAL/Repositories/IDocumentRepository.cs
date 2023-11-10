@@ -17,8 +17,8 @@ namespace Stage4rest2023.Repositories
 
         Task<DocumentDTO> GetDocumentById(int id);
         Task AddDocument(Document document);
-        Task UpdateDocument(EditDocumentRequestDTO document);
-        Task UpdateIsArchived(CheckBoxDTO document);
+        Task UpdateDocument(EditDocumentRequest document);
+        Task UpdateIsArchived(CheckBoxRequest document);
         Task DeleteDocument(int id);
     }
 }

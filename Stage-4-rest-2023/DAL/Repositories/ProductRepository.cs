@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Stage4rest2023.Models;
 using Microsoft.EntityFrameworkCore;
 using Stage4rest2023.Exceptions;
+using Stage4rest2023.Models.DTOs;
 using DbContext = Stage4rest2023.Models.DbContext;
 
 namespace Stage4rest2023.Repositories
@@ -44,6 +45,14 @@ namespace Stage4rest2023.Repositories
             var productList = await query
                 .Skip(skipCount)
                 .Take(pageSize)
+                .Select(product => new ProductResponse
+                {
+                    ProductId = product.ProductId,
+                    ExpirationDate = product.ExpirationDate,
+                    PurchaseDate = product.PurchaseDate,
+                    Type = product.Type.ToString(),
+                    SerialNumber = product.SerialNumber
+                })
                 .ToListAsync();
 
             return (productList, numberOfProducts);

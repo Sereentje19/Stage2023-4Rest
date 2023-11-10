@@ -9,8 +9,8 @@ namespace Stage4rest2023.Repositories
 {
     public interface ILoanHistoryRepository
     {
-        Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByProductId(int id);
-        Task<IEnumerable<LoanHistoryDTO>> GetLoanHistoryByCustomerId(int id);
+        Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByProductId(int id);
+        Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByCustomerId(int id);
         Task<DateTime?> GetReturnDatesByProductId(int productId);
         Task<LoanHistory> GetLatestLoanHistoryByProductId(int id);
         Task UpdateLoanHistory(LoanHistory loanHistory);
