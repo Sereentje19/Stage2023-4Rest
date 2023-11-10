@@ -11,8 +11,8 @@ namespace Stage4rest2023.Models
         public string? FileType { get; set; }
         public DateTime Date { get; set; }
         
-        [ForeignKey("CustomerId")]
-        public Customer Customer { get; set; }
+        [ForeignKey("EmployeeId")]
+        public Employee Employee { get; set; }
 
         [Column(TypeName = "nvarchar(24)")]
         public DocumentType Type { get; set; }

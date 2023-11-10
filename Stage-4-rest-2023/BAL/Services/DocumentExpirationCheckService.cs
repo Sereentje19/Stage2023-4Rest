@@ -58,16 +58,16 @@ namespace Stage4rest2023.Services
             DateTime targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
 
             List<Document> expiringDocuments = await dbContext.Documents
-                        .Include(d => d.Customer)
+                        .Include(d => d.Employee)
                         .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
                         .ToListAsync();
 
             foreach (Document document in expiringDocuments)
             {
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
-                Customer customer = await dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == document.Customer.CustomerId);
+                Employee employee = await dbContext.Customers.FirstOrDefaultAsync(c => c.EmployeeId == document.Employee.EmployeeId);
 
-                mailService.SendEmail(customer.Name, document.FileType, document.Date, document.Type, document.File, weeks);
+                mailService.SendEmail(employee.Name, document.FileType, document.Date, document.Type, document.File, weeks);
             }
         }
     }

@@ -122,12 +122,12 @@ namespace Stage4rest2023.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDocumentById(int id)
         {
-            DocumentDTO doc = await _documentService.GetDocumentById(id);
+            DocumentResponse doc = await _documentService.GetDocumentById(id);
             
             var response = new
             {
                 Document = doc,
-                doc.Customer,
+                Customer = doc.Employee,
                 type = doc.Type.ToString().Replace("_", " "),
             };
             
@@ -141,16 +141,16 @@ namespace Stage4rest2023.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public async Task<IActionResult> PostDocument([FromForm] IFormFile? file, [FromForm] DocumentDTO document)
+        public async Task<IActionResult> PostDocument([FromForm] IFormFile? file, [FromForm] DocumentResponse document)
         {
             Document doc = new Document
             {
                 Type = document.Type,
                 Date = document.Date,
-                Customer = new Customer()
+                Employee = new Employee()
                 {
-                    Email = document.Customer.Email,
-                    Name = document.Customer.Name
+                    Email = document.Employee.Email,
+                    Name = document.Employee.Name
                 },
                 FileType = document.FileType
             };

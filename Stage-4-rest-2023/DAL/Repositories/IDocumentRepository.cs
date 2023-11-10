@@ -15,7 +15,7 @@ namespace Stage4rest2023.Repositories
         (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
 
-        Task<DocumentDTO> GetDocumentById(int id);
+        Task<DocumentResponse> GetDocumentById(int id);
         Task AddDocument(Document document);
         Task UpdateDocument(EditDocumentRequest document);
         Task UpdateIsArchived(CheckBoxRequest document);

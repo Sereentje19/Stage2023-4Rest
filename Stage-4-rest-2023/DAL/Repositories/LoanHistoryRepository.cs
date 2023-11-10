@@ -30,7 +30,7 @@ namespace Stage4rest2023.Repositories
         public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByProductId(int id)
         {
             return await _dbSet
-                .Include(l => l.Customer)
+                .Include(l => l.Employee)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
                 .OrderByDescending(l => l.LoanDate)
@@ -38,7 +38,7 @@ namespace Stage4rest2023.Repositories
                 {
                     Type = loan.Product.Type.ToString(),
                     SerialNumber = loan.Product.SerialNumber,
-                    Name = loan.Customer.Name,
+                    Name = loan.Employee.Name,
                     ExpirationDate = loan.Product.ExpirationDate,
                     PurchaseDate = loan.Product.PurchaseDate,
                     LoanDate = loan.LoanDate,
@@ -58,16 +58,16 @@ namespace Stage4rest2023.Repositories
         public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByCustomerId(int id)
         {
             return await _dbSet
-                .Include(l => l.Customer)
+                .Include(l => l.Employee)
                 .Include(l => l.Product)
-                .Where(l => l.Customer.CustomerId == id)
+                .Where(l => l.Employee.EmployeeId == id)
                 .OrderByDescending(l => l.LoanDate)
                 .Select(loan => new LoanHistoryResponse
                 {
                     Type = loan.Product.Type.ToString(),
                     SerialNumber = loan.Product.SerialNumber,
-                    Name = loan.Customer.Name,
-                    Email = loan.Customer.Email,
+                    Name = loan.Employee.Name,
+                    Email = loan.Employee.Email,
                     LoanDate = loan.LoanDate,
                     ReturnDate = loan.ReturnDate,
                 })
@@ -112,7 +112,7 @@ namespace Stage4rest2023.Repositories
         public async Task<LoanHistory> GetLatestLoanHistoryByProductId(int id)
         {
             return await _dbSet
-                .Include(l => l.Customer)
+                .Include(l => l.Employee)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
                 .OrderByDescending(l => l.LoanDate)
@@ -129,7 +129,7 @@ namespace Stage4rest2023.Repositories
             LoanHistory loanHistory = new LoanHistory
             {
                 Product = await _context.Products.FindAsync(lh.Product.ProductId),
-                Customer = lh.Customer,
+                Employee = lh.Employee,
                 ReturnDate = DateTime.Now,
                 LoanDate = lh.LoanDate,
                 LoanHistoryId = lh.LoanHistoryId
@@ -149,7 +149,7 @@ namespace Stage4rest2023.Repositories
             LoanHistory loanHistory = new LoanHistory
             {
                 Product = await _context.Products.FindAsync(lh.Product.ProductId),
-                Customer = await _context.Customers.FindAsync(lh.Customer.CustomerId),
+                Employee = await _context.Customers.FindAsync(lh.Employee.EmployeeId),
                 ReturnDate = lh.ReturnDate,
                 LoanDate = lh.LoanDate
             };

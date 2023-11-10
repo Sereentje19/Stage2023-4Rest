@@ -4,13 +4,13 @@ using Stage4rest2023.Repositories;
 
 namespace Stage4rest2023.Services
 {
-    public class CustomerService : ICustomerService
+    public class EmployeeService : IEmployeeService
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository)
         {
-            _customerRepository = customerRepository;
+            _employeeRepository = employeeRepository;
         }
 
         /// <summary>
@@ -20,9 +20,9 @@ namespace Stage4rest2023.Services
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of customers per page.</param>
         /// <returns>A tuple containing paged customers and pagination information.</returns>
-        public async Task<(IEnumerable<object>, Pager)> GetPagedCustomers(string searchfield, int page, int pageSize)
+        public async Task<(IEnumerable<object>, Pager)> GetPagedEmployee(string searchfield, int page, int pageSize)
         {
-            var (pagedCustomers, numberOfcustomers) = await _customerRepository.GetAllCustomers(searchfield, page, pageSize);
+            var (pagedCustomers, numberOfcustomers) = await _employeeRepository.GetAllEmployee(searchfield, page, pageSize);
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
             return (pagedCustomers, pager);
         }
@@ -32,9 +32,9 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="searchfield">The search criteria.</param>
         /// <returns>A collection of matching Customer objects.</returns>
-        public async Task<IEnumerable<Customer>> GetFilteredCustomers(string searchfield)
+        public async Task<IEnumerable<Employee>> GetFilteredEmployee(string searchfield)
         {
-            return await _customerRepository.GetFilteredCustomers(searchfield);
+            return await _employeeRepository.GetFilteredEmployee(searchfield);
         }
 
         /// <summary>
@@ -42,29 +42,29 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<Customer> GetCustomerById(int id)
+        public async Task<Employee> GetEmployeeById(int id)
         {
-            return await _customerRepository.GetCustomerById(id);
+            return await _employeeRepository.GetEmployeeById(id);
         }
 
         /// <summary>
         /// Adds a new customer to the repository.
         /// </summary>
-        /// <param name="customer">The customer entity to be added.</param>
+        /// <param name="employee">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer.</returns>
-        public async Task<int> PostCustomer(Customer customer)
+        public async Task<int> PostEmployee(Employee employee)
         {
-            return await _customerRepository.AddCustomer(customer);
+            return await _employeeRepository.AddEmployee(employee);
         }
 
         /// <summary>
         /// Updates an existing customer's information.
         /// </summary>
-        /// <param name="customer">The Customer object containing updated information.</param>
+        /// <param name="employee">The Customer object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task PutCustomer(Customer customer)
+        public async Task PutEmployee(Employee employee)
         {
-            await _customerRepository.UpdateCustomer(customer);
+            await _employeeRepository.UpdateEmployee(employee);
         }
         
         /// <summary>
@@ -72,9 +72,9 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="id">The ID of the customer to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteCustomer(int id)
+        public async Task DeleteEmployee(int id)
         {
-            await _customerRepository.DeleteCustomer(id);
+            await _employeeRepository.DeleteEmployee(id);
         }
     }
 }

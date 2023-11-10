@@ -86,8 +86,8 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
     builder.Services.AddScoped<ILoginService, LoginService>();
     builder.Services.AddScoped<ILoginRepository, LoginRepository>();
-    builder.Services.AddScoped<ICustomerService, CustomerService>();
-    builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+    builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+    builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
     builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
     builder.Services.AddScoped<IProductRepository, ProductRepository>();
     builder.Services.AddScoped<IProductService, ProductService>();

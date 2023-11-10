@@ -11,7 +11,7 @@ namespace Stage4rest2023.Services
             int page, int pageSize);
         public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
-        Task<DocumentDTO> GetDocumentById(int id);
+        Task<DocumentResponse> GetDocumentById(int id);
         Task PostDocument(Document document);
         Task PutDocument(EditDocumentRequest document);
         Task UpdateIsArchived(CheckBoxRequest entity);

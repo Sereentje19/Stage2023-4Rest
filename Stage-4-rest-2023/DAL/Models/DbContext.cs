@@ -8,7 +8,7 @@ namespace Stage4rest2023.Models
         {}
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Employee> Customers { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<LoanHistory> LoanHistory { get; set; }

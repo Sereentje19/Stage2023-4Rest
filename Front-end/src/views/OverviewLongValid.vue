@@ -188,9 +188,6 @@
         } else if (ageInDays >= week * 2) {
           unit = "weken";
           value = Math.floor(ageInDays / week);
-        } else {
-          unit = "dagen";
-          value = ageInDays;
         }
   
         return `${value} ${unit}`;

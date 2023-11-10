@@ -28,18 +28,18 @@ namespace Stage4rest2023.Repositories
             Func<DocumentOverviewResponse, bool> filter)
         {
             return _context.Documents
-                .Include(d => d.Customer)
+                .Include(d => d.Employee)
                 .Where(document => (string.IsNullOrEmpty(searchfield) ||
-                                    document.Customer.Name.Contains(searchfield) ||
-                                    document.Customer.Email.Contains(searchfield))
+                                    document.Employee.Name.Contains(searchfield) ||
+                                    document.Employee.Email.Contains(searchfield))
                                    && (dropdown == DocumentType.Not_Selected || document.Type == dropdown))
                 .OrderBy(document => document.Date)
                 .Select(doc => new DocumentOverviewResponse
                 {
                     DocumentId = doc.DocumentId,
-                    CustomerId = doc.Customer.CustomerId,
+                    CustomerId = doc.Employee.EmployeeId,
                     Date = doc.Date,
-                    CustomerName = doc.Customer.Name,
+                    CustomerName = doc.Employee.Name,
                     IsArchived = doc.IsArchived,
                     Type = doc.Type.ToString().Replace("_", " "),
                 });
@@ -121,18 +121,18 @@ namespace Stage4rest2023.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<DocumentDTO> GetDocumentById(int id)
+        public async Task<DocumentResponse> GetDocumentById(int id)
         {
             Document doc = await _dbSet
-                .Include(d => d.Customer)
+                .Include(d => d.Employee)
                 .FirstOrDefaultAsync(d => d.DocumentId == id);
 
-            return new DocumentDTO
+            return new DocumentResponse
             {
                 File = doc.File,
                 FileType = doc.FileType,
                 Date = doc.Date,
-                Customer = doc.Customer,
+                Employee = doc.Employee,
                 Type = doc.Type
             };
         }
@@ -149,18 +149,18 @@ namespace Stage4rest2023.Repositories
                 throw new InputValidationException("Selecteer een type.");
             }
 
-            if (string.IsNullOrWhiteSpace(document.Customer.Name) ||
-                string.IsNullOrWhiteSpace(document.Customer.Email))
+            if (string.IsNullOrWhiteSpace(document.Employee.Name) ||
+                string.IsNullOrWhiteSpace(document.Employee.Email))
             {
                 throw new InputValidationException("Klant naam of email is leeg.");
             }
 
-            Customer existingCustomer = await _context.Customers
-                .SingleOrDefaultAsync(l => l.Name == document.Customer.Name && l.Email == document.Customer.Email);
+            Employee existingEmployee = await _context.Customers
+                .SingleOrDefaultAsync(l => l.Name == document.Employee.Name && l.Email == document.Employee.Email);
 
-            if (existingCustomer != null)
+            if (existingEmployee != null)
             {
-                document.Customer = existingCustomer;
+                document.Employee = existingEmployee;
             }
 
             await _dbSet.AddAsync(document);
@@ -174,7 +174,7 @@ namespace Stage4rest2023.Repositories
         public async Task UpdateDocument(EditDocumentRequest document)
         {
             Document existingDocument = await _dbSet
-                .Include(d => d.Customer)
+                .Include(d => d.Employee)
                 .Where(d => d.DocumentId == document.DocumentId)
                 .FirstOrDefaultAsync();
 

@@ -10,15 +10,15 @@ using DbContext = Stage4rest2023.Models.DbContext;
 
 namespace Stage4rest2023.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class EmployeeRepository : IEmployeeRepository
     {
         private readonly DbContext _context;
-        private readonly DbSet<Customer> _dbSet;
+        private readonly DbSet<Employee> _dbSet;
 
-        public CustomerRepository(DbContext context)
+        public EmployeeRepository(DbContext context)
         {
             _context = context;
-            _dbSet = _context.Set<Customer>();
+            _dbSet = _context.Set<Employee>();
         }
 
         /// <summary>
@@ -30,9 +30,9 @@ namespace Stage4rest2023.Repositories
         /// <returns>
         /// A tuple containing a collection of customers and the total number of customers.
         /// </returns>
-        public async Task<(IEnumerable<object>, int)> GetAllCustomers(string searchfield, int page, int pageSize)
+        public async Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page, int pageSize)
         {
-            IQueryable<Customer> query = _context.Customers
+            IQueryable<Employee> query = _context.Customers
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
                                    customer.Name.Contains(searchfield) ||
                                    customer.Email.Contains(searchfield))
@@ -41,7 +41,7 @@ namespace Stage4rest2023.Repositories
             int numberOfCustomers = await query.CountAsync();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
 
-            IEnumerable<Customer> customerList = await query
+            IEnumerable<Employee> customerList = await query
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToListAsync();
@@ -54,9 +54,9 @@ namespace Stage4rest2023.Repositories
         /// </summary>
         /// <param name="searchfield">The search criteria for customer names or emails.</param>
         /// <returns>A collection of customers filtered by the provided search field.</returns>
-        public async Task<IEnumerable<Customer>> GetFilteredCustomers(string searchfield)
+        public async Task<IEnumerable<Employee>> GetFilteredEmployee(string searchfield)
         {
-            IQueryable<Customer> customers = _dbSet;
+            IQueryable<Employee> customers = _dbSet;
 
             if (!string.IsNullOrWhiteSpace(searchfield))
             {
@@ -74,7 +74,7 @@ namespace Stage4rest2023.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<Customer> GetCustomerById(int id)
+        public async Task<Employee> GetEmployeeById(int id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -83,36 +83,36 @@ namespace Stage4rest2023.Repositories
         /// <summary>
         /// Adds a new customer to the repository.
         /// </summary>
-        /// <param name="customer">The customer entity to be added.</param>
+        /// <param name="employee">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer, or the ID of an existing customer if the same name and email combination is found.</returns>
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
-        public async Task<int> AddCustomer(Customer customer)
+        public async Task<int> AddEmployee(Employee employee)
         {
-            if (string.IsNullOrWhiteSpace(customer.Name) || string.IsNullOrWhiteSpace(customer.Email))
+            if (string.IsNullOrWhiteSpace(employee.Name) || string.IsNullOrWhiteSpace(employee.Email))
             {
                 throw new InputValidationException("Klant naam of email is leeg.");
             }
 
             //if the customer already exist, don't add it again.
-            Customer existingCustomer =
-                await _dbSet.FirstOrDefaultAsync(c => c.Name == customer.Name && c.Email == customer.Email);
+            Employee existingEmployee =
+                await _dbSet.FirstOrDefaultAsync(c => c.Name == employee.Name && c.Email == employee.Email);
 
-            if (existingCustomer == null)
+            if (existingEmployee == null)
             {
-                await _dbSet.AddAsync(customer);
+                await _dbSet.AddAsync(employee);
                 await _context.SaveChangesAsync();
             }
 
-            return customer.CustomerId;
+            return employee.EmployeeId;
         }
 
         /// <summary>
         /// Updates an existing customer in the repository.
         /// </summary>
-        /// <param name="customer">The document entity to be updated.</param>
-        public async Task UpdateCustomer(Customer customer)
+        /// <param name="employee">The document entity to be updated.</param>
+        public async Task UpdateEmployee(Employee employee)
         {
-            _dbSet.Update(customer);
+            _dbSet.Update(employee);
             await _context.SaveChangesAsync();
         }
 
@@ -121,15 +121,15 @@ namespace Stage4rest2023.Repositories
         /// </summary>
         /// <param name="id">The ID of the customer to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteCustomer(int id)
+        public async Task DeleteEmployee(int id)
         {
-            List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Customer.CustomerId == id).ToList();
+            List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Employee.EmployeeId == id).ToList();
             foreach (LoanHistory loan in loans)
             {
                 _context.LoanHistory.Remove(loan);
             }
 
-            List<Document> docs = _context.Documents.Where(l => l.Customer.CustomerId == id).ToList();
+            List<Document> docs = _context.Documents.Where(l => l.Employee.EmployeeId == id).ToList();
             foreach (Document doc in docs)
             {
                 _context.Documents.Remove(doc);

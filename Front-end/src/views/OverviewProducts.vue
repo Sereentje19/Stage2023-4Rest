@@ -156,9 +156,7 @@ export default {
           console.log(res.data)
           this.product[index].returnDate = res.data;
         }).catch((error) => {
-          // if (error.response.data != "Sequence contains no elements") {
             this.$refs.PopUpMessage.popUpError(error.response.data);
-          // }
         });
     },
     formatDate(date) {

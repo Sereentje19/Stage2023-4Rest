@@ -7,8 +7,8 @@ namespace Stage4rest2023.Models
     {
         [Key]
         public int LoanHistoryId { get; set; }
-        [ForeignKey("CustomerId")]
-        public Customer Customer { get; set; }
+        [ForeignKey("EmployeeId")]
+        public Employee Employee { get; set; }
 
         [ForeignKey("ProductId")]
         public Product Product { get; set; }

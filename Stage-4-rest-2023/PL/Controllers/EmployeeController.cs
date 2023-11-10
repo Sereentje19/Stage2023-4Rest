@@ -9,13 +9,13 @@ namespace Stage4rest2023.Controllers
     [ApiController]
     [Route("customer")]
     [Authorize]
-    public class CustomerController : ControllerBase
+    public class EmployeeController : ControllerBase
     {
-        private readonly ICustomerService _customerService;
+        private readonly IEmployeeService _employeeService;
 
-        public CustomerController(ICustomerService customerService)
+        public EmployeeController(IEmployeeService employeeService)
         {
-            _customerService = customerService;
+            _employeeService = employeeService;
         }
         
         /// <summary>
@@ -28,9 +28,9 @@ namespace Stage4rest2023.Controllers
         /// ActionResult with a JSON response containing paged customers and pagination details.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetPagedCustomers(string? searchfield, int page, int pageSize)
+        public async Task<IActionResult> GetPagedEmployee(string? searchfield, int page, int pageSize)
         {
-            var (pagedCustomers, pager) = await _customerService.GetPagedCustomers(searchfield, page, pageSize);
+            var (pagedCustomers, pager) = await _employeeService.GetPagedEmployee(searchfield, page, pageSize);
 
             var response = new
             {
@@ -53,9 +53,9 @@ namespace Stage4rest2023.Controllers
         /// <param name="searchField">The search field used to filter customers.</param>
         /// <returns>A collection of customers matching the search criteria.</returns>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetFilteredCustomers(string? searchField)
+        public async Task<IActionResult> GetFilteredEmployee(string? searchField)
         {
-            IEnumerable<Customer> customers = await _customerService.GetFilteredCustomers(searchField);
+            IEnumerable<Employee> customers = await _employeeService.GetFilteredEmployee(searchField);
             return Ok(customers);
         }
 
@@ -65,10 +65,10 @@ namespace Stage4rest2023.Controllers
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomerById(int id)
+        public async Task<IActionResult> GetEmployeeById(int id)
         {
-            Customer customer = await _customerService.GetCustomerById(id);
-            return Ok(customer);
+            Employee employee = await _employeeService.GetEmployeeById(id);
+            return Ok(employee);
         }
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace Stage4rest2023.Controllers
         /// <param name="cus">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer if successful; otherwise, an error message.</returns>
         [HttpPost]
-        public  async Task<IActionResult>  PostCustomer(Customer cus)
+        public  async Task<IActionResult>  PostEmployee(Employee cus)
         {
-            int id = await _customerService.PostCustomer(cus);
+            int id = await _employeeService.PostEmployee(cus);
             return Ok(id);
         }
 
@@ -89,9 +89,9 @@ namespace Stage4rest2023.Controllers
         /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public async Task<IActionResult> PutCustomer(Customer customer)
+        public async Task<IActionResult> PutEmployee(Employee employee)
         {
-            await _customerService.PutCustomer(customer);
+            await _employeeService.PutEmployee(employee);
             return Ok(new { message = "Customer updated" });
         }
 
@@ -103,9 +103,9 @@ namespace Stage4rest2023.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
-            await _customerService.DeleteCustomer(id);
+            await _employeeService.DeleteEmployee(id);
             return Ok(new { message = "Customer deleted" });
         }
     }

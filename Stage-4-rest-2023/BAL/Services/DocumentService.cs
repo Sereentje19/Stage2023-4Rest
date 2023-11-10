@@ -63,7 +63,7 @@ namespace Stage4rest2023.Services
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<DocumentDTO> GetDocumentById(int id)
+        public async Task<DocumentResponse> GetDocumentById(int id)
         {
             return await _documentRepository.GetDocumentById(id);
         }

@@ -176,18 +176,10 @@ export default {
     daysAway(date) {
       const ageInDays = this.caculationDays(date);
       const week = 7;
-      const month = 30;
-      const year = 365;
 
       let unit, value;
 
-      if (ageInDays >= year) {
-        unit = "jaar";
-        value = Math.floor(ageInDays / year);
-      } else if (ageInDays >= month * 2) {
-        unit = "maanden";
-        value = Math.floor(ageInDays / month);
-      } else if (ageInDays >= week * 2) {
+      if (ageInDays >= week * 2) {
         unit = "weken";
         value = Math.floor(ageInDays / week);
       } else {
