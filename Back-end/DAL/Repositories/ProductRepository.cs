@@ -107,12 +107,6 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task DeleteProduct(int id)
         {
-            List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Product.ProductId == id).ToList();
-            foreach (LoanHistory loan in loans)
-            {
-                _context.LoanHistory.Remove(loan);
-            }
-
             _dbSet.Remove(_dbSet.Find(id));
             await _context.SaveChangesAsync();
         }

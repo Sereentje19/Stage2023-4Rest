@@ -184,12 +184,14 @@ namespace DAL.Repositories
                 .Where(d => d.DocumentId == document.DocumentId)
                 .FirstOrDefaultAsync();
 
-            Console.WriteLine(document.Type);
-            Console.WriteLine(document.Date);
-
-            if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
+            if (document.Type == DocumentType.Not_Selected)
             {
-                throw new InputValidationException("Datum of type is leeg.");
+                throw new InputValidationException("Type is leeg.");
+            }
+
+            if (string.IsNullOrEmpty(document.Date.ToString()))
+            {
+                throw new InputValidationException("Datum is leeg.");
             }
 
             existingDocument.Date = document.Date;

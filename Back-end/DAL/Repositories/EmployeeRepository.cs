@@ -122,18 +122,6 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task DeleteEmployee(int id)
         {
-            List<LoanHistory> loans = _context.LoanHistory.Where(l => l.Employee.EmployeeId == id).ToList();
-            foreach (LoanHistory loan in loans)
-            {
-                _context.LoanHistory.Remove(loan);
-            }
-
-            List<Document> docs = _context.Documents.Where(l => l.Employee.EmployeeId == id).ToList();
-            foreach (Document doc in docs)
-            {
-                _context.Documents.Remove(doc);
-            }
-
             _dbSet.Remove(_dbSet.Find(id));
             await _context.SaveChangesAsync();
         }
