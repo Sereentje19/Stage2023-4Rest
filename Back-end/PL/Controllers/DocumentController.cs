@@ -178,6 +178,7 @@ namespace PL.Controllers
         [HttpPut]
         public async Task<IActionResult> PutDocument(EditDocumentRequest doc)
         {
+            Console.WriteLine(doc.Type.ToString());
             await _documentService.PutDocument(doc);
             return Ok(new { message = "Document updated" });
         }

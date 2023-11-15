@@ -2,7 +2,7 @@
 {
     public class CheckBoxRequest
     {
-        public int DocumentId { get; }
-        public bool IsArchived { get; }
+        public int DocumentId { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

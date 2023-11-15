@@ -184,6 +184,9 @@ namespace DAL.Repositories
                 .Where(d => d.DocumentId == document.DocumentId)
                 .FirstOrDefaultAsync();
 
+            Console.WriteLine(document.Type);
+            Console.WriteLine(document.Date);
+
             if (document.Type == DocumentType.Not_Selected || string.IsNullOrEmpty(document.Date.ToString()))
             {
                 throw new InputValidationException("Datum of type is leeg.");
@@ -202,6 +205,8 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task UpdateIsArchived(CheckBoxRequest document)
         {
+            Console.WriteLine(document.IsArchived);
+            Console.WriteLine(document.DocumentId);
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
             existingDocument.IsArchived = document.IsArchived;
             await _context.SaveChangesAsync();

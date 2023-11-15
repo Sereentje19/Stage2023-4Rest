@@ -43,11 +43,6 @@ export default {
     },
     data() {
         return {
-            employee: {
-                employeeId: 0,
-                Name: '',
-                Email: '',
-            },
             document: {
                 DocumentId: 0,
                 Type: 0,
@@ -73,7 +68,6 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.employee = res.data.employee;
                     this.document = res.data.document;
                     this.document.Date = res.data.document.date;
                     this.document.Type = res.data.document.type;

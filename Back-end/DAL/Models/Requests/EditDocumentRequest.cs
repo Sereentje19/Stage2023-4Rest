@@ -4,8 +4,8 @@ namespace PL.Models.Requests
 {
     public class EditDocumentRequest
     {
-        public int DocumentId { get; }
-        public DateTime Date { get; }
-        public DocumentType Type { get; }
+        public int DocumentId { get; set; }
+        public DateTime Date { get; set; }
+        public DocumentType Type { get; set; }
     }
 }

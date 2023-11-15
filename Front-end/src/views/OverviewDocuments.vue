@@ -94,7 +94,7 @@ export default {
           date: "",
           employeeName: "",
           type: "",
-          isArchived: null
+          isArchived: false
         }
       ],
       pager: {
@@ -118,7 +118,7 @@ export default {
   methods: {
     goToInfoPage(doc) {
       setTimeout(() => {
-        if (doc.isArchived == null) {
+        if (doc.isArchived == false) {
           this.$router.push("/info/document/" + doc.documentId);
         }
         else {
