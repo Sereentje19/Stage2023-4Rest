@@ -19,7 +19,7 @@
                     </form>
                 </ul>
 
-                <button @click="this.PostCustomer()" class="verstuur-employee">
+                <button @click="this.PostEmployee()" class="verstuur-employee">
                     Verstuur document
                 </button>
             </div>
@@ -51,7 +51,7 @@ export default {
         };
     },
     methods: {
-        PostCustomer() {
+        PostEmployee() {
             this.product.type = parseInt(this.product.type, 10);
             axios.post("product", this.product, {
                 headers: {
@@ -60,7 +60,7 @@ export default {
             })
                 .then((res) => {
                     localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/Overzicht/medewerkers', query: { activePopup: true } });
+                    this.$router.push({ path: '/Overzicht/bruikleen', query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

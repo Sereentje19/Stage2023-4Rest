@@ -7,13 +7,13 @@
 
                 <ul>
                     <form class="gegevens">
-                        <input v-model="this.customer.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
-                        <input v-model="this.customer.Email" type="text" class="email" placeholder="Email"
+                        <input v-model="this.Employee.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
+                        <input v-model="this.Employee.Email" type="text" class="email" placeholder="Email"
                             name="Email" />
                     </form>
                 </ul>
 
-                <button @click="this.PostCustomer()" class="verstuur-employee">
+                <button @click="this.PostEmployee()" class="verstuur-employee">
                     Verstuur document
                 </button>
             </div>
@@ -36,16 +36,16 @@ export default {
     },
     data() {
         return {
-            customer: {
-                CustomerId: 0,
+            Employee: {
+                employeeId: 0,
                 Name: '',
                 Email: '',
             },
         };
     },
     methods: {
-        PostCustomer() {
-            axios.post("customer", this.customer, {
+        PostEmployee() {
+            axios.post("Employee", this.Employee, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }

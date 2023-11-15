@@ -3,7 +3,7 @@
     <div class="info-container">
         <h1>Info</h1>
 
-        <PopupChoice ref="PopupChoice" @delete="deleteCustomer"/>
+        <PopupChoice ref="PopupChoice" @delete="deleteEmployee"/>
 
         <div id="leftside">
             <div id="loan-title">
@@ -15,8 +15,8 @@
                     Email: <br>
                 </div>
                 <div>
-                    {{ this.customer.name }} <br>
-                    {{ this.customer.email }} <br>
+                    {{ this.employee.name }} <br>
+                    {{ this.employee.email }} <br>
                 </div>
             </div>
             <div id="box">
@@ -48,40 +48,40 @@ export default {
     },
     data() {
         return {
-            customer: {
-                customerId: 0,
+            employee: {
+                employeeId: 0,
                 name: "",
                 email: ""
             },
         }
     },
     mounted() {
-        this.getAllCustomers();
+        this.getAllEmployees();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
-        getAllCustomers() {
-            axios.get("customer/" + this.id, {
+        getAllEmployees() {
+            axios.get("employee/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
             })
                 .then((res) => {
-                    this.customer = res.data
+                    this.employee = res.data
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         toPopUpDelete() {
             this.emitter.emit('isPopUpTrue', {'eventContent': true})
-            this.emitter.emit('text', {'eventContent': "Weet je zeker dat je " + this.customer.name + " wilt verwijderen?"})
+            this.emitter.emit('text', {'eventContent': "Weet je zeker dat je " + this.employee.name + " wilt verwijderen?"})
         },
-        deleteCustomer() {
+        deleteEmployee() {
             this.isPopUpDelete = false;
-            axios.delete("customer/" + this.id, {
+            axios.delete("employee/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },

@@ -38,7 +38,7 @@
             <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentie-symbool"
               src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
             <img v-else id="urgentie-symbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
-            <div id="klantnaamTekst">{{ document.customerName }}</div>
+            <div id="klantnaamTekst">{{ document.employeeName }}</div>
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type }}</div>
@@ -90,9 +90,9 @@ export default {
       documents: [
         {
           documentId: 0,
-          customerId: 0,
+          employeeId: 0,
           date: "",
-          customerName: "",
+          employeeName: "",
           type: "",
           isArchived: null
         }
@@ -103,7 +103,7 @@ export default {
         totalPages: 0,
         pageSize: 5,
       },
-      customers: [],
+      employees: [],
       searchField: "",
       dropdown: "0",
     };
@@ -157,6 +157,7 @@ export default {
           },
         })
         .then((res) => {
+          console.log(res.data)
           this.documents = res.data.documents;
           this.pager = res.data.pager;
         })

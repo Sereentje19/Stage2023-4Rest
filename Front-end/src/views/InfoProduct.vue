@@ -38,9 +38,9 @@
                             Uitgeleend aan medewerker
                         </div>
                         <div id="loan-info">
-                            Naam: &nbsp; {{ this.loanHistory.customer.name }}
+                            Naam: &nbsp; {{ this.loanHistory.employee.name }}
                             <br>
-                            Email: &nbsp;&nbsp; {{ this.loanHistory.customer.email }}
+                            Email: &nbsp;&nbsp; {{ this.loanHistory.employee.email }}
                         </div>
                     </div>
                     <div>
@@ -56,7 +56,7 @@
             <div id="customers-list">
 
                 <div v-if="this.loanHistory.returnDate != null" id="rightside">
-                    <input @input="filterCustomer" v-model="searchField" type="search" class="searchfield-loanhistory"
+                    <input @input="getAllFilteredEmployees" v-model="searchField" type="search" class="searchfield-loanhistory"
                         placeholder="Zoek klant" />
 
                     <table id="top-table">
@@ -68,9 +68,9 @@
                     </table>
                     <div id="table-info-loan">
                         <table id="bottom-table">
-                            <tr v-for="(customer, i) in this.filteredCustomers" @click="selectCustomer(customer)">
-                                <td class="first-row">{{ customer.name }}</td>
-                                <td>{{ customer.email }}</td>
+                            <tr v-for="(employee, i) in this.filteredEmployees" @click="selectEmployee(employee)">
+                                <td class="first-row">{{ employee.name }}</td>
+                                <td>{{ employee.email }}</td>
                             </tr>
                         </table>
                     </div>
@@ -115,8 +115,8 @@ export default {
             {
                 loanDate: "",
                 returnDate: "",
-                customer: {
-                    customerId: 0,
+                employee: {
+                    employeeId: 0,
                     name: "",
                     email: "",
                 },
@@ -126,7 +126,7 @@ export default {
                 }
             },
             searchField: "",
-            filteredCustomers: [],
+            filteredEmployees: [],
             isPopUpReturn: false,
             isPopUpDelete: false
         }
@@ -134,15 +134,15 @@ export default {
     mounted() {
         this.getLoanhistory();
         this.getProducts();
-        this.getAllFilteredCustomers();
+        this.getAllFilteredEmployees();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
-        selectCustomer(cus) {
-            this.loanHistory.customer = cus;
+        selectEmployee(emp) {
+            this.loanHistory.employee = emp;
             this.loanHistory.product.productId = this.product.productId;
             this.loanHistory.loanDate = new Date();
             this.loanHistory.returnDate = null;
@@ -161,8 +161,8 @@ export default {
                 });
 
         },
-        getAllFilteredCustomers() {
-            axios.get("customer/filter", {
+        getAllFilteredEmployees() {
+            axios.get("employee/filter", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -173,8 +173,9 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.filteredCustomers = res.data;
-                    console.log(this.filteredCustomers)
+                    console.log(res.data)
+                    this.filteredEmployees = res.data;
+                    console.log(this.filteredEmployees)
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
@@ -202,6 +203,7 @@ export default {
                     console.log(res.data)
                     this.loanHistory = res.data;
                     this.loanHistory.product.productId = res.data.productId
+                    console.log(this.loanHistory)
                 }).catch((error) => {
                     if (this.loanHistory.loanDate != "") {
                         this.$refs.PopUpMessage.popUpError(error.response.data);

@@ -6,11 +6,11 @@
 
             <form>
                 <div class="gegevens-edit">
-                    <input class="Email" v-model="this.customer.name" @input="filterDocuments" />
-                    <input class="Email" v-model="this.customer.email" @input="filterDocuments" />
+                    <input class="Email" v-model="this.employee.name" @input="filterDocuments" />
+                    <input class="Email" v-model="this.employee.email" @input="filterDocuments" />
                 </div>
             </form>
-            <button @click="editCustomer()" class="verstuur-edit">Aanpassen</button>
+            <button @click="editEmployee()" class="verstuur-edit">Aanpassen</button>
         </div>
 
         <PopUpMessage ref="PopUpMessage" />
@@ -34,34 +34,34 @@ export default {
     },
     data() {
         return {
-            customer: {
-                CustomerId: 0,
+            employee: {
+                employeeId: 0,
                 Name: '',
                 Email: '',
             },
         };
     },
     mounted() {
-        this.getCustomer();
+        this.getEmployee();
     },
     methods: {
-        getCustomer() {
-            axios.get("customer/" + this.id, {
+        getEmployee() {
+            axios.get("employee/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
             })
                 .then((res) => {
                     console.log(res.data)
-                    this.customer = res.data;
+                    this.employee = res.data;
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
-        editCustomer() {
-            console.log(this.customer)
+        editEmployee() {
+            console.log(this.employee)
 
-            axios.put("customer", this.customer,{
+            axios.put("employee", this.employee,{
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },

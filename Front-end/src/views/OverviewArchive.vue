@@ -34,7 +34,7 @@
                 <div v-for="(document, i) in displayedDocuments">
                     <div @click="goToInfoPage(document)" id="item-archive">
                         <div></div>
-                        <div id="klantnaamTekst">{{ document.customerName }}</div>
+                        <div id="klantnaamTekst">{{ document.employeeName }}</div>
                         <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
                         <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
                         <div id="typeTekst">{{ document.type }}</div>
@@ -87,9 +87,9 @@ export default {
             documents: [
                 {
                     documentId: 0,
-                    customerId: 0,
+                    employeeId: 0,
                     date: "",
-                    customerName: "",
+                    employeeName: "",
                     type: "",
                     isArchived: null
                 }
@@ -100,7 +100,7 @@ export default {
                 totalPages: 0,
                 pageSize: 5,
             },
-            customers: [],
+            employees: [],
             searchField: "",
             dropdown: "0",
         };

@@ -6,7 +6,7 @@
                 <h1 id="h1-overview">Medewerkers</h1>
 
                 <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
-                    @input="getAllCustomers" />
+                    @input="getAllEmployees" />
             </div>
 
             <div v-if="displayedDocuments.length > 0">
@@ -17,12 +17,12 @@
                     <h3 id="klantnaam">Geschiedenis</h3>
                 </div>
 
-                <div v-for="(customer, i) in displayedDocuments">
-                    <div @click="goToInfoPage(customer)" id="item-employees">
+                <div v-for="(employee, i) in displayedDocuments">
+                    <div @click="goToInfoPage(employee)" id="item-employees">
                         <div></div>
-                        <div id="klantnaamTekst">{{ customer.name }}</div>
-                        <div id="geldigVanTekst">{{ customer.email }}</div>
-                        <button id="button-history" @click="goToHistory(customer)"><svg
+                        <div id="klantnaamTekst">{{ employee.name }}</div>
+                        <div id="geldigVanTekst">{{ employee.email }}</div>
+                        <button id="button-history" @click="goToHistory(employee)"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-hourglass" viewBox="0 0 16 16">
                                 <path
@@ -69,9 +69,9 @@ export default {
             documents: [
                 {
                     documentId: 0,
-                    customerId: 0,
+                    employeeId: 0,
                     date: "",
-                    customerName: "",
+                    employeeName: "",
                     type: "",
                     isArchived: null
                 }
@@ -82,9 +82,9 @@ export default {
                 totalPages: 0,
                 pageSize: 5,
             },
-            customers: [
+            employees: [
                 {
-                    customerId: 0,
+                    employeeId: 0,
                     name: "",
                     email: ""
                 }
@@ -95,7 +95,7 @@ export default {
         };
     },
     mounted() {
-        this.getAllCustomers();
+        this.getAllEmployees();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
@@ -105,20 +105,20 @@ export default {
         goToInfoPage(cus) {
             setTimeout(() => {
                 if (this.toHistory == false) {
-                    this.$router.push("/info/medewerker/" + cus.customerId);
+                    this.$router.push("/info/medewerker/" + cus.employeeId);
                 }
             }, 100);
         },
         goToHistory(cus) {
             this.toHistory = true;
-            this.$router.push("/geschiedenis/medewerker/" + cus.customerId);
+            this.$router.push("/geschiedenis/medewerker/" + cus.employeeId);
         },
         handlePageChange(newPage) {
             this.pager.currentPage = newPage;
-            this.getAllCustomers();
+            this.getAllEmployees();
         },
-        getAllCustomers() {
-            axios.get("customer", {
+        getAllEmployees() {
+            axios.get("employee", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -129,7 +129,8 @@ export default {
                 },
             })
                 .then((res) => {
-                    this.customers = res.data.customers
+                    console.log(res.data)
+                    this.employees = res.data.employees
                     this.pager = res.data.pager;
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
@@ -141,7 +142,7 @@ export default {
     },
     computed: {
         displayedDocuments() {
-            return this.customers.slice(0, this.pager.pageSize);
+            return this.employees.slice(0, this.pager.pageSize);
         },
     },
 };

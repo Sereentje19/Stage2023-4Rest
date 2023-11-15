@@ -43,8 +43,8 @@ export default {
     },
     data() {
         return {
-            customer: {
-                CustomerId: 0,
+            employee: {
+                employeeId: 0,
                 Name: '',
                 Email: '',
             },
@@ -53,13 +53,13 @@ export default {
                 Type: 0,
                 Date: "",
             },
-            customerDocument: {
-                CustomerId: 0,
+            employeeDocument: {
+                employeeId: 0,
                 Name: '',
                 Email: '',
                 DocumentId: 0,
             },
-            filteredCustomers: []
+            filteredEmployees: []
         };
     },
     mounted() {
@@ -73,7 +73,7 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.customer = res.data.customer;
+                    this.employee = res.data.employee;
                     this.document = res.data.document;
                     this.document.Date = res.data.document.date;
                     this.document.Type = res.data.document.type;

@@ -1,7 +1,6 @@
 using MimeKit;
 using Stage4rest2023.Models;
 using Microsoft.Extensions.Options;
-using MimeKit.Utils;
 
 
 namespace Stage4rest2023.Services

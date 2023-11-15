@@ -24,17 +24,17 @@
       <div class="rightside">
         <ul>
           <form class="gegevens">
-            <input @input="filterCustomer" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
+            <input @input="filterEmployee" @focus="isFocused = true" @blur="onBlur" v-model="searchField" type="search"
               class="Zoek" placeholder="Zoek klant" name="Naam" />
 
-            <ul id="ul" v-show="isFocused && filteredCustomers.length > 0">
-              <li v-for="customer in filteredCustomers" :key="customer.id">
-                <div id="searchList" @click="fillCustomer(customer)"> {{ customer.name }}</div>
+            <ul id="ul" v-show="isFocused && filteredEmployees.length > 0">
+              <li v-for="employee in filteredEmployees" :key="employee.id">
+                <div id="searchList" @click="fillEmployee(employee)"> {{ employee.name }}</div>
               </li>
             </ul>
 
-            <input v-model="this.customer.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
-            <input v-model="this.customer.Email" type="text" class="email" placeholder="Email" name="Email" />
+            <input v-model="this.employee.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
+            <input v-model="this.employee.Email" type="text" class="email" placeholder="Email" name="Email" />
             <select v-model="this.document.Type" class="type" name="Type">
               <option value="0">Selecteer document...</option>
               <option value="1">Vog</option>
@@ -78,8 +78,8 @@ export default {
       displayImage: false,
       searchField: "",
       uploadedFileName: '',
-      customer: {
-        CustomerId: 0,
+      employee: {
+        employeeId: 0,
         Name: '',
         Email: '',
       },
@@ -87,10 +87,10 @@ export default {
         DocumentId: 0,
         Type: 0,
         Date: new Date().toISOString().split('T')[0],
-        CustomerId: 0,
+        employeeId: 0,
         fileType: ""
       },
-      filteredCustomers: []
+      filteredEmployees: []
     };
   },
   methods: {
@@ -120,14 +120,14 @@ export default {
 
       formData.append('document.Type', this.document.Type);
       formData.append('document.Date', this.document.Date);
-      formData.append('document.Customer.Email', this.customer.Email);
-      formData.append('document.Customer.Name', this.customer.Name);
+      formData.append('document.Employee.Email', this.employee.Email);
+      formData.append('document.Employee.Name', this.employee.Name);
 
       return formData;
     },
-    filterCustomer() {
+    filterEmployee() {
       if (this.searchField != "") {
-        axios.get("customer/filter", {
+        axios.get("employee/filter", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwt")
           },
@@ -136,16 +136,16 @@ export default {
           }
         })
           .then((res) => {
-            this.filteredCustomers = res.data;
-            console.log(this.filteredCustomers)
+            this.filteredEmployees = res.data;
+            console.log(this.filteredEmployees)
           }).catch((error) => {
             this.$refs.PopUpMessage.popUpError(error.response.data);
           });
       }
     },
-    fillCustomer(cus) {
-      this.customer.Email = cus.email;
-      this.customer.Name = cus.name;
+    fillEmployee(cus) {
+      this.employee.Email = cus.email;
+      this.employee.Name = cus.name;
       this.searchField = "";
     },
     handleFileChange(event) {

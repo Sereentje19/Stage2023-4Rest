@@ -35,8 +35,8 @@
           Email: <br>
         </div>
         <div>
-          {{ this.customer.name }} <br>
-          {{ this.customer.email }} <br>
+          {{ this.employee.name }} <br>
+          {{ this.employee.email }} <br>
         </div>
       </div>
     </div>
@@ -77,14 +77,14 @@ export default {
       document:
       {
         documentId: 0,
-        customerId: 0,
+        employeeId: 0,
         date: "",
-        customerName: "",
+        employeeName: "",
         type: "",
         file: "",
         fileType: ""
       },
-      customer: [],
+      employee: [],
     }
   },
   mounted() {
@@ -103,7 +103,7 @@ export default {
       })
         .then((res) => {
           console.log(res.data)
-          this.customer = res.data.document.customer;
+          this.employee = res.data.document.employee;
           this.document = res.data.document;
           this.document.type = res.data.type
         }).catch((error) => {
@@ -125,7 +125,7 @@ export default {
     },
     toPopUpDelete() {
       this.emitter.emit('isPopUpTrue', { 'eventContent': true })
-      this.emitter.emit('text', { 'eventContent': "Weet je zeker dat je " + this.document.type.toLowerCase() + " van medewerker " + this.customer.name + " wilt verwijderen?" })
+      this.emitter.emit('text', { 'eventContent': "Weet je zeker dat je " + this.document.type.toLowerCase() + " van medewerker " + this.employee.name + " wilt verwijderen?" })
     },
     toEdit() {
       this.$router.push("/edit/document/" + this.id);

@@ -64,7 +64,7 @@ export default {
     },
     methods: {
         getLoanHistory() {
-            axios.get("loan-history/customer/" + this.id, {
+            axios.get("loan-history/employee/" + this.id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }

@@ -76,7 +76,7 @@ export default {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
                 params: {
-                    customer: this.customer,
+                    employee: this.employee,
                 },
             })
                 .then((res) => {
