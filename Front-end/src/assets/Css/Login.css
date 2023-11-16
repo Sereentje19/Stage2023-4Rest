@@ -134,8 +134,24 @@
   border-radius: 0px 4px 4px 0px;
 }
 
+#verstuur-button{
+  margin-top: 150px;
+}
+
+#forgot-password{
+  font-weight: 500;
+  font-size: 16px;
+  padding-left: 10%;
+  padding-top: 5px;
+  color: rgb(43, 43, 43);
+}
+
+#forgot-password:hover{
+  text-decoration: underline;
+}
+
 #input-wachtwoord {
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 
 button {

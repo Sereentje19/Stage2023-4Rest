@@ -30,9 +30,11 @@
             </a>
           </div>
           <button @click="login()" class="login-button" type="button">Login</button>
+
           <div id="error-message">
             {{ this.errorMessage }}
           </div>
+         <a href="/login/wachtwoord-vergeten" id="forgot-password"> Wachtwoord vergeten? </a>
         </div>
       </div>
     </div>

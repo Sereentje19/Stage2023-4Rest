@@ -6,6 +6,15 @@
     flex-direction: column;
 }
 
+.info-document-container{
+    
+    width: 85%;
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+}
+
 .foto {
     max-height: 500px;
     max-width: 500px;
@@ -20,10 +29,23 @@
     font-weight: 500;
 }
 
-
 #loan-title {
     font-size: 25px;
     font-weight: 700;
+}
+
+#info-edit-delete{
+    display: flex;
+    flex-direction: column;
+}
+
+#leftside-documents{
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 155%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    margin-bottom: 30px;
 }
 
 #leftside {

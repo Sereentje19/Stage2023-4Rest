@@ -1,11 +1,11 @@
 <template>
   <Header></Header>
-  <div class="info-container">
+  <div class="info-document-container">
+<div id="info-edit-delete">
     <h1>Info</h1>
 
     <PopupChoice ref="PopupChoice" @delete="deleteDocument"/>
-
-    <div id="leftside">
+    <div id="leftside-documents">
       <div id="loan-title">
         Document
       </div>
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div id="leftside">
+    <div id="leftside-documents">
       <div id="loan-title">
         Medewerker
       </div>
@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-
+  </div>
 
     <div class="foto">
       <div v-if="this.document.fileType == null"> <br><br><br> Er is geen afbeelding aanwezig bij dit document</div>
