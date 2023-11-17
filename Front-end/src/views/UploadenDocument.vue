@@ -34,7 +34,7 @@
             </ul>
 
             <input v-model="this.employee.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
-            <input v-model="this.employee.Email" type="text" class="email" placeholder="Email" name="Email" />
+            <input v-model="this.employee.Email" type="email" class="email" placeholder="Email" name="email"/>
             <select v-model="this.document.Type" class="type" name="Type">
               <option value="0">Selecteer document...</option>
               <option value="1">Vog</option>

@@ -51,6 +51,7 @@
 #titles-overview-archive {
     display: grid;
     grid-template-columns: 2% 30% 15% 15% 28% 10%;
+    font-size: large;
 }
 
 #item-archive {

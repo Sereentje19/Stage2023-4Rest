@@ -57,7 +57,7 @@ export default {
     },
     methods: {
         send() {
-            this.$router.push("/overzicht/documenten");
+            this.$router.push("/");
         },
     },
 };
