@@ -19,6 +19,7 @@
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
           @input="filterDocuments" />
 
+        <button @click="toArchive()" id="button-archive">Archief</button>
       </div>
 
       <div v-if="displayedDocuments.length > 0">
@@ -54,7 +55,12 @@
         </div>
 
         <div id="paging">
-          <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages" @page-changed="handlePageChange" />
+          <div>
+            <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages"
+              @page-changed="handlePageChange" />
+          </div>
+          <a href="/overzicht/documenten/lang-geldig" id="long-valid-link">Documenten bekijken die langer dan 6 weken geldig zijn  <ArrowRight /></a>
+
         </div>
       </div>
       <div v-else>
@@ -75,6 +81,7 @@ import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
 import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
+import ArrowRight from "../components/icons/iconArrowRight.vue";
 
 
 export default {
@@ -83,6 +90,7 @@ export default {
     Pagination,
     PopUpMessage,
     Header,
+    ArrowRight
   },
 
   data() {
@@ -125,6 +133,9 @@ export default {
           this.filterDocuments();
         }
       }, 100);
+    },
+    toArchive() {
+      this.$router.push("/overzicht/documenten/archief");
     },
     toggleCheckbox(doc) {
       doc.isArchived = true;
@@ -206,5 +217,4 @@ export default {
 
 <style>
 @import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';
-</style>
+@import '../assets/Css/Main.css';</style>

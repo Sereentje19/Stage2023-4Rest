@@ -7,6 +7,8 @@
 
                 <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
                     @input="getAllEmployees" />
+                    
+            <button @click="toArchive()" id="button-archive">Archief</button>
             </div>
 
             <div v-if="displayedDocuments.length > 0">

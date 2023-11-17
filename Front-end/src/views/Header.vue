@@ -12,12 +12,9 @@
                 </a>
                 <div v-if="showDropdown" class="dropdown-content">
                     <div id="box-shadow">
-                        <a id="dropdown-links" href="/overzicht/bruikleen">Bruikleen</a>
-                        <a id="dropdown-links" href="/overzicht/medewerkers">Medewerkers</a>
                         <a id="dropdown-links" href="/overzicht/documenten">Documenten</a>
-                        <a id="dropdown-links" href="/overzicht/documenten/lang-geldig">Lang
-                            geldig</a>
-                        <a id="dropdown-links" href="/overzicht/documenten/archief">Archief</a>
+                        <a id="dropdown-links" href="/overzicht/medewerkers">Medewerkers</a>
+                        <a id="dropdown-links" href="/overzicht/bruikleen">Bruikleen</a>
                     </div>
                 </div>
             </div> &nbsp; &nbsp; &nbsp;

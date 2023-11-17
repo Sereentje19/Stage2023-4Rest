@@ -138,6 +138,26 @@
     border-right: none;
 }
 
+#button-archive{
+    background-color: #22421f;
+    color: white;
+    height: fit-content;
+    padding: 5px 12px 5px 12px;
+    border-bottom: 3px solid #133610;
+    border-right: 3px solid #133610;
+    font-size: 20px;
+    margin: auto 0px auto 30px;
+}
+
+#button-archive:hover {
+    background-color: #133610;
+    border-radius: 5px;
+    border-left: 3px solid #afaeae;
+    border-top: 3px solid #afaeae;
+    border-bottom: none;
+    border-right: none;
+}
+
 
 #klantnaamTekst,
 #typeTekst {
@@ -163,15 +183,22 @@
 }
 
 
-
-
-
-/* weet niet of dit nodig is */
-#paging {
+#long-valid-link{
     display: flex;
-    margin-right: auto;
+    justify-content: flex-end;
+    font-size: 15px;
+    color: black;
 }
 
+#long-valid-link svg {
+    margin-left: 7px;
+    margin-top: 3px; 
+}
+
+#paging {
+    display: flex;
+    justify-content: space-between;
+}
 
 .popup-button {
     display: block;
