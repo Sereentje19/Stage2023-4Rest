@@ -72,7 +72,7 @@
 
 #titles-overview-employee {
     display: grid;
-    grid-template-columns: 2% 25% 60% 4%;
+    grid-template-columns: 2% 25% 49% 4% 10% 4%;
 }
 
 #item-employees {
@@ -84,7 +84,7 @@
     border-width: 1px;
     border-style: solid;
     display: grid;
-    grid-template-columns: 2% 25% 60% 4%;
+    grid-template-columns: 2% 25% 49% 4% 10% 4%;
     color: black;
     margin-left: auto;
     border-radius: 3px;

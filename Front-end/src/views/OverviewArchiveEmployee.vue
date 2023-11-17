@@ -3,12 +3,22 @@
         <Header ref="Header"></Header>
         <div class="overview-container">
             <div id="topside">
-                <h1 id="h1-overview">Medewerkers</h1>
+                <h1 id="h1-overview">Archief</h1>
 
+
+                <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
+                    <option value="0">Selecteer document...</option>
+                    <option value="1">Vog</option>
+                    <option value="2">Contract</option>
+                    <option value="3">Paspoort</option>
+                    <option value="4">ID kaart</option>
+                    <option value="5">Diploma</option>
+                    <option value="6">Certificaat</option>
+                    <option value="7">Lease auto</option>
+                </select>
                 <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
-                    @input="getAllEmployees" />
+                    @input="filterDocuments" />
 
-                <button @click="toArchive()" id="button-archive">Archief</button>
             </div>
 
             <div v-if="displayedDocuments.length > 0">
@@ -47,7 +57,7 @@
                 </div>
             </div>
             <div v-else>
-                <br> Nog geen medewerkers bekend
+                <br> Nog geen medewerkers gearchiveerd
             </div>
 
             <br><br><br>
@@ -64,6 +74,7 @@ import moment from 'moment';
 import Pagination from '../views/Pagination.vue';
 import PopUpMessage from '../views/PopUpMessage.vue';
 import Header from '../views/Header.vue';
+import ArrowRight from "../components/icons/iconArrowRight.vue";
 
 
 export default {
@@ -72,18 +83,17 @@ export default {
         Pagination,
         PopUpMessage,
         Header,
+        ArrowRight
+
     },
 
     data() {
         return {
-            documents: [
+            employees: [
                 {
-                    documentId: 0,
                     employeeId: 0,
-                    date: "",
-                    employeeName: "",
-                    type: "",
-                    isArchived: null
+                    name: "",
+                    email: ""
                 }
             ],
             pager: {
@@ -92,43 +102,33 @@ export default {
                 totalPages: 0,
                 pageSize: 5,
             },
-            employees: [
-                {
-                    employeeId: 0,
-                    name: "",
-                    email: ""
-                }
-            ],
+            employees: [],
             searchField: "",
             dropdown: "0",
-            toHistory: false
         };
     },
     mounted() {
-        this.getAllEmployees();
+        this.filterDocuments();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
-        goToInfoPage(cus) {
+        goToInfoPage(doc) {
             setTimeout(() => {
-                if (cus.isArchived == false) {
-                    this.$router.push("/info/medewerker/" + cus.employeeId);
+                if (doc.isArchived == null) {
+                    this.$router.push("/info/document/" + doc.documentId);
                 }
                 else {
-                    this.getAllEmployees();
+                    this.filterDocuments();
                 }
             }, 100);
         },
-        toArchive() {
-            this.$router.push("/overzicht/medewerkers/archief");
-        },
-        toggleCheckbox(employee) {
-            employee.isArchived = true;
+        toggleCheckbox(doc) {
+            doc.isArchived = false;
 
-            axios.put("employee/archive", employee, {
+            axios.put("employee/archive", doc, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -138,35 +138,77 @@ export default {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
-        goToHistory(cus) {
-            this.toHistory = true;
-            this.$router.push("/geschiedenis/medewerker/" + cus.employeeId);
-        },
         handlePageChange(newPage) {
             this.pager.currentPage = newPage;
-            this.getAllEmployees();
+            this.filterDocuments();
         },
-        getAllEmployees() {
-            axios.get("employee", {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwt")
-                },
-                params: {
-                    searchfield: this.searchField,
-                    page: this.pager.currentPage,
-                    pageSize: this.pager.pageSize
-                },
-            })
+        filterDocuments() {
+            axios
+                .get("employee/archive", {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("jwt"),
+                    },
+                    params: {
+                        searchfield: this.searchField,
+                        page: this.pager.currentPage,
+                        pageSize: this.pager.pageSize
+                    },
+                })
                 .then((res) => {
                     console.log(res.data)
                     this.employees = res.data.employees
                     this.pager = res.data.pager;
-                }).catch((error) => {
+                })
+                .catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");
+        },
+        caculationDays(date) {
+            const documentDate = new Date(date);
+            const currentDate = new Date();
+            const ageInDays = Math.floor((currentDate - documentDate) / (1000 * 60 * 60 * 24));
+            return (ageInDays - (ageInDays + ageInDays));
+        },
+        daysAway(date) {
+            const ageInDays = this.caculationDays(date);
+            const week = 7;
+            const month = 30;
+            const year = 365;
+
+            let unit, value;
+
+            if (ageInDays >= year) {
+                unit = "jaar";
+                value = Math.floor(ageInDays / year);
+            } else if (ageInDays >= month * 2) {
+                unit = "maanden";
+                value = Math.floor(ageInDays / month);
+            } else if (ageInDays >= week * 2) {
+                unit = "weken";
+                value = Math.floor(ageInDays / week);
+            } else {
+                unit = "dagen";
+                value = ageInDays;
+            }
+
+            value = this.toOrFromArchive(value);
+            return `${value} ${unit}`;
+        },
+        toOrFromArchive(value) {
+            if (value < 0) {
+                value = Math.abs(value);
+            }
+            else if (value > 0) {
+                value = -value
+            }
+            return value
+        },
+        documentDaysFromExpiration(document, days) {
+            const ageInDays = this.caculationDays(document.date);
+            return (ageInDays <= days)
         },
     },
     computed: {

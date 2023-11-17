@@ -27,7 +27,8 @@ import OverviewDocuments from '../views/OverviewDocuments.vue';
 import OverviewEmployees from '../views/OverviewEmployees.vue';
 import OverviewProducts from '../views/OverviewProducts.vue';
 import OverviewLongValid from '../views/OverviewLongValid.vue';
-import OverviewArchive from '../views/OverviewArchive.vue';
+import OverviewArchiveDocuments from '../views/OverviewArchiveDocuments.vue';
+import OverviewArchiveEmployee from '../views/OverviewArchiveEmployee.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,9 +50,11 @@ const router = createRouter({
     props: route => ({ popup1: route.query.popup1 === 'true' })},
     { path: '/overzicht/documenten/lang-geldig', name: 'OverviewLongValid', component: OverviewLongValid,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
-    { path: '/overzicht/documenten/archief', name: 'OverviewArchive', component: OverviewArchive,
+    { path: '/overzicht/documenten/archief', name: 'OverviewArchiveDocuments', component: OverviewArchiveDocuments,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
     { path: '/overzicht/medewerkers', name: 'OverviewMedewerkers', component: OverviewEmployees,
+    props: route => ({ popup1: route.query.popup1 === 'true' })},
+    { path: '/overzicht/medewerkers/archief', name: 'OverviewArchiveEmploees', component: OverviewArchiveEmployee,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
     { path: '/overzicht/bruikleen', name: 'OverviewBruikleen', component: OverviewProducts,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
