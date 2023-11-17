@@ -6,11 +6,16 @@
             <h1>Leen geschiedenis</h1>
             <div id="item-data">
                 <div v-if="loanHistory.length > 0" id="loan-data">
-                    <div>Type: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.loanHistory[0].type }}</div>
-                    <div>Serie nummer: &nbsp; {{ this.loanHistory[0].serialNumber }}</div>
-                    <div>Gekocht op: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.loanHistory[0].purchaseDate) }}</div>
-                    <div>Gebruiken tot: &nbsp;&nbsp; {{ formatDate(this.loanHistory[0].expirationDate) }}</div>
+                    <div>
+                        <div><b> Type:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.loanHistory[0].type }}</div>
+                        <div><b> Serie nummer:</b> &nbsp; {{ this.loanHistory[0].serialNumber }}</div>
+                    </div>
+                    <div id="loan-item-data">
+                        <div><b> Gekocht op:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ formatDate(this.loanHistory[0].purchaseDate) }}
+                        </div>
+                        <div><b> Gebruiken tot:</b> &nbsp;&nbsp; {{ formatDate(this.loanHistory[0].expirationDate) }}</div>
+                    </div>
                 </div>
 
 

@@ -114,7 +114,7 @@ export default {
     methods: {
         goToInfoPage(cus) {
             setTimeout(() => {
-                if (cus.isArchived == false) {
+                if (cus.isArchived == false && this.toHistory == false) {
                     this.$router.push("/info/medewerker/huidig/" + cus.employeeId);
                 }
                 else {
