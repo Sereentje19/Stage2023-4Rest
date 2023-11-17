@@ -40,7 +40,7 @@ const router = createRouter({
     { path: '/edit/product/:id', component: EditProduct, props: true},
     { path: '/info/document/:id', component: InfoDocument, props: true},
     { path: '/info/bruikleen/:id', component: InfoProduct, props: true },
-    { path: '/info/medewerker/:id', component: InfoEmployee, props: true },
+    { path: '/info/medewerker/:type/:id', component: InfoEmployee, props: true },
     { path: '/geschiedenis/product/:id', component: HistoryProduct, props: true },
     { path: '/geschiedenis/medewerker/:id', component: HistoryEmployee, props: true },
     { path: '/uploaden/document', component: UploadenDocument },

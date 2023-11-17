@@ -28,7 +28,7 @@
                     <h3 id="klantnaam">Email</h3>
                     <h3 id="klantnaam">Geschiedenis</h3>
                     <div></div>
-                    <h3 id="klantnaam">Archiveer</h3>
+                    <h3 id="klantnaam">Zet terug</h3>
                 </div>
 
                 <div v-for="(employee, i) in displayedDocuments">
@@ -108,20 +108,20 @@ export default {
         };
     },
     mounted() {
-        this.filterDocuments();
+        this.getAllEmployees();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
         }
     },
     methods: {
-        goToInfoPage(doc) {
+        goToInfoPage(cus) {
             setTimeout(() => {
-                if (doc.isArchived == null) {
-                    this.$router.push("/info/document/" + doc.documentId);
+                if (cus.isArchived == true) {
+                    this.$router.push("/info/medewerker/archief/" + cus.employeeId);
                 }
                 else {
-                    this.filterDocuments();
+                    this.getAllEmployees();
                 }
             }, 100);
         },
@@ -140,9 +140,9 @@ export default {
         },
         handlePageChange(newPage) {
             this.pager.currentPage = newPage;
-            this.filterDocuments();
+            this.getAllEmployees();
         },
-        filterDocuments() {
+        getAllEmployees() {
             axios
                 .get("employee/archive", {
                     headers: {

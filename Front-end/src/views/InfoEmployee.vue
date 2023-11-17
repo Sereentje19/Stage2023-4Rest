@@ -21,7 +21,7 @@
             </div>
             <div id="box">
                 <button @click="toEdit()" id="edit-button">Edit</button>
-                <button @click="toPopUpDelete()" id="delete-button">Delete</button>
+                <button v-if="this.type == 'archief'" @click="toPopUpDelete()" id="delete-button">Delete</button>
             </div>
         </div>
     </div>
@@ -40,6 +40,7 @@ export default {
     name: "Info",
     props: {
         id: Number,
+        type: String
     },
     components: {
         PopupMessage,
@@ -57,6 +58,7 @@ export default {
     },
     mounted() {
         this.getAllEmployees();
+        console.log(this.type)
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
