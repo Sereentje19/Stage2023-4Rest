@@ -90,7 +90,7 @@ export default {
             })
                 .then((res) => {
                     localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/overzicht/medewerkers', query: { activePopup: true } });
+                    this.$router.push({ path: '/overzicht/medewerkers/archief', query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
