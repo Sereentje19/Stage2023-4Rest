@@ -20,8 +20,8 @@
   
 <script>
 import axios from '../../axios-auth.js'
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 
 export default {
     components: {
@@ -68,7 +68,7 @@ export default {
             })
                 .then((res) => {
                     localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/info/medewerker/' + this.id, query: { activePopup: true } });
+                    this.$router.push({ path: '/info/medewerker/' + this.type + "/" + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
@@ -88,7 +88,7 @@ export default {
 </script>
   
 <style>
-@import '../assets/Css/Edit.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Edit.css';
+@import '../assets/css/Main.css';
 </style>
   

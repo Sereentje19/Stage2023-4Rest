@@ -8,13 +8,9 @@
 
         <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
-          <option value="1">Vog</option>
-          <option value="2">Contract</option>
-          <option value="3">Paspoort</option>
-          <option value="4">ID kaart</option>
-          <option value="5">Diploma</option>
-          <option value="6">Certificaat</option>
-          <option value="7">Lease auto</option>
+                    <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
+                        {{ type }}
+                    </option>
         </select>
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
           @input="filterDocuments" />
@@ -35,10 +31,10 @@
         <div v-for="(document, i) in displayedDocuments">
           <div @click="goToInfoPage(document)" id="item-documents">
             <img v-if="documentDaysFromExpiration(document, 35)" id="urgentie-symbool"
-              src="../assets/Pictures/hogeUrgentie.png" alt="does not work" />
+              src="../assets/pictures/hogeUrgentie.png" alt="does not work" />
             <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentie-symbool"
-              src="../assets/Pictures/middelUrgentie.png" alt="does not work" />
-            <img v-else id="urgentie-symbool" src="../assets/Pictures/lageUrgentie.png" alt="does not work" />
+              src="../assets/pictures/middelUrgentie.png" alt="does not work" />
+            <img v-else id="urgentie-symbool" src="../assets/pictures/lageUrgentie.png" alt="does not work" />
             <div id="klantnaamTekst">{{ document.employeeName }}</div>
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
@@ -78,14 +74,13 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/Pagination.vue';
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import Pagination from '../components/pagination/Pagination.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 import ArrowRight from "../components/icons/iconArrowRight.vue";
 
 
 export default {
-  name: "Overview",
   components: {
     Pagination,
     PopUpMessage,
@@ -118,6 +113,7 @@ export default {
   },
   mounted() {
     this.filterDocuments();
+    this.getDocumentTypes();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
@@ -176,6 +172,21 @@ export default {
           this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
+    getDocumentTypes() {
+            axios
+                .get("document/types", {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("jwt"),
+                    }
+                })
+                .then((res) => {
+                    console.log(res.data)
+                    this.documentTypes = res.data;
+                })
+                .catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");
     },
@@ -216,5 +227,5 @@ export default {
 
 
 <style>
-@import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';</style>
+@import '../assets/css/Overview.css';
+@import '../assets/css/Main.css';</style>

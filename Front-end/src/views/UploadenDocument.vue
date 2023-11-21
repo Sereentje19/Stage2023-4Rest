@@ -16,7 +16,7 @@
 
         <label class="overlay">
           <div id="select-document"> Selecteer document</div>
-          <img id="folder-image" src="../assets/Pictures/folder.png">
+          <img id="folder-image" src="../assets/pictures/folder.png">
           <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
         </label>
       </div>
@@ -34,16 +34,12 @@
             </ul>
 
             <input v-model="this.employee.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
-            <input v-model="this.employee.Email" type="email" class="email" placeholder="Email" name="email"/>
+            <input v-model="this.employee.Email" type="email" class="email" placeholder="Email" name="email" />
             <select v-model="this.document.Type" class="type" name="Type">
               <option value="0">Selecteer document...</option>
-              <option value="1">Vog</option>
-              <option value="2">Contract</option>
-              <option value="3">Paspoort</option>
-              <option value="4">ID kaart</option>
-              <option value="5">Diploma</option>
-              <option value="6">Certificaat</option>
-              <option value="7">Lease auto</option>
+              <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
+                {{ type }}
+              </option>
             </select>
             <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="date" name="Date" />
           </form>
@@ -62,8 +58,8 @@
 
 <script>
 import axios from '../../axios-auth.js'
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 
 export default {
   components: {
@@ -83,6 +79,7 @@ export default {
         Name: '',
         Email: '',
       },
+      documentTypes: [],
       document: {
         DocumentId: 0,
         Type: 0,
@@ -92,6 +89,9 @@ export default {
       },
       filteredEmployees: []
     };
+  },
+  mounted() {
+    this.getDocumentTypes();
   },
   methods: {
     postDocument() {
@@ -143,6 +143,21 @@ export default {
           });
       }
     },
+    getDocumentTypes() {
+      axios
+        .get("document/types", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt"),
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          this.documentTypes = res.data;
+        })
+        .catch((error) => {
+          this.$refs.PopUpMessage.popUpError(error.response.data);
+        });
+    },
     fillEmployee(cus) {
       this.employee.Email = cus.email;
       this.employee.Name = cus.name;
@@ -185,6 +200,6 @@ export default {
 </script>
 
 <style>
-@import '../assets/Css/Uploaden.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Uploaden.css';
+@import '../assets/css/Main.css';
 </style>

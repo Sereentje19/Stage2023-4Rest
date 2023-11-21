@@ -8,13 +8,9 @@
 
                 <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
                     <option value="0">Selecteer document...</option>
-                    <option value="1">Vog</option>
-                    <option value="2">Contract</option>
-                    <option value="3">Paspoort</option>
-                    <option value="4">ID kaart</option>
-                    <option value="5">Diploma</option>
-                    <option value="6">Certificaat</option>
-                    <option value="7">Lease auto</option>
+                    <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
+                        {{ type }}
+                    </option>
                 </select>
                 <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
                     @input="filterDocuments" />
@@ -76,22 +72,19 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/Pagination.vue';
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import Pagination from '../components/pagination/Pagination.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 import ArrowRight from "../components/icons/iconArrowRight.vue";
 
 
 export default {
-    name: "Overview",
     components: {
         Pagination,
         PopUpMessage,
-        Header,
-    ArrowRight
-
+        ArrowRight,
+        Header
     },
-
     data() {
         return {
             documents: [
@@ -104,6 +97,7 @@ export default {
                     isArchived: null
                 }
             ],
+            documentTypes: [],
             pager: {
                 currentPage: 1,
                 totalItems: 0,
@@ -117,6 +111,7 @@ export default {
     },
     mounted() {
         this.filterDocuments();
+        this.getDocumentTypes();
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
@@ -168,6 +163,21 @@ export default {
                     this.documents = res.data.documents;
                     this.pager = res.data.pager;
                     console.log(res.data.documents.length)
+                })
+                .catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
+        getDocumentTypes() {
+            axios
+                .get("document/types", {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("jwt"),
+                    }
+                })
+                .then((res) => {
+                    console.log(res.data)
+                    this.documentTypes = res.data;
                 })
                 .catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
@@ -231,6 +241,7 @@ export default {
   
   
 <style>
-@import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';</style>
+@import '../assets/css/Overview.css';
+@import '../assets/css/Main.css';
+</style>
   

@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <a id="logo-header-link" href="/overzicht/documenten"><img id="logo-header"
-                src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
+                src="../../assets/pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
         <div id="header-buttons">
             <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
                 <a id="header-items" class="dropdown-link" href="/overzicht/documenten"
@@ -41,8 +41,7 @@
 </template>
 
 <script>
-import ArrowDown from '../components/icons/IconArrowdown.vue';
-import axios from '../../axios-auth.js';
+import ArrowDown from '../icons/IconArrowdown.vue';
 
 export default {
     name: "Header",
@@ -69,6 +68,6 @@ export default {
 </script>
 
 <style>
-@import '../assets/Css/Main.css';
-@import '../assets/Css/Header.css';
+@import '../../assets/css/Main.css';
+@import '../../assets/css/Header.css';
 </style>

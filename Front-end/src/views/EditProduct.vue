@@ -8,12 +8,12 @@
                 <div class="gegevens-edit">
                     <select v-model="this.product.type" class="Type">
                         <option value="0">Selecteer type...</option>
-                        <option value="1">Laptop</option>
-                        <option value="2">Monitor</option>
-                        <option value="3">Stoel</option>
+                        <option v-for="(type, index) in productTypes" :key="index" :value="index + 1">
+                            {{ type }}
+                        </option>
                     </select>
-                    <input v-model="this.product.purchaseDate" type="date" class="Date"/>
-                    <input v-model="this.product.expirationDate" type="date" class="Date"/>
+                    <input v-model="this.product.purchaseDate" type="date" class="Date" />
+                    <input v-model="this.product.expirationDate" type="date" class="Date" />
                     <input class="Email" v-model="this.product.serialNumber" @input="filterDocuments" />
                 </div>
             </form>
@@ -27,8 +27,8 @@
   
 <script>
 import axios from '../../axios-auth.js'
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 
 export default {
     components: {
@@ -47,10 +47,12 @@ export default {
                 expirationDate: "",
                 serialNumber: ""
             },
+            productTypes: [],
         };
     },
     mounted() {
         this.getProduct();
+        this.getProductTypes();
     },
     methods: {
         getProduct() {
@@ -71,7 +73,7 @@ export default {
             console.log(this.product)
             this.product.type = parseInt(this.product.type, 10);
 
-            axios.put("product", this.product,{
+            axios.put("product", this.product, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
@@ -86,6 +88,21 @@ export default {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
+        getProductTypes() {
+            axios
+                .get("product/types", {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("jwt"),
+                    }
+                })
+                .then((res) => {
+                    console.log(res.data)
+                    this.productTypes = res.data;
+                })
+                .catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
         formatDates() {
             this.product.purchaseDate = this.product.purchaseDate.split('T')[0];
             this.product.expirationDate = this.product.expirationDate.split('T')[0];
@@ -95,7 +112,7 @@ export default {
 </script>
   
 <style>
-@import '../assets/Css/Edit.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Edit.css';
+@import '../assets/css/Main.css';
 </style>
   

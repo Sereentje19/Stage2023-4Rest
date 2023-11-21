@@ -25,9 +25,9 @@
 </template>
   
 <script>
-import Cross from '../components/icons/IconCross.vue';
-import CrossCircle from '../components/icons/IconCrossCircle.vue';
-import Check from '../components/icons/IconCheck.vue';
+import Cross from '../icons/IconCross.vue';
+import CrossCircle from '../icons/IconCrossCircle.vue';
+import Check from '../icons/IconCheck.vue';
 
 export default {
   name: "PopUpMessage",
@@ -73,7 +73,7 @@ export default {
   
   
 <style>
-@import '../assets/Css/Main.css';
-@import '../assets/Css/Popup.css';
+@import '../../assets/css/Main.css';
+@import '../../assets/css/Popup.css';
 </style>
   

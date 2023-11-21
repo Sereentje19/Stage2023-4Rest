@@ -56,6 +56,6 @@ export default {
   
   
 <style>
-@import '../assets/Css/Main.css';
-@import '../assets/Css/Popup.css';
+@import '../../assets/css/Main.css';
+@import '../../assets/css/Popup.css';
 </style>

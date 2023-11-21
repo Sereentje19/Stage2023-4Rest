@@ -8,13 +8,9 @@
                 <div class="gegevens-edit">
                     <select v-model="this.document.Type" class="Type">
                         <option value="0">Selecteer type...</option>
-                        <option value="1">Vog</option>
-                        <option value="2">Contract</option>
-                        <option value="3">Paspoort</option>
-                        <option value="4">ID kaart</option>
-                        <option value="5">Diploma</option>
-                        <option value="6">Certificaat</option>
-                        <option value="7">Lease auto</option>
+                        <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
+                            {{ type }}
+                        </option>
                     </select>
                     <input v-model="formattedDate" type="date" class="Date" />
 
@@ -30,8 +26,8 @@
   
 <script>
 import axios from '../../axios-auth.js'
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 
 export default {
     components: {
@@ -48,6 +44,7 @@ export default {
                 Type: 0,
                 Date: "",
             },
+            documentTypes: [],
             employeeDocument: {
                 employeeId: 0,
                 Name: '',
@@ -59,6 +56,7 @@ export default {
     },
     mounted() {
         this.getDocument();
+        this.getDocumentTypes();
     },
     methods: {
         getDocument() {
@@ -72,6 +70,21 @@ export default {
                     this.document.Date = res.data.document.date;
                     this.document.Type = res.data.document.type;
                 }).catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
+        getDocumentTypes() {
+            axios
+                .get("document/types", {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("jwt"),
+                    }
+                })
+                .then((res) => {
+                    console.log(res.data)
+                    this.documentTypes = res.data;
+                })
+                .catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
@@ -106,7 +119,7 @@ export default {
 </script>
   
 <style>
-@import '../assets/Css/Edit.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Edit.css';
+@import '../assets/css/Main.css';
 </style>
   

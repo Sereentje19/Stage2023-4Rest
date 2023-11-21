@@ -11,8 +11,9 @@
 </template>
   
 <script>
-import ArrowLeft from "../components/icons/iconArrowLeft.vue";
-import ArrowRight from "../components/icons/iconArrowRight.vue";
+import ArrowLeft from "../icons/iconArrowLeft.vue";
+import ArrowRight from "../icons/iconArrowRight.vue";
+
 export default {
     name: "Overview",
     components: {
@@ -46,6 +47,6 @@ export default {
   
   
 <style>
-@import '../assets/Css/Main.css';
-@import '../assets/Css/Pagination.css';
+@import '../../assets/css/Main.css';
+@import '../../assets/css/Pagination.css';
 </style>

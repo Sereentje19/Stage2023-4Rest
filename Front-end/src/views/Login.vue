@@ -1,6 +1,6 @@
 <template>
   <div id="login-body">
-    <img id="logo-login" src="../assets/Pictures/Logo-4-rest-IT.png" alt="does not work" />
+    <img id="logo-login" src="../assets/pictures/Logo-4-rest-IT.png" alt="does not work" />
     <div id="login-container">
       <div id="background-circel">
         <div id="alignment-body">
@@ -97,6 +97,6 @@ export default {
 </script>
    
 <style>
-@import '../assets/Css/Main.css';
-@import '../assets/Css/Login.css';
+@import '../assets/css/Main.css';
+@import '../assets/css/Login.css';
 </style>

@@ -58,9 +58,9 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import PopUpMessage from '../views/PopUpMessage.vue';
-import PopupChoice from '../views/PopUpChoice.vue';
-import Header from '../views/Header.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import PopupChoice from '../components/notifications/PopUpChoice.vue';
+import Header from '../components/layout/Header.vue';
 
 export default {
   name: "Info",
@@ -139,6 +139,6 @@ export default {
 </script>
 
 <style>
-@import '../assets/Css/Info.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Info.css';
+@import '../assets/css/Main.css';
 </style>

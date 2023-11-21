@@ -8,9 +8,9 @@
 
         <select v-model="dropdown" id="filter-dropdown" @change="getProducts">
           <option value="0">Selecteer type...</option>
-          <option value="1">Laptop</option>
-          <option value="2">Monitor</option>
-          <option value="3">Stoel</option>
+          <option v-for="(type, index) in productTypes" :key="index" :value="index + 1">
+            {{ type }}
+          </option>
         </select>
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek" @input="getProducts" />
       </div>
@@ -35,8 +35,8 @@
             <div id="typeTekst">{{ product.serialNumber }}</div>
             <div id="typeTekst" v-if="product.returnDate == null || product.returnDate == ''">Ja</div>
             <div id="typeTekst" v-else>Nee</div>
-            <button id="button-history" @click="goToHistory(product)"><svg xmlns="http://www.w3.org/2000/svg"
-                width="20" height="20" fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
+            <button id="button-history" @click="goToHistory(product)"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                height="20" fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
                 <path
                   d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2h-7z" />
               </svg></button>
@@ -62,9 +62,9 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/Pagination.vue';
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import Pagination from '../components/pagination/Pagination.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 
 
 export default {
@@ -87,6 +87,7 @@ export default {
           expirationDate: ""
         }
       ],
+      productTypes: [],
       pager: {
         currentPage: 1,
         totalItems: 0,
@@ -100,6 +101,7 @@ export default {
   },
   mounted() {
     this.getProducts();
+    this.getProductTypes();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
@@ -143,7 +145,7 @@ export default {
           }
 
         }).catch((error) => {
-            this.$refs.PopUpMessage.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     getReturnDate(productId, index) {
@@ -156,7 +158,22 @@ export default {
           console.log(res.data)
           this.product[index].returnDate = res.data;
         }).catch((error) => {
-            this.$refs.PopUpMessage.popUpError(error.response.data);
+          this.$refs.PopUpMessage.popUpError(error.response.data);
+        });
+    },
+    getProductTypes() {
+      axios
+        .get("product/types", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt"),
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          this.productTypes = res.data;
+        })
+        .catch((error) => {
+          this.$refs.PopUpMessage.popUpError(error.response.data);
         });
     },
     formatDate(date) {
@@ -173,6 +190,6 @@ export default {
 
 
 <style>
-@import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Overview.css';
+@import '../assets/css/Main.css';
 </style>

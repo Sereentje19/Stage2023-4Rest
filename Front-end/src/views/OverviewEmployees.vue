@@ -61,13 +61,12 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../views/Pagination.vue';
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import Pagination from '../components/pagination/Pagination.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 
 
 export default {
-    name: "Overview",
     components: {
         Pagination,
         PopUpMessage,
@@ -179,7 +178,7 @@ export default {
   
   
 <style>
-@import '../assets/Css/Overview.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Overview.css';
+@import '../assets/css/Main.css';
 </style>
   

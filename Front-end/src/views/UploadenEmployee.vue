@@ -26,8 +26,8 @@
   
 <script>
 import axios from '../../axios-auth.js'
-import PopUpMessage from '../views/PopUpMessage.vue';
-import Header from '../views/Header.vue';
+import PopUpMessage from '../components/notifications/PopUpMessage.vue';
+import Header from '../components/layout/Header.vue';
 
 export default {
     components: {
@@ -62,7 +62,7 @@ export default {
 </script>
   
 <style>
-@import '../assets/Css/Uploaden.css';
-@import '../assets/Css/Main.css';
+@import '../assets/css/Uploaden.css';
+@import '../assets/css/Main.css';
 </style>
   
