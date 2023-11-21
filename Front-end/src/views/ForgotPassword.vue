@@ -13,11 +13,16 @@
                         <div id="icon" class="icon-profile-fill">
                             <profileFill />
                         </div>
-                        <input id="input-email" v-model="this.user.Email" type="text" placeholder="Email" required />
+                        <input v-if="isSend == false" id="input-email" v-model="this.user.email" type="text"
+                            placeholder="Email" required />
+                        <input v-else id="input-email" v-model="this.code" type="text" placeholder="Code" required />
                         <div class="space" id="eye-icon"></div>
                     </div>
 
-                    <button @click="send()" class="login-button" id="verstuur-button" type="button">Verstuur</button>
+                    <button v-if="isSend == false" @click="sendEmail()" class="login-button" id="verstuur-button"
+                        type="button">Verstuur</button>
+                    <button v-else @click="sendCode()" class="login-button" id="verstuur-button"
+                        type="button">Verstuur</button>
                     <div id="error-message">
                         {{ this.errorMessage }}
                     </div>
@@ -50,14 +55,41 @@ export default {
             inputType: "password",
             errorMessage: "",
             user: {
-                Email: '',
-                Password: '',
-            }
+                email: '',
+            },
+            code: "",
+            isSend: false
         };
     },
     methods: {
-        send() {
-            this.$router.push("/");
+        sendEmail() {
+            axios.get("forgot-password",
+                {
+                    params: {
+                        email: this.user.email,
+                    },
+                })
+                .then((res) => {
+                    console.log(res.data);
+                    this.isSend = true;
+                }).catch((error) => {
+                    this.errorMessage = error.response.data
+                });
+        },
+        sendCode() {
+            //serena.kenter@gmail.com
+            axios.get("forgot-password/check-code", {
+                    params: {
+                        email: this.user.email,
+                        code: this.code,
+                    },
+                })
+                .then((res) => {
+                    console.log(res.data);
+                    this.$router.push("/");
+                }).catch((error) => {
+                    this.errorMessage = error.response.data
+                });
         },
     },
 };
@@ -65,6 +97,5 @@ export default {
      
 <style>
 @import '../assets/css/Main.css';
-@import '../assets/css/Login.css';
-</style>
+@import '../assets/css/Login.css';</style>
   
