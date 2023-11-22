@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 //Login
 import Login from '../views/Login.vue';
 import ForgotPassword from '../views/ForgotPassword.vue';
+import ChangePassword from '../views/ChangePassword.vue';
 
 //Edit 
 import EditDocument from '../views/EditDocument.vue';
@@ -35,6 +36,7 @@ const router = createRouter({
   routes: [
     { path: '/', component: Login },
     { path: '/login/wachtwoord-vergeten', component: ForgotPassword },
+    { path: '/login/wachtwoord-vergeten/nieuw-wachtwoord/:code', component: ChangePassword, props: true },
     { path: '/edit/document/:id', component: EditDocument, props: true},
     { path: '/edit/medewerker/:id', component: EditEmployee, props: true},
     { path: '/edit/product/:id', component: EditProduct, props: true},

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BLL.Services;
 using DAL.Repositories;
+using PL.Exceptions;
 using PL.Models;
 
 public class PasswordResetService : IPasswordResetService
@@ -37,7 +38,17 @@ public class PasswordResetService : IPasswordResetService
 
     public async Task CheckEnteredCode(string email, string code)
     {
-        string password = await _passwordResetRepository.CheckEnteredCode(email, code);
-        _mailService.SendPasswordEmail(password, email, "Nieuw wachtwoord.");
+        await _passwordResetRepository.CheckEnteredCode(email, code);
+    }
+    
+    public async Task PostPassword(string email, string password1, string password2, string code)
+    {
+        if (password1 != password2)
+        {
+            throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
+        }
+        
+        await _passwordResetRepository.PostPassword(email, password1, code);
+
     }
 }

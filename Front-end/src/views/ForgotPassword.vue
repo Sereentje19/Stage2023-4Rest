@@ -22,7 +22,7 @@
                     <button v-if="isSend == false" @click="sendEmail()" class="login-button" id="verstuur-button"
                         type="button">Verstuur</button>
                     <button v-else @click="sendCode()" class="login-button" id="verstuur-button"
-                        type="button">Verstuur</button>
+                        type="button"> Verander wachtwoord</button>
                     <div id="error-message">
                         {{ this.errorMessage }}
                     </div>
@@ -87,7 +87,8 @@ export default {
                 })
                 .then((res) => {
                     console.log(res.data);
-                    this.$router.push("/");
+                    localStorage.setItem("userEmail", this.user.email)
+                    this.$router.push("/login/wachtwoord-vergeten/nieuw-wachtwoord/" + this.code);
                 }).catch((error) => {
                     this.errorMessage = error.response.data
                 });
@@ -98,5 +99,6 @@ export default {
      
 <style>
 @import '../assets/css/Main.css';
-@import '../assets/css/Login.css';</style>
+@import '../assets/css/Login.css';
+</style>
   

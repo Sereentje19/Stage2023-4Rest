@@ -20,8 +20,8 @@
             <div id="icon" class="icon-lock">
               <lockClosed />
             </div>
-            <input id="input-wachtwoord" v-model="this.user.Password" :type="this.inputType" placeholder="Wachtwoord"
-              required />
+            <input id="input-wachtwoord" class="password-margin" v-model="this.user.Password" :type="this.inputType"
+              placeholder="Wachtwoord" required />
             <a v-if="this.eyeCon == true" @click="eyeconChange" id="eye-icon">
               <eyeOpen />
             </a>
@@ -34,7 +34,7 @@
           <div id="error-message">
             {{ this.errorMessage }}
           </div>
-         <a href="/login/wachtwoord-vergeten" id="forgot-password"> Wachtwoord vergeten? </a>
+            <a href="/login/wachtwoord-vergeten" id="forgot-password">Wachtwoord vergeten? </a>
         </div>
       </div>
     </div>

@@ -62,15 +62,34 @@ public class PasswordResetRepository : IPasswordResetRepository
             }
         }
 
-        throw new InvalidCredentialsException("Code is incorrect of verlopen.");
+        throw new InputValidationException("Code is incorrect of verlopen.");
+    }
+
+    public async Task PostPassword(string email, string password, string code)
+    {
+        User matchingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        Console.WriteLine(matchingUser.UserId);
+        Console.WriteLine(code);
+        
+        PasswordResetCode prc = await _dbSet.FirstOrDefaultAsync(u =>
+            u.UserId == matchingUser.UserId &&
+            u.Code == code &&
+            u.ExpirationTime > DateTime.UtcNow);
+
+        if (prc == null)
+        {
+            throw new InputValidationException("Sessie is verlopen. Probeer het opnieuw.");
+        }
+
+        await HashAndSavePassword(matchingUser, password);
     }
 
     private async Task HashAndSavePassword(User user, string password)
     {
-        // Hash the password
         using (var deriveBytes = new Rfc2898DeriveBytes(password, 32, 10000))
         {
-            byte[] hashedBytes = deriveBytes.GetBytes(32); // 32 bytes for a 256-bit key
+            byte[] hashedBytes = deriveBytes.GetBytes(32);
             user.PasswordHash = Convert.ToBase64String(hashedBytes);
             user.PasswordSalt = Convert.ToBase64String(deriveBytes.Salt);
         }
