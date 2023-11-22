@@ -31,6 +31,13 @@ namespace BLL.Services
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
             return (pagedCustomers, pager);
         }
+        
+        public async Task<(IEnumerable<object>, Pager)> GetPagedArchivedEmployee(string searchfield, int page, int pageSize)
+        {
+            var (pagedCustomers, numberOfcustomers) = await _employeeRepository.GetAllArchivedEmployees(searchfield, page, pageSize);
+            Pager pager = new Pager(numberOfcustomers, page, pageSize);
+            return (pagedCustomers, pager);
+        }
 
         /// <summary>
         /// Retrieves a filtered list of customers based on the specified search field.
@@ -60,6 +67,11 @@ namespace BLL.Services
         public async Task<int> PostEmployee(Employee employee)
         {
             return await _employeeRepository.AddEmployee(employee);
+        }
+        
+        public async Task PutEmployeeIsArchived(Employee employee)
+        {
+            await _employeeRepository.UpdateEmployeeIsArchived(employee);
         }
 
         /// <summary>

@@ -18,6 +18,8 @@ namespace BLL.Services
             int page, int pageSize);
         public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
+
+        List<string> GetDocumentTypeStrings();
         Task<DocumentResponse> GetDocumentById(int id);
         Task PostDocument(Document document);
         Task PutDocument(EditDocumentRequest document);

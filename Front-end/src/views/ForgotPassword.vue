@@ -75,6 +75,7 @@ export default {
                 }).catch((error) => {
                     this.errorMessage = error.response.data
                 });
+                console.log(this.errorMessage)
         },
         sendCode() {
             //serena.kenter@gmail.com

@@ -2,11 +2,6 @@
 using PL.Exceptions;
 using PL.Models.Requests;
 using PL.Models.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PL.Models;
 
@@ -30,15 +25,14 @@ namespace DAL.Repositories
         /// <param name="dropdown">The document type filter.</param>
         /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>An IQueryable of DocumentOverviewDTO representing the document overviews.</returns>
-        public IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, DocumentType? dropdown,
-            Func<DocumentOverviewResponse, bool> filter)
+        public IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, DocumentType? dropdown)
         {
             return _context.Documents
                 .Include(d => d.Employee)
                 .Where(document => (string.IsNullOrEmpty(searchfield) ||
                                     document.Employee.Name.Contains(searchfield) ||
                                     document.Employee.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_Selected || document.Type == dropdown))
+                                   && (dropdown == DocumentType.Not_selected || document.Type == dropdown))
                 .OrderBy(document => document.Date)
                 .Select(doc => new DocumentOverviewResponse
                 {
@@ -64,7 +58,7 @@ namespace DAL.Repositories
             DocumentType? dropdown, int page, int pageSize, Func<DocumentOverviewResponse, bool> filter)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            IQueryable<DocumentOverviewResponse> query = QueryGetDocuments(searchfield, dropdown, filter);
+            IQueryable<DocumentOverviewResponse> query = QueryGetDocuments(searchfield, dropdown);
             int numberOfCustomers = query.Where(filter).Count();
 
             IEnumerable<DocumentOverviewResponse> documentList = query
@@ -122,6 +116,17 @@ namespace DAL.Repositories
                 item => item.Date > sixWeeksFromNow && !item.IsArchived);
         }
 
+        public List<string> GetDocumentTypeStrings()
+        {
+            List<string> documentTypeStrings = Enum.GetValues(typeof(DocumentType))
+                .Cast<DocumentType>()
+                .Skip(1)
+                .Select(enumValue => enumValue.ToString().Replace("_", " "))
+                .ToList();
+
+            return documentTypeStrings;
+        }
+        
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>
@@ -142,27 +147,28 @@ namespace DAL.Repositories
                 Type = doc.Type
             };
         }
-
-
+        
         /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
         /// <param name="document">The document entity to be added.</param>
         public async Task AddDocument(Document document)
         {
-            if (document.Type == DocumentType.Not_Selected)
+            if (document.Type == DocumentType.Not_selected)
             {
                 throw new InputValidationException("Selecteer een type.");
             }
-
-            if (string.IsNullOrWhiteSpace(document.Employee.Name) ||
-                string.IsNullOrWhiteSpace(document.Employee.Email))
+            if (string.IsNullOrWhiteSpace(document.Employee.Email) || !document.Employee.Email.Contains("@"))
             {
-                throw new InputValidationException("Klant naam of email is leeg.");
+                throw new InputValidationException("Geen geldige email.");
             }
-
+            if (string.IsNullOrWhiteSpace(document.Employee.Name))
+            {
+                throw new InputValidationException("Klant naam is leeg.");
+            }
+            
             Employee existingEmployee = await _context.Employees
-                .SingleOrDefaultAsync(l => l.Name == document.Employee.Name && l.Email == document.Employee.Email);
+                .SingleOrDefaultAsync(l => l.Email == document.Employee.Email);
 
             if (existingEmployee != null)
             {
@@ -184,7 +190,7 @@ namespace DAL.Repositories
                 .Where(d => d.DocumentId == document.DocumentId)
                 .FirstOrDefaultAsync();
 
-            if (document.Type == DocumentType.Not_Selected)
+            if (document.Type == DocumentType.Not_selected)
             {
                 throw new InputValidationException("Type is leeg.");
             }
@@ -207,8 +213,6 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task UpdateIsArchived(CheckBoxRequest document)
         {
-            Console.WriteLine(document.IsArchived);
-            Console.WriteLine(document.DocumentId);
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
             existingDocument.IsArchived = document.IsArchived;
             await _context.SaveChangesAsync();

@@ -115,7 +115,15 @@ namespace PL.Controllers
 
             return Ok(response);
         }
+        
+        [HttpGet("types")]
+        public IActionResult GetDocumentTypeStrings()
+        {
+            List<string> documentTypeStrings = _documentService.GetDocumentTypeStrings();
+            return Ok(documentTypeStrings);
+        }
 
+        
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>

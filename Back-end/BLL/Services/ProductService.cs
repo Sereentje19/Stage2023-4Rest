@@ -36,6 +36,11 @@ namespace BLL.Services
             return (products, pager);
         }
 
+        public List<string> GetProductTypeStrings()
+        {
+            return _productRepository.GetProductTypeStrings();
+        }
+        
         /// <summary>
         /// Retrieves a product based on the specified ID.
         /// </summary>

@@ -10,8 +10,8 @@ namespace DAL.Repositories
 {
     public interface ILoanHistoryRepository
     {
-        Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByProductId(int id);
-        Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByCustomerId(int id);
+        Task<(IEnumerable<object>, int)> GetLoanHistoryByProductId(int id, int page, int pageSize);
+        Task<(IEnumerable<object>, int)> GetLoanHistoryByCustomerId(int id, int page, int pageSize);
         Task<DateTime?> GetReturnDatesByProductId(int productId);
         Task<LoanHistory> GetLatestLoanHistoryByProductId(int id);
         Task UpdateLoanHistory(LoanHistory loanHistory);

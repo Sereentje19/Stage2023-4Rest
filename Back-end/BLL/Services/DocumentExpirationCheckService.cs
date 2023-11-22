@@ -66,7 +66,7 @@ namespace BLL.Services
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
                 Employee employee = await applicationDbContext.Employees.FirstOrDefaultAsync(c => c.EmployeeId == document.Employee.EmployeeId);
 
-                mailService.SendEmail(employee.Name, document.FileType, document.Date, document.Type, document.File, weeks);
+                mailService.SendDocumentExpirationEmail(employee.Name, document.FileType, document.Date, document.Type, document.File, weeks);
             }
         }
     }

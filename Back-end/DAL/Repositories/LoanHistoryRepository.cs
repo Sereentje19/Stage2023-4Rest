@@ -27,13 +27,20 @@ namespace DAL.Repositories
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified product.
         /// </returns>
-        public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByProductId(int id)
+        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByProductId(int id, int page, int pageSize)
         {
-            return await _dbSet
+            IQueryable<LoanHistory> query = _context.LoanHistory
                 .Include(l => l.Employee)
                 .Include(l => l.Product)
                 .Where(l => l.Product.ProductId == id)
-                .OrderByDescending(l => l.LoanDate)
+                .OrderByDescending(l => l.LoanDate);
+            
+            int numberOfLoanHistory = await query.CountAsync();
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+
+            IEnumerable<LoanHistoryResponse> LoanHistoryList = await query
+                .Skip(skipCount)
+                .Take(pageSize)
                 .Select(loan => new LoanHistoryResponse
                 {
                     Type = loan.Product.Type.ToString(),
@@ -46,6 +53,8 @@ namespace DAL.Repositories
                     ProductId = loan.Product.ProductId,
                 })
                 .ToListAsync();
+            
+            return (LoanHistoryList, numberOfLoanHistory);    
         }
 
         /// <summary>
@@ -55,13 +64,20 @@ namespace DAL.Repositories
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified customer.
         /// </returns>
-        public async Task<IEnumerable<LoanHistoryResponse>> GetLoanHistoryByCustomerId(int id)
+        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByCustomerId(int id, int page, int pageSize)
         {
-            return await _dbSet
+            IQueryable<LoanHistory> query = _context.LoanHistory
                 .Include(l => l.Employee)
                 .Include(l => l.Product)
                 .Where(l => l.Employee.EmployeeId == id)
-                .OrderByDescending(l => l.LoanDate)
+                .OrderByDescending(l => l.LoanDate);
+                
+            int numberOfLoanHistory = await query.CountAsync();
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
+                
+            IEnumerable<LoanHistoryResponse> LoanHistoryList = await query
+                .Skip(skipCount)
+                .Take(pageSize)
                 .Select(loan => new LoanHistoryResponse
                 {
                     Type = loan.Product.Type.ToString(),
@@ -72,6 +88,7 @@ namespace DAL.Repositories
                     ReturnDate = loan.ReturnDate,
                 })
                 .ToListAsync();
+            return (LoanHistoryList, numberOfLoanHistory);    
         }
 
         /// <summary>

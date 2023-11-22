@@ -57,6 +57,17 @@ namespace DAL.Repositories
 
             return (productList, numberOfProducts);
         }
+        
+        public List<string> GetProductTypeStrings()
+        {
+            List<string> productTypeStrings = Enum.GetValues(typeof(ProductType))
+                .Cast<ProductType>()
+                .Skip(1)
+                .Select(enumValue => enumValue.ToString())
+                .ToList();
+
+            return productTypeStrings;
+        }
 
         /// <summary>
         /// Retrieves a product based on the specified ID.

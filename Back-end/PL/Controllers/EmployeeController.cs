@@ -47,6 +47,26 @@ namespace PL.Controllers
 
             return Ok(response);
         }
+        
+        [HttpGet("archive")]
+        public async Task<IActionResult> GetPagedArchivedEmployee(string? searchfield, int page, int pageSize)
+        {
+            var (pagedCustomers, pager) = await _employeeService.GetPagedArchivedEmployee(searchfield, page, pageSize);
+
+            var response = new
+            {
+                Employees = pagedCustomers,
+                Pager = new
+                {
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
+
+            return Ok(response);
+        }
 
         /// <summary>
         /// Filters and retrieves a list of customers based on a search field.
@@ -84,6 +104,13 @@ namespace PL.Controllers
             return Ok(id);
         }
 
+        [HttpPut("archive")]
+        public async Task<IActionResult> PutIsArchived(Employee doc)
+        {
+            await _employeeService.PutEmployeeIsArchived(doc);
+            return Ok(new { message = "Document updated" });
+        }
+        
         /// <summary>
         /// Updates an existing document with the provided information.
         /// </summary>

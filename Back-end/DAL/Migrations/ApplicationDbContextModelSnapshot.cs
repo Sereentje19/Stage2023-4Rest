@@ -107,6 +107,29 @@ namespace DAL.Migrations
                     b.ToTable("LoanHistory");
                 });
 
+            modelBuilder.Entity("PL.Models.PasswordResetCode", b =>
+                {
+                    b.Property<int>("ResetCodeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResetCodeId"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ResetCodeId");
+
+                    b.ToTable("PasswordResetCode");
+                });
+
             modelBuilder.Entity("PL.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")

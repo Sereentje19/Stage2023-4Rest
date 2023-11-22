@@ -21,6 +21,7 @@ namespace DAL.Repositories
         (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
             int page, int pageSize);
 
+        List<string> GetDocumentTypeStrings();
         Task<DocumentResponse> GetDocumentById(int id);
         Task AddDocument(Document document);
         Task UpdateDocument(EditDocumentRequest document);

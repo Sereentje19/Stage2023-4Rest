@@ -19,34 +19,44 @@ namespace DAL.Repositories
             _context = context;
             _dbSet = _context.Set<Employee>();
         }
-
-        /// <summary>
-        /// Retrieves a paged list of customers based on specified criteria.
-        /// </summary>
-        /// <param name="searchfield">The search criteria for customer names or emails.</param>
-        /// <param name="page">The current page number.</param>
-        /// <param name="pageSize">The number of customers per page.</param>
-        /// <returns>
-        /// A tuple containing a collection of customers and the total number of customers.
-        /// </returns>
-        public async Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page, int pageSize)
+        
+        public IQueryable<Employee> QueryGetEmployees(string searchfield)
         {
-            IQueryable<Employee> query = _context.Employees
+            return _context.Employees
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
                                    customer.Name.Contains(searchfield) ||
                                    customer.Email.Contains(searchfield))
                 .OrderBy(customer => customer.Name);
+        }
 
-            int numberOfCustomers = await query.CountAsync();
+        private (IEnumerable<object>, int) GetPagedEmployeesInternal(string searchfield, int page, int pageSize,
+            Func<Employee, bool> filter)
+        {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
+            IQueryable<Employee> query = QueryGetEmployees(searchfield);
+            int numberOfEmployees = query.Where(filter).Count();
 
-            IEnumerable<Employee> customerList = await query
+            IEnumerable<Employee> employeeList = query
+                .Where(filter)
                 .Skip(skipCount)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToList();
 
-            return (customerList, numberOfCustomers);
+            return (employeeList, numberOfEmployees);
         }
+
+        public async Task<(IEnumerable<object>, int)> GetAllArchivedEmployees(string searchfield, int page,
+            int pageSize)
+        {
+            return GetPagedEmployeesInternal(searchfield, page, pageSize, item => item.IsArchived);
+        }
+        
+        public async Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page,
+            int pageSize)
+        {
+            return GetPagedEmployeesInternal(searchfield, page, pageSize, item => !item.IsArchived);
+        }
+        
 
         /// <summary>
         /// Retrieves a list of customers based on a search field.
@@ -87,14 +97,19 @@ namespace DAL.Repositories
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
         public async Task<int> AddEmployee(Employee employee)
         {
-            if (string.IsNullOrWhiteSpace(employee.Name) || string.IsNullOrWhiteSpace(employee.Email))
+            if (string.IsNullOrWhiteSpace(employee.Email) || !employee.Email.Contains("@"))
             {
-                throw new InputValidationException("Klant naam of email is leeg.");
+                throw new InputValidationException("Geen geldige email.");
             }
 
-            //if the customer already exist, don't add it again.
+            if (string.IsNullOrWhiteSpace(employee.Name))
+            {
+                throw new InputValidationException("Klant naam is leeg.");
+            }
+
+            //check if the customer already exist, don't add it again.
             Employee existingEmployee =
-                await _dbSet.FirstOrDefaultAsync(c => c.Name == employee.Name && c.Email == employee.Email);
+                await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email);
 
             if (existingEmployee == null)
             {
@@ -103,6 +118,13 @@ namespace DAL.Repositories
             }
 
             return employee.EmployeeId;
+        }
+
+        public async Task UpdateEmployeeIsArchived(Employee employee)
+        {
+            Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
+            existingEmployee.IsArchived = employee.IsArchived;
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>

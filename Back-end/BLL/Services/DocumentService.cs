@@ -65,6 +65,11 @@ namespace BLL.Services
             return (documentList, pager);
         }
 
+        public List<string> GetDocumentTypeStrings()
+        {
+            return _documentRepository.GetDocumentTypeStrings();
+        }
+        
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>
@@ -74,6 +79,7 @@ namespace BLL.Services
         {
             return await _documentRepository.GetDocumentById(id);
         }
+        
 
         /// <summary>
         /// Adds a new document to the repository.

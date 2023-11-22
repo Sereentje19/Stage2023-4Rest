@@ -13,5 +13,6 @@ namespace PL.Models
         public DbSet<Document> Documents { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<LoanHistory> LoanHistory { get; set; }
+        public DbSet<PasswordResetCode> PasswordResetCode { get; set; }
     }
 }

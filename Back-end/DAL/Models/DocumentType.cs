@@ -2,7 +2,7 @@
 {
     public enum DocumentType
     {
-        Not_Selected,
+        Not_selected,
         Vog,
         Contract,
         Paspoort,

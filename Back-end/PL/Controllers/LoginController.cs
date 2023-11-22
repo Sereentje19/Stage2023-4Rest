@@ -1,8 +1,8 @@
-﻿using BLL.Services;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PL.Attributes;
 using PL.Models.Requests;
+using BLL.Services;
 
 namespace PL.Controllers
 {
@@ -14,11 +14,14 @@ namespace PL.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IJwtValidationService _jwtValidationService;
+        private readonly IMailService _mailService;
 
-        public LoginController(ILoginService loginService, IJwtValidationService jwtValidationService)
+        public LoginController(ILoginService loginService, IJwtValidationService jwtValidationService,
+            IMailService mailService)
         {
             _loginService = loginService;
             _jwtValidationService = jwtValidationService;
+            _mailService = mailService;
         }
 
         /// <summary>
@@ -34,5 +37,9 @@ namespace PL.Controllers
             String token = _jwtValidationService.GenerateToken(user);
             return Ok(token);
         }
+
+        
+        
+        
     }
 }

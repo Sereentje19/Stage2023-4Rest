@@ -11,5 +11,6 @@ namespace DAL.Repositories
     public interface ILoginRepository
     {
         Task<User> CheckCredentials(LoginRequestDTO user);
+        
     }
 }

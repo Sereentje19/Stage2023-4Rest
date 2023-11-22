@@ -28,10 +28,23 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing loan history details for the specified product.
         /// </returns>
         [HttpGet("product/{product-id}")]
-        public async Task<IActionResult> getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
+        public async Task<IActionResult> getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId, int page, int pageSize)
         {
-            IEnumerable<LoanHistoryResponse> loanHistory = await _loanHistoryService.GetLoanHistoryByProductId(productId);
-            return Ok(loanHistory);
+            var (pagedHistory, pager) = await _loanHistoryService.GetLoanHistoryByProductId(productId, page, pageSize);
+            
+            var response = new
+            {
+                LoanHistory = pagedHistory,
+                Pager = new
+                {
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
+            
+            return Ok(response);
         }
 
         /// <summary>
@@ -42,10 +55,23 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing loan history details for the specified customer.
         /// </returns>
         [HttpGet("employee/{customer-id}")]
-        public async Task<IActionResult> GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId)
+        public async Task<IActionResult> GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId, int page, int pageSize)
         {
-            IEnumerable<LoanHistoryResponse> lh = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId);
-            return Ok(lh);
+            var (pagedHistory, pager) = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId, page, pageSize);
+            
+            var response = new
+            {
+                LoanHistory = pagedHistory,
+                Pager = new
+                {
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
+            
+            return Ok(response);
         }
 
         /// <summary>

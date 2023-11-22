@@ -1,0 +1,17 @@
+﻿Terminal commands:
+
+dotnet:
+dotnet build
+dotnet run
+dotnet clean
+dotnet test
+
+Entity Framework:
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet ef migrations add Initial --project ../DAL
+dotnet ef database update
+
+nieuwe applicatie starten:
+dotnet new console
+dotnet new webapi

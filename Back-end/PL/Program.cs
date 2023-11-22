@@ -10,7 +10,6 @@ using PL.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-
 AddServices();
 AddAuthentication();
 AddCors();
@@ -78,13 +77,15 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
     builder.Services.AddScoped<ILoginService, LoginService>();
     builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+    builder.Services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
+    builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
     builder.Services.AddScoped<IEmployeeService, EmployeeService>();
     builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-    builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
     builder.Services.AddScoped<IProductRepository, ProductRepository>();
     builder.Services.AddScoped<IProductService, ProductService>();
     builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
     builder.Services.AddScoped<ILoanHistoryService, LoanHistoryService>();
+    builder.Services.AddScoped<IJwtValidationService, JwtValidationService>();
     builder.Services.AddScoped<IMailService, MailService>();
     builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
     builder.Services.AddHostedService<DocumentExpirationCheckService>();
@@ -94,6 +95,7 @@ void ConnectionInterfaces()
 void BuildApp()
 {
     var app = builder.Build();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     if (app.Environment.IsDevelopment())
     {
@@ -106,7 +108,6 @@ void BuildApp()
     app.UseCors("ApiCorsPolicy");
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
     // Set the URL and port

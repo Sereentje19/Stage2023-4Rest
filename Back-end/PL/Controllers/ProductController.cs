@@ -48,6 +48,13 @@ namespace PL.Controllers
 
             return Ok(response);
         }
+        
+        [HttpGet("types")]
+        public IActionResult getProductType()
+        {
+            List<string> productType = _productService.GetProductTypeStrings();
+            return Ok(productType);
+        }
 
         /// <summary>
         /// Retrieves a product based on the specified product ID.
