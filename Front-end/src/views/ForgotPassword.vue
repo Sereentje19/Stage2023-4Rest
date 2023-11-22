@@ -72,10 +72,10 @@ export default {
                 .then((res) => {
                     console.log(res.data);
                     this.isSend = true;
+                    this.errorMessage = "";
                 }).catch((error) => {
                     this.errorMessage = error.response.data
                 });
-                console.log(this.errorMessage)
         },
         sendCode() {
             //serena.kenter@gmail.com

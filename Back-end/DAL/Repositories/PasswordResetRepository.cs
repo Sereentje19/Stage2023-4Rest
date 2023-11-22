@@ -20,18 +20,19 @@ public class PasswordResetRepository : IPasswordResetRepository
 
     public async Task PostResetCode(string code, string email)
     {
-        User matchingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+        int userId = await _context.Users
+            .Where(u => u.Email.ToLower() == email.ToLower())
+            .Select(u => u.UserId)
+            .FirstOrDefaultAsync();
 
-        Console.WriteLine(matchingUser.UserId);
-
-        if (matchingUser == null)
+        if (userId == 0)
         {
             throw new InvalidCredentialsException("Geen gebruiker gevonden");
         }
 
         PasswordResetCode prc = new PasswordResetCode
         {
-            UserId = matchingUser.UserId,
+            UserId = userId,
             Code = code,
             ExpirationTime = DateTime.UtcNow.AddMinutes(5)
         };
