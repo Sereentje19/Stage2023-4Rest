@@ -12,7 +12,7 @@ using PL.Models;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231121134534_Initial")]
+    [Migration("20231122122145_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -170,7 +170,10 @@ namespace DAL.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordSalt")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");

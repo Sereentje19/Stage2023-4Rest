@@ -1,4 +1,5 @@
-﻿using PL.Exceptions;
+﻿using System.Security.Cryptography;
+using PL.Exceptions;
 using PL.Models.Requests;
 using PL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ namespace DAL.Repositories
 
             if (matchingUser != null)
             {
-                if (matchingUser.Password == user.Password)
+                if (VerifyPassword(user.Password, matchingUser.PasswordHash, matchingUser.PasswordSalt))
                 {
                     return matchingUser;
                 }
@@ -37,6 +38,17 @@ namespace DAL.Repositories
             }
 
             throw new InvalidCredentialsException("Email is incorrect!");
+        }
+        
+        private bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
+        {
+            using (var deriveBytes = new Rfc2898DeriveBytes(enteredPassword, Convert.FromBase64String(storedSalt), 10000))
+            {
+                byte[] enteredPasswordHash = deriveBytes.GetBytes(32); 
+                string enteredPasswordHashString = Convert.ToBase64String(enteredPasswordHash);
+
+                return string.Equals(enteredPasswordHashString, storedHash);
+            }
         }
 
     }

@@ -57,14 +57,25 @@ public class PasswordResetRepository : IPasswordResetRepository
             if (prc != null)
             {
                 string GeneratedPassword = GenerateRandomPassword(12);
-                matchingUser.Password = GeneratedPassword;
-                await _context.SaveChangesAsync();
-
+                await HashAndSavePassword(matchingUser, GeneratedPassword);
                 return GeneratedPassword;
             }
         }
 
         throw new InvalidCredentialsException("Code is incorrect of verlopen.");
+    }
+
+    private async Task HashAndSavePassword(User user, string password)
+    {
+        // Hash the password
+        using (var deriveBytes = new Rfc2898DeriveBytes(password, 32, 10000))
+        {
+            byte[] hashedBytes = deriveBytes.GetBytes(32); // 32 bytes for a 256-bit key
+            user.PasswordHash = Convert.ToBase64String(hashedBytes);
+            user.PasswordSalt = Convert.ToBase64String(deriveBytes.Salt);
+        }
+
+        await _context.SaveChangesAsync();
     }
 
     public static string GenerateRandomPassword(int length)
