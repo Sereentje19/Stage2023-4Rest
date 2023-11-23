@@ -12,7 +12,7 @@ using PL.Models;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231122122145_Initial")]
+    [Migration("20231123104623_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -168,6 +168,9 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")

@@ -3,6 +3,7 @@ using BLL.Services;
 using DAL.Repositories;
 using PL.Exceptions;
 using PL.Models;
+using PL.Models.Requests;
 
 public class PasswordResetService : IPasswordResetService
 {
@@ -15,7 +16,7 @@ public class PasswordResetService : IPasswordResetService
         _mailService = mailService;
     }
 
-    static string GenerateVerificationCode(int length)
+    private static string GenerateVerificationCode(int length)
     {
         Random random = new Random();
         const string chars = "0123456789";
@@ -32,8 +33,8 @@ public class PasswordResetService : IPasswordResetService
     public async Task PostResetCode(string email)
     {
         string code = GenerateVerificationCode(6);
-        await _passwordResetRepository.PostResetCode(code, email);
-        _mailService.SendPasswordEmail(code, email, "Verificatie code.");
+        User user = await _passwordResetRepository.PostResetCode(code, email);
+        _mailService.SendPasswordEmail(code, email, "Verificatie code.", user.Name);
     }
 
     public async Task CheckEnteredCode(string email, string code)
@@ -41,14 +42,13 @@ public class PasswordResetService : IPasswordResetService
         await _passwordResetRepository.CheckEnteredCode(email, code);
     }
     
-    public async Task PostPassword(string email, string password1, string password2, string code)
+    public async Task PostPassword(PasswordChangeRequest request)
     {
-        if (password1 != password2)
+        if (request.Password1 != request.Password2)
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
         }
         
-        await _passwordResetRepository.PostPassword(email, password1, code);
-
+        await _passwordResetRepository.PostPassword(request.Email, request.Password1, request.Code);
     }
 }

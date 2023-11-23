@@ -66,7 +66,12 @@ namespace BLL.Services
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
                 Employee employee = await applicationDbContext.Employees.FirstOrDefaultAsync(c => c.EmployeeId == document.Employee.EmployeeId);
 
-                mailService.SendDocumentExpirationEmail(employee.Name, document.FileType, document.Date, document.Type, document.File, weeks);
+                string bodyEmail = $"Het volgende document zal over {weeks} weken komen te vervallen:" +
+                              $"\nNaam: {employee.Name}" +
+                              $"\nVerloop datum: {document.Date:dd-MM-yyyy}" +
+                              $"\nType document: {document.Type.ToString().Replace("_", " ")}\n\n";
+
+                mailService.SendDocumentExpirationEmail(bodyEmail, document.FileType, document.File, "Document vervalt Binnenkort!");
             }
         }
     }

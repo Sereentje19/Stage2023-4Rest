@@ -18,71 +18,53 @@ public class PasswordResetRepository : IPasswordResetRepository
         _dbSet = _context.Set<PasswordResetCode>();
     }
 
-    public async Task PostResetCode(string code, string email)
+    public async Task<User> PostResetCode(string code, string email)
     {
-        int userId = await _context.Users
+        User user = await _context.Users
             .Where(u => u.Email.ToLower() == email.ToLower())
-            .Select(u => u.UserId)
             .FirstOrDefaultAsync();
 
-        if (userId == 0)
+        if (user.UserId == 0)
         {
             throw new InvalidCredentialsException("Geen gebruiker gevonden");
         }
 
         PasswordResetCode prc = new PasswordResetCode
         {
-            UserId = userId,
+            UserId = user.UserId,
             Code = code,
             ExpirationTime = DateTime.UtcNow.AddMinutes(5)
         };
 
         await _dbSet.AddAsync(prc);
         await _context.SaveChangesAsync();
+        return user;
     }
 
-    public async Task<string> CheckEnteredCode(string email, string code)
+    public async Task<User> CheckEnteredCode(string email, string code)
     {
-        User matchingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var userWithCode = await _context.Users
+            .Join(_dbSet,
+                user => user.UserId,
+                prc => prc.UserId,
+                (user, prc) => new { User = user, Prc = prc })
+            .FirstOrDefaultAsync(joined =>
+                joined.User.Email == email &&
+                joined.Prc.Code == code &&
+                joined.Prc.ExpirationTime > DateTime.UtcNow);
 
-
-        if (matchingUser != null)
+        if (userWithCode == null)
         {
-            PasswordResetCode prc = await _dbSet.FirstOrDefaultAsync(u =>
-                u.UserId == matchingUser.UserId &&
-                u.Code == code &&
-                u.ExpirationTime > DateTime.UtcNow);
-
-
-            if (prc != null)
-            {
-                string GeneratedPassword = GenerateRandomPassword(12);
-                await HashAndSavePassword(matchingUser, GeneratedPassword);
-                return GeneratedPassword;
-            }
+            throw new InputValidationException("Sessie verlopen of ongeldige code. Probeer het opnieuw.");
         }
 
-        throw new InputValidationException("Code is incorrect of verlopen.");
+        return userWithCode.User;
     }
 
     public async Task PostPassword(string email, string password, string code)
     {
-        User matchingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-
-        Console.WriteLine(matchingUser.UserId);
-        Console.WriteLine(code);
-        
-        PasswordResetCode prc = await _dbSet.FirstOrDefaultAsync(u =>
-            u.UserId == matchingUser.UserId &&
-            u.Code == code &&
-            u.ExpirationTime > DateTime.UtcNow);
-
-        if (prc == null)
-        {
-            throw new InputValidationException("Sessie is verlopen. Probeer het opnieuw.");
-        }
-
-        await HashAndSavePassword(matchingUser, password);
+        User user = await CheckEnteredCode(email, code);
+        await HashAndSavePassword(user, password);
     }
 
     private async Task HashAndSavePassword(User user, string password)
@@ -95,25 +77,5 @@ public class PasswordResetRepository : IPasswordResetRepository
         }
 
         await _context.SaveChangesAsync();
-    }
-
-    public static string GenerateRandomPassword(int length)
-    {
-        const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_-+=<>?";
-
-        using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-        {
-            byte[] randomBytes = new byte[length];
-            rng.GetBytes(randomBytes);
-
-            StringBuilder password = new StringBuilder(length);
-
-            foreach (byte b in randomBytes)
-            {
-                password.Append(validChars[b % validChars.Length]);
-            }
-
-            return password.ToString();
-        }
     }
 }

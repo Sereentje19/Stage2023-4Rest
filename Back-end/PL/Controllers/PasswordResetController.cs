@@ -41,7 +41,7 @@ namespace PL.Controllers
         public async Task<IActionResult> AddPassword(PasswordChangeRequest request)
         {
             Console.WriteLine("hoihoi");
-            await _passwordResetService.PostPassword(request.Email, request.Password1, request.Password2, request.Code);
+            await _passwordResetService.PostPassword(request);
             return Ok(new { message = "Wachtwoord aangepast." });
         }
     }

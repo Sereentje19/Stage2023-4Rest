@@ -30,24 +30,11 @@ namespace BLL.Services
             return imageAttachment;
         }
 
-        /// <summary>
-        /// Sets the HTML body of the email message with specific content and embeds an image.
-        /// </summary>
-        /// <param name="weeks">The number of weeks until document expiration.</param>
-        /// <param name="customerName">The name of the customer.</param>
-        /// <param name="date">The expiration date of the document.</param>
-        /// <param name="type">The type of the document.</param>
-        /// <param name="emailMessage">The MimeMessage to which the body will be set.</param>
-        /// <param name="image">The byte array representing the embedded image.</param>
-        private void SetBody(int weeks, string customerName, DateTime date, DocumentType type, MimeMessage emailMessage,
-            byte[] image, string fileType)
+        private void SetBody(MimeMessage emailMessage, string body, byte[] image, string fileType)
         {
             TextPart textPart = new TextPart("plain")
             {
-                Text = $"Het volgende document zal over {weeks} weken komen te vervallen:" +
-                       $"\nNaam: {customerName}" +
-                       $"\nVerloop datum: {date:dd-MM-yyyy}" +
-                       $"\nType document: {type.ToString().Replace("_", " ")}\n\n"
+                Text = body
             };
 
             Multipart multipart = new Multipart("mixed");
@@ -59,20 +46,6 @@ namespace BLL.Services
                 MimePart imageAttachment = SetImage(image, fileType);
                 multipart.Add(imageAttachment);
             }
-
-            emailMessage.Body = multipart;
-        }
-
-        private void SetPasswordBody(MimeMessage emailMessage, string body)
-        {
-            TextPart textPart = new TextPart("plain")
-            {
-                Text = body
-            };
-
-            Multipart multipart = new Multipart("mixed");
-            multipart.Add(textPart);
-
 
             emailMessage.Body = multipart;
         }
@@ -114,23 +87,21 @@ namespace BLL.Services
             }
         }
 
-        public void SendDocumentExpirationEmail(string customerName, string fileType, DateTime date, DocumentType type,
-            byte[] image,
-            int weeks)
+        public void SendDocumentExpirationEmail(string body, string fileType, byte[] image, string subject)
         {
             MimeMessage emailMessage = SetMailSettings("Administratie", _mailSettings.ReceiverEmail);
             emailMessage.Subject = "Document vervalt Binnenkort!";
 
-            SetBody(weeks, customerName, date, type, emailMessage, image, fileType);
+            SetBody(emailMessage, body, image, fileType);
             ConnectAndSendMail(emailMessage);
         }
 
-        public void SendPasswordEmail(string body, string email, string subject)
+        public void SendPasswordEmail(string body, string email, string subject, string customerName)
         {
             MimeMessage emailMessage = SetMailSettings("customerName", email);
             emailMessage.Subject = subject;
 
-            SetPasswordBody(emailMessage, body);
+            SetBody(emailMessage, body, null, null);
             ConnectAndSendMail(emailMessage);
         }
 

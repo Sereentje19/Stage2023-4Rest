@@ -8,7 +8,7 @@ namespace BLL.Services
 {
     public interface IMailService
     {
-        void SendDocumentExpirationEmail(string customerName, string fileType, DateTime date, PL.Models.DocumentType type, byte[] image, int weeks);
-        void SendPasswordEmail(string body, string email, string subject);
+        void SendDocumentExpirationEmail(string body, string fileType, byte[] image, string subject);
+        void SendPasswordEmail(string body, string email, string subject, string customerName);
     }
 }
