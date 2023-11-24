@@ -16,6 +16,11 @@ public class PasswordResetService : IPasswordResetService
         _mailService = mailService;
     }
 
+    /// <summary>
+    /// Generates a random verification code with the specified length.
+    /// </summary>
+    /// <param name="length">The length of the verification code to generate.</param>
+    /// <returns>A string representing the generated verification code.</returns>
     private static string GenerateVerificationCode(int length)
     {
         Random random = new Random();
@@ -30,6 +35,10 @@ public class PasswordResetService : IPasswordResetService
         return new string(code);
     }
 
+    /// <summary>
+    /// Posts a reset code for password recovery and sends an email notification.
+    /// </summary>
+    /// <param name="email">The email address of the user requesting a password reset.</param>
     public async Task PostResetCode(string email)
     {
         string code = GenerateVerificationCode(6);
@@ -37,11 +46,20 @@ public class PasswordResetService : IPasswordResetService
         _mailService.SendPasswordEmail(code, email, "Verificatie code.", user.Name);
     }
 
+    /// <summary>
+    /// Checks the entered verification code during the password recovery process.
+    /// </summary>
+    /// <param name="email">The email address of the user.</param>
+    /// <param name="code">The verification code entered by the user.</param>
     public async Task CheckEnteredCode(string email, string code)
     {
         await _passwordResetRepository.CheckEnteredCode(email, code);
     }
     
+    /// <summary>
+    /// Posts a new password for a user after the password recovery process.
+    /// </summary>
+    /// <param name="request">A PasswordChangeRequest object containing the new password and associated information.</param>
     public async Task PostPassword(PasswordChangeRequest request)
     {
         if (request.Password1 != request.Password2)

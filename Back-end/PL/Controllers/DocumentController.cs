@@ -116,6 +116,12 @@ namespace PL.Controllers
             return Ok(response);
         }
         
+        /// <summary>
+        /// Retrieves a list of document type strings.
+        /// </summary>
+        /// <returns>
+        /// a list of strings representing document types.
+        /// </returns>
         [HttpGet("types")]
         public IActionResult GetDocumentTypeStrings()
         {

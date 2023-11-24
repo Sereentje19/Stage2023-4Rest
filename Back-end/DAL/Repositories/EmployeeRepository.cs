@@ -20,6 +20,13 @@ namespace DAL.Repositories
             _dbSet = _context.Set<Employee>();
         }
         
+        /// <summary>
+        /// Queries the database for employees based on a search field.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for filtering employees.</param>
+        /// <returns>
+        /// An IQueryable<Employee> representing the filtered employees based on the search criteria.
+        /// </returns>
         public IQueryable<Employee> QueryGetEmployees(string searchfield)
         {
             return _context.Employees
@@ -29,6 +36,18 @@ namespace DAL.Repositories
                 .OrderBy(customer => customer.Name);
         }
 
+        /// <summary>
+        /// Retrieves a paged list of employees based on search criteria and a filter function.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for filtering employees.</param>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <param name="filter">A filter function to determine which employees to include in the result.</param>
+        /// <returns>
+        /// A tuple containing:
+        ///   1. An IEnumerable<object> representing the paged list of employees.
+        ///   2. An int representing the total number of employees matching the search criteria and filter.
+        /// </returns>
         private (IEnumerable<object>, int) GetPagedEmployeesInternal(string searchfield, int page, int pageSize,
             Func<Employee, bool> filter)
         {
@@ -45,12 +64,34 @@ namespace DAL.Repositories
             return (employeeList, numberOfEmployees);
         }
 
+        /// <summary>
+        /// Retrieves a paged list of archived employees based on search criteria.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for filtering archived employees.</param>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <returns>
+        /// A tuple containing:
+        ///   1. An IEnumerable<object> representing the paged list of archived employees.
+        ///   2. An int representing the total number of archived employees matching the search criteria.
+        /// </returns>
         public async Task<(IEnumerable<object>, int)> GetAllArchivedEmployees(string searchfield, int page,
             int pageSize)
         {
             return GetPagedEmployeesInternal(searchfield, page, pageSize, item => item.IsArchived);
         }
         
+        /// <summary>
+        /// Retrieves a paged list of active employees based on search criteria.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for filtering active employees.</param>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <returns>
+        /// A tuple containing:
+        ///   1. An IEnumerable<object> representing the paged list of active employees.
+        ///   2. An int representing the total number of active employees matching the search criteria.
+        /// </returns>
         public async Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page,
             int pageSize)
         {

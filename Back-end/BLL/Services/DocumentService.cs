@@ -65,6 +65,12 @@ namespace BLL.Services
             return (documentList, pager);
         }
 
+        /// <summary>
+        /// Retrieves a list of document type strings from the underlying document repository.
+        /// </summary>
+        /// <returns>
+        /// A list of strings representing document types.
+        /// </returns>
         public List<string> GetDocumentTypeStrings()
         {
             return _documentRepository.GetDocumentTypeStrings();

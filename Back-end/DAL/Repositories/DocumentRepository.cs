@@ -116,6 +116,12 @@ namespace DAL.Repositories
                 item => item.Date > sixWeeksFromNow && !item.IsArchived);
         }
 
+        /// <summary>
+        /// Retrieves a list of document type strings from the enumeration of DocumentType.
+        /// </summary>
+        /// <returns>
+        /// A list of strings representing document types.
+        /// </returns>
         public List<string> GetDocumentTypeStrings()
         {
             List<string> documentTypeStrings = Enum.GetValues(typeof(DocumentType))

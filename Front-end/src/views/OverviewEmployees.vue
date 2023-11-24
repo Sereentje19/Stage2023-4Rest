@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div v-else>
-                <br> Nog geen medewerkers bekend
+                <br> Nog geen medewerkers bekend.
             </div>
 
             <br><br><br>

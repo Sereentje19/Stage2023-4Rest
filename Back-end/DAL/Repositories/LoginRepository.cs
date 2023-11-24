@@ -40,6 +40,15 @@ namespace DAL.Repositories
             throw new InvalidCredentialsException("Email is incorrect!");
         }
         
+        /// <summary>
+        /// Verifies the correctness of a password by comparing the entered password hash with the stored hash.
+        /// </summary>
+        /// <param name="enteredPassword">The password entered by the user.</param>
+        /// <param name="storedHash">The stored password hash to compare against.</param>
+        /// <param name="storedSalt">The stored salt value used during password hashing.</param>
+        /// <returns>
+        /// True if the entered password hash matches the stored hash; otherwise, false.
+        /// </returns>
         private bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
         {
             using (var deriveBytes = new Rfc2898DeriveBytes(enteredPassword, Convert.FromBase64String(storedSalt), 10000))

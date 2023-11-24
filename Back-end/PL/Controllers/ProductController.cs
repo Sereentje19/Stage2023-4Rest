@@ -49,6 +49,12 @@ namespace PL.Controllers
             return Ok(response);
         }
         
+        /// <summary>
+        /// Retrieves a list of product type strings.
+        /// </summary>
+        /// <returns>
+        /// a list of strings representing product types.
+        /// </returns>
         [HttpGet("types")]
         public IActionResult getProductType()
         {

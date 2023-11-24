@@ -48,6 +48,15 @@ namespace PL.Controllers
             return Ok(response);
         }
         
+        /// <summary>
+        /// Retrieves a paged list of archived employees.
+        /// </summary>
+        /// <param name="searchfield">Optional. The search criteria for filtering archived employees.</param>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <returns>
+        /// a response object containing a paged list of archived employees and pagination information.
+        /// </returns>
         [HttpGet("archive")]
         public async Task<IActionResult> GetPagedArchivedEmployee(string? searchfield, int page, int pageSize)
         {
@@ -104,6 +113,13 @@ namespace PL.Controllers
             return Ok(id);
         }
 
+        /// <summary>
+        /// Updates the archived status of an employee.
+        /// </summary>
+        /// <param name="doc">The Employee object containing information about the employee to be updated.</param>
+        /// <returns>
+        /// a message indicating that the employee's archived status has been updated.
+        /// </returns>
         [HttpPut("archive")]
         public async Task<IActionResult> PutIsArchived(Employee doc)
         {

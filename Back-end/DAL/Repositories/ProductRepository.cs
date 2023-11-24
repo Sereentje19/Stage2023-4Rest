@@ -58,6 +58,12 @@ namespace DAL.Repositories
             return (productList, numberOfProducts);
         }
         
+        /// <summary>
+        /// Retrieves a list of product type strings from the enumeration of ProductType.
+        /// </summary>
+        /// <returns>
+        /// A list of strings representing product types.
+        /// </returns>
         public List<string> GetProductTypeStrings()
         {
             List<string> productTypeStrings = Enum.GetValues(typeof(ProductType))

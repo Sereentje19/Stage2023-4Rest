@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div v-else>
-                <br> Nog geen medewerkers gearchiveerd
+                <br> Nog geen medewerkers gearchiveerd.
             </div>
 
             <br><br><br>

@@ -55,7 +55,7 @@
         </div>
       </div>
       <div v-else>
-        <br> Nog geen geldige documenten bekend
+        <br> Nog geen lang geldige documenten bekend.
       </div>
 
       <br><br><br>

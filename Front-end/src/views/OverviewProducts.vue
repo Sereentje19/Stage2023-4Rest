@@ -48,7 +48,7 @@
         </div>
       </div>
       <div v-else>
-        <br> Nog geen geldige documenten bekend
+        <br> Nog geen producten bekend.
       </div>
 
       <br><br><br>

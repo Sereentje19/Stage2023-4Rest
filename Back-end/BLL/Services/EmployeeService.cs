@@ -32,6 +32,17 @@ namespace BLL.Services
             return (pagedCustomers, pager);
         }
         
+        /// <summary>
+        /// Retrieves a paged list of archived employees based on the specified search criteria.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for filtering employees.</param>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <returns>
+        /// A tuple containing:
+        ///   1. An enumerable collection of archived employee objects.
+        ///   2. A Pager object providing information about the pagination.
+        /// </returns>
         public async Task<(IEnumerable<object>, Pager)> GetPagedArchivedEmployee(string searchfield, int page, int pageSize)
         {
             var (pagedCustomers, numberOfcustomers) = await _employeeRepository.GetAllArchivedEmployees(searchfield, page, pageSize);
@@ -69,6 +80,13 @@ namespace BLL.Services
             return await _employeeRepository.AddEmployee(employee);
         }
         
+        /// <summary>
+        /// Updates the 'IsArchived' status of an employee in the system.
+        /// </summary>
+        /// <param name="employee">The Employee object containing updated information.</param>
+        /// <returns>
+        /// A task representing the asynchronous operation of updating the 'IsArchived' status.
+        /// </returns>
         public async Task PutEmployeeIsArchived(Employee employee)
         {
             await _employeeRepository.UpdateEmployeeIsArchived(employee);

@@ -36,6 +36,12 @@ namespace BLL.Services
             return (products, pager);
         }
 
+        /// <summary>
+        /// Retrieves a list of product type strings from the underlying product repository.
+        /// </summary>
+        /// <returns>
+        /// A list of strings representing product types.
+        /// </returns>
         public List<string> GetProductTypeStrings()
         {
             return _productRepository.GetProductTypeStrings();

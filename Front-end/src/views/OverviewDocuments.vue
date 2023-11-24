@@ -8,9 +8,9 @@
 
         <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
-                    <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
-                        {{ type }}
-                    </option>
+          <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
+            {{ type }}
+          </option>
         </select>
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
           @input="filterDocuments" />
@@ -55,12 +55,16 @@
             <Pagination :currentPage="pager.currentPage" :totalPages="pager.totalPages"
               @page-changed="handlePageChange" />
           </div>
-          <a href="/overzicht/documenten/lang-geldig" id="long-valid-link">Documenten bekijken die langer dan 6 weken geldig zijn  <ArrowRight /></a>
+          <a href="/overzicht/documenten/lang-geldig" id="long-valid-link">Documenten bekijken die langer dan 6 weken
+            geldig zijn
+            <ArrowRight />
+          </a>
 
         </div>
       </div>
       <div v-else>
-        <br> Nog geen geldige documenten bekend
+        <br>
+        Er zijn momenteel geen documenten bekend met een datum binnen het tijdsbestek van nu tot de komende zes weken.
       </div>
 
       <br><br><br>
@@ -173,20 +177,20 @@ export default {
         });
     },
     getDocumentTypes() {
-            axios
-                .get("document/types", {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("jwt"),
-                    }
-                })
-                .then((res) => {
-                    console.log(res.data)
-                    this.documentTypes = res.data;
-                })
-                .catch((error) => {
-                    this.$refs.PopUpMessage.popUpError(error.response.data);
-                });
-        },
+      axios
+        .get("document/types", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt"),
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          this.documentTypes = res.data;
+        })
+        .catch((error) => {
+          this.$refs.PopUpMessage.popUpError(error.response.data);
+        });
+    },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");
     },
@@ -226,6 +230,5 @@ export default {
 </script>
 
 
-<style>
-@import '../assets/css/Overview.css';
+<style>@import '../assets/css/Overview.css';
 @import '../assets/css/Main.css';</style>

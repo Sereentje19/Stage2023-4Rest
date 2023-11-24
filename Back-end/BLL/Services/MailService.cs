@@ -30,6 +30,13 @@ namespace BLL.Services
             return imageAttachment;
         }
 
+        /// <summary>
+        /// Sets the body of an email message with optional text content and image attachment.
+        /// </summary>
+        /// <param name="emailMessage">The MimeMessage object representing the email message.</param>
+        /// <param name="body">The text content to be included in the email body.</param>
+        /// <param name="image">The byte array representing the image attachment (optional, set to null if not applicable).</param>
+        /// <param name="fileType">The file type of the image attachment (e.g., "jpeg", "png").</param>
         private void SetBody(MimeMessage emailMessage, string body, byte[] image, string fileType)
         {
             TextPart textPart = new TextPart("plain")
@@ -87,6 +94,13 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Sends an email notification for an expiring document.
+        /// </summary>
+        /// <param name="body">The content of the email body.</param>
+        /// <param name="fileType">The file type of an optional image attachment (e.g., "jpeg", "png").</param>
+        /// <param name="image">The byte array representing the optional image attachment.</param>
+        /// <param name="subject">The subject of the email.</param>
         public void SendDocumentExpirationEmail(string body, string fileType, byte[] image, string subject)
         {
             MimeMessage emailMessage = SetMailSettings("Administratie", _mailSettings.ReceiverEmail);
@@ -96,6 +110,13 @@ namespace BLL.Services
             ConnectAndSendMail(emailMessage);
         }
 
+        /// <summary>
+        /// Sends an email with a password-related notification to a customer.
+        /// </summary>
+        /// <param name="body">The content of the email body.</param>
+        /// <param name="email">The email address of the customer.</param>
+        /// <param name="subject">The subject of the email.</param>
+        /// <param name="customerName">The name of the customer receiving the email.</param>
         public void SendPasswordEmail(string body, string email, string subject, string customerName)
         {
             MimeMessage emailMessage = SetMailSettings("customerName", email);
