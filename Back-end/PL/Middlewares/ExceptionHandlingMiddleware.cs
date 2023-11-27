@@ -67,6 +67,10 @@ namespace PL.Middlewares
                     response.StatusCode = (int)HttpStatusCode.Forbidden; //403
                     errorResponse.Message = exception.Message;
                     break;
+                case NotFoundException:
+                    response.StatusCode = (int)HttpStatusCode.NotFound; //404
+                    errorResponse.Message = exception.Message;
+                    break;
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError; //500
                     errorResponse.Message = "Interne serverfout. - " + exception.Message;

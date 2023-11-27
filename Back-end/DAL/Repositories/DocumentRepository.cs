@@ -25,7 +25,7 @@ namespace DAL.Repositories
         /// <param name="dropdown">The document type filter.</param>
         /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>An IQueryable of DocumentOverviewDTO representing the document overviews.</returns>
-        public IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, DocumentType? dropdown)
+        private IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, DocumentType? dropdown)
         {
             return _context.Documents
                 .Include(d => d.Employee)
@@ -140,18 +140,18 @@ namespace DAL.Repositories
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
         public async Task<DocumentResponse> GetDocumentById(int id)
         {
-            Document doc = await _dbSet
+            return await _dbSet
+                .Where(d => d.DocumentId == id)
                 .Include(d => d.Employee)
-                .FirstOrDefaultAsync(d => d.DocumentId == id);
-
-            return new DocumentResponse
-            {
-                File = doc.File,
-                FileType = doc.FileType,
-                Date = doc.Date,
-                Employee = doc.Employee,
-                Type = doc.Type
-            };
+                .Select(doc => new DocumentResponse
+                {
+                    File = doc.File,
+                    FileType = doc.FileType,
+                    Date = doc.Date,
+                    Employee = doc.Employee,
+                    Type = doc.Type
+                })
+                .FirstOrDefaultAsync();
         }
         
         /// <summary>
@@ -171,6 +171,10 @@ namespace DAL.Repositories
             if (string.IsNullOrWhiteSpace(document.Employee.Name))
             {
                 throw new InputValidationException("Klant naam is leeg.");
+            }
+            if (document.Date < DateTime.Today)
+            {
+                throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
             }
             
             Employee existingEmployee = await _context.Employees
@@ -198,12 +202,12 @@ namespace DAL.Repositories
 
             if (document.Type == DocumentType.Not_selected)
             {
-                throw new InputValidationException("Type is leeg.");
+                throw new InputValidationException("Selecteer een type.");
             }
 
-            if (string.IsNullOrEmpty(document.Date.ToString()))
+            if (document.Date < DateTime.Today)
             {
-                throw new InputValidationException("Datum is leeg.");
+                throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
             }
 
             existingDocument.Date = document.Date;
@@ -220,6 +224,12 @@ namespace DAL.Repositories
         public async Task UpdateIsArchived(CheckBoxRequest document)
         {
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
+            
+            if (document.DocumentId == 0)
+            {
+                throw new NotFoundException("Geen document gevonden");
+            }
+            
             existingDocument.IsArchived = document.IsArchived;
             await _context.SaveChangesAsync();
         }
@@ -232,6 +242,12 @@ namespace DAL.Repositories
         public async Task DeleteDocument(int id)
         {
             Document doc = await _dbSet.FindAsync(id);
+
+            if (id == 0)
+            {
+                throw new NotFoundException("Geen document gevonden");
+            }
+            
             _dbSet.Remove(doc);
             await _context.SaveChangesAsync();
         }

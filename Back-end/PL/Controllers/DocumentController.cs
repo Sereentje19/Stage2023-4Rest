@@ -128,7 +128,6 @@ namespace PL.Controllers
             List<string> documentTypeStrings = _documentService.GetDocumentTypeStrings();
             return Ok(documentTypeStrings);
         }
-
         
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
