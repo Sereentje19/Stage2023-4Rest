@@ -110,14 +110,17 @@ namespace DAL.Repositories
 
             if (!string.IsNullOrWhiteSpace(searchfield))
             {
-                customers.Where(customer =>
-                    customer.Name.Contains(searchfield) ||
-                    customer.Email.Contains(searchfield)
+                searchfield = searchfield.ToLower(); 
+                customers = customers.Where(customer =>
+                    customer.Name.ToLower().Contains(searchfield) ||
+                    customer.Email.ToLower().Contains(searchfield)
                 );
             }
 
             return await customers.OrderBy(customer => customer.Name).ToListAsync();
         }
+
+
 
         /// <summary>
         /// Retrieves a customer by their unique identifier (ID).
