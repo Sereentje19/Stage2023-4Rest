@@ -113,6 +113,13 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task PutProduct(Product product)
         {
+            Product existingProduct = await _dbSet.FindAsync(product.ProductId);
+            
+            if (existingProduct == null)
+            {
+                throw new NotFoundException("Geen product gevonden");
+            }
+            
             _dbSet.Update(product);
             await _context.SaveChangesAsync();
         }
@@ -124,7 +131,14 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task DeleteProduct(int id)
         {
-            _dbSet.Remove(_dbSet.Find(id));
+            Product product = _dbSet.Find(id);
+            
+            if (product == null)
+            {
+                throw new NotFoundException("Geen product gevonden");
+            }
+            
+            _dbSet.Remove(product);
             await _context.SaveChangesAsync();
         }
     }

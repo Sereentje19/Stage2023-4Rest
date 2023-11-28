@@ -9,28 +9,6 @@ namespace Tests.Repositories
 
     public class LoginRepositoryTests
     {
-        private readonly List<LoanHistory> _loanHistories = new()
-        {
-            new LoanHistory
-            {
-                LoanHistoryId = 1, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(0),
-                Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 1, Type = ProductType.Laptop, SerialNumber = "123456" }
-            },
-            new LoanHistory
-            {
-                LoanHistoryId = 2, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(30),
-                Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 2, Type = ProductType.Laptop, SerialNumber = "123456" }
-            },
-            new LoanHistory
-            {
-                LoanHistoryId = 3, LoanDate = DateTime.Now, ReturnDate = null,
-                Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 3, Type = ProductType.Laptop, SerialNumber = "123456" }
-            },
-        };
-
         private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
         {
             return new DbContextOptionsBuilder<ApplicationDbContext>()

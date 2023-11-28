@@ -31,7 +31,7 @@ namespace Tests.Repositories
             },
         };
 
-        private DbContextOptions<ApplicationDbContext> CreateNewOptions()
+        private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
         {
             return new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) 
