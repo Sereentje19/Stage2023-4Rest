@@ -19,7 +19,7 @@ namespace DAL.Repositories
             _context = context;
             _dbSet = _context.Set<Employee>();
         }
-        
+
         /// <summary>
         /// Queries the database for employees based on a search field.
         /// </summary>
@@ -80,7 +80,7 @@ namespace DAL.Repositories
         {
             return GetPagedEmployeesInternal(searchfield, page, pageSize, item => item.IsArchived);
         }
-        
+
         /// <summary>
         /// Retrieves a paged list of active employees based on search criteria.
         /// </summary>
@@ -97,7 +97,7 @@ namespace DAL.Repositories
         {
             return GetPagedEmployeesInternal(searchfield, page, pageSize, item => !item.IsArchived);
         }
-        
+
 
         /// <summary>
         /// Retrieves a list of customers based on a search field.
@@ -110,7 +110,7 @@ namespace DAL.Repositories
 
             if (!string.IsNullOrWhiteSpace(searchfield))
             {
-                searchfield = searchfield.ToLower(); 
+                searchfield = searchfield.ToLower();
                 customers = customers.Where(customer =>
                     customer.Name.ToLower().Contains(searchfield) ||
                     customer.Email.ToLower().Contains(searchfield)
@@ -119,7 +119,6 @@ namespace DAL.Repositories
 
             return await customers.OrderBy(customer => customer.Name).ToListAsync();
         }
-
 
 
         /// <summary>
@@ -167,6 +166,12 @@ namespace DAL.Repositories
         public async Task UpdateEmployeeIsArchived(Employee employee)
         {
             Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
+            
+            if (existingEmployee == null)
+            {
+                throw new NotFoundException("Geen medewerker gevonden");
+            }
+            
             existingEmployee.IsArchived = employee.IsArchived;
             await _context.SaveChangesAsync();
         }
@@ -177,6 +182,13 @@ namespace DAL.Repositories
         /// <param name="employee">The document entity to be updated.</param>
         public async Task UpdateEmployee(Employee employee)
         {
+            Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
+            
+            if (existingEmployee == null)
+            {
+                throw new NotFoundException("Geen medewerker gevonden");
+            }
+
             _dbSet.Update(employee);
             await _context.SaveChangesAsync();
         }
@@ -188,7 +200,14 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task DeleteEmployee(int id)
         {
-            _dbSet.Remove(_dbSet.Find(id));
+            Employee employee = await _dbSet.FindAsync(id);
+            
+            if (employee == null)
+            {
+                throw new NotFoundException("Geen medewerker gevonden");
+            }
+
+            _dbSet.Remove(employee);
             await _context.SaveChangesAsync();
         }
     }
