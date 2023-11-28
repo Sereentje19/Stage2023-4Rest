@@ -135,32 +135,13 @@ namespace DAL.Repositories
                 .Where(l => l.Product.ProductId == id)
                 .LastOrDefaultAsync();
 
-            if(loanHistory == null)
-            {
-                loanHistory.ReturnDate = null;
-            }
+            //kan weg?
+            // if(loanHistory == null)
+            // {
+            //     loanHistory.ReturnDate = null;
+            // }
 
             return loanHistory;
-        }
-
-        /// <summary>
-        /// Updates an existing loan history record.
-        /// </summary>
-        /// <param name="lh">The LoanHistory object containing updated information.</param>
-        /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateLoanHistory(LoanHistory lh)
-        {
-            LoanHistory loanHistory = new LoanHistory
-            {
-                Product = await _context.Products.FindAsync(lh.Product.ProductId),
-                Employee = lh.Employee,
-                ReturnDate = DateTime.Now,
-                LoanDate = lh.LoanDate,
-                LoanHistoryId = lh.LoanHistoryId
-            };
-
-            _dbSet.Update(loanHistory);
-            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -179,6 +160,27 @@ namespace DAL.Repositories
             };
 
             await _dbSet.AddAsync(loanHistory);
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Updates an existing loan history record.
+        /// </summary>
+        /// <param name="lh">The LoanHistory object containing updated information.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        public async Task UpdateLoanHistory(LoanHistory lh)
+        {
+            _context.Entry(lh).State = EntityState.Detached;
+            LoanHistory loanHistory = new LoanHistory
+            {
+                Product = await _context.Products.FindAsync(lh.Product.ProductId),
+                Employee = lh.Employee,
+                ReturnDate = DateTime.Now,
+                LoanDate = lh.LoanDate,
+                LoanHistoryId = lh.LoanHistoryId
+            };
+
+            _dbSet.Update(loanHistory);
             await _context.SaveChangesAsync();
         }
     }
