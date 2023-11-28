@@ -34,7 +34,7 @@ namespace Tests.Repositories
         private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
         {
             return new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) 
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
         }
 
@@ -289,7 +289,7 @@ namespace Tests.Repositories
                     DocumentId = documentId,
                     Type = DocumentType.Certificaat,
                     Date = DateTime.Now,
-                    Employee = new Employee()
+                    Employee = new Employee { Email = "test@test.nl", Name = "test" }
                 };
 
                 await context.Documents.AddAsync(existingDocument);
@@ -324,7 +324,7 @@ namespace Tests.Repositories
                     DocumentId = documentId,
                     Type = DocumentType.Certificaat,
                     Date = DateTime.Now,
-                    Employee = new Employee()
+                    Employee = new Employee { Email = "test@test.nl", Name = "test" }
                 };
 
                 await context.Documents.AddAsync(existingDocument);
@@ -357,7 +357,7 @@ namespace Tests.Repositories
                     DocumentId = documentId,
                     Type = DocumentType.Certificaat,
                     Date = DateTime.Now,
-                    Employee = new Employee()
+                    Employee = new Employee { Email = "test@test.nl", Name = "test" }
                 };
 
                 await context.Documents.AddAsync(existingDocument);
@@ -452,10 +452,10 @@ namespace Tests.Repositories
                 await repository.DeleteDocument(documentId);
 
                 var deletedDocument = await context.Documents.FindAsync(documentId);
-                Assert.Null(deletedDocument); 
+                Assert.Null(deletedDocument);
             }
         }
-        
+
         [Fact]
         public async Task DeleteDocument_WithNonExistentId_ShouldThrowNotFoundException()
         {

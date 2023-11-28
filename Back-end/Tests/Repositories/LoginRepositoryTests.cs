@@ -25,7 +25,8 @@ namespace Tests.Repositories
 
                 var user = new User
                 {
-                    UserId = 1,
+                    UserId = 1,                    
+                    Name = "test",
                     Email = "test@example.com",
                     PasswordHash = "zkiE/979pWcygZdGCnKiubLZywTAA0JJ6BeFfRSuw/Q=",
                     PasswordSalt = "Td2fD1/rI+0u0kt/RHSDMchDDJBX7EW6rmvUs7taLz4=" 
@@ -75,6 +76,7 @@ namespace Tests.Repositories
                 var user = new User
                 {
                     UserId = 1,
+                    Name = "test",
                     Email = "test@example.com",
                     PasswordHash = "hashed_password", 
                     PasswordSalt = "salt" 
