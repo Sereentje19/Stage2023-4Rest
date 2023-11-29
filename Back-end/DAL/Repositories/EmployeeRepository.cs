@@ -150,7 +150,7 @@ namespace DAL.Repositories
                 throw new InputValidationException("Klant naam is leeg.");
             }
 
-            //check if the customer already exist, don't add it again.
+            //check if the customer already exist, then don't add it again.
             Employee existingEmployee =
                 await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email);
 
@@ -189,7 +189,7 @@ namespace DAL.Repositories
                 throw new NotFoundException("Geen medewerker gevonden");
             }
 
-            _dbSet.Update(employee);
+            _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
             await _context.SaveChangesAsync();
         }
 

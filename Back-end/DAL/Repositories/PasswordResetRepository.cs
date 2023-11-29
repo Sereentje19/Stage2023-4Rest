@@ -33,7 +33,7 @@ namespace DAL.Repositories
                 .Where(u => u.Email.ToLower() == email.ToLower())
                 .FirstOrDefaultAsync();
 
-            if (user== null)
+            if (user == null)
             {
                 throw new InvalidCredentialsException("Geen gebruiker gevonden");
             }

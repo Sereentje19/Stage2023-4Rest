@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <PopupMessage ref="PopUpMessage" />
+    <PopUpMessage ref="PopUpMessage" />
 </template>
   
 <script>
@@ -58,7 +58,6 @@ export default {
     },
     mounted() {
         this.getAllEmployees();
-        console.log(this.type)
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
@@ -99,7 +98,7 @@ export default {
             this.isPopUpDelete = false;
         },
         toEdit() {
-            this.$router.push("/edit/medewerker/" + this.id);
+            this.$router.push("/edit/medewerker/" + this.type + "/" + this.id);
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");

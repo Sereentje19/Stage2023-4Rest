@@ -120,8 +120,8 @@ export default {
     methods: {
         goToInfoPage(doc) {
             setTimeout(() => {
-                if (doc.isArchived == null) {
-                    this.$router.push("/info/document/" + doc.documentId);
+                if (doc.isArchived == true) {
+                    this.$router.push("/info/document/archief/" + doc.documentId);
                 }
                 else {
                     this.filterDocuments();

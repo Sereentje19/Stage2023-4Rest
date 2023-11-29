@@ -6,18 +6,8 @@
                 <h1 id="h1-overview">Archief</h1>
 
 
-                <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
-                    <option value="0">Selecteer document...</option>
-                    <option value="1">Vog</option>
-                    <option value="2">Contract</option>
-                    <option value="3">Paspoort</option>
-                    <option value="4">ID kaart</option>
-                    <option value="5">Diploma</option>
-                    <option value="6">Certificaat</option>
-                    <option value="7">Lease auto</option>
-                </select>
                 <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
-                    @input="filterDocuments" />
+                @input="getAllEmployees" />
 
             </div>
 
@@ -104,6 +94,7 @@ export default {
             employees: [],
             searchField: "",
             dropdown: "0",
+            toHistory: false
         };
     },
     mounted() {
@@ -116,13 +107,17 @@ export default {
     methods: {
         goToInfoPage(cus) {
             setTimeout(() => {
-                if (cus.isArchived == true) {
+                if (cus.isArchived == true && this.toHistory == false) {
                     this.$router.push("/info/medewerker/archief/" + cus.employeeId);
                 }
                 else {
                     this.getAllEmployees();
                 }
             }, 100);
+        },
+        goToHistory(cus) {
+            this.toHistory = true;
+            this.$router.push("/geschiedenis/medewerker/" + cus.employeeId);
         },
         toggleCheckbox(doc) {
             doc.isArchived = false;

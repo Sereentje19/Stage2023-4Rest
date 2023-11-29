@@ -21,7 +21,7 @@
       </div>
       <div id="box">
         <button @click="toEdit()" id="edit-button">Edit</button>
-        <button @click="toPopUpDelete()" id="delete-button">Delete</button>
+        <button v-if="this.type == 'archief'" @click="toPopUpDelete()" id="delete-button">Delete</button>
       </div>
     </div>
 
@@ -48,7 +48,7 @@
         :src="'data:' + this.document.fileType + ';base64,' + this.document.file" frameborder="0" width="100%"
         height="500px">
       <img v-else-if="this.document.fileType != 'application/pdf'" class="foto"
-        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" alt="image not shown" />
+        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" alt="Afbeelding kan niet worden laten zien." />
     </div>
   </div>
 
@@ -66,6 +66,7 @@ export default {
   name: "Info",
   props: {
     id: Number,
+    type: String
   },
   components: {
     PopUpMessage,
@@ -118,7 +119,7 @@ export default {
       })
         .then((res) => {
           localStorage.setItem('popUpSucces', 'true');
-          this.$router.push({ path: '/overzicht/documenten', query: { activePopup: true } });
+          this.$router.push({ path: '/overzicht/documenten/archief', query: { activePopup: true } });
         }).catch((error) => {
           this.$refs.PopUpMessage.popUpError(error.response.data);
         });
@@ -128,7 +129,7 @@ export default {
       this.emitter.emit('text', { 'eventContent': "Weet je zeker dat je " + this.document.type.toLowerCase() + " van medewerker " + this.employee.name + " wilt verwijderen?" })
     },
     toEdit() {
-      this.$router.push("/edit/document/" + this.id);
+      this.$router.push("/edit/document/" + this.type + "/" + this.id);
     },
     formatDate(date) {
       return moment(date).format("DD-MM-YYYY");

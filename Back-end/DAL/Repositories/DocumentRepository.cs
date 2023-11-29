@@ -225,7 +225,7 @@ namespace DAL.Repositories
         {
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
             
-            if (document.DocumentId == 0)
+            if (existingDocument == null)
             {
                 throw new NotFoundException("Geen document gevonden");
             }
@@ -243,7 +243,7 @@ namespace DAL.Repositories
         {
             Document doc = await _dbSet.FindAsync(id);
 
-            if (id == 0)
+            if (doc == null)
             {
                 throw new NotFoundException("Geen document gevonden");
             }

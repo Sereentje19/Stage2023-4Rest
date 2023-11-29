@@ -127,7 +127,7 @@ export default {
     goToInfoPage(doc) {
       setTimeout(() => {
         if (doc.isArchived == false) {
-          this.$router.push("/info/document/" + doc.documentId);
+          this.$router.push("/info/document/huidig/" + doc.documentId);
         }
         else {
           this.filterDocuments();

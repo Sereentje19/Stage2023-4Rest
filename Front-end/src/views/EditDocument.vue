@@ -35,7 +35,8 @@ export default {
         Header
     },
     props: {
-        id: Number
+        id: Number,
+        type: String
     },
     data() {
         return {
@@ -99,7 +100,7 @@ export default {
             })
                 .then((res) => {
                     localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/info/document/' + this.id, query: { activePopup: true } });
+                    this.$router.push({ path: '/info/document/' + this.type + "/" + this.id, query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

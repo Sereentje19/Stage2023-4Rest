@@ -29,7 +29,7 @@ export default {
         Header
     },
     props: {
-        route: String,
+        type: String,
         id: Number
     },
     data() {

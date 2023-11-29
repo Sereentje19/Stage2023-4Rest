@@ -100,11 +100,13 @@ namespace DAL.Repositories
         /// </returns>
         public async Task<DateTime?> GetReturnDatesByProductId(int productId)
         {
+            
             int loanHistoryId = await _dbSet
                 .Where(l => l.Product.ProductId == productId)
                 .Select(l => l.LoanHistoryId)
                 .FirstOrDefaultAsync();
 
+            //makes sure that the heading 'in gebruik' is correctly fetched.
             if (loanHistoryId == 0)
             {
                 return DateTime.Now;
@@ -135,11 +137,11 @@ namespace DAL.Repositories
                 .Where(l => l.Product.ProductId == id)
                 .LastOrDefaultAsync();
 
-            //kan weg?
-            // if(loanHistory == null)
-            // {
-            //     loanHistory.ReturnDate = null;
-            // }
+            //makes sure that if there is no loan history, you will be able to link an employee to a product.
+            if(loanHistory == null)
+            {
+                loanHistory.ReturnDate = null;
+            }
 
             return loanHistory;
         }

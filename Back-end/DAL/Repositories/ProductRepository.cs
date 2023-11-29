@@ -32,15 +32,15 @@ namespace DAL.Repositories
         public async Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, ProductType? dropdown,
             int page, int pageSize)
         {
-            IQueryable<Product> query = _context.Products
+            var query = _context.Products
                 .Where(product => (string.IsNullOrEmpty(searchfield) ||
                                    product.SerialNumber.Contains(searchfield) ||
                                    product.ExpirationDate.ToString().Contains(searchfield) ||
                                    product.PurchaseDate.ToString().Contains(searchfield))
                                   && (dropdown == ProductType.Not_Selected || product.Type == dropdown));
 
-            int numberOfProducts = await query.CountAsync();
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            var numberOfProducts = await query.CountAsync();
+            var skipCount = Math.Max(0, (page - 1) * pageSize);
 
             var productList = await query
                 .Skip(skipCount)
@@ -120,7 +120,7 @@ namespace DAL.Repositories
                 throw new NotFoundException("Geen product gevonden");
             }
             
-            _dbSet.Update(product);
+            _context.Entry(existingProduct).CurrentValues.SetValues(product);
             await _context.SaveChangesAsync();
         }
 
