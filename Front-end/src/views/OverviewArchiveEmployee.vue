@@ -4,11 +4,8 @@
         <div class="overview-container">
             <div id="topside">
                 <h1 id="h1-overview">Archief</h1>
-
-
                 <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
-                @input="getAllEmployees" />
-
+                    @input="getAllEmployees" />
             </div>
 
             <div v-if="displayedDocuments.length > 0">

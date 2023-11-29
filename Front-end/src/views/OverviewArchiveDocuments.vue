@@ -4,8 +4,6 @@
         <div class="overview-container">
             <div id="topside">
                 <h1 id="h1-overview">Archief</h1>
-
-
                 <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
                     <option value="0">Selecteer document...</option>
                     <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
