@@ -32,10 +32,10 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged documents and pagination details.
         /// </returns>
         [HttpGet]
-        public IActionResult GetFilteredPagedDocuments(string? searchfield, DocumentType? dropdown,
+        public IActionResult GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
-            var (pagedDocuments, pager) = _documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
+            (IEnumerable<object> pagedDocuments, Pager pager) = _documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
 
             var response = new
             {
@@ -63,10 +63,10 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged archived documents and pagination details.
         /// </returns>
         [HttpGet("archive")]
-        public IActionResult GetArchivedPagedDocuments(string? searchfield, DocumentType? dropdown,
+        public IActionResult GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
-            var (pagedDocuments, pager) =
+            (IEnumerable<object> pagedDocuments, Pager pager) =
                 _documentService.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
 
             var response = new
@@ -95,10 +95,10 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged long-valid documents and pagination details.
         /// </returns>
         [HttpGet("long-valid")]
-        public IActionResult GetLongValidPagedDocuments(string? searchfield, DocumentType? dropdown,
+        public IActionResult GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
             int page = 1, int pageSize = 5)
         {
-            var (pagedDocuments, pager) =
+            (IEnumerable<object> pagedDocuments, Pager pager) =
                 _documentService.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
 
             var response = new
@@ -156,7 +156,7 @@ namespace PL.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public async Task<IActionResult> PostDocument([FromForm] IFormFile? file, [FromForm] DocumentResponse document)
+        public async Task<IActionResult> PostDocument([FromForm] IFormFile file, [FromForm] DocumentResponse document)
         {
             Document doc = new Document
             {
@@ -172,9 +172,9 @@ namespace PL.Controllers
 
             if (file != null)
             {
-                using (var memoryStream = new MemoryStream())
+                using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    file.CopyTo(memoryStream);
+                    await file.CopyToAsync(memoryStream);
                     doc.File = memoryStream.ToArray();
                 }
             }

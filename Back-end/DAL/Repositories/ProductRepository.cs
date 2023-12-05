@@ -2,6 +2,7 @@
 using PL.Models.Responses;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,17 +33,17 @@ namespace DAL.Repositories
         public async Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, ProductType? dropdown,
             int page, int pageSize)
         {
-            var query = _context.Products
+            IQueryable<Product> query = _context.Products
                 .Where(product => (string.IsNullOrEmpty(searchfield) ||
                                    product.SerialNumber.Contains(searchfield) ||
-                                   product.ExpirationDate.ToString().Contains(searchfield) ||
-                                   product.PurchaseDate.ToString().Contains(searchfield))
+                                   product.ExpirationDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield) ||
+                                   product.PurchaseDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield))
                                   && (dropdown == ProductType.Not_Selected || product.Type == dropdown));
 
-            var numberOfProducts = await query.CountAsync();
-            var skipCount = Math.Max(0, (page - 1) * pageSize);
+            int numberOfProducts = await query.CountAsync();
+            int skipCount = Math.Max(0, (page - 1) * pageSize);
 
-            var productList = await query
+            List<ProductResponse> productList = await query
                 .Skip(skipCount)
                 .Take(pageSize)
                 .Select(product => new ProductResponse

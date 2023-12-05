@@ -3,6 +3,7 @@ using PL.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using PL.Models;
@@ -49,14 +50,13 @@ namespace DAL.Repositories
         ///   2. An int representing the total number of employees matching the search criteria and filter.
         /// </returns>
         private (IEnumerable<object>, int) GetPagedEmployeesInternal(string searchfield, int page, int pageSize,
-            Func<Employee, bool> filter)
+            Expression<Func<Employee, bool>> filter)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            IQueryable<Employee> query = QueryGetEmployees(searchfield);
-            int numberOfEmployees = query.Where(filter).Count();
+            IQueryable<Employee> query = QueryGetEmployees(searchfield).Where(filter);
+            int numberOfEmployees = query.Count();
 
             IEnumerable<Employee> employeeList = query
-                .Where(filter)
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToList();
@@ -75,10 +75,10 @@ namespace DAL.Repositories
         ///   1. An IEnumerable<object> representing the paged list of archived employees.
         ///   2. An int representing the total number of archived employees matching the search criteria.
         /// </returns>
-        public async Task<(IEnumerable<object>, int)> GetAllArchivedEmployees(string searchfield, int page,
+        public Task<(IEnumerable<object>, int)> GetAllArchivedEmployees(string searchfield, int page,
             int pageSize)
         {
-            return GetPagedEmployeesInternal(searchfield, page, pageSize, item => item.IsArchived);
+            return Task.FromResult(GetPagedEmployeesInternal(searchfield, page, pageSize, item => item.IsArchived));
         }
 
         /// <summary>
@@ -92,10 +92,10 @@ namespace DAL.Repositories
         ///   1. An IEnumerable<object> representing the paged list of active employees.
         ///   2. An int representing the total number of active employees matching the search criteria.
         /// </returns>
-        public async Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page,
+        public Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page,
             int pageSize)
         {
-            return GetPagedEmployeesInternal(searchfield, page, pageSize, item => !item.IsArchived);
+            return Task.FromResult(GetPagedEmployeesInternal(searchfield, page, pageSize, item => !item.IsArchived));
         }
 
 

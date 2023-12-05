@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Filters;
 using PL.Exceptions;
 
 namespace PL.Attributes
@@ -18,12 +19,12 @@ namespace PL.Attributes
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             // skip authorization if action is decorated with [AllowAnonymous] attribute
-            var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
+            bool allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
             if (allowAnonymous)
                 return;
 
             // authorization
-            var user = context.HttpContext.User;
+            ClaimsPrincipal user = context.HttpContext.User;
             if (!user.Identity.IsAuthenticated)
             {
                 throw new TokenValidationException("Opnieuw inloggen vereist");

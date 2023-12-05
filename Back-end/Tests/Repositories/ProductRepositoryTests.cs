@@ -40,14 +40,14 @@ namespace Tests.Repositories
         [Fact]
         public async Task GetAllProducts_ReturnsProducts()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
 
                 await context.Products.AddRangeAsync(_products);
                 await context.SaveChangesAsync();
 
-                var (result, totalCount) = await productRepository.GetAllProducts("", ProductType.Not_Selected, 1, 5);
+                (IEnumerable<object> result, int totalCount) = await productRepository.GetAllProducts("", ProductType.Not_Selected, 1, 5);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);
@@ -58,14 +58,14 @@ namespace Tests.Repositories
         [Fact]
         public async Task GetAllProducts_WithFilters_ReturnsFilteredProducts()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
 
                 await context.Products.AddRangeAsync(_products);
                 await context.SaveChangesAsync();
 
-                var (result, totalCount) = await productRepository.GetAllProducts("123", ProductType.Laptop, 1, 10);
+                (IEnumerable<object> result, int totalCount) = await productRepository.GetAllProducts("123", ProductType.Laptop, 1, 10);
 
                 IEnumerable<ProductResponse> products = (IEnumerable<ProductResponse>)result;
                 ProductResponse productResponse = products.First();
@@ -81,7 +81,7 @@ namespace Tests.Repositories
         [Fact]
         public void GetProductTypeStrings_ShouldReturnCorrectList()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 ProductRepository yourClassInstance = new ProductRepository(context);
                 List<string> result = yourClassInstance.GetProductTypeStrings();
@@ -99,14 +99,14 @@ namespace Tests.Repositories
         [Fact]
         public async Task GetProductById_ExistingId_ReturnsProduct()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
 
                 await context.Products.AddAsync(_products.First());
                 await context.SaveChangesAsync();
                 
-                var result = await productRepository.GetProductById(1);
+                Product result = await productRepository.GetProductById(1);
 
                 Assert.NotNull(result);
                 Assert.Equal("12345", result.SerialNumber);
@@ -117,10 +117,10 @@ namespace Tests.Repositories
         [Fact]
         public async Task GetProductById_NonexistentId_ReturnsNull()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
-                var result = await productRepository.GetProductById(1);
+                ProductRepository productRepository = new ProductRepository(context);
+                Product result = await productRepository.GetProductById(1);
                 Assert.Null(result);
             }
         }
@@ -128,12 +128,12 @@ namespace Tests.Repositories
         [Fact]
         public async Task AddProduct_ValidProduct_ShouldAddToDatabase()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
                 
                 await productRepository.AddProduct(_products.First());
-                var addedProduct = await context.Products.FindAsync(_products[0].ProductId);
+                Product addedProduct = await context.Products.FindAsync(_products[0].ProductId);
                 
                 Assert.NotNull(addedProduct);
                 Assert.Equal("12345", addedProduct.SerialNumber);
@@ -144,9 +144,9 @@ namespace Tests.Repositories
         [Fact]
         public async Task AddProduct_EmptySerialNumber_ShouldThrowException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
                 await Assert.ThrowsAsync<InputValidationException>(() => productRepository.AddProduct(_products[2]));
             }
         }
@@ -154,9 +154,9 @@ namespace Tests.Repositories
         [Fact]
         public async Task AddProduct_NotSelectedType_ShouldThrowException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
                 await Assert.ThrowsAsync<InputValidationException>(() => productRepository.AddProduct(_products[1]));
             }
         }
@@ -164,11 +164,11 @@ namespace Tests.Repositories
         [Fact]
         public async Task PutProduct_ExistingProduct_ShouldUpdateInDatabase()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
 
-                var product = new Product
+                Product product = new Product
                 {
                     SerialNumber = "12345",
                     ExpirationDate = DateTime.Now.AddDays(30),
@@ -184,7 +184,7 @@ namespace Tests.Repositories
 
                 await productRepository.PutProduct(product);
 
-                var updatedProductInDatabase = await context.Products.FindAsync(product.ProductId);
+                Product updatedProductInDatabase = await context.Products.FindAsync(product.ProductId);
                 Assert.NotNull(updatedProductInDatabase);
                 Assert.Equal("67890", updatedProductInDatabase.SerialNumber);
                 Assert.Equal(ProductType.Monitor, updatedProductInDatabase.Type);
@@ -194,11 +194,11 @@ namespace Tests.Repositories
         [Fact]
         public async Task PutProduct_NonexistentProduct_ShouldNotUpdateInDatabase()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
 
-                var nonexistentProduct = new Product
+                Product nonexistentProduct = new Product
                 {
                     ProductId = 999, 
                     SerialNumber = "12345",
@@ -207,7 +207,7 @@ namespace Tests.Repositories
                     Type = ProductType.Laptop
                 };
 
-                var actualException =
+                NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
                         productRepository.PutProduct(nonexistentProduct));
                 Assert.NotNull(actualException);
@@ -217,16 +217,16 @@ namespace Tests.Repositories
         [Fact]
         public async Task DeleteProduct_ExistingProduct_ShouldRemoveFromDatabase()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
                 
                 await context.Products.AddAsync(_products.First());
                 await context.SaveChangesAsync();
 
                 await productRepository.DeleteProduct(_products.First().ProductId);
 
-                var deletedProduct = await context.Products.FindAsync(_products.First().ProductId);
+                Product deletedProduct = await context.Products.FindAsync(_products.First().ProductId);
                 Assert.Null(deletedProduct);
             }
         }
@@ -234,9 +234,9 @@ namespace Tests.Repositories
         [Fact]
         public async Task DeleteProduct_NonexistentProduct_ShouldThrowNotFoundException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var productRepository = new ProductRepository(context);
+                ProductRepository productRepository = new ProductRepository(context);
                 await Assert.ThrowsAsync<NotFoundException>(() => productRepository.DeleteProduct(999));
             }
         }

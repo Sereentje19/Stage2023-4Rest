@@ -18,7 +18,7 @@ namespace BLL.Services
         /// </summary>
         /// <param name="image">The byte array representing the image data.</param>
         /// <returns>The MIME part representing the embedded image.</returns>
-        private MimePart SetImage(byte[] image, string fileType)
+        private static MimePart SetImage(byte[] image, string fileType)
         {
             MimePart imageAttachment = new MimePart(fileType)
             {
@@ -37,7 +37,7 @@ namespace BLL.Services
         /// <param name="body">The text content to be included in the email body.</param>
         /// <param name="image">The byte array representing the image attachment (optional, set to null if not applicable).</param>
         /// <param name="fileType">The file type of the image attachment (e.g., "jpeg", "png").</param>
-        private void SetBody(MimeMessage emailMessage, string body, byte[] image, string fileType)
+        private static void SetBody(MimeMessage emailMessage, string body, byte[] image, string fileType)
         {
             TextPart textPart = new TextPart("plain")
             {
@@ -66,7 +66,7 @@ namespace BLL.Services
         {
             using (MailKit.Net.Smtp.SmtpClient mailClient = new MailKit.Net.Smtp.SmtpClient())
             {
-                mailClient.Connect(_mailSettings.Server, _mailSettings.Port,
+                mailClient.Connect(_mailSettings.Server, _mailSettings.Port, 
                     MailKit.Security.SecureSocketOptions.StartTls);
                 mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
                 mailClient.Send(emailMessage);
@@ -81,11 +81,11 @@ namespace BLL.Services
         /// <param name="date">The expiration date of the document.</param>
         /// <param name="type">The type of the document.</param>
         /// <param name="image">The byte array representing the embedded image.</param>
-        public MimeMessage SetMailSettings(string customerName, string email)
+        private MimeMessage SetMailSettings(string customerName, string email)
         {
             using (MimeMessage emailMessage = new MimeMessage())
             {
-                MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
+                 MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
                 emailMessage.From.Add(emailFrom);
                 MailboxAddress emailTo = new MailboxAddress(customerName, email);
                 emailMessage.To.Add(emailTo);

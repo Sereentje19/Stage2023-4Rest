@@ -5,6 +5,7 @@
         Not_Selected,
         Laptop,
         Monitor,
-        Stoel
+        Stoel,
+        Boek
     }
 }

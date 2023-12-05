@@ -30,7 +30,7 @@ namespace PL.Controllers
         [HttpGet("product/{product-id}")]
         public async Task<IActionResult> getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId, int page, int pageSize)
         {
-            var (pagedHistory, pager) = await _loanHistoryService.GetLoanHistoryByProductId(productId, page, pageSize);
+            (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByProductId(productId, page, pageSize);
             
             var response = new
             {
@@ -57,7 +57,7 @@ namespace PL.Controllers
         [HttpGet("employee/{customer-id}")]
         public async Task<IActionResult> GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId, int page, int pageSize)
         {
-            var (pagedHistory, pager) = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId, page, pageSize);
+            (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId, page, pageSize);
             
             var response = new
             {

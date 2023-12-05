@@ -24,6 +24,8 @@ namespace DAL.Repositories
         /// Retrieves a collection of loan history records for a specific product ID.
         /// </summary>
         /// <param name="id">The ID of the product.</param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified product.
         /// </returns>
@@ -38,7 +40,7 @@ namespace DAL.Repositories
             int numberOfLoanHistory = await query.CountAsync();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
 
-            IEnumerable<LoanHistoryResponse> LoanHistoryList = await query
+            IEnumerable<LoanHistoryResponse> loanHistoryList = await query
                 .Skip(skipCount)
                 .Take(pageSize)
                 .Select(loan => new LoanHistoryResponse
@@ -54,13 +56,15 @@ namespace DAL.Repositories
                 })
                 .ToListAsync();
             
-            return (LoanHistoryList, numberOfLoanHistory);    
+            return (loanHistoryList, numberOfLoanHistory);    
         }
 
         /// <summary>
         /// Retrieves a collection of loan history records for a specific customer ID.
         /// </summary>
         /// <param name="id">The ID of the customer.</param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified customer.
         /// </returns>
@@ -75,7 +79,7 @@ namespace DAL.Repositories
             int numberOfLoanHistory = await query.CountAsync();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
                 
-            IEnumerable<LoanHistoryResponse> LoanHistoryList = await query
+            IEnumerable<LoanHistoryResponse> loanHistoryList = await query
                 .Skip(skipCount)
                 .Take(pageSize)
                 .Select(loan => new LoanHistoryResponse
@@ -88,7 +92,7 @@ namespace DAL.Repositories
                     ReturnDate = loan.ReturnDate,
                 })
                 .ToListAsync();
-            return (LoanHistoryList, numberOfLoanHistory);    
+            return (loanHistoryList, numberOfLoanHistory);    
         }
 
         /// <summary>
@@ -136,12 +140,6 @@ namespace DAL.Repositories
                 .OrderBy(l => l.LoanHistoryId)
                 .Where(l => l.Product.ProductId == id)
                 .LastOrDefaultAsync();
-
-            //makes sure that if there is no loan history, you will be able to link an employee to a product.
-            if(loanHistory == null)
-            {
-                loanHistory.ReturnDate = null;
-            }
 
             return loanHistory;
         }

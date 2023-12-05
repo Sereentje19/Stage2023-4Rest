@@ -32,7 +32,7 @@ namespace PL.Controllers
         [HttpGet]
         public async Task<IActionResult> getAllProducts(string? searchfield, ProductType? dropdown, int page = 1, int pageSize = 5)
         {
-            var (pagedProducts, pager) = await _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
+            (IEnumerable<object> pagedProducts, Pager pager) = await _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
 
             var response = new
             {

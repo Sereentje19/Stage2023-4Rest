@@ -30,7 +30,7 @@ namespace BLL.Services
         /// <returns>A tuple containing paged documents and pagination information.</returns>
         public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            var (documentList, numberOfDocuments) = _documentRepository.GetPagedDocuments(searchfield, dropdown, page, pageSize);
+            (IEnumerable<object> documentList, int numberOfDocuments) = _documentRepository.GetPagedDocuments(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfDocuments, page, pageSize);
             return (documentList, pager);
         }
@@ -45,7 +45,7 @@ namespace BLL.Services
         /// <returns>A tuple containing paged documents and pagination information.</returns>
         public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            var (documentList, numberOfDocuments) = _documentRepository.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
+            (IEnumerable<object> documentList, int numberOfDocuments) = _documentRepository.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfDocuments, page, pageSize);
             return (documentList, pager);
         }
@@ -60,7 +60,7 @@ namespace BLL.Services
         /// <returns>A tuple containing paged documents and pagination information.</returns>
         public (IEnumerable<object>, Pager) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
         {
-            var (documentList, numberOfDocuments) = _documentRepository.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
+            (IEnumerable<object> documentList, int numberOfDocuments) = _documentRepository.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfDocuments, page, pageSize);
             return (documentList, pager);
         }

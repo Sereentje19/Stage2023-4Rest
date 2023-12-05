@@ -19,11 +19,11 @@ namespace Tests.Repositories
         [Fact]
         public async Task CheckCredentials_ValidCredentials_ShouldReturnUser()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new LoginRepository(context);
+                LoginRepository userRepository = new LoginRepository(context);
 
-                var user = new User
+                User user = new User
                 {
                     UserId = 1,                    
                     Name = "test",
@@ -35,13 +35,13 @@ namespace Tests.Repositories
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
 
-                var loginRequest = new LoginRequestDTO
+                LoginRequestDTO loginRequest = new LoginRequestDTO
                 {
                     Email = "test@example.com",
                     Password = "1" 
                 };
 
-                var result = await userRepository.CheckCredentials(loginRequest);
+                User result = await userRepository.CheckCredentials(loginRequest);
 
                 Assert.NotNull(result);
                 Assert.Equal(user.UserId, result.UserId);
@@ -51,11 +51,11 @@ namespace Tests.Repositories
         [Fact]
         public async Task CheckCredentials_InvalidEmail_ShouldThrowInvalidCredentialsException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new LoginRepository(context);
+                LoginRepository userRepository = new LoginRepository(context);
 
-                var loginRequest = new LoginRequestDTO
+                LoginRequestDTO loginRequest = new LoginRequestDTO
                 {
                     Email = "nonexistent@example.com",
                     Password = "user_password" 
@@ -69,11 +69,11 @@ namespace Tests.Repositories
         [Fact]
         public async Task CheckCredentials_InvalidPassword_ShouldThrowInvalidCredentialsException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new LoginRepository(context);
+                LoginRepository userRepository = new LoginRepository(context);
 
-                var user = new User
+                User user = new User
                 {
                     UserId = 1,
                     Name = "test",
@@ -85,7 +85,7 @@ namespace Tests.Repositories
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
 
-                var loginRequest = new LoginRequestDTO
+                LoginRequestDTO loginRequest = new LoginRequestDTO
                 {
                     Email = "test@example.com",
                     Password = "incorrect_password"

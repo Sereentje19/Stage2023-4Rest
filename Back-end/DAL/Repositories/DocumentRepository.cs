@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using PL.Exceptions;
 using PL.Models.Requests;
 using PL.Models.Responses;
@@ -55,14 +56,13 @@ namespace DAL.Repositories
         /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>A tuple containing a collection of document overviews and the total number of document overviews.</returns>
         private (IEnumerable<object>, int) GetPagedDocumentsInternal(string searchfield,
-            DocumentType? dropdown, int page, int pageSize, Func<DocumentOverviewResponse, bool> filter)
+            DocumentType? dropdown, int page, int pageSize, Expression<Func<DocumentOverviewResponse, bool>> filter)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            IQueryable<DocumentOverviewResponse> query = QueryGetDocuments(searchfield, dropdown);
-            int numberOfCustomers = query.Where(filter).Count();
+            IQueryable<DocumentOverviewResponse> query = QueryGetDocuments(searchfield, dropdown).Where(filter);
+            int numberOfCustomers = query.Count();
 
             IEnumerable<DocumentOverviewResponse> documentList = query
-                .Where(filter)
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToList();

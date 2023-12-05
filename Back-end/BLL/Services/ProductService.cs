@@ -30,7 +30,7 @@ namespace BLL.Services
         public async Task<(IEnumerable<object>, Pager)> GetAllProducts(string searchfield, ProductType? dropdown,
             int page, int pageSize)
         {
-            var (products, numberOfProducts) =
+            (IEnumerable<object> products, int numberOfProducts) =
                 await _productRepository.GetAllProducts(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfProducts, page, pageSize);
             return (products, pager);

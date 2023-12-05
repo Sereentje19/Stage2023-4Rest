@@ -7,13 +7,13 @@ using Microsoft.IdentityModel.Tokens;
 using BLL.Services;
 using PL.Middlewares;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 AddServices();
 AddAuthentication();
 AddCors();
-AddDBConnection();
+AddDbConnection();
 ConnectionInterfaces();
 BuildApp();
 
@@ -30,8 +30,8 @@ void AddServices()
 //add authentication
 void AddAuthentication()
 {
-    var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
-    var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+    string jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
+    string jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -63,7 +63,7 @@ void AddCors()
 
 
 //db connection
-void AddDBConnection()
+void AddDbConnection()
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
@@ -94,7 +94,7 @@ void ConnectionInterfaces()
 
 void BuildApp()
 {
-    var app = builder.Build();
+    WebApplication app = builder.Build();
     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     if (app.Environment.IsDevelopment())

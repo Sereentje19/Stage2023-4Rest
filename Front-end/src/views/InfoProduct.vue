@@ -56,8 +56,8 @@
             <div id="customers-list">
 
                 <div v-if="this.loanHistory.returnDate != null" id="rightside">
-                    <input @input="getAllFilteredEmployees" v-model="searchField" type="search" class="searchfield-loanhistory"
-                        placeholder="Zoek klant" />
+                    <input @input="getAllFilteredEmployees" v-model="searchField" type="search"
+                        class="searchfield-loanhistory" placeholder="Zoek klant" />
 
                     <table id="top-table">
                         <tr>
@@ -201,13 +201,13 @@ export default {
             })
                 .then((res) => {
                     console.log(res.data)
-                    this.loanHistory = res.data;
-                    this.loanHistory.product.productId = res.data.productId
+                    if (res.data.loanHistoryId != null) {
+                        this.loanHistory = res.data;
+                        this.loanHistory.product.productId = res.data.productId
+                    }
                     console.log(this.loanHistory)
                 }).catch((error) => {
-                    if (this.loanHistory.loanDate != "") {
-                        this.$refs.PopUpMessage.popUpError(error.response.data);
-                    }
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         getProducts() {
@@ -242,13 +242,13 @@ export default {
             this.$router.push("/edit/product/" + this.id);
         },
         deleteProduct() {
-            this.emitter.emit('isPopUpTrue', {'eventContent': true});
-            this.emitter.emit('text', {'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt verwijderen?`});
+            this.emitter.emit('isPopUpTrue', { 'eventContent': true });
+            this.emitter.emit('text', { 'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt verwijderen?` });
         },
         returnProduct() {
-            this.emitter.emit('isPopUpTrue', {'eventContent': true});
-            this.emitter.emit('toReturn', {'eventContent': true});
-            this.emitter.emit('text', {'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt terugbrengen?`});
+            this.emitter.emit('isPopUpTrue', { 'eventContent': true });
+            this.emitter.emit('toReturn', { 'eventContent': true });
+            this.emitter.emit('text', { 'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt terugbrengen?` });
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");

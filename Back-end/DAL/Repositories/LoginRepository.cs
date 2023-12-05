@@ -49,9 +49,9 @@ namespace DAL.Repositories
         /// <returns>
         /// True if the entered password hash matches the stored hash; otherwise, false.
         /// </returns>
-        private bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
+        private static bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
         {
-            using (var deriveBytes = new Rfc2898DeriveBytes(enteredPassword, Convert.FromBase64String(storedSalt), 10000))
+            using (Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(enteredPassword, Convert.FromBase64String(storedSalt), 10000))
             {
                 byte[] enteredPasswordHash = deriveBytes.GetBytes(32); 
                 string enteredPasswordHashString = Convert.ToBase64String(enteredPasswordHash);

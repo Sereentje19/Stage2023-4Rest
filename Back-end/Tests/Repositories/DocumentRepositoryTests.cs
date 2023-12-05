@@ -10,7 +10,7 @@ namespace Tests.Repositories
 {
     public class DocumentRepositoryTests
     {
-        readonly List<Document> _documents = new()
+        private readonly List<Document> _documents = new()
         {
             new Document
             {
@@ -41,13 +41,13 @@ namespace Tests.Repositories
         [Fact]
         public async void GetPagedDocuments_ShouldReturnPagedResult()
         {
-            await using (var context = new ApplicationDbContext(CreateNewOptions()))
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 await context.Documents.AddRangeAsync(_documents);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
-                var result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
+                DocumentRepository repository = new DocumentRepository(context);
+                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
 
                 Assert.Single(result.Item1);
                 Assert.Equal(1, result.Item2);
@@ -60,10 +60,10 @@ namespace Tests.Repositories
         [Fact]
         public async void GetPagedDocuments_WithArchivedDocuments_ShouldExcludeArchivedDocuments()
         {
-            await using (var context = new ApplicationDbContext(CreateNewOptions()))
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var repository = new DocumentRepository(context);
-                var result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
+                DocumentRepository repository = new DocumentRepository(context);
+                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
                 Assert.Empty(result.Item1.Where(doc => ((Document)doc).IsArchived));
             }
         }
@@ -71,10 +71,10 @@ namespace Tests.Repositories
         [Fact]
         public async void GetPagedDocuments_WithNoMatchingDocuments_ShouldReturnEmptyList()
         {
-            await using (var context = new ApplicationDbContext(CreateNewOptions()))
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var repository = new DocumentRepository(context);
-                var result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
+                DocumentRepository repository = new DocumentRepository(context);
+                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
                 Assert.Empty(result.Item1);
             }
         }
@@ -82,13 +82,13 @@ namespace Tests.Repositories
         [Fact]
         public async void GetArchivedPagedDocuments_ShouldReturnPagedResult()
         {
-            await using (var context = new ApplicationDbContext(CreateNewOptions()))
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 await context.Documents.AddRangeAsync(_documents);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
-                var result = repository.GetArchivedPagedDocuments("Jane", DocumentType.Certificaat, 1, 1);
+                DocumentRepository repository = new DocumentRepository(context);
+                (IEnumerable<object>, int) result = repository.GetArchivedPagedDocuments("Jane", DocumentType.Certificaat, 1, 1);
 
                 Assert.Single(result.Item1);
                 Assert.Equal(1, result.Item2);
@@ -99,10 +99,10 @@ namespace Tests.Repositories
         [Fact]
         public async void GetArchivedPagedDocuments_WithNoMatchingDocuments_ShouldReturnEmptyList()
         {
-            await using (var context = new ApplicationDbContext(CreateNewOptions()))
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var repository = new DocumentRepository(context);
-                var result = repository.GetArchivedPagedDocuments("John", DocumentType.Contract, 1, 1);
+                DocumentRepository repository = new DocumentRepository(context);
+                (IEnumerable<object>, int) result = repository.GetArchivedPagedDocuments("John", DocumentType.Contract, 1, 1);
                 Assert.Empty(result.Item1);
             }
         }
@@ -110,15 +110,15 @@ namespace Tests.Repositories
         [Fact]
         public async void GetLongValidPagedDocuments_ShouldReturnPagedResult()
         {
-            await using (var context = new ApplicationDbContext(CreateNewOptions()))
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 await context.Documents.AddRangeAsync(_documents);
                 await context.SaveChangesAsync();
 
-                var documentRepository = new DocumentRepository(context);
-                var documentService = new DocumentService(documentRepository);
+                DocumentRepository documentRepository = new DocumentRepository(context);
+                DocumentService documentService = new DocumentService(documentRepository);
 
-                var result = documentService.GetLongValidPagedDocuments("Meredith", DocumentType.Paspoort, 1, 1);
+                (IEnumerable<object>, Pager) result = documentService.GetLongValidPagedDocuments("Meredith", DocumentType.Paspoort, 1, 1);
 
                 Assert.Single(result.Item1);
                 Assert.All(result.Item1, doc => Assert.False(((DocumentOverviewResponse)doc).IsArchived));
@@ -130,15 +130,15 @@ namespace Tests.Repositories
         [Fact]
         public void GetLongValidPagedDocuments_WithArchivedDocuments_ShouldExcludeArchivedDocuments()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 context.Documents.AddRange(_documents);
                 context.SaveChanges();
 
-                var documentRepository = new DocumentRepository(context);
-                var documentService = new DocumentService(documentRepository);
+                DocumentRepository documentRepository = new DocumentRepository(context);
+                DocumentService documentService = new DocumentService(documentRepository);
 
-                var result = documentService.GetLongValidPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, Pager) result = documentService.GetLongValidPagedDocuments("John", DocumentType.Contract, 1, 1);
 
                 Assert.Empty(result.Item1.Where(doc => ((Document)doc).IsArchived));
             }
@@ -147,12 +147,12 @@ namespace Tests.Repositories
         [Fact]
         public void GetLongValidPagedDocuments_WithNoMatchingDocuments_ShouldReturnEmptyList()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var documentRepository = new DocumentRepository(context);
-                var documentService = new DocumentService(documentRepository);
+                DocumentRepository documentRepository = new DocumentRepository(context);
+                DocumentService documentService = new DocumentService(documentRepository);
 
-                var result = documentService.GetLongValidPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, Pager) result = documentService.GetLongValidPagedDocuments("John", DocumentType.Contract, 1, 1);
 
                 Assert.Empty(result.Item1);
             }
@@ -161,7 +161,7 @@ namespace Tests.Repositories
         [Fact]
         public void GetDocumentTypeStrings_ShouldReturnCorrectList()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 DocumentRepository yourClassInstance = new DocumentRepository(context);
                 List<string> result = yourClassInstance.GetDocumentTypeStrings();
@@ -183,7 +183,7 @@ namespace Tests.Repositories
         [Fact]
         public void GetDocumentTypeStrings_ShouldNotContainUnderscore()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 DocumentRepository repository = new DocumentRepository(context);
                 List<string> result = repository.GetDocumentTypeStrings();
@@ -194,13 +194,13 @@ namespace Tests.Repositories
         [Fact]
         public async Task GetDocumentById_ShouldReturnDocumentResponse()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 await context.Documents.AddRangeAsync(_documents);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
-                var result = await repository.GetDocumentById(1);
+                DocumentRepository repository = new DocumentRepository(context);
+                DocumentResponse result = await repository.GetDocumentById(1);
 
                 Assert.NotNull(result);
                 Assert.IsType<DocumentResponse>(result);
@@ -215,14 +215,14 @@ namespace Tests.Repositories
         [Fact]
         public async Task GetDocumentById_WithNonExistentId_ShouldReturnNull()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 await context.Documents.AddRangeAsync(_documents);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
-                var result = await repository.GetDocumentById(999);
+                DocumentResponse result = await repository.GetDocumentById(999);
                 Assert.Null(result);
             }
         }
@@ -230,7 +230,7 @@ namespace Tests.Repositories
         [Fact]
         public async Task AddDocument_WithValidInput_ShouldAddDocument()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 await context.Documents.AddRangeAsync(_documents);
                 await context.SaveChangesAsync();
@@ -241,15 +241,15 @@ namespace Tests.Repositories
         [Fact]
         public async Task AddDocument_WithInvalidType_ShouldThrowValidationException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var document = new Document
+                Document document = new Document
                 {
                     Type = DocumentType.Not_selected,
                     Employee = new Employee { Name = "John", Email = "john@example.com" }
                 };
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
                 await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
             }
@@ -258,33 +258,94 @@ namespace Tests.Repositories
         [Fact]
         public async Task AddDocument_WithInvalidEmail_ShouldThrowValidationException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var document = new Document
+                Document document = new Document
                 {
                     Type = DocumentType.Contract,
                     Employee = new Employee { Name = "John", Email = "invalidemail" }
                 };
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
                 await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
             }
         }
+        
+        [Fact]
+        public async Task AddDocument_WithEmptyName_ShouldThrowValidationException()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                Document document = new Document
+                {
+                    Type = DocumentType.Contract,
+                    Employee = new Employee { Name = "", Email = "john@example.com" }
+                };
+
+                DocumentRepository repository = new DocumentRepository(context);
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
+            }
+        }
+        
+        [Fact]
+        public async Task AddDocument_WithInvalidDate_ShouldThrowValidationException()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                Document document = new Document
+                {
+                    Type = DocumentType.Contract,
+                    Date = DateTime.Today.AddDays(-1),
+                    Employee = new Employee { Name = "John", Email = "john@example.com" }
+                };
+
+                DocumentRepository repository = new DocumentRepository(context);
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
+            }
+        }
+        
+        [Fact]
+        public async Task AddDocument_ShouldSetExistingEmployeeWhenFound()
+        {
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                const string existingEmployeeEmail = "existing@example.com";
+                Employee existingEmployee = new Employee { Email = existingEmployeeEmail, Name = "test" };
+                context.Employees.Add(existingEmployee);
+                await context.SaveChangesAsync();
+
+                DocumentRepository documentRepository = new DocumentRepository(context);
+
+                Document document = new Document
+                {
+                    Type = DocumentType.Contract,
+                    Date = DateTime.Today,
+                    Employee = new Employee { Email = existingEmployeeEmail, Name = "test" }
+                };
+
+                await documentRepository.AddDocument(document);
+
+                Assert.NotNull(document.Employee);
+                Assert.Equal(existingEmployee, document.Employee);
+            }
+        }
+
+
 
         [Fact]
         public async Task UpdateDocument_WithValidInput_ShouldUpdateDocument()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                var editDocumentRequest = new EditDocumentRequest
+                EditDocumentRequest editDocumentRequest = new EditDocumentRequest
                 {
                     DocumentId = documentId,
                     Type = DocumentType.Contract,
                     Date = DateTime.Now.AddDays(10),
                 };
 
-                var existingDocument = new Document
+                Document existingDocument = new Document
                 {
                     DocumentId = documentId,
                     Type = DocumentType.Certificaat,
@@ -295,10 +356,10 @@ namespace Tests.Repositories
                 await context.Documents.AddAsync(existingDocument);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
                 await repository.UpdateDocument(editDocumentRequest);
-                var updatedDocument = await context.Documents.FindAsync(documentId);
+                Document updatedDocument = await context.Documents.FindAsync(documentId);
 
                 Assert.NotNull(updatedDocument);
                 Assert.Equal(editDocumentRequest.Date, updatedDocument.Date);
@@ -309,17 +370,17 @@ namespace Tests.Repositories
         [Fact]
         public async Task UpdateDocument_WithInvalidType_ShouldThrowValidationException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                var editDocumentRequest = new EditDocumentRequest
+                EditDocumentRequest editDocumentRequest = new EditDocumentRequest
                 {
                     DocumentId = documentId,
                     Type = DocumentType.Not_selected,
                     Date = DateTime.Now.AddDays(10),
                 };
 
-                var existingDocument = new Document
+                Document existingDocument = new Document
                 {
                     DocumentId = documentId,
                     Type = DocumentType.Certificaat,
@@ -330,9 +391,9 @@ namespace Tests.Repositories
                 await context.Documents.AddAsync(existingDocument);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
-                var actualException =
+                InputValidationException actualException =
                     await Assert.ThrowsAsync<InputValidationException>(() =>
                         repository.UpdateDocument(editDocumentRequest));
                 Assert.NotNull(actualException);
@@ -342,17 +403,17 @@ namespace Tests.Repositories
         [Fact]
         public async Task UpdateDocument_WithEmptyDate_ShouldThrowValidationException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                var editDocumentRequest = new EditDocumentRequest
+                EditDocumentRequest editDocumentRequest = new EditDocumentRequest
                 {
                     DocumentId = documentId,
                     Type = DocumentType.Contract,
                     Date = DateTime.MinValue,
                 };
 
-                var existingDocument = new Document
+                Document existingDocument = new Document
                 {
                     DocumentId = documentId,
                     Type = DocumentType.Certificaat,
@@ -363,9 +424,9 @@ namespace Tests.Repositories
                 await context.Documents.AddAsync(existingDocument);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
-                var actualException =
+                InputValidationException actualException =
                     await Assert.ThrowsAsync<InputValidationException>(() =>
                         repository.UpdateDocument(editDocumentRequest));
                 Assert.NotNull(actualException);
@@ -375,16 +436,16 @@ namespace Tests.Repositories
         [Fact]
         public async Task UpdateIsArchived_ShouldUpdateIsArchived()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                var checkBoxRequest = new CheckBoxRequest
+                CheckBoxRequest checkBoxRequest = new CheckBoxRequest
                 {
                     DocumentId = documentId,
                     IsArchived = true
                 };
 
-                var existingDocument = new Document
+                Document existingDocument = new Document
                 {
                     DocumentId = documentId,
                     IsArchived = false
@@ -393,10 +454,10 @@ namespace Tests.Repositories
                 await context.Documents.AddAsync(existingDocument);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
                 await repository.UpdateIsArchived(checkBoxRequest);
-                var updatedDocument = await context.Documents.FindAsync(documentId);
+                Document updatedDocument = await context.Documents.FindAsync(documentId);
 
                 Assert.NotNull(updatedDocument);
                 Assert.True(existingDocument.IsArchived);
@@ -406,16 +467,16 @@ namespace Tests.Repositories
         [Fact]
         public async Task UpdateIsArchived_WithNonExistentId_ShouldThrowNotFoundException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                var checkBoxRequest = new CheckBoxRequest
+                CheckBoxRequest checkBoxRequest = new CheckBoxRequest
                 {
                     DocumentId = 0,
                     IsArchived = true
                 };
 
-                var existingDocument = new Document
+                Document existingDocument = new Document
                 {
                     DocumentId = documentId,
                     IsArchived = false
@@ -424,9 +485,9 @@ namespace Tests.Repositories
                 await context.Documents.AddAsync(existingDocument);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
-                var actualException =
+                NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
                         repository.UpdateIsArchived(checkBoxRequest));
                 Assert.NotNull(actualException);
@@ -436,10 +497,10 @@ namespace Tests.Repositories
         [Fact]
         public async Task DeleteDocument_ShouldDeleteDocument()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var documentId = 1;
-                var existingDocument = new Document
+                int documentId = 1;
+                Document existingDocument = new Document
                 {
                     DocumentId = documentId,
                 };
@@ -447,11 +508,11 @@ namespace Tests.Repositories
                 await context.Documents.AddAsync(existingDocument);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
                 await repository.DeleteDocument(documentId);
 
-                var deletedDocument = await context.Documents.FindAsync(documentId);
+                Document deletedDocument = await context.Documents.FindAsync(documentId);
                 Assert.Null(deletedDocument);
             }
         }
@@ -459,10 +520,10 @@ namespace Tests.Repositories
         [Fact]
         public async Task DeleteDocument_WithNonExistentId_ShouldThrowNotFoundException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var documentId = 0;
-                var existingDocument = new Document
+                int documentId = 0;
+                Document existingDocument = new Document
                 {
                     DocumentId = 1,
                 };
@@ -470,9 +531,9 @@ namespace Tests.Repositories
                 await context.Documents.AddAsync(existingDocument);
                 await context.SaveChangesAsync();
 
-                var repository = new DocumentRepository(context);
+                DocumentRepository repository = new DocumentRepository(context);
 
-                var actualException =
+                NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
                         repository.DeleteDocument(documentId));
                 Assert.NotNull(actualException);

@@ -45,9 +45,9 @@ namespace PL.Middlewares
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            var response = context.Response;
+            HttpResponse response = context.Response;
 
-            var errorResponse = new ErrorResponse
+            ErrorResponse errorResponse = new ErrorResponse
             {
                 Success = false
             };

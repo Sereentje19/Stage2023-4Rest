@@ -25,7 +25,7 @@ namespace BLL.Services
         /// <returns>A collection of LoanHistoryDTO representing loan history for the product.</returns>
         public async Task<(IEnumerable<object>, Pager)> GetLoanHistoryByProductId(int id, int page, int pageSize)
         {
-            var (pagedHistory, numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByProductId(id, page, pageSize);
+            (IEnumerable<object> pagedHistory, int numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByProductId(id, page, pageSize);
             Pager pager = new Pager(numberOfHistory, page, pageSize);
             return (pagedHistory, pager);
         }
@@ -37,7 +37,7 @@ namespace BLL.Services
         /// <returns>A collection of LoanHistoryDTO representing loan history for the customer.</returns>
         public async Task<(IEnumerable<object>, Pager)> GetLoanHistoryByCustomerId(int id, int page, int pageSize)
         {
-            var (pagedHistory, numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByCustomerId(id, page, pageSize);
+            (IEnumerable<object> pagedHistory, int numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByCustomerId(id, page, pageSize);
             Pager pager = new Pager(numberOfHistory, page, pageSize);
             return (pagedHistory, pager);
         }

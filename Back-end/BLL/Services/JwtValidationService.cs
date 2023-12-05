@@ -27,12 +27,12 @@ namespace BLL.Services
         /// <returns>The generated JWT as a string.</returns>
         public string GenerateToken(LoginRequestDTO user)
         {
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException()));
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             List<Claim> claims = new List<Claim>
             {
-                new(ClaimTypes.Name, user.Email)
+                new Claim(ClaimTypes.Name, user.Email ?? throw new InvalidOperationException())
             };
 
             JwtSecurityToken token = new JwtSecurityToken(

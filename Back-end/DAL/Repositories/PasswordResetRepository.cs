@@ -97,7 +97,7 @@ namespace DAL.Repositories
         /// <param name="password">The new password to be hashed.</param>
         private async Task HashAndSavePassword(User user, string password)
         {
-            using (var deriveBytes = new Rfc2898DeriveBytes(password, 32, 10000))
+            using (Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, 32, 10000))
             {
                 byte[] hashedBytes = deriveBytes.GetBytes(32);
                 user.PasswordHash = Convert.ToBase64String(hashedBytes);

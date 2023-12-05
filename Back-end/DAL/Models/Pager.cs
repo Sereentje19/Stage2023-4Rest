@@ -13,12 +13,6 @@ namespace BLL.Services
         public int PageSize { get; private set; }
         public int TotalPages { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the Pager class with the specified parameters.
-        /// </summary>
-        /// <param name="totalItems">The total number of items to be paginated.</param>
-        /// <param name="currentPage">The current page number (default is 1).</param>
-        /// <param name="pageSize">The number of items per page (default is 5).</param>
         public Pager(
             int totalItems,
             int currentPage = 1,

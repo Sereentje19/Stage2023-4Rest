@@ -31,7 +31,7 @@ namespace PL.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPagedEmployee(string? searchfield, int page, int pageSize)
         {
-            var (pagedCustomers, pager) = await _employeeService.GetPagedEmployee(searchfield, page, pageSize);
+            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedEmployee(searchfield, page, pageSize);
 
             var response = new
             {
@@ -60,7 +60,7 @@ namespace PL.Controllers
         [HttpGet("archive")]
         public async Task<IActionResult> GetPagedArchivedEmployee(string? searchfield, int page, int pageSize)
         {
-            var (pagedCustomers, pager) = await _employeeService.GetPagedArchivedEmployee(searchfield, page, pageSize);
+            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedArchivedEmployee(searchfield, page, pageSize);
 
             var response = new
             {

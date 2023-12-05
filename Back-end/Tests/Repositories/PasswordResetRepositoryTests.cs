@@ -41,21 +41,21 @@ namespace Tests.Repositories
         [Fact]
         public async Task PostResetCode_UserFound_ShouldAddResetCode()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new PasswordResetRepository(context);
+                PasswordResetRepository userRepository = new PasswordResetRepository(context);
 
                 await context.Users.AddAsync(_users.First());
                 await context.SaveChangesAsync();
 
                 const string code = "123456";
 
-                var result = await userRepository.PostResetCode(code, _users.First().Email);
+                User result = await userRepository.PostResetCode(code, _users.First().Email);
 
                 Assert.NotNull(result);
                 Assert.Equal(_users.First().UserId, result.UserId);
 
-                var resetCode = await context.PasswordResetCode.FirstOrDefaultAsync(prc => prc.UserId == _users.First().UserId);
+                PasswordResetCode resetCode = await context.PasswordResetCode.FirstOrDefaultAsync(prc => prc.UserId == _users.First().UserId);
                 Assert.NotNull(resetCode);
                 Assert.Equal(code, resetCode.Code);
             }
@@ -64,9 +64,9 @@ namespace Tests.Repositories
         [Fact]
         public async Task PostResetCode_UserNotFound_ShouldThrowException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new PasswordResetRepository(context);
+                PasswordResetRepository userRepository = new PasswordResetRepository(context);
                 const string email = "nonexistent@example.com";
                 const string code = "123456";
 
@@ -77,21 +77,21 @@ namespace Tests.Repositories
         [Fact]
         public async Task PostResetCode_AddResetCode_Success()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new PasswordResetRepository(context);
+                PasswordResetRepository userRepository = new PasswordResetRepository(context);
 
                 await context.Users.AddAsync(_users.First());
                 await context.SaveChangesAsync();
 
-                var code = "123456";
+                string code = "123456";
 
-                var result = await userRepository.PostResetCode(code, _users.First().Email);
+                User result = await userRepository.PostResetCode(code, _users.First().Email);
 
                 Assert.NotNull(result);
                 Assert.Equal(_users.First().UserId, result.UserId);
 
-                var resetCode = await context.PasswordResetCode.FirstOrDefaultAsync(prc => prc.UserId == _users.First().UserId);
+                PasswordResetCode resetCode = await context.PasswordResetCode.FirstOrDefaultAsync(prc => prc.UserId == _users.First().UserId);
                 Assert.NotNull(resetCode);
                 Assert.Equal(code, resetCode.Code);
             }
@@ -100,15 +100,15 @@ namespace Tests.Repositories
         [Fact]
         public async Task CheckEnteredCode_ValidCode_ShouldReturnUser()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new PasswordResetRepository(context);
+                PasswordResetRepository userRepository = new PasswordResetRepository(context);
 
                 await context.Users.AddAsync(_users.First());
                 await context.PasswordResetCode.AddAsync(_passwordResetCode.First());
                 await context.SaveChangesAsync();
 
-                var result = await userRepository.CheckEnteredCode(_users.First().Email, _passwordResetCode.First().Code);
+                User result = await userRepository.CheckEnteredCode(_users.First().Email, _passwordResetCode.First().Code);
 
                 Assert.NotNull(result);
                 Assert.Equal(_users.First().UserId, result.UserId);
@@ -118,9 +118,9 @@ namespace Tests.Repositories
         [Fact]
         public async Task CheckEnteredCode_InvalidCode_ShouldThrowException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new PasswordResetRepository(context);
+                PasswordResetRepository userRepository = new PasswordResetRepository(context);
 
                 await context.Users.AddAsync(_users.First());
                 await context.PasswordResetCode.AddAsync(_passwordResetCode.Last());
@@ -134,9 +134,9 @@ namespace Tests.Repositories
         [Fact]
         public async Task PostPassword_ValidCode_ShouldChangePassword()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new PasswordResetRepository(context);
+                PasswordResetRepository userRepository = new PasswordResetRepository(context);
 
                 await context.Users.AddAsync(_users.First());
                 await context.PasswordResetCode.AddAsync(_passwordResetCode.First());
@@ -144,7 +144,7 @@ namespace Tests.Repositories
 
                 await userRepository.PostPassword(_users.First().Email, "new_password", _passwordResetCode.First().Code);
 
-                var updatedUser = await context.Users.FindAsync(_users.First().UserId);
+                User updatedUser = await context.Users.FindAsync(_users.First().UserId);
                 Assert.NotNull(updatedUser);
             }
         }
@@ -152,9 +152,9 @@ namespace Tests.Repositories
         [Fact]
         public async Task PostPassword_InvalidCode_ShouldThrowException()
         {
-            using (var context = new ApplicationDbContext(CreateNewOptions()))
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                var userRepository = new PasswordResetRepository(context);
+                PasswordResetRepository userRepository = new PasswordResetRepository(context);
 
                 await context.Users.AddAsync(_users.First());
                 await context.PasswordResetCode.AddAsync(_passwordResetCode.Last());

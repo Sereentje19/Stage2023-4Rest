@@ -11,19 +11,21 @@
                 </div>
 
                 <div v-if="displayedDocuments.length > 0">
-                    <div id="titles-overview-archive">
+                    <div id="titles-overview-history">
                         <div></div>
-                        <h3 id="klantnaam">Medewerker naam</h3>
+                        <h3 id="geldigTot">Product</h3>
                         <h3 id="geldigVan">Geleend op</h3>
                         <h3 id="geldigTot">Geleend tot</h3>
+                        <h3 id="geldigTot">Serienummer</h3>
                     </div>
 
                     <div v-for="(loanHistory, i) in displayedDocuments">
-                        <div @click="goToInfoPage(loanHistory)" id="item-archive">
+                        <div @click="goToInfoPage(loanHistory)" id="item-history">
                             <div></div>
-                            <div id="klantnaamTekst">{{ loanHistory.name }}</div>
+                            <div id="geldigTotTekst">{{ loanHistory.type }}</div>
                             <div id="geldigVanTekst">{{ formatDate(loanHistory.loanDate) }}</div>
                             <div id="geldigTotTekst">{{ formatDate(loanHistory.returnDate) }}</div>
+                            <div id="geldigTotTekst">{{ loanHistory.serialNumber }}</div>
                         </div>
                     </div>
 

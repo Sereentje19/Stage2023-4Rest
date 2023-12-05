@@ -9,12 +9,10 @@ namespace BLL.Services
     public class DocumentExpirationCheckService : BackgroundService
     {
         private readonly IServiceProvider _provider;
-        private readonly ILogger<DocumentExpirationCheckService> _logger;
 
-        public DocumentExpirationCheckService(IServiceProvider provider, ILogger<DocumentExpirationCheckService> logger)
+        public DocumentExpirationCheckService(IServiceProvider provider)
         {
             _provider = provider;
-            _logger = logger;
         }
 
         /// <summary>
@@ -26,16 +24,9 @@ namespace BLL.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                using (var scope = _provider.CreateScope())
+                using (IServiceScope scope = _provider.CreateScope())
                 {
-                    try
-                    {
-                        await ProcessExpiringDocumentsAsync(scope.ServiceProvider);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "An error occurred while processing document expiration check.");
-                    }
+                    await ProcessExpiringDocumentsAsync(scope.ServiceProvider);
                 }
 
                 TimeSpan delay = TimeSpan.FromDays(1);
@@ -48,30 +39,33 @@ namespace BLL.Services
         /// </summary>
         /// <param name="serviceProvider">The service provider for dependency injection.</param>
         /// <returns>A task representing the processing of expiring documents.</returns>
-        private async Task ProcessExpiringDocumentsAsync(IServiceProvider serviceProvider)
+        private static async Task ProcessExpiringDocumentsAsync(IServiceProvider serviceProvider)
         {
             ApplicationDbContext applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
-            var mailService = serviceProvider.GetRequiredService<IMailService>();
+            IMailService mailService = serviceProvider.GetRequiredService<IMailService>();
 
             DateTime targetDate6Weeks = DateTime.Now.AddDays(6 * 7);
             DateTime targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
 
             List<Document> expiringDocuments = await applicationDbContext.Documents
-                        .Include(d => d.Employee)
-                        .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
-                        .ToListAsync();
+                .Include(d => d.Employee)
+                .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
+                .ToListAsync();
 
             foreach (Document document in expiringDocuments)
             {
                 int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
-                Employee employee = await applicationDbContext.Employees.FirstOrDefaultAsync(c => c.EmployeeId == document.Employee.EmployeeId);
+                Employee employee =
+                    await applicationDbContext.Employees.FirstOrDefaultAsync(c =>
+                        c.EmployeeId == document.Employee.EmployeeId);
 
                 string bodyEmail = $"Het volgende document zal over {weeks} weken komen te vervallen:" +
-                              $"\nNaam: {employee.Name}" +
-                              $"\nVerloop datum: {document.Date:dd-MM-yyyy}" +
-                              $"\nType document: {document.Type.ToString().Replace("_", " ")}\n\n";
+                                   $"\nNaam: {employee.Name}" +
+                                   $"\nVerloop datum: {document.Date:dd-MM-yyyy}" +
+                                   $"\nType document: {document.Type.ToString().Replace("_", " ")}\n\n";
 
-                mailService.SendDocumentExpirationEmail(bodyEmail, document.FileType, document.File, "Document vervalt Binnenkort!");
+                mailService.SendDocumentExpirationEmail(bodyEmail, document.FileType, document.File,
+                    "Document vervalt Binnenkort!");
             }
         }
     }
