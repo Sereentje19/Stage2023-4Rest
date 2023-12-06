@@ -172,6 +172,16 @@ a {
   border-right: 3px solid #133610;
 }
 
+.verstuur:hover,
+.verstuur-employee:hover {
+  border-left: 3px solid #afaeae;
+  border-top: 3px solid #afaeae;
+  border-bottom: none;
+  border-right: none;
+  border-radius: 5px;
+  background-color: #133610;
+}
+
 .verstuur{
   margin-left: auto;
   margin-right: 0;
@@ -182,15 +192,6 @@ ul{
   padding: 0;
 }
 
-.verstuur:hover,
-.verstuur-employee:hover {
-  border-left: 3px solid #afaeae;
-  border-top: 3px solid #afaeae;
-  border-bottom: none;
-  border-right: none;
-  border-radius: 5px;
-  background-color: #133610;
-}
 
 #upload-employee{
   left: 0;

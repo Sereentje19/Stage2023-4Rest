@@ -31,12 +31,22 @@ import OverviewLongValid from '../views/OverviewLongValid.vue';
 import OverviewArchiveDocuments from '../views/OverviewArchiveDocuments.vue';
 import OverviewArchiveEmployee from '../views/OverviewArchiveEmployee.vue';
 
+//Profile
+import ProfilePersonalData from '../views/ProfilePersonalData.vue';
+import ProfileChangePassword from '../views/ProfileChangePassword.vue';
+import ProfileManageUsers from '../views/ProfileManageUsers.vue';
+import ProfileAddUser from '../views/ProfileAddUser.vue';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', component: Login },
     { path: '/login/wachtwoord-vergeten', component: ForgotPassword },
     { path: '/login/wachtwoord-vergeten/nieuw-wachtwoord/:code', component: ChangePassword, props: true },
+    { path: '/profiel/persoonsgegevens', component: ProfilePersonalData },
+    { path: '/profiel/wachtwoord-wijzigen', component: ProfileChangePassword },
+    { path: '/profiel/gebruikers-beheren', component: ProfileManageUsers },
+    { path: '/profiel/gebruikers-toevoegen', component: ProfileAddUser },
     { path: '/edit/document/:type/:id', component: EditDocument, props: true},
     { path: '/edit/medewerker/:type/:id', component: EditEmployee, props: true},
     { path: '/edit/product/:id', component: EditProduct, props: true},

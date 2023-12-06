@@ -35,6 +35,9 @@
                     </div>
                 </div>
             </div> &nbsp; &nbsp; &nbsp;
+            <router-link id="header-items" to="/profiel/persoonsgegevens" >Profiel</router-link>
+
+            &nbsp; &nbsp; &nbsp;
             <router-link id="header-items" to="/" @click="logOut">Uitloggen</router-link>
         </div>
     </div>

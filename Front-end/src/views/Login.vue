@@ -11,14 +11,14 @@
           </div>
           <div class="input-container">
             <div id="icon" class="icon-profile-fill">
-              <profileFill />
+              <profileFill style="color: #6b6b6b;"/>
             </div>
             <input id="input-email" v-model="this.user.Email" type="text" placeholder="Email" required />
             <div class="space" id="eye-icon"></div>
           </div>
           <div class="input-container">
             <div id="icon" class="icon-lock">
-              <lockClosed />
+              <lockClosed style="color: #6b6b6b;"/>
             </div>
             <input id="input-wachtwoord" class="password-margin" v-model="this.user.Password" :type="this.inputType"
               placeholder="Wachtwoord" required />
