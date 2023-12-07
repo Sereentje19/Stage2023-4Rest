@@ -55,7 +55,8 @@ export default {
       }
     },
     popUpError(error) {
-      this.closePopup();
+      this.colorOfMessage = localStorage.getItem('popUpSucces');
+      this.activePopup = null;
       this.Message = error;
       this.togglePopup('popup2');
 

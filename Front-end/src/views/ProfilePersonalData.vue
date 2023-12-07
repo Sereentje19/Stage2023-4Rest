@@ -19,13 +19,19 @@
 
             <div id="profile-page">
                 <div id="inputfields">
-                    <div id="input-edit"><input v-bind:readonly="true" class="inputfield-personal-data" placeholder="Serena Kenter"> <button
-                            id="button-personal-data" @click="editNameField()">edit</button></div>
-                    <div v-if="this.editName" id="input-edit"><input class="inputfield-personal-data" placeholder="Nieuwe naam"> <button
+                    <div id="input-edit"><input v-bind:readonly="true" class="inputfield-personal-data"
+                            :placeholder="this.currentUser.name"> <button id="button-personal-data"
+                            @click="editNameField()">edit</button></div>
+                    <div v-if="this.editName" id="input-edit"><input v-model="this.user.name"
+                            class="inputfield-personal-data" placeholder="Nieuwe naam"> <button @click="updateUser(true)"
                             id="button-personal-data">bevestig</button></div>
-                    <div class="email-personal-data" id="input-edit"><input v-bind:readonly="true" class="inputfield-personal-data" placeholder="Serena.kenter@gmail.com"> <button
+                    <div class="email-personal-data" id="input-edit"><input v-bind:readonly="true"
+                            class="inputfield-personal-data" :placeholder="this.currentUser.email"> <button
                             id="button-personal-data" @click="editEmailField()">edit</button></div>
-                    <div v-if="this.editEmail" id="input-edit"><input class="inputfield-personal-data" placeholder="Nieuwe email"> <button
+                    <div v-if="this.editEmail" id="input-edit"><input v-model="this.email" class="inputfield-personal-data"
+                            placeholder="Nieuwe email"></div>
+                    <div v-if="this.editEmail" id="input-edit"><input v-model="this.user.email"
+                            class="inputfield-personal-data" placeholder="Nieuwe email"> <button @click="updateUser(false)"
                             id="button-personal-data">bevestig</button></div>
                 </div>
             </div>
@@ -61,15 +67,38 @@ export default {
     data() {
         return {
             editName: false,
-            editEmail: false
-
+            editEmail: false,
+            currentUser: JSON.parse(localStorage.getItem("currentUser")),
+            user: {
+                email: "",
+                name: "",
+                userId: JSON.parse(localStorage.getItem("currentUser")).userId
+            },
+            email: "",
         };
     },
     mounted() {
 
-
     },
     methods: {
+        updateUser(bool) {
+            axios.put("login", this.user, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                },
+                params: {
+                    email: this.email,
+                    updateName: bool
+                }
+            })
+                .then((res) => {
+                    localStorage.setItem('popUpSucces', 'true');
+                    this.$refs.PopUpMessage.popUpError("Data is bijgewerkt. Log opnieuw in om de nieuwe data in te zien.");
+                }).catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
+
         editNameField() {
             this.editName = !this.editName;
         },
@@ -81,6 +110,8 @@ export default {
 </script>
   
   
-<style>@import '../assets/css//Profile.css';
-@import '../assets/css/Main.css';</style>
+<style>
+@import '../assets/css//Profile.css';
+@import '../assets/css/Main.css';
+</style>
   

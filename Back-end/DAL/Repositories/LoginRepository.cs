@@ -16,6 +16,52 @@ namespace DAL.Repositories
             _context = context;
             _dbSet = _context.Set<User>();
         }
+        
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _dbSet
+                .SingleOrDefaultAsync(l => l.Email == email);
+        }
+
+        public async Task PutUserEmail(User user, string email)
+        {
+            User existingUser = await _dbSet
+                .SingleOrDefaultAsync(l => l.UserId == user.UserId);
+
+            if (string.IsNullOrWhiteSpace(user.Email))
+            {
+                throw new InputValidationException("Email veld is leeg.");
+            }
+             
+            if (user.Email != email)
+            {
+                throw new InputValidationException("Email velden zijn niet gelijk aan elkaar.");
+            }
+
+            if (!user.Email.Contains('@'))
+            {
+                throw new InputValidationException("Geen geldige email.");
+            }
+
+            existingUser.Email = user.Email;
+            _dbSet.Update(existingUser);
+            await _context.SaveChangesAsync();
+        }
+        
+        public async Task PutUserName(User user)
+        {
+            User existingUser = await _dbSet
+                .SingleOrDefaultAsync(l => l.UserId == user.UserId);
+
+            if (string.IsNullOrWhiteSpace(user.Name))
+            {
+                throw new InputValidationException("Naam veld is leeg.");
+            }
+
+            existingUser.Name = user.Name;
+            _dbSet.Update(existingUser);
+            await _context.SaveChangesAsync();
+        }
 
         /// <summary>
         /// Validates user credentials by checking the provided user's email and password against the repository.
@@ -25,7 +71,7 @@ namespace DAL.Repositories
         /// <exception cref="Exception">Thrown when the email or password is incorrect.</exception>
         public async Task<User> CheckCredentials(LoginRequestDTO user)
         {
-            User matchingUser = await _dbSet.FirstOrDefaultAsync(u => u.Email == user.Email);
+            User matchingUser = await _dbSet.FirstOrDefaultAsync(u => u.Email.ToLower() == user.Email.ToLower());
 
             if (matchingUser != null)
             {
@@ -39,7 +85,7 @@ namespace DAL.Repositories
 
             throw new InvalidCredentialsException("Email is incorrect!");
         }
-        
+
         /// <summary>
         /// Verifies the correctness of a password by comparing the entered password hash with the stored hash.
         /// </summary>
@@ -51,14 +97,14 @@ namespace DAL.Repositories
         /// </returns>
         private static bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
         {
-            using (Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(enteredPassword, Convert.FromBase64String(storedSalt), 10000))
+            using (Rfc2898DeriveBytes deriveBytes =
+                   new Rfc2898DeriveBytes(enteredPassword, Convert.FromBase64String(storedSalt), 10000))
             {
-                byte[] enteredPasswordHash = deriveBytes.GetBytes(32); 
+                byte[] enteredPasswordHash = deriveBytes.GetBytes(32);
                 string enteredPasswordHashString = Convert.ToBase64String(enteredPasswordHash);
 
                 return string.Equals(enteredPasswordHashString, storedHash);
             }
         }
-
     }
 }

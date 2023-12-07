@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using PL.Models;
 
 namespace BLL.Services
 {
@@ -25,14 +26,16 @@ namespace BLL.Services
         /// </summary>
         /// <param name="user">The LoginRequestDTO containing user information.</param>
         /// <returns>The generated JWT as a string.</returns>
-        public string GenerateToken(LoginRequestDTO user)
+        public string GenerateToken(User user)
         {
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException()));
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
+            
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Email ?? throw new InvalidOperationException())
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             };
 
             JwtSecurityToken token = new JwtSecurityToken(

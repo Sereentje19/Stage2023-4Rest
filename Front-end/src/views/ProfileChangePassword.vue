@@ -19,11 +19,11 @@
 
             <div id="profile-page">
                 <div id="inputfields">
-                    <div id="input-edit"><input class="inputfield-personal-data" placeholder="Huidige wachtwoord"> </div>
-                    <div id="input-edit"><input class="inputfield-personal-data" placeholder="Nieuw wachtwoord">
+                    <div id="input-edit"><input v-model="this.password1" class="inputfield-personal-data" placeholder="Huidige wachtwoord"> </div>
+                    <div id="input-edit"><input v-model="this.password2" class="inputfield-personal-data" placeholder="Nieuw wachtwoord">
                     </div>
-                    <div id="input-edit"><input class="inputfield-personal-data" placeholder="Nieuw wachtwoord"></div>
-                    <button id="button-personal-data">bevestig</button>
+                    <div id="input-edit"><input v-model="this.password3" class="inputfield-personal-data" placeholder="Nieuw wachtwoord"></div>
+                    <button @click="changePassword()" id="button-personal-data">bevestig</button>
                 </div>
             </div>
 
@@ -57,33 +57,34 @@ export default {
 
     data() {
         return {
-            documents: [
-                {
-                    documentId: 0,
-                    employeeId: 0,
-                    date: "",
-                    employeeName: "",
-                    type: "",
-                    isArchived: false
-                }
-            ],
-            pager: {
-                currentPage: 1,
-                totalItems: 0,
-                totalPages: 0,
-                pageSize: 5,
-            },
-            employees: [],
-            searchField: "",
-            dropdown: "0",
+            currentUser: JSON.parse(localStorage.getItem("currentUser")),
+            password1: "",
+            password2: "",
+            password3: ""
         };
     },
     mounted() {
 
-
     },
     methods: {
-
+        changePassword() {
+            console.log(this.currentUser)
+            axios.put("forgot-password", this.currentUser , {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                },
+                params: {
+                    password1: this.password1,
+                    password2: this.password2,
+                    password3: this.password3,
+                }
+            })
+                .then((res) => {
+                    console.log(res.data);
+                }).catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
     },
 };
 </script>

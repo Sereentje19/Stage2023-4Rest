@@ -168,7 +168,6 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res.data)
           this.documents = res.data.documents;
           this.pager = res.data.pager;
         })
@@ -184,7 +183,6 @@ export default {
           }
         })
         .then((res) => {
-          console.log(res.data)
           this.documentTypes = res.data;
         })
         .catch((error) => {

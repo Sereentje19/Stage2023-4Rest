@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PL.Attributes;
 using PL.Models.Requests;
 using BLL.Services;
+using PL.Models;
 
 namespace PL.Controllers
 {
@@ -14,32 +15,34 @@ namespace PL.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IJwtValidationService _jwtValidationService;
-        private readonly IMailService _mailService;
 
-        public LoginController(ILoginService loginService, IJwtValidationService jwtValidationService,
-            IMailService mailService)
+        public LoginController(ILoginService loginService, IJwtValidationService jwtValidationService)
         {
             _loginService = loginService;
             _jwtValidationService = jwtValidationService;
-            _mailService = mailService;
         }
 
         /// <summary>
         /// Handles user login and returns an authentication token.
         /// </summary>
-        /// <param name="user">The user credentials for login.</param>
+        /// <param name="userDto"></param>
         /// <returns>An authentication token if login is successful; otherwise, an error message.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO user)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO userDto)
         {
-            await _loginService.CheckCredentials(user);
-            String token = _jwtValidationService.GenerateToken(user);
+            await _loginService.CheckCredentials(userDto);
+            User user =  await _loginService.GetUserByEmail(userDto.Email);
+            string token = _jwtValidationService.GenerateToken(user);
             return Ok(token);
         }
-
         
-        
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(string email, User user, bool updateName)
+        {
+            await _loginService.PutUser(user, email, updateName);   
+            return Ok(new { message = "User updated" });
+        }
         
     }
 }

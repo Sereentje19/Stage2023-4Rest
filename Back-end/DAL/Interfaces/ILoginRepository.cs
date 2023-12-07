@@ -11,6 +11,9 @@ namespace DAL.Repositories
     public interface ILoginRepository
     {
         Task<User> CheckCredentials(LoginRequestDTO user);
-        
+        Task<User> GetUserByEmail(string email);
+        Task PutUserEmail(User user, string email);
+        Task PutUserName(User user);
+
     }
 }

@@ -59,10 +59,17 @@ namespace PL.Controllers
         /// a success message indicating that the password has been updated.
         /// </returns>
         [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> AddPassword(PasswordChangeRequest request)
+        [HttpPost("code")]
+        public async Task<IActionResult> AddPasswordWithCode(PasswordChangeRequest request)
         {
             await _passwordResetService.PostPassword(request);
+            return Ok(new { message = "Wachtwoord aangepast." });
+        }
+        
+        [HttpPut]
+        public async Task<IActionResult> AddPassword(User user, string password1, string password2, string password3)
+        {
+            await _passwordResetService.PutPassword(user, password1, password2, password3);
             return Ok(new { message = "Wachtwoord aangepast." });
         }
     }

@@ -9,11 +9,13 @@ public class PasswordResetService : IPasswordResetService
 {
     private readonly IPasswordResetRepository _passwordResetRepository;
     private readonly IMailService _mailService;
+    private readonly ILoginService _loginService;
 
-    public PasswordResetService(IPasswordResetRepository passwordResetRepository, IMailService mailService)
+    public PasswordResetService(IPasswordResetRepository passwordResetRepository, IMailService mailService, ILoginService loginService)
     {
         _passwordResetRepository = passwordResetRepository;
         _mailService = mailService;
+        _loginService = loginService;
     }
 
     /// <summary>
@@ -68,5 +70,23 @@ public class PasswordResetService : IPasswordResetService
         }
         
         await _passwordResetRepository.PostPassword(request.Email, request.Password1, request.Code);
+    }
+    
+    public async Task PutPassword(User user, string password1, string password2, string password3)
+    {
+        LoginRequestDTO dto = new LoginRequestDTO()
+        {
+            Email = user.Email,
+            Password = password1
+        };
+
+        await _loginService.CheckCredentials(dto);
+        
+        if (password2 != password3)
+        {
+            throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
+        }
+        
+        await _passwordResetRepository.PutPassword(user, password2);
     }
 }

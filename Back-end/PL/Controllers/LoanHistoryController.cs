@@ -110,7 +110,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> PostLoanHistory([FromBody] LoanHistory? lh)
+        public async Task<IActionResult> PostLoanHistory([FromBody] LoanHistory lh)
         {
             await _loanHistoryService.PostLoanHistory(lh);
             return Ok(new { message = "Product created" });

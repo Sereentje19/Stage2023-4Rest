@@ -81,7 +81,7 @@ export default {
     },
     methods: {
         changePassword() {
-            axios.post("forgot-password", this.user
+            axios.post("forgot-password/code", this.user
                 )
                 .then((res) => {
                     console.log(res.data);

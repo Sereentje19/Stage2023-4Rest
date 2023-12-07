@@ -11,14 +11,14 @@
           </div>
           <div class="input-container">
             <div id="icon" class="icon-profile-fill">
-              <profileFill style="color: #6b6b6b;"/>
+              <profileFill style="color: #6b6b6b;" />
             </div>
             <input id="input-email" v-model="this.user.Email" type="text" placeholder="Email" required />
             <div class="space" id="eye-icon"></div>
           </div>
           <div class="input-container">
             <div id="icon" class="icon-lock">
-              <lockClosed style="color: #6b6b6b;"/>
+              <lockClosed style="color: #6b6b6b;" />
             </div>
             <input id="input-wachtwoord" class="password-margin" v-model="this.user.Password" :type="this.inputType"
               placeholder="Wachtwoord" required />
@@ -34,7 +34,7 @@
           <div id="error-message">
             {{ this.errorMessage }}
           </div>
-            <a href="/login/wachtwoord-vergeten" id="forgot-password">Wachtwoord vergeten? </a>
+          <a href="/login/wachtwoord-vergeten" id="forgot-password">Wachtwoord vergeten? </a>
         </div>
       </div>
     </div>
@@ -43,6 +43,7 @@
 
 <script>
 import axios from '../../axios-auth.js';
+import VueJwtDecode from 'vue-jwt-decode';
 import profile from "../components/icons/iconloginprofile.vue";
 import profileFill from "../components/icons/iconLoginProfileFill.vue";
 import lockClosed from "../components/icons/iconLoginLockClosed.vue";
@@ -66,6 +67,11 @@ export default {
       user: {
         Email: '',
         Password: '',
+      },
+      currentUser: {
+        email: "",
+        name: "",
+        userId: 0
       }
     };
   },
@@ -76,6 +82,16 @@ export default {
           axios.defaults.headers.common['Authorization'] = "Bearer " + res.data;
           localStorage.setItem("jwt", res.data)
           localStorage.setItem("overviewType", "Overzicht")
+
+          const token = res.data;
+          const decodedToken = VueJwtDecode.decode(token);
+
+            this.currentUser.email = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+            this.currentUser.name = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+            this.currentUser.userId = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+          localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
+
           this.$router.push("/overzicht/documenten");
           console.log(res.data);
         }).catch((error) => {

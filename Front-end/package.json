@@ -9,12 +9,16 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@types/jwt-decode": "^3.1.0",
     "axios": "^1.5.0",
     "file-type": "^18.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mitt": "^3.0.1",
     "moment": "^2.29.4",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",
+    "vue-jwt-decode": "^0.1.0",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {

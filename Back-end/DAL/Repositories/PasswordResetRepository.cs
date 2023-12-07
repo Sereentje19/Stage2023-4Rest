@@ -88,6 +88,18 @@ namespace DAL.Repositories
         {
             User user = await CheckEnteredCode(email, code);
             await HashAndSavePassword(user, password);
+            await _context.SaveChangesAsync();
+        }
+        
+        public async Task PutPassword(User user, string password)
+        {
+            User existingUser = await _context.Users
+                .Where(u => u.UserId == user.UserId)
+                .FirstOrDefaultAsync();
+            
+            User hashedUser = await HashAndSavePassword(existingUser, password);
+            _context.Update(hashedUser);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -95,7 +107,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="user">The User object for whom the password is to be hashed and saved.</param>
         /// <param name="password">The new password to be hashed.</param>
-        private async Task HashAndSavePassword(User user, string password)
+        private static async Task<User> HashAndSavePassword(User user, string password)
         {
             using (Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, 32, 10000))
             {
@@ -104,7 +116,7 @@ namespace DAL.Repositories
                 user.PasswordSalt = Convert.ToBase64String(deriveBytes.Salt);
             }
 
-            await _context.SaveChangesAsync();
+            return user;
         }
     }
 }
