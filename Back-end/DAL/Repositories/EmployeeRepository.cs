@@ -153,18 +153,22 @@ namespace DAL.Repositories
             //check if the customer already exist, then don't add it again.
             Employee existingEmployee =
                 await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email);
-
-            if (existingEmployee == null)
+            
+            if (existingEmployee != null)
             {
-                await _dbSet.AddAsync(employee);
-                await _context.SaveChangesAsync();
+                throw new InputValidationException("Email bestaat al.");
             }
+
+            await _dbSet.AddAsync(employee);
+            await _context.SaveChangesAsync();
 
             return employee.EmployeeId;
         }
 
         public async Task UpdateEmployeeIsArchived(Employee employee)
         {
+            await CheckEmailExists(employee);
+            
             Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
             
             if (existingEmployee == null)
@@ -182,8 +186,9 @@ namespace DAL.Repositories
         /// <param name="employee">The document entity to be updated.</param>
         public async Task UpdateEmployee(Employee employee)
         {
+            await CheckEmailExists(employee);
             Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
-            
+
             if (existingEmployee == null)
             {
                 throw new NotFoundException("Geen medewerker gevonden");
@@ -209,6 +214,17 @@ namespace DAL.Repositories
 
             _dbSet.Remove(employee);
             await _context.SaveChangesAsync();
+        }
+
+        private async Task CheckEmailExists(Employee employee)
+        {
+            Employee existingEmployee =
+                await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email);
+            
+            if (existingEmployee != null)
+            {
+                throw new InputValidationException("Email bestaat al.");
+            }
         }
     }
 }

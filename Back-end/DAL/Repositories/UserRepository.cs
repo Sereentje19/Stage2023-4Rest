@@ -34,8 +34,11 @@ namespace DAL.Repositories
                 }).ToListAsync();
         }
 
+        
         public async Task PutUserEmail(User user, string email)
         {
+            await CheckEmailExists(user);
+            
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
 
@@ -61,6 +64,8 @@ namespace DAL.Repositories
 
         public async Task PutUserName(User user)
         {
+            await CheckEmailExists(user);
+            
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
 
@@ -76,6 +81,14 @@ namespace DAL.Repositories
 
         public async Task PostUser(User user)
         {
+             User existingUser = await _dbSet
+                .SingleOrDefaultAsync(l => l.Email == user.Email);
+
+             if (existingUser != null)
+             {
+                 throw new InputValidationException("Email bestaat al.");
+             }
+            
             if (string.IsNullOrWhiteSpace(user.Name))
             {
                 throw new InputValidationException("Naam veld is leeg.");
@@ -145,6 +158,17 @@ namespace DAL.Repositories
                 string enteredPasswordHashString = Convert.ToBase64String(enteredPasswordHash);
 
                 return string.Equals(enteredPasswordHashString, storedHash);
+            }
+        }
+        
+        private async Task CheckEmailExists(User user)
+        {
+            User existingUserEmail = await _dbSet
+                .SingleOrDefaultAsync(l => l.Email == user.Email);
+
+            if (existingUserEmail != null)
+            {
+                throw new InputValidationException("Email bestaat al.");
             }
         }
     }
