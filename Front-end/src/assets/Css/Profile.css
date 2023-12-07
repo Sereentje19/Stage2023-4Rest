@@ -18,6 +18,14 @@
     margin-bottom: auto;
 }
 
+.nav-item:first-child{
+    border-radius: 5px 5px 0px 0px;
+}
+
+.nav-item:last-child{
+    border-radius: 0px 0px 5px 5px;
+}
+
 .nav-item:hover {
     background-color: #315a2e;
 }
@@ -38,6 +46,7 @@
     width: 65%;
     height: 500px;
     margin-left: auto;
+    border-radius: 5px;
 }
 
 #inputfields {
@@ -123,6 +132,7 @@
     width: 65%;
     height: 500px;
     margin-left: auto;
+    border-radius: 5px;
 }
 
 #profile-page-add-users{
@@ -135,13 +145,13 @@
 #profile-add-button{
     height: fit-content;
     background-color: #949494;
-    margin: 62px 0px 0px 0px;
+    margin: 70px 0px 0px 0px;
 }
 
 #profile-back-button{
     height: fit-content;
     background-color: #949494;
-    margin: 70px 30px 0px 0px;
+    margin: 75px 30px 0px 0px;
 }
 
 #table-users{
@@ -168,7 +178,7 @@
 }
 
 #table-info-users {
-    height: 215px;
+    height: 205px;
     cursor: auto;
     overflow-y: auto;
 }

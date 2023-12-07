@@ -7,12 +7,12 @@ using PL.Models.Responses;
 
 namespace DAL.Repositories
 {
-    public class LoginRepository : ILoginRepository
+    public class UserRepository : ILoginRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<User> _dbSet;
 
-        public LoginRepository(ApplicationDbContext context)
+        public UserRepository(ApplicationDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<User>();

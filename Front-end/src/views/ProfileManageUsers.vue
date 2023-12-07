@@ -22,7 +22,7 @@
                     <div id="table-users">
                         <table id="top-table">
                             <tr>
-                                <td class="first-row-users"><b>Name</b></td>
+                                <td class="first-row-users"><b>Naam</b></td>
                                 <td id="second-row-users"><b>Email</b></td>
                                 <td id="third-row-users">
                                     <ProfileDelete /> &nbsp;
@@ -30,15 +30,17 @@
                             </tr>
                         </table>
 
-                        <table id="bottom-table-users">
-                            <tr v-for="(user, i) in this.users">
-                                <td class="first-row-users">{{ user.name }}</td>
-                                <td id="second-row-users">{{ user.email }}</td>
-                                <td id="third-row-users">
-                                    <Trash @click="deleteUser(user.email)" id="trash" />
-                                </td>
-                            </tr>
-                        </table>
+                        <div id="table-info-users">
+                            <table id="bottom-table-users">
+                                <tr v-for="(user, i) in this.users">
+                                    <td class="first-row-users">{{ user.name }}</td>
+                                    <td id="second-row-users">{{ user.email }}</td>
+                                    <td id="third-row-users">
+                                        <Trash @click="deleteUser(user.email)" id="trash" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <button id="profile-add-button">
@@ -108,7 +110,7 @@ export default {
                 });
         },
         deleteUser(userEmail) {
-            axios.delete("user",  {
+            axios.delete("user", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },

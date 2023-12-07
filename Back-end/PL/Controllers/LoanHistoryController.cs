@@ -113,7 +113,7 @@ namespace PL.Controllers
         public async Task<IActionResult> PostLoanHistory([FromBody] LoanHistory lh)
         {
             await _loanHistoryService.PostLoanHistory(lh);
-            return Ok(new { message = "Product created" });
+            return Ok(new { message = "Leen geschiedenis toegevoegd." });
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace PL.Controllers
         public async Task<IActionResult> UpdateLoanHistory(LoanHistory loanHistory)
         {
             await _loanHistoryService.UpdateLoanHistory(loanHistory);
-            return Ok(new { message = "Product updated" });
+            return Ok(new { message = "Leen geschiedenis geupdate" });
         }
     }
 }

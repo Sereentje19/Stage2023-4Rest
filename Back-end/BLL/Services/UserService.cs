@@ -11,11 +11,11 @@ using PL.Models.Responses;
 
 namespace BLL.Services
 {
-    public class LoginService : ILoginService
+    public class UserService : ILoginService
     {
         private readonly ILoginRepository _loginRepository;
 
-        public LoginService(ILoginRepository loginRepository)
+        public UserService(ILoginRepository loginRepository)
         {
             _loginRepository = loginRepository;
         }

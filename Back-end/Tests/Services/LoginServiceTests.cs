@@ -26,8 +26,8 @@ public class LoginServiceTests
         loginRepositoryMock.Setup(repo => repo.CheckCredentials(userCredentials))
             .ReturnsAsync(expectedUser);
 
-        LoginService loginService = new LoginService(loginRepositoryMock.Object);
-        User resultUser = await loginService.CheckCredentials(userCredentials);
+        UserService userService = new UserService(loginRepositoryMock.Object);
+        User resultUser = await userService.CheckCredentials(userCredentials);
 
         Assert.NotNull(resultUser);
         Assert.Equal(expectedUser.UserId, resultUser.UserId);
@@ -46,8 +46,8 @@ public class LoginServiceTests
         loginRepositoryMock.Setup(repo => repo.CheckCredentials(userCredentials))
             .ReturnsAsync((User)null);
 
-        LoginService loginService = new LoginService(loginRepositoryMock.Object);
-        User resultUser = await loginService.CheckCredentials(userCredentials);
+        UserService userService = new UserService(loginRepositoryMock.Object);
+        User resultUser = await userService.CheckCredentials(userCredentials);
 
         Assert.Null(resultUser);
     }

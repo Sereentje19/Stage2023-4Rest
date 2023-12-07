@@ -60,14 +60,14 @@ namespace PL.Controllers
         /// </returns>
         [AllowAnonymous]
         [HttpPost("code")]
-        public async Task<IActionResult> AddPasswordWithCode(PasswordChangeRequest request)
+        public async Task<IActionResult> AddPassword(PasswordChangeRequest request)
         {
             await _passwordResetService.PostPassword(request);
-            return Ok(new { message = "Wachtwoord aangepast." });
+            return Ok(new { message = "Wachtwoord gemaakt" });
         }
         
         [HttpPut]
-        public async Task<IActionResult> AddPassword(User user, string password1, string password2, string password3)
+        public async Task<IActionResult> PutPassword(User user, string password1, string password2, string password3)
         {
             await _passwordResetService.PutPassword(user, password1, password2, password3);
             return Ok(new { message = "Wachtwoord aangepast." });

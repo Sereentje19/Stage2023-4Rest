@@ -180,7 +180,7 @@ namespace PL.Controllers
             }
 
             await _documentService.PostDocument(doc);
-            return Ok(new { message = "Document created" });
+            return Ok(new { message = "Document toegevoegd." });
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace PL.Controllers
         {
             Console.WriteLine(doc.Type.ToString());
             await _documentService.PutDocument(doc);
-            return Ok(new { message = "Document updated" });
+            return Ok(new { message = "Document geupdate." });
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace PL.Controllers
         public async Task<IActionResult> PutIsArchived(CheckBoxRequest doc)
         {
             await _documentService.UpdateIsArchived(doc);
-            return Ok(new { message = "Document updated" });
+            return Ok(new { message = "Document geupdate." });
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace PL.Controllers
         public async Task<IActionResult> DeleteDocument(int id)
         {
             await _documentService.DeleteDocument(id);
-            return Ok(new { message = "Document deleted" });
+            return Ok(new { message = "Document verwijderd." });
         }
     }
 }

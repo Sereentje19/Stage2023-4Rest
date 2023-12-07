@@ -124,7 +124,7 @@ namespace PL.Controllers
         public async Task<IActionResult> PutIsArchived(Employee doc)
         {
             await _employeeService.PutEmployeeIsArchived(doc);
-            return Ok(new { message = "Document updated" });
+            return Ok(new { message = "Medewerker geupdate." });
         }
         
         /// <summary>
@@ -136,7 +136,7 @@ namespace PL.Controllers
         public async Task<IActionResult> PutEmployee(Employee employee)
         {
             await _employeeService.PutEmployee(employee);
-            return Ok(new { message = "Customer updated" });
+            return Ok(new { message = "Medewerker geupdate. " });
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace PL.Controllers
         public async Task<IActionResult> DeleteEmployee(int id)
         {
             await _employeeService.DeleteEmployee(id);
-            return Ok(new { message = "Customer deleted" });
+            return Ok(new { message = "Medewerker verwijderd." });
         }
     }
 }

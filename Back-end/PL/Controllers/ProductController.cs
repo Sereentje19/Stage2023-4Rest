@@ -94,7 +94,7 @@ namespace PL.Controllers
         public async Task<IActionResult> PostProduct(Product product)
         {
             await _productService.PostProduct(product);
-            return Ok(new { message = "Product created" });
+            return Ok(new { message = "Product toegevoegd." });
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace PL.Controllers
         public async Task<IActionResult> PutProduct(Product product)
         {
             await _productService.PutProduct(product);
-            return Ok(new { message = "Product updated" });
+            return Ok(new { message = "Product geupdate." });
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace PL.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _productService.DeleteProduct(id);
-            return Ok(new { message = "Product deleted" });
+            return Ok(new { message = "Product verwijderd." });
         }
     }
 }

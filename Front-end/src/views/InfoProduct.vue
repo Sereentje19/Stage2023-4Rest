@@ -61,7 +61,7 @@
 
                     <table id="top-table">
                         <tr>
-                            <td class="first-row"><b>Name</b></td>
+                            <td class="first-row"><b>Naam</b></td>
                             <td id="second-row"><b>Email</b></td>
                             <td id="empty-row"></td>
                         </tr>

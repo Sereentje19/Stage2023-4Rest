@@ -12,12 +12,12 @@ namespace PL.Controllers
     [ApiController]
     [Route("user")]
     [Authorize]
-    public class LoginController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly ILoginService _loginService;
         private readonly IJwtValidationService _jwtValidationService;
 
-        public LoginController(ILoginService loginService, IJwtValidationService jwtValidationService)
+        public UserController(ILoginService loginService, IJwtValidationService jwtValidationService)
         {
             _loginService = loginService;
             _jwtValidationService = jwtValidationService;
@@ -45,26 +45,25 @@ namespace PL.Controllers
             return Ok(token);
         }
         
-        [HttpPut]
-        public async Task<IActionResult> UpdateUser(string email, User user, bool updateName)
-        {
-            await _loginService.PutUser(user, email, updateName);   
-            return Ok(new { message = "User updated" });
-        }
-        
         [HttpPost]
         public async Task<IActionResult> PostUser(User user)
         {
             await _loginService.PostUser(user);   
-            return Ok(new { message = "User added" });
+            return Ok(new { message = "Gebruiker toegevoegd." });
+        }
+        
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(string email, User user, bool updateName)
+        {
+            await _loginService.PutUser(user, email, updateName);   
+            return Ok(new { message = "Gebruiker geupdate." });
         }
         
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string email)
         {
             await _loginService.DeleteUser(email);   
-            return Ok(new { message = "User deleted" });
+            return Ok(new { message = "Gebruiker verwijderd." });
         }
-        
     }
 }

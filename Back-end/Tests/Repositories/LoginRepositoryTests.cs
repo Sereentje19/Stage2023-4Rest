@@ -21,7 +21,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                LoginRepository userRepository = new LoginRepository(context);
+                UserRepository userRepository = new UserRepository(context);
 
                 User user = new User
                 {
@@ -53,7 +53,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                LoginRepository userRepository = new LoginRepository(context);
+                UserRepository userRepository = new UserRepository(context);
 
                 LoginRequestDTO loginRequest = new LoginRequestDTO
                 {
@@ -71,7 +71,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                LoginRepository userRepository = new LoginRepository(context);
+                UserRepository userRepository = new UserRepository(context);
 
                 User user = new User
                 {
