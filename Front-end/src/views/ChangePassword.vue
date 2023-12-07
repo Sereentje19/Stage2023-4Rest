@@ -11,7 +11,7 @@
                     </div>
                     <div class="input-container">
                         <div id="icon" class="icon-lock">
-                            <lockClosed />
+                            <lockClosed  style="color: #6b6b6b;"/>
                         </div>
                         <input id="input-wachtwoord" v-model="this.user.password1" :type="this.inputType"
                             placeholder="Wachtwoord" required />
@@ -24,7 +24,7 @@
                     </div>
                     <div class="input-container">
                         <div id="icon" class="icon-lock">
-                            <lockClosed />
+                            <lockClosed  style="color: #6b6b6b;"/>
                         </div>
                         <input id="input-wachtwoord" class="password-margin" v-model="this.user.password2"
                             :type="this.inputType" placeholder="Wachtwoord" required />

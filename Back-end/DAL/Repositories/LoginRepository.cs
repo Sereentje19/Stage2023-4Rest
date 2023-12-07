@@ -3,6 +3,7 @@ using PL.Exceptions;
 using PL.Models.Requests;
 using PL.Models;
 using Microsoft.EntityFrameworkCore;
+using PL.Models.Responses;
 
 namespace DAL.Repositories
 {
@@ -16,11 +17,21 @@ namespace DAL.Repositories
             _context = context;
             _dbSet = _context.Set<User>();
         }
-        
+
         public async Task<User> GetUserByEmail(string email)
         {
             return await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == email);
+        }
+
+        public async Task<IEnumerable<UserResponse>> GetAllUsers()
+        {
+            return await _dbSet
+                .Select(user => new UserResponse
+                {
+                    Email = user.Email,
+                    Name = user.Name
+                }).ToListAsync();
         }
 
         public async Task PutUserEmail(User user, string email)
@@ -32,7 +43,7 @@ namespace DAL.Repositories
             {
                 throw new InputValidationException("Email veld is leeg.");
             }
-             
+
             if (user.Email != email)
             {
                 throw new InputValidationException("Email velden zijn niet gelijk aan elkaar.");
@@ -47,7 +58,7 @@ namespace DAL.Repositories
             _dbSet.Update(existingUser);
             await _context.SaveChangesAsync();
         }
-        
+
         public async Task PutUserName(User user)
         {
             User existingUser = await _dbSet
@@ -60,6 +71,36 @@ namespace DAL.Repositories
 
             existingUser.Name = user.Name;
             _dbSet.Update(existingUser);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task PostUser(User user)
+        {
+            if (string.IsNullOrWhiteSpace(user.Name))
+            {
+                throw new InputValidationException("Naam veld is leeg.");
+            }
+
+            if (string.IsNullOrWhiteSpace(user.Email))
+            {
+                throw new InputValidationException("Email veld is leeg.");
+            }
+
+            if (!user.Email.Contains('@'))
+            {
+                throw new InputValidationException("Geen geldige email.");
+            }
+
+            _dbSet.Add(user);
+            await _context.SaveChangesAsync();
+        }
+        
+        public async Task DeleteUser(string email)
+        {
+            User user = await _dbSet
+                .SingleOrDefaultAsync(l => l.Email == email);
+            
+            _dbSet.Remove(user);
             await _context.SaveChangesAsync();
         }
 

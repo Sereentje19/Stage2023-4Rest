@@ -77,12 +77,9 @@ export default {
             email: "",
         };
     },
-    mounted() {
-
-    },
     methods: {
         updateUser(bool) {
-            axios.put("login", this.user, {
+            axios.put("user", this.user, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },

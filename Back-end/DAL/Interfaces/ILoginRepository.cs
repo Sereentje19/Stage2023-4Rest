@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PL.Models;
+using PL.Models.Responses;
 
 namespace DAL.Repositories
 {
@@ -14,6 +15,9 @@ namespace DAL.Repositories
         Task<User> GetUserByEmail(string email);
         Task PutUserEmail(User user, string email);
         Task PutUserName(User user);
+        Task PostUser(User user);
+        Task<IEnumerable<UserResponse>> GetAllUsers();
+        Task DeleteUser(string email);
 
     }
 }

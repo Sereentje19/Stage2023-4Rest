@@ -4,12 +4,13 @@ using PL.Attributes;
 using PL.Models.Requests;
 using BLL.Services;
 using PL.Models;
+using PL.Models.Responses;
 
 namespace PL.Controllers
 {
     [EnableCors("ApiCorsPolicy")]
     [ApiController]
-    [Route("login")]
+    [Route("user")]
     [Authorize]
     public class LoginController : ControllerBase
     {
@@ -22,13 +23,20 @@ namespace PL.Controllers
             _jwtValidationService = jwtValidationService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            IEnumerable<UserResponse> users = await _loginService.GetAllUsers();   
+            return Ok(users);
+        }
+        
         /// <summary>
         /// Handles user login and returns an authentication token.
         /// </summary>
         /// <param name="userDto"></param>
         /// <returns>An authentication token if login is successful; otherwise, an error message.</returns>
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO userDto)
         {
             await _loginService.CheckCredentials(userDto);
@@ -42,6 +50,20 @@ namespace PL.Controllers
         {
             await _loginService.PutUser(user, email, updateName);   
             return Ok(new { message = "User updated" });
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> PostUser(User user)
+        {
+            await _loginService.PostUser(user);   
+            return Ok(new { message = "User added" });
+        }
+        
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(string email)
+        {
+            await _loginService.DeleteUser(email);   
+            return Ok(new { message = "User deleted" });
         }
         
     }

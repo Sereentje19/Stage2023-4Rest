@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PL.Exceptions;
+using PL.Models.Responses;
 
 namespace BLL.Services
 {
@@ -34,6 +35,21 @@ namespace BLL.Services
         public async Task<User> GetUserByEmail(string email)
         {
             return await _loginRepository.GetUserByEmail(email);
+        }
+        
+        public async Task PostUser(User user)
+        {
+             await _loginRepository.PostUser(user);
+        }
+        
+        public async Task<IEnumerable<UserResponse>> GetAllUsers()
+        {
+            return await _loginRepository.GetAllUsers();
+        }
+        
+        public async Task DeleteUser(string email)
+        {
+             await _loginRepository.DeleteUser(email);
         }
 
         public async Task PutUser(User user, string email, bool updateName)

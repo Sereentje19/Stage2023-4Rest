@@ -176,3 +176,7 @@
 #trash:hover{
     color: rgb(173, 9, 9);
 }
+
+tr{
+    font-size: 15px;
+}

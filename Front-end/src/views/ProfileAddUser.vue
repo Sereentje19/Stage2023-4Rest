@@ -20,10 +20,10 @@
             <div id="profile-page-add-users">
                 <div id="table-add-users">
                     <div id="inputfields">
-                        <div id="input-edit"><input class="inputfield-personal-data" placeholder="Naam">
+                        <div id="input-edit"><input v-model="this.user.name" class="inputfield-personal-data" placeholder="Naam">
                         </div>
-                        <div id="input-edit"><input class="inputfield-personal-data" placeholder="Email"></div>
-                        <button id="button-personal-data">bevestig</button>
+                        <div id="input-edit"><input v-model="this.user.email" class="inputfield-personal-data" placeholder="Email"></div>
+                        <button @click="addUser()" id="button-personal-data">bevestig</button>
                     </div>
                     <button id="profile-back-button">
                         <ProfileBack @click="back()" />
@@ -66,35 +66,27 @@ export default {
 
     data() {
         return {
-            documents: [
-                {
-                    documentId: 0,
-                    employeeId: 0,
-                    date: "",
-                    employeeName: "",
-                    type: "",
-                    isArchived: false
-                }
-            ],
-            pager: {
-                currentPage: 1,
-                totalItems: 0,
-                totalPages: 0,
-                pageSize: 5,
-            },
-            employees: [],
-            searchField: "",
-            dropdown: "0",
+            user:{
+                name: "",
+                email: ""
+            }
         };
-    },
-    mounted() {
-
-
     },
     methods: {
         back() {
             this.$router.push('/profiel/gebruikers-beheren');
-        }
+        },
+        addUser() {
+            axios.post("user", this.user, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }})
+                .then((res) => {
+                    this.$router.push("/profiel/gebruikers-beheren");
+                }).catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
     },
 };
 </script>

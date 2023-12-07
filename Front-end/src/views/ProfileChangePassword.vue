@@ -63,9 +63,6 @@ export default {
             password3: ""
         };
     },
-    mounted() {
-
-    },
     methods: {
         changePassword() {
             console.log(this.currentUser)
@@ -80,7 +77,8 @@ export default {
                 }
             })
                 .then((res) => {
-                    console.log(res.data);
+                    localStorage.setItem('popUpSucces', 'true');
+                    this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

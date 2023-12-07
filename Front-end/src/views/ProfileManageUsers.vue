@@ -20,26 +20,25 @@
             <div id="profile-page-users">
                 <div id="profile-users">
                     <div id="table-users">
-                        <input @input="getAllFilteredEmployees" v-model="searchField" type="search"
-                            class="searchfield-loanhistory" placeholder="Zoek klant" />
-
                         <table id="top-table">
                             <tr>
                                 <td class="first-row-users"><b>Name</b></td>
                                 <td id="second-row-users"><b>Email</b></td>
-                                <td id="third-row-users"><ProfileDelete/> &nbsp;</td>
+                                <td id="third-row-users">
+                                    <ProfileDelete /> &nbsp;
+                                </td>
                             </tr>
                         </table>
-                        
-                        <div id="table-info-users">
-                            <table id="bottom-table-users">
-                                <tr @click="selectEmployee(employee)">
-                                    <td class="first-row-users">vf</td>
-                                    <td id="second-row-users">vfvfd</td>
-                                    <td id="third-row-users"><Trash id="trash"/></td>
-                                </tr>
-                            </table>
-                        </div>
+
+                        <table id="bottom-table-users">
+                            <tr v-for="(user, i) in this.users">
+                                <td class="first-row-users">{{ user.name }}</td>
+                                <td id="second-row-users">{{ user.email }}</td>
+                                <td id="third-row-users">
+                                    <Trash @click="deleteUser(user.email)" id="trash" />
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <button id="profile-add-button">
@@ -83,35 +82,47 @@ export default {
 
     data() {
         return {
-            documents: [
-                {
-                    documentId: 0,
-                    employeeId: 0,
-                    date: "",
-                    employeeName: "",
-                    type: "",
-                    isArchived: false
-                }
-            ],
-            pager: {
-                currentPage: 1,
-                totalItems: 0,
-                totalPages: 0,
-                pageSize: 5,
-            },
-            employees: [],
-            searchField: "",
-            dropdown: "0",
+            users: {
+                name: "",
+                email: ""
+            }
         };
     },
     mounted() {
-
-
+        this.getUsers();
     },
     methods: {
         addUser() {
             this.$router.push('/profiel/gebruikers-toevoegen');
-        }
+        },
+        getUsers() {
+            axios.get("user", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                }
+            })
+                .then((res) => {
+                    this.users = res.data;
+                }).catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
+        deleteUser(userEmail) {
+            axios.delete("user",  {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwt")
+                },
+                params: {
+                    email: userEmail
+                }
+            })
+                .then((res) => {
+                    this.users = res.data;
+                    this.getUsers();
+                }).catch((error) => {
+                    this.$refs.PopUpMessage.popUpError(error.response.data);
+                });
+        },
     },
 };
 </script>

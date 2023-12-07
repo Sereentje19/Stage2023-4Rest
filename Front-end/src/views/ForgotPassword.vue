@@ -11,7 +11,7 @@
                     </div>
                     <div class="input-container">
                         <div id="icon" class="icon-profile-fill">
-                            <profileFill />
+                            <profileFill  style="color: #6b6b6b;"/>
                         </div>
                         <input v-if="isSend == false" id="input-email" v-model="this.user.email" type="text"
                             placeholder="Email" required />
