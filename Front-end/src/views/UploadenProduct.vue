@@ -2,9 +2,27 @@
     <div>
         <Header></Header>
         <div class="upload-container">
-            <div id="upload-employee">
+            <div class="leftside">
                 <h1 id="h1">Product uploaden</h1>
+                <div id="drop" ref="dropArea" class="drop-area" @dragover.prevent="handleDrag(true)"
+                    @dragleave="handleDrag(false)" @drop.prevent="handleDrop">
+                    <p id="p" ref="pElement"></p>
+                    <input type="file" class="file" @change="handleFileChange" style="display: none" />
+                </div>
 
+                <div v-if="this.selectedFile != null">Geselecteerde bestand: <b>{{ this.selectedFile.name }}</b></div>
+                <div v-else>Nog geen bestand geselecteerd</div>
+
+
+                <label class="overlay">
+                    <div id="select-document"> Selecteer document</div>
+                    <img id="folder-image" src="../assets/pictures/folder.png">
+                    <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
+                </label>
+            </div>
+
+
+            <div class="rightside" id="rightside-product">
                 <ul>
                     <form class="gegevens">
                         <select v-model="this.product.type" class="Type">
@@ -19,7 +37,7 @@
                     </form>
                 </ul>
 
-                <button @click="this.PostEmployee()" class="verstuur-employee">
+                <button @click="this.PostEmployee()" class="verstuur" id="verstuur-product">
                     Verstuur document
                 </button>
             </div>

@@ -24,7 +24,6 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="searchfield">The search criteria for customer names or emails.</param>
         /// <param name="dropdown">The document type filter.</param>
-        /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>An IQueryable of DocumentOverviewDTO representing the document overviews.</returns>
         private IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, DocumentType? dropdown)
         {
