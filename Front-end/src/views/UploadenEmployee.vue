@@ -14,7 +14,7 @@
                 </ul>
 
                 <button @click="this.PostEmployee()" class="verstuur-employee">
-                    Verstuur document
+                    Verstuur medewerker
                 </button>
             </div>
         </div>

@@ -77,6 +77,15 @@
                 </div>
             </div>
         </div>
+        <div class="foto-product">
+            <div v-if="this.product.fileType == null"> <br><br><br> Er is geen afbeelding aanwezig bij dit document</div>
+            <embed v-else-if="this.product.fileType === 'application/pdf'"
+                :src="'data:' + this.product.fileType + ';base64,' + this.product.file" frameborder="0" width="100%"
+                height="500px">
+            <img v-else-if="this.product.fileType != 'application/pdf'" class="foto"
+                :src="'data:' + this.product.fileType + ';base64,' + this.product.file"
+                alt="Afbeelding kan niet worden laten zien." />
+        </div>
 
     </div>
     <br><br><br>
@@ -110,6 +119,8 @@ export default {
                 type: "",
                 serialNumber: "",
                 productId: 0,
+                file: "",
+                fileType: ""
             },
             loanHistory:
             {

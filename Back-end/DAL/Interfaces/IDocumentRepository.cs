@@ -12,16 +12,16 @@ namespace DAL.Repositories
     public interface IDocumentRepository
     {
 
-        (IEnumerable<object>, int) GetPagedDocuments(string searchfield, DocumentType? dropdown,
+        (IEnumerable<object>, int) GetPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize);
 
-        (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
+        (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize);
 
-        (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
+        (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize);
 
-        List<string> GetDocumentTypeStrings();
+        Task<IEnumerable<DocumentType>> GetDocumentTypes();
         Task<DocumentResponse> GetDocumentById(int id);
         Task AddDocument(Document document);
         Task UpdateDocument(EditDocumentRequest document);

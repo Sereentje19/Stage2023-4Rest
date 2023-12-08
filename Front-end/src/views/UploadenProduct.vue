@@ -15,7 +15,7 @@
 
 
                 <label class="overlay">
-                    <div id="select-document"> Selecteer document</div>
+                    <div id="select-document"> Selecteer product</div>
                     <img id="folder-image" src="../assets/pictures/folder.png">
                     <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
                 </label>
@@ -27,8 +27,8 @@
                     <form class="gegevens">
                         <select v-model="this.product.type" class="Type">
                             <option value="0">Selecteer type...</option>
-                            <option v-for="(type, index) in productTypes" :key="index" :value="index + 1">
-                                {{ type }}
+                            <option v-for="(type, index) in productTypes" :key="index" :value="type.name">
+                                {{ type.name }}
                             </option>
                         </select>
                         <input v-model="this.product.purchaseDate" type="date" class="Date" />
@@ -38,7 +38,7 @@
                 </ul>
 
                 <button @click="this.PostEmployee()" class="verstuur" id="verstuur-product">
-                    Verstuur document
+                    Verstuur product
                 </button>
             </div>
         </div>
@@ -60,6 +60,9 @@ export default {
     },
     data() {
         return {
+            isFocused: false,
+            selectedFile: null,
+            dropAreaActive: false,
             product: {
                 purchaseDate: new Date().toISOString().split('T')[0],
                 expirationDate: new Date().toISOString().split('T')[0],
@@ -74,8 +77,9 @@ export default {
     },
     methods: {
         PostEmployee() {
-            this.product.type = parseInt(this.product.type, 10);
-            axios.post("product", this.product, {
+            let formData = this.CreateFromData();
+
+            axios.post("product", formData, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }
@@ -86,6 +90,22 @@ export default {
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
+        },
+        CreateFromData() {
+            let formData = new FormData();
+
+            if (this.selectedFile != null) {
+                formData.append('file', this.selectedFile);
+                formData.append('product.FileType', this.selectedFile.type);
+            }
+
+            this.product.type = parseInt(this.product.type, 10);
+            formData.append('product.expirationDate', this.product.expirationDate);
+            formData.append('product.purchaseDate', this.product.purchaseDate);
+            formData.append('product.type', this.product.type);
+            formData.append('product.serialNumber', this.product.serialNumber);
+
+            return formData;
         },
         getProductTypes() {
             axios
@@ -101,6 +121,38 @@ export default {
                 .catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
+        },
+        handleFileChange(event) {
+            this.selectedFile = event.target.files[0]
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.fileContents = reader.result;
+            };
+            reader.readAsBinaryString(this.selectedFile)
+
+        },
+        onBlur() {
+            setTimeout(() => {
+                this.isFocused = false;
+            }, 200);
+        },
+        handleDrag(e, bool) {
+            e.preventDefault();
+            this.dropAreaActive = bool;
+        },
+        handleDrop(e) {
+            e.preventDefault();
+            this.dropAreaActive = false;
+            const files = e.dataTransfer.files;
+            this.processFile(files[0]);
+        },
+        processFile(file) {
+            if (file) {
+                this.selectedFile = file;
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+            }
         },
     },
 };

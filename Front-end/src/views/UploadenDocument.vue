@@ -35,12 +35,24 @@
 
             <input v-model="this.employee.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
             <input v-model="this.employee.Email" type="email" class="email" placeholder="Email" name="email" />
-            <select v-model="this.document.Type" class="type" name="Type">
-              <option value="0">Selecteer document...</option>
-              <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
-                {{ type }}
-              </option>
-            </select>
+
+            <div id="new-type">
+              <select v-if="this.addDocumentType == false" v-model="this.document.Type.name" class="type" name="Type">
+                <option value="0">Selecteer document...</option>
+                <option v-for="(type, index) in documentTypes" :key="index" :value="type.name">
+                  {{ type.name }}
+                </option>
+              </select>
+
+              <input v-else v-model="this.document.Type.name" class="email" placeholder="Nieuw type" name="email">
+              <div v-if="this.addDocumentType == false" @click="addType()" id="add-button">
+                <IconAdd />
+              </div>
+              <div v-else @click="addTypeReverse()" id="add-button" >
+                <CardList />
+              </div>
+            </div>
+
             <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="date" name="Date" />
           </form>
         </ul>
@@ -60,11 +72,15 @@
 import axios from '../../axios-auth.js'
 import PopUpMessage from '../components/notifications/PopUpMessage.vue';
 import Header from '../components/layout/Header.vue';
+import IconAdd from '../components/icons/IconAdd.vue';
+import CardList from '../components/icons/IconCardList.vue';
 
 export default {
   components: {
     PopUpMessage,
-    Header
+    Header,
+    IconAdd,
+    CardList
   },
   data() {
     return {
@@ -82,18 +98,30 @@ export default {
       documentTypes: [],
       document: {
         DocumentId: 0,
-        Type: 0,
+        Type: {
+          id: 0,
+          name: "0"
+        },
         Date: new Date().toISOString().split('T')[0],
         employeeId: 0,
         fileType: ""
       },
-      filteredEmployees: []
+      filteredEmployees: [],
+      addDocumentType: false
     };
   },
   mounted() {
     this.getDocumentTypes();
   },
   methods: {
+    addType() {
+      this.addDocumentType = !this.addDocumentType;
+      this.document.Type.name = "";
+    },
+    addTypeReverse(){
+      this.addDocumentType = !this.addDocumentType;
+      this.document.Type.name = "0";
+    },
     postDocument() {
       let formData = this.CreateFromData();
 
@@ -118,7 +146,7 @@ export default {
         formData.append('document.FileType', this.selectedFile.type);
       }
 
-      formData.append('document.Type', this.document.Type);
+      formData.append('document.Type.name', this.document.Type.name);
       formData.append('document.Date', this.document.Date);
       formData.append('document.Employee.Email', this.employee.Email);
       formData.append('document.Employee.Name', this.employee.Name);

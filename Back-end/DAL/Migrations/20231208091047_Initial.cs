@@ -12,6 +12,19 @@ namespace DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "DocumentTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -42,21 +55,16 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "ProductTypes",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    File = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(24)", nullable: false),
-                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.ProductId);
+                    table.PrimaryKey("PK_ProductTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,17 +93,46 @@ namespace DAL.Migrations
                     FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(24)", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: true),
                     IsArchived = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Documents", x => x.DocumentId);
                     table.ForeignKey(
+                        name: "FK_Documents_DocumentTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "DocumentTypes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Documents_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "EmployeeId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    File = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: true),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.ProductId);
+                    table.ForeignKey(
+                        name: "FK_Products_ProductTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "ProductTypes",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -130,6 +167,11 @@ namespace DAL.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Documents_TypeId",
+                table: "Documents",
+                column: "TypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employees_Email",
                 table: "Employees",
                 column: "Email",
@@ -144,6 +186,11 @@ namespace DAL.Migrations
                 name: "IX_LoanHistory_ProductId",
                 table: "LoanHistory",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_TypeId",
+                table: "Products",
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -168,10 +215,16 @@ namespace DAL.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
+                name: "DocumentTypes");
+
+            migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "ProductTypes");
         }
     }
 }

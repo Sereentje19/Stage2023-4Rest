@@ -12,7 +12,7 @@ using PL.Models;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231207143237_Initial")]
+    [Migration("20231208091047_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -48,15 +48,32 @@ namespace DAL.Migrations
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
+                    b.Property<int?>("TypeId")
+                        .HasColumnType("int");
 
                     b.HasKey("DocumentId");
 
                     b.HasIndex("EmployeeId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("PL.Models.DocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentTypes");
                 });
 
             modelBuilder.Entity("PL.Models.Employee", b =>
@@ -155,19 +172,39 @@ namespace DAL.Migrations
                     b.Property<string>("FileType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
+                    b.Property<int?>("TypeId")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("PL.Models.ProductType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductTypes");
                 });
 
             modelBuilder.Entity("PL.Models.User", b =>
@@ -205,7 +242,13 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
+                    b.HasOne("PL.Models.DocumentType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
+
                     b.Navigation("Employee");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("PL.Models.LoanHistory", b =>
@@ -221,6 +264,15 @@ namespace DAL.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("PL.Models.Product", b =>
+                {
+                    b.HasOne("PL.Models.ProductType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
+
+                    b.Navigation("Type");
                 });
 #pragma warning restore 612, 618
         }

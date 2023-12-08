@@ -237,3 +237,7 @@ tr:nth-child(odd) {
     cursor: auto;
     overflow-y: auto;
 }
+
+.foto-product{
+    margin-top: 30px;
+}

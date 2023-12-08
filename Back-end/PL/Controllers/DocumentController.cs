@@ -32,7 +32,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged documents and pagination details.
         /// </returns>
         [HttpGet]
-        public IActionResult GetFilteredPagedDocuments(string searchfield, DocumentType? dropdown,
+        public IActionResult GetFilteredPagedDocuments(string searchfield, string dropdown,
             int page = 1, int pageSize = 5)
         {
             (IEnumerable<object> pagedDocuments, Pager pager) = _documentService.GetPagedDocuments(searchfield, dropdown, page, pageSize);
@@ -63,7 +63,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged archived documents and pagination details.
         /// </returns>
         [HttpGet("archive")]
-        public IActionResult GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
+        public IActionResult GetArchivedPagedDocuments(string searchfield, string dropdown,
             int page = 1, int pageSize = 5)
         {
             (IEnumerable<object> pagedDocuments, Pager pager) =
@@ -95,7 +95,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged long-valid documents and pagination details.
         /// </returns>
         [HttpGet("long-valid")]
-        public IActionResult GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
+        public IActionResult GetLongValidPagedDocuments(string searchfield, string dropdown,
             int page = 1, int pageSize = 5)
         {
             (IEnumerable<object> pagedDocuments, Pager pager) =
@@ -123,10 +123,10 @@ namespace PL.Controllers
         /// a list of strings representing document types.
         /// </returns>
         [HttpGet("types")]
-        public IActionResult GetDocumentTypeStrings()
+        public async Task<IActionResult> GetDocumentTypeStrings()
         {
-            List<string> documentTypeStrings = _documentService.GetDocumentTypeStrings();
-            return Ok(documentTypeStrings);
+            IEnumerable<DocumentType> documentTypes = await _documentService.GetDocumentTypes();
+            return Ok(documentTypes);
         }
         
         /// <summary>
@@ -143,7 +143,7 @@ namespace PL.Controllers
             {
                 Document = doc,
                 doc.Employee,
-                type = doc.Type.ToString().Replace("_", " "),
+                type = doc.Type,        
             };
 
             return Ok(response);

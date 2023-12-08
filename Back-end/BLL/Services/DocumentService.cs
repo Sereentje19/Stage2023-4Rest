@@ -28,7 +28,7 @@ namespace BLL.Services
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of documents per page.</param>
         /// <returns>A tuple containing paged documents and pagination information.</returns>
-        public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, string dropdown, int page, int pageSize)
         {
             (IEnumerable<object> documentList, int numberOfDocuments) = _documentRepository.GetPagedDocuments(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfDocuments, page, pageSize);
@@ -43,7 +43,7 @@ namespace BLL.Services
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of documents per page.</param>
         /// <returns>A tuple containing paged documents and pagination information.</returns>
-        public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, string dropdown, int page, int pageSize)
         {
             (IEnumerable<object> documentList, int numberOfDocuments) = _documentRepository.GetArchivedPagedDocuments(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfDocuments, page, pageSize);
@@ -58,7 +58,7 @@ namespace BLL.Services
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of documents per page.</param>
         /// <returns>A tuple containing paged documents and pagination information.</returns>
-        public (IEnumerable<object>, Pager) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown, int page, int pageSize)
+        public (IEnumerable<object>, Pager) GetLongValidPagedDocuments(string searchfield, string dropdown, int page, int pageSize)
         {
             (IEnumerable<object> documentList, int numberOfDocuments) = _documentRepository.GetLongValidPagedDocuments(searchfield, dropdown, page, pageSize);
             Pager pager = new Pager(numberOfDocuments, page, pageSize);
@@ -71,9 +71,9 @@ namespace BLL.Services
         /// <returns>
         /// A list of strings representing document types.
         /// </returns>
-        public List<string> GetDocumentTypeStrings()
+        public async Task<IEnumerable<DocumentType>> GetDocumentTypes()
         {
-            return _documentRepository.GetDocumentTypeStrings();
+            return await _documentRepository.GetDocumentTypes();
         }
         
         /// <summary>

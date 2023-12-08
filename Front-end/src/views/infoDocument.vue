@@ -1,46 +1,46 @@
 <template>
   <Header></Header>
   <div class="info-document-container">
-<div id="info-edit-delete">
-    <h1>Info</h1>
+    <div id="info-edit-delete">
+      <h1>Info</h1>
 
-    <PopupChoice ref="PopupChoice" @delete="deleteDocument"/>
-    <div id="leftside-documents">
-      <div id="loan-title">
-        Document
-      </div>
-      <div id="loan-info">
-        <div id="loan-info-leftside">
-          Type: <br>
-          Verval datum: <br>
+      <PopupChoice ref="PopupChoice" @delete="deleteDocument" />
+      <div id="leftside-documents">
+        <div id="loan-title">
+          Document
         </div>
-        <div>
-          {{ this.document.type }} <br>
-          {{ formatDate(this.document.date) }} <br>
+        <div id="loan-info">
+          <div id="loan-info-leftside">
+            Type: <br>
+            Verval datum: <br>
+          </div>
+          <div>
+            {{ this.document.type.name }} <br>
+            {{ formatDate(this.document.date) }} <br>
+          </div>
+        </div>
+        <div id="box">
+          <button @click="toEdit()" id="edit-button">Edit</button>
+          <button v-if="this.type == 'archief'" @click="toPopUpDelete()" id="delete-button">Delete</button>
         </div>
       </div>
-      <div id="box">
-        <button @click="toEdit()" id="edit-button">Edit</button>
-        <button v-if="this.type == 'archief'" @click="toPopUpDelete()" id="delete-button">Delete</button>
+
+      <div id="leftside-documents">
+        <div id="loan-title">
+          Medewerker
+        </div>
+        <div id="loan-info">
+          <div id="loan-info-leftside">
+            Naam: <br>
+            Email: <br>
+          </div>
+          <div>
+            {{ this.employee.name }} <br>
+            {{ this.employee.email }} <br>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div id="leftside-documents">
-      <div id="loan-title">
-        Medewerker
-      </div>
-      <div id="loan-info">
-        <div id="loan-info-leftside">
-          Naam: <br>
-          Email: <br>
-        </div>
-        <div>
-          {{ this.employee.name }} <br>
-          {{ this.employee.email }} <br>
-        </div>
-      </div>
-    </div>
-  </div>
 
     <div class="foto">
       <div v-if="this.document.fileType == null"> <br><br><br> Er is geen afbeelding aanwezig bij dit document</div>
@@ -48,7 +48,8 @@
         :src="'data:' + this.document.fileType + ';base64,' + this.document.file" frameborder="0" width="100%"
         height="500px">
       <img v-else-if="this.document.fileType != 'application/pdf'" class="foto"
-        :src="'data:' + this.document.fileType + ';base64,' + this.document.file" alt="Afbeelding kan niet worden laten zien." />
+        :src="'data:' + this.document.fileType + ';base64,' + this.document.file"
+        alt="Afbeelding kan niet worden laten zien." />
     </div>
   </div>
 
@@ -81,7 +82,9 @@ export default {
         employeeId: 0,
         date: "",
         employeeName: "",
-        type: "",
+        type: {
+          name: ""
+        },
         file: "",
         fileType: ""
       },
@@ -126,7 +129,7 @@ export default {
     },
     toPopUpDelete() {
       this.emitter.emit('isPopUpTrue', { 'eventContent': true })
-      this.emitter.emit('text', { 'eventContent': "Weet je zeker dat je " + this.document.type.toLowerCase() + " van medewerker " + this.employee.name + " wilt verwijderen?" })
+      this.emitter.emit('text', { 'eventContent': "Weet je zeker dat je " + this.document.type.name.toLowerCase() + " van medewerker " + this.employee.name + " wilt verwijderen?" })
     },
     toEdit() {
       this.$router.push("/edit/document/" + this.type + "/" + this.id);

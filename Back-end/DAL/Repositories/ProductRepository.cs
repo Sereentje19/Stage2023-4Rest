@@ -30,7 +30,7 @@ namespace DAL.Repositories
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of products per page.</param>
         /// <returns>A tuple containing a collection of products and the total number of products.</returns>
-        public async Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, ProductType? dropdown,
+        public async Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, ProductType dropdown,
             int page, int pageSize)
         {
             IQueryable<Product> query = _context.Products
@@ -38,7 +38,7 @@ namespace DAL.Repositories
                                    product.SerialNumber.Contains(searchfield) ||
                                    product.ExpirationDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield) ||
                                    product.PurchaseDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield))
-                                  && (dropdown == ProductType.Not_Selected || product.Type == dropdown));
+                                  && (dropdown.ToString() == "Not selected" || product.Type == dropdown));
 
             int numberOfProducts = await query.CountAsync();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
@@ -98,7 +98,7 @@ namespace DAL.Repositories
                 throw new InputValidationException("Serie nummer is leeg.");
             }
 
-            if (product.Type == ProductType.Not_Selected)
+            if (product.Type.ToString() == "Not selected")
             {
                 throw new InputValidationException("Type is leeg.");
             }

@@ -205,3 +205,24 @@ ul{
 #verstuur-product{
   margin-top: 30px;
 }
+
+#new-type{
+  width: 475px;
+  display: flex;
+}
+
+#add-button{
+  width: 25px;
+  background-color: white;
+  border: 1px solid black;
+  height: 25px;
+  margin-left: 10px;    
+  background-color: #f4f4f4;
+  font-size: 20px;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  margin-top: 0px;
+  margin-right: 0;
+
+}

@@ -86,14 +86,34 @@ namespace PL.Controllers
         /// <summary>
         /// Creates a new product entry.
         /// </summary>
+        /// <param name="file"></param>
         /// <param name="product">The Product object containing information for the new entry.</param>
         /// <returns>
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> PostProduct(Product product)
+        public async Task<IActionResult> PostProduct([FromForm] IFormFile file, [FromForm] Product product)
         {
-            await _productService.PostProduct(product);
+            
+            Product pro = new Product
+            {
+                Type = product.Type,
+                FileType = product.FileType,
+                PurchaseDate = product.PurchaseDate,
+                ExpirationDate = product.ExpirationDate,
+                SerialNumber = product.SerialNumber
+            };
+
+            if (file != null)
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    pro.File = memoryStream.ToArray();
+                }
+            }
+            
+            await _productService.PostProduct(pro);
             return Ok(new { message = "Product toegevoegd." });
         }
 

@@ -12,14 +12,14 @@ namespace BLL.Services
 {
     public interface IDocumentService
     {
-        (IEnumerable<object>, Pager) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown, int page,
+        (IEnumerable<object>, Pager) GetLongValidPagedDocuments(string searchfield, string dropdown, int page,
             int pageSize);
-        public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
+        public (IEnumerable<object>, Pager) GetArchivedPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize);
-        public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, DocumentType? dropdown,
+        public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize);
 
-        List<string> GetDocumentTypeStrings();
+        Task<IEnumerable<DocumentType>> GetDocumentTypes();
         Task<DocumentResponse> GetDocumentById(int id);
         Task PostDocument(Document document);
         Task PutDocument(EditDocumentRequest document);

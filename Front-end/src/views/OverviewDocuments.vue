@@ -8,8 +8,8 @@
 
         <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
-          <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
-            {{ type }}
+          <option v-for="(type, index) in documentTypes" :key="index" :value="type.id">
+            {{ type.name }}
           </option>
         </select>
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
@@ -38,7 +38,7 @@
             <div id="klantnaamTekst">{{ document.employeeName }}</div>
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
-            <div id="typeTekst">{{ document.type }}</div>
+            <div id="typeTekst">{{ document.type.name }}</div>
             <div id="checkboxArchive">
               <button id="button-history" @click="toggleCheckbox(document)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive"
@@ -104,6 +104,7 @@ export default {
           isArchived: false
         }
       ],
+      documentTypes: [],
       pager: {
         currentPage: 1,
         totalItems: 0,

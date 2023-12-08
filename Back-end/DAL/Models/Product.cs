@@ -14,5 +14,6 @@ namespace PL.Models
         [Column(TypeName = "nvarchar(24)")]
         public ProductType Type { get; set; }
         public string SerialNumber { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

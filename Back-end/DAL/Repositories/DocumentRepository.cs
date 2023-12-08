@@ -1,9 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PL.Exceptions;
 using PL.Models.Requests;
 using PL.Models.Responses;
-
 using PL.Models;
 
 namespace DAL.Repositories
@@ -25,14 +25,16 @@ namespace DAL.Repositories
         /// <param name="searchfield">The search criteria for customer names or emails.</param>
         /// <param name="dropdown">The document type filter.</param>
         /// <returns>An IQueryable of DocumentOverviewDTO representing the document overviews.</returns>
-        private IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, DocumentType? dropdown)
+        private IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, string dropdown)
         {
+            Console.WriteLine(dropdown);
+
             return _context.Documents
                 .Include(d => d.Employee)
                 .Where(document => (string.IsNullOrEmpty(searchfield) ||
                                     document.Employee.Name.Contains(searchfield) ||
                                     document.Employee.Email.Contains(searchfield))
-                                   && (dropdown == DocumentType.Not_selected || document.Type == dropdown))
+                                   && (dropdown == "0" || document.Type.Id.ToString() == dropdown))
                 .OrderBy(document => document.Date)
                 .Select(doc => new DocumentOverviewResponse
                 {
@@ -41,7 +43,7 @@ namespace DAL.Repositories
                     Date = doc.Date,
                     EmployeeName = doc.Employee.Name,
                     IsArchived = doc.IsArchived,
-                    Type = doc.Type.ToString().Replace("_", " "),
+                    Type = doc.Type,
                 });
         }
 
@@ -55,7 +57,7 @@ namespace DAL.Repositories
         /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>A tuple containing a collection of document overviews and the total number of document overviews.</returns>
         private (IEnumerable<object>, int) GetPagedDocumentsInternal(string searchfield,
-            DocumentType? dropdown, int page, int pageSize, Expression<Func<DocumentOverviewResponse, bool>> filter)
+            string dropdown, int page, int pageSize, Expression<Func<DocumentOverviewResponse, bool>> filter)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
             IQueryable<DocumentOverviewResponse> query = QueryGetDocuments(searchfield, dropdown).Where(filter);
@@ -77,7 +79,7 @@ namespace DAL.Repositories
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of documents per page.</param>
         /// <returns>A tuple containing a collection of documents and the total number of documents.</returns>
-        public (IEnumerable<object>, int) GetPagedDocuments(string searchfield, DocumentType? dropdown, int page,
+        public (IEnumerable<object>, int) GetPagedDocuments(string searchfield, string dropdown, int page,
             int pageSize)
         {
             DateTime sixWeeksFromNow = DateTime.Now.AddDays(42);
@@ -93,7 +95,7 @@ namespace DAL.Repositories
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of documents per page.</param>
         /// <returns>A tuple containing a collection of archived documents and the total number of documents.</returns>
-        public (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, DocumentType? dropdown,
+        public (IEnumerable<object>, int) GetArchivedPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize)
         {
             return GetPagedDocumentsInternal(searchfield, dropdown, page, pageSize, item => item.IsArchived);
@@ -107,7 +109,7 @@ namespace DAL.Repositories
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of documents per page.</param>
         /// <returns>A tuple containing a collection of long-valid documents and the total number of documents.</returns>
-        public (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, DocumentType? dropdown,
+        public (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize)
         {
             DateTime sixWeeksFromNow = DateTime.Now.AddDays(42);
@@ -115,23 +117,12 @@ namespace DAL.Repositories
                 item => item.Date > sixWeeksFromNow && !item.IsArchived);
         }
 
-        /// <summary>
-        /// Retrieves a list of document type strings from the enumeration of DocumentType.
-        /// </summary>
-        /// <returns>
-        /// A list of strings representing document types.
-        /// </returns>
-        public List<string> GetDocumentTypeStrings()
-        {
-            List<string> documentTypeStrings = Enum.GetValues(typeof(DocumentType))
-                .Cast<DocumentType>()
-                .Skip(1)
-                .Select(enumValue => enumValue.ToString().Replace("_", " "))
-                .ToList();
 
-            return documentTypeStrings;
+        public async Task<IEnumerable<DocumentType>> GetDocumentTypes()
+        {
+            return await _context.DocumentTypes.ToListAsync();
         }
-        
+
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>
@@ -152,32 +143,43 @@ namespace DAL.Repositories
                 })
                 .FirstOrDefaultAsync();
         }
-        
+
         /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
         /// <param name="document">The document entity to be added.</param>
         public async Task AddDocument(Document document)
         {
-            if (document.Type == DocumentType.Not_selected)
+            if (document.Type.Name == "0")
             {
                 throw new InputValidationException("Selecteer een type.");
             }
+
             if (string.IsNullOrWhiteSpace(document.Employee.Email) || !document.Employee.Email.Contains("@"))
             {
                 throw new InputValidationException("Geen geldige email.");
             }
+
             if (string.IsNullOrWhiteSpace(document.Employee.Name))
             {
                 throw new InputValidationException("Klant naam is leeg.");
             }
+
             if (document.Date < DateTime.Today)
             {
                 throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
             }
-            
+
             Employee existingEmployee = await _context.Employees
                 .SingleOrDefaultAsync(l => l.Email == document.Employee.Email);
+
+            DocumentType type = await _context.DocumentTypes
+                .SingleOrDefaultAsync(t => t.Name == document.Type.Name);
+
+            if (type != null)
+            {
+                document.Type = type;
+            }
 
             if (existingEmployee != null)
             {
@@ -199,7 +201,7 @@ namespace DAL.Repositories
                 .Where(d => d.DocumentId == document.DocumentId)
                 .FirstOrDefaultAsync();
 
-            if (document.Type == DocumentType.Not_selected)
+            if (document.Type.Name == "0")
             {
                 throw new InputValidationException("Selecteer een type.");
             }
@@ -223,12 +225,12 @@ namespace DAL.Repositories
         public async Task UpdateIsArchived(CheckBoxRequest document)
         {
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
-            
+
             if (existingDocument == null)
             {
                 throw new NotFoundException("Geen document gevonden");
             }
-            
+
             existingDocument.IsArchived = document.IsArchived;
             await _context.SaveChangesAsync();
         }
@@ -246,7 +248,7 @@ namespace DAL.Repositories
             {
                 throw new NotFoundException("Geen document gevonden");
             }
-            
+
             _dbSet.Remove(doc);
             await _context.SaveChangesAsync();
         }

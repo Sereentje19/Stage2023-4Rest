@@ -67,7 +67,7 @@ void AddDbConnection()
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-            options => options.EnableRetryOnFailure()));
+            options => options.EnableRetryOnFailure()).EnableSensitiveDataLogging());
 }
 
 //connect interfaces

@@ -6,10 +6,10 @@
 
             <form>
                 <div class="gegevens-edit">
-                    <select v-model="this.document.Type" class="Type">
+                    <select v-model="this.document.Type.name" class="Type">
                         <option value="0">Selecteer type...</option>
-                        <option v-for="(type, index) in documentTypes" :key="index" :value="index + 1">
-                            {{ type }}
+                        <option v-for="(type, index) in documentTypes" :key="index" :value="type.name">
+                            {{ type.name }}
                         </option>
                     </select>
                     <input v-model="formattedDate" type="date" class="Date" />
@@ -42,7 +42,10 @@ export default {
         return {
             document: {
                 DocumentId: 0,
-                Type: 0,
+                Type: {
+                    id: 0,
+                    name: "0"
+                },
                 Date: "",
             },
             documentTypes: [],
