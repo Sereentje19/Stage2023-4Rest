@@ -13,6 +13,7 @@
           </option>
         </select>
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek" @input="getProducts" />
+        <button @click="toTrash()" id="button-archive">Prullenbak</button>
       </div>
 
       <div v-if="displayedProducts.length > 0">
@@ -24,6 +25,7 @@
           <h3 id="geldigTot">Serie nummer</h3>
           <h3 id="geldigTot">In gebruik</h3>
           <h3 id="geldigTot">Geschiedenis</h3>
+          <h3 id="geldigTot">Verwijder</h3>
         </div>
 
         <div v-for="(product, i) in displayedProducts">
@@ -35,11 +37,12 @@
             <div id="typeTekst">{{ product.serialNumber }}</div>
             <div id="typeTekst" v-if="product.returnDate == null || product.returnDate == ''">Ja</div>
             <div id="typeTekst" v-else>Nee</div>
-            <button id="button-history" @click="goToHistory(product)"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-                height="20" fill="currentColor" class="bi bi-hourglass" viewBox="0 0 16 16">
-                <path
-                  d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2h-7z" />
-              </svg></button>
+            <button id="button-history" @click="goToHistory(product)">
+              <History />
+            </button>
+            <button id="button-history" @click="toggleCheckbox(product)">
+              <Trash />
+            </button>
           </div>
         </div>
 
@@ -65,6 +68,8 @@ import moment from 'moment';
 import Pagination from '../components/pagination/Pagination.vue';
 import PopUpMessage from '../components/notifications/PopUpMessage.vue';
 import Header from '../components/layout/Header.vue';
+import History from '../components/icons/IconHistory.vue';
+import Trash from '../components/icons/IconTrash.vue';
 
 
 export default {
@@ -73,6 +78,8 @@ export default {
     Pagination,
     PopUpMessage,
     Header,
+    History,
+    Trash
   },
 
   data() {
@@ -87,6 +94,7 @@ export default {
           },
           serialNumber: "",
           productId: 0,
+          isDeleted: false,
           expirationDate: ""
         }
       ],
@@ -113,7 +121,7 @@ export default {
   methods: {
     goToInfoPage(pro) {
       setTimeout(() => {
-        if (this.toHistory == false) {
+        if (this.toHistory == false && pro.isDeleted == false) {
           this.$router.push("/info/bruikleen/" + pro.productId);
         }
       }, 100);
@@ -121,6 +129,23 @@ export default {
     goToHistory(pro) {
       this.toHistory = true;
       this.$router.push("/geschiedenis/product/" + pro.productId);
+    },
+    toTrash() {
+      this.$router.push("/overzicht/bruikleen/archief");
+    },
+    toggleCheckbox(pro) {
+      pro.isDeleted = true;
+
+      axios.put("product/delete", pro, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt")
+        }
+      })
+        .then((res) => {
+          this.getProducts();
+        }).catch((error) => {
+          this.$refs.PopUpMessage.popUpError(error.response.data);
+        });
     },
     handlePageChange(newPage) {
       this.pager.currentPage = newPage;
@@ -158,7 +183,6 @@ export default {
         }
       })
         .then((res) => {
-          console.log(res.data)
           this.product[index].returnDate = res.data;
         }).catch((error) => {
           this.$refs.PopUpMessage.popUpError(error.response.data);

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using PL.Models;
@@ -22,43 +23,48 @@ namespace DAL.Repositories
             _dbSet = _context.Set<Product>();
         }
 
-        /// <summary>
-        /// Retrieves a paged list of products based on specified criteria.
-        /// </summary>
-        /// <param name="searchfield">The search criteria for product serial numbers, expiration dates, or purchase dates.</param>
-        /// <param name="dropdown">The product type filter.</param>
-        /// <param name="page">The current page number.</param>
-        /// <param name="pageSize">The number of products per page.</param>
-        /// <returns>A tuple containing a collection of products and the total number of products.</returns>
-        public async Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, string dropdown,
-            int page, int pageSize)
+        public IQueryable<Product> QueryGetProducts(string searchfield, string dropdown)
         {
-            IQueryable<Product> query = _context.Products
-                .Where(product => (string.IsNullOrEmpty(searchfield) ||
-                                   product.SerialNumber.Contains(searchfield) ||
-                                   product.ExpirationDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield) ||
-                                   product.PurchaseDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield))
-                                  && (dropdown == "0" || product.Type.Id.ToString() == dropdown));
+            return _context.Products
+                .Include(l => l.Type)
+                .Where(product =>
+                    (string.IsNullOrEmpty(searchfield) ||
+                     product.SerialNumber.Contains(searchfield) ||
+                     product.ExpirationDate.ToString().Contains(searchfield) ||
+                     product.PurchaseDate.ToString().Contains(searchfield))
+                    && (dropdown == "0" || product.Type.Id.ToString() == dropdown))
+                .OrderBy(product => product.ExpirationDate);
+        }
 
-            int numberOfProducts = await query.CountAsync();
+        private (IEnumerable<object>, int) GetPagedProductsInternal(string searchfield, int page, int pageSize,
+            Expression<Func<Product, bool>> filter, string dropdown)
+        {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
+            IQueryable<Product> query = QueryGetProducts(searchfield, dropdown).Where(filter);
+            int numberOfProducts = query.Count();
 
-            List<ProductResponse> productList = await query
+            IEnumerable<Product> productList = query
                 .Skip(skipCount)
                 .Take(pageSize)
-                .Select(product => new ProductResponse
-                {
-                    ProductId = product.ProductId,
-                    ExpirationDate = product.ExpirationDate,
-                    PurchaseDate = product.PurchaseDate,
-                    Type = product.Type,
-                    SerialNumber = product.SerialNumber
-                })
-                .ToListAsync();
+                .ToList();
 
             return (productList, numberOfProducts);
         }
-        
+
+        public Task<(IEnumerable<object>, int)> GetAllDeletedProducts(string searchfield, int page,
+            int pageSize, string dropdown)
+        {
+            return Task.FromResult(GetPagedProductsInternal(searchfield, page, pageSize, item => item.IsDeleted,
+                dropdown));
+        }
+
+        public Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, int page,
+            int pageSize, string dropdown)
+        {
+            return Task.FromResult(GetPagedProductsInternal(searchfield, page, pageSize, item => !item.IsDeleted,
+                dropdown));
+        }
+
         /// <summary>
         /// Retrieves a list of product type strings from the enumeration of ProductType.
         /// </summary>
@@ -78,7 +84,7 @@ namespace DAL.Repositories
         public async Task<Product> GetProductById(int id)
         {
             return await _context.Products
-                .Include(p => p.Type)  
+                .Include(p => p.Type)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
@@ -98,7 +104,7 @@ namespace DAL.Repositories
             {
                 throw new InputValidationException("Type is leeg.");
             }
-            
+
             ProductType type = await _context.ProductTypes
                 .SingleOrDefaultAsync(t => t.Name == product.Type.Name);
 
@@ -119,7 +125,7 @@ namespace DAL.Repositories
         public async Task PutProduct(Product product)
         {
             Product existingProduct = await _dbSet
-                .Include(p => p.Type) 
+                .Include(p => p.Type)
                 .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
 
             if (existingProduct == null)
@@ -133,6 +139,23 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task PutIsDeleted(Product product)
+        {
+            Product existingProduct = await _dbSet
+                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+
+            if (existingProduct == null)
+            {
+                throw new NotFoundException("Geen product gevonden");
+            }
+
+            existingProduct.TimeDeleted = product.IsDeleted ? DateTime.Today : DateTime.MinValue;
+
+            existingProduct.IsDeleted = product.IsDeleted;
+            await _context.SaveChangesAsync();
+        }
+
+
         /// <summary>
         /// Deletes a product based on the specified ID.
         /// </summary>
@@ -141,12 +164,12 @@ namespace DAL.Repositories
         public async Task DeleteProduct(int id)
         {
             Product product = await _dbSet.FindAsync(id);
-            
+
             if (product == null)
             {
                 throw new NotFoundException("Geen product gevonden");
             }
-            
+
             _dbSet.Remove(product);
             await _context.SaveChangesAsync();
         }

@@ -15,5 +15,6 @@ namespace PL.Models
         public ProductType Type { get; set; }
         public string SerialNumber { get; set; }
         public bool IsDeleted { get; set; }
+        public DateTime TimeDeleted { get; set; }
     }
 }

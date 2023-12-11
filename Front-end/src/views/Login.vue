@@ -25,7 +25,7 @@
             <a v-if="this.eyeCon == true" @click="eyeconChange" id="eye-icon">
               <eyeOpen />
             </a>
-            <a v-else-if="this.eyeCon == false" class="eyeconClosed" @click="eyeconChange" id="eye-icon">
+            <a v-else-if="this.eyeCon == false" @click="eyeconChange" id="eye-icon">
               <eyeClosed />
             </a>
           </div>
@@ -93,7 +93,6 @@ export default {
           localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
 
           this.$router.push("/overzicht/documenten");
-          console.log(res.data);
         }).catch((error) => {
           this.errorMessage = error.response.data
         });

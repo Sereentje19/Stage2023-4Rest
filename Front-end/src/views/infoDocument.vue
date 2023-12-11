@@ -106,10 +106,8 @@ export default {
         }
       })
         .then((res) => {
-          console.log(res.data)
-          this.employee = res.data.document.employee;
-          this.document = res.data.document;
-          this.document.type = res.data.type
+          this.employee = res.data.employee;
+          this.document = res.data;
         }).catch((error) => {
           this.$refs.PopUpMessage.popUpError(error.response.data);
         });

@@ -30,6 +30,7 @@ import OverviewProducts from '../views/OverviewProducts.vue';
 import OverviewLongValid from '../views/OverviewLongValid.vue';
 import OverviewArchiveDocuments from '../views/OverviewArchiveDocuments.vue';
 import OverviewArchiveEmployee from '../views/OverviewArchiveEmployee.vue';
+import OverviewArchiveProducts from '../views/OverviewArchiveProducts.vue';
 
 //Profile
 import ProfilePersonalData from '../views/ProfilePersonalData.vue';
@@ -66,9 +67,11 @@ const router = createRouter({
     props: route => ({ popup1: route.query.popup1 === 'true' })},
     { path: '/overzicht/medewerkers', name: 'OverviewMedewerkers', component: OverviewEmployees,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
-    { path: '/overzicht/medewerkers/archief', name: 'OverviewArchiveEmploees', component: OverviewArchiveEmployee,
+    { path: '/overzicht/medewerkers/archief', name: 'OverviewArchiveEmployees', component: OverviewArchiveEmployee,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
     { path: '/overzicht/bruikleen', name: 'OverviewBruikleen', component: OverviewProducts,
+    props: route => ({ popup1: route.query.popup1 === 'true' })},
+    { path: '/overzicht/bruikleen/archief', name: 'OverviewArchiveProducts', component: OverviewArchiveProducts,
     props: route => ({ popup1: route.query.popup1 === 'true' })},
   ],
 });

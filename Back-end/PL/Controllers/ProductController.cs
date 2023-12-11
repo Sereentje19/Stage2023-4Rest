@@ -30,9 +30,29 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged products and pagination details.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> getAllProducts(string searchfield, string dropdown, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetAllProducts(string searchfield, string dropdown, int page = 1, int pageSize = 5)
         {
             (IEnumerable<object> pagedProducts, Pager pager) = await _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
+
+            var response = new
+            {
+                Products = pagedProducts,
+                Pager = new
+                {
+                    pager.TotalItems,
+                    pager.CurrentPage,
+                    pager.PageSize,
+                    pager.TotalPages,
+                }
+            };
+
+            return Ok(response);
+        }
+        
+        [HttpGet("deleted")]
+        public async Task<IActionResult> GetAllDeletedProducts(string searchfield, string dropdown, int page = 1, int pageSize = 5)
+        {
+            (IEnumerable<object> pagedProducts, Pager pager) = await _productService.GetAllDeletedProducts(searchfield, dropdown, page, pageSize);
 
             var response = new
             {
@@ -87,8 +107,6 @@ namespace PL.Controllers
         [HttpPost]
         public async Task<IActionResult> PostProduct([FromForm] IFormFile file, [FromForm] Product product)
         {
-            Console.WriteLine(product.Type.Name);
-            
             Product pro = new Product
             {
                 Type = product.Type,
@@ -122,6 +140,13 @@ namespace PL.Controllers
         public async Task<IActionResult> PutProduct(Product product)
         {
             await _productService.PutProduct(product);
+            return Ok(new { message = "Product geupdate." });
+        }
+        
+        [HttpPut("delete")]
+        public async Task<IActionResult> PutIsDeleted(Product product)
+        {
+            await _productService.PutIsDeleted(product);
             return Ok(new { message = "Product geupdate." });
         }
 

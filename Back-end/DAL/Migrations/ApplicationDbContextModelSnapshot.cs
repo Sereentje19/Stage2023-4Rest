@@ -178,6 +178,9 @@ namespace DAL.Migrations
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("TimeDeleted")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("TypeId")
                         .HasColumnType("int");
 

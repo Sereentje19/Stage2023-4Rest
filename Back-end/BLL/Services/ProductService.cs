@@ -31,7 +31,16 @@ namespace BLL.Services
             int page, int pageSize)
         {
             (IEnumerable<object> products, int numberOfProducts) =
-                await _productRepository.GetAllProducts(searchfield, dropdown, page, pageSize);
+                await _productRepository.GetAllProducts(searchfield, page, pageSize, dropdown);
+            Pager pager = new Pager(numberOfProducts, page, pageSize);
+            return (products, pager);
+        }
+        
+        public async Task<(IEnumerable<object>, Pager)> GetAllDeletedProducts(string searchfield, string dropdown,
+            int page, int pageSize)
+        {
+            (IEnumerable<object> products, int numberOfProducts) =
+                await _productRepository.GetAllDeletedProducts(searchfield, page, pageSize, dropdown);
             Pager pager = new Pager(numberOfProducts, page, pageSize);
             return (products, pager);
         }
@@ -75,6 +84,11 @@ namespace BLL.Services
         public async Task PutProduct(Product product)
         {
             await _productRepository.PutProduct(product);
+        }
+        
+        public async Task PutIsDeleted(Product product)
+        {
+            await _productRepository.PutIsDeleted(product);
         }
 
         /// <summary>

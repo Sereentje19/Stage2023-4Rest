@@ -55,25 +55,30 @@
             </div>
             <div id="customers-list">
 
-                <div v-if="this.loanHistory.returnDate != null" id="rightside">
-                    <input @input="getAllFilteredEmployees" v-model="searchField" type="search"
-                        class="searchfield-loanhistory" placeholder="Zoek klant" />
+                <div v-if="this.filteredEmployees.length != 0">
+                    <div v-if="this.loanHistory.returnDate != null" id="rightside">
+                        <input @input="getAllFilteredEmployees" v-model="searchField" type="search"
+                            class="searchfield-loanhistory" placeholder="Zoek klant" />
 
-                    <table id="top-table">
-                        <tr>
-                            <td class="first-row"><b>Naam</b></td>
-                            <td id="second-row"><b>Email</b></td>
-                            <td id="empty-row"></td>
-                        </tr>
-                    </table>
-                    <div id="table-info-loan">
-                        <table id="bottom-table">
-                            <tr v-for="(employee, i) in this.filteredEmployees" @click="selectEmployee(employee)">
-                                <td class="first-row">{{ employee.name }}</td>
-                                <td>{{ employee.email }}</td>
+                        <table id="top-table">
+                            <tr>
+                                <td class="first-row"><b>Naam</b></td>
+                                <td id="second-row"><b>Email</b></td>
+                                <td id="empty-row"></td>
                             </tr>
                         </table>
+                        <div id="table-info-loan">
+                            <table id="bottom-table">
+                                <tr v-for="(employee, i) in this.filteredEmployees" @click="selectEmployee(employee)">
+                                    <td class="first-row">{{ employee.name }}</td>
+                                    <td>{{ employee.email }}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
+                </div>
+                <div v-else>
+                    Er staan nog geen medewerkers in dit systeem!
                 </div>
             </div>
         </div>
@@ -159,7 +164,6 @@ export default {
             this.loanHistory.product.productId = this.product.productId;
             this.loanHistory.loanDate = new Date();
             this.loanHistory.returnDate = null;
-            console.log(this.loanHistory)
 
             axios.post("loan-history", this.loanHistory, {
                 headers: {
@@ -225,10 +229,7 @@ export default {
                 },
             })
                 .then((res) => {
-                    console.log(res.data)
                     this.product = res.data;
-                    console.log(this.product)
-
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

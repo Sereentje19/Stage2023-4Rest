@@ -78,7 +78,6 @@ export default {
                 });
         },
         sendCode() {
-            //serena.kenter@gmail.com
             axios.get("forgot-password/check-code", {
                     params: {
                         email: this.user.email,

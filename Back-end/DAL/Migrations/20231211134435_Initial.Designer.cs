@@ -12,7 +12,7 @@ using PL.Models;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231208091047_Initial")]
+    [Migration("20231211134435_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -180,6 +180,9 @@ namespace DAL.Migrations
 
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeDeleted")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("TypeId")
                         .HasColumnType("int");

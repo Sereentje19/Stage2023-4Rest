@@ -36,8 +36,8 @@ export default {
         return {
             employee: {
                 employeeId: 0,
-                Name: '',
-                Email: '',
+                name: '',
+                email: '',
             },
         };
     },

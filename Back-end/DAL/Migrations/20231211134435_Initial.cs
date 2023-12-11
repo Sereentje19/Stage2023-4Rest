@@ -123,7 +123,8 @@ namespace DAL.Migrations
                     PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TypeId = table.Column<int>(type: "int", nullable: true),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    TimeDeleted = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

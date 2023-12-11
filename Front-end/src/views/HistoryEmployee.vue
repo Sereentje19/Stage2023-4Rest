@@ -99,9 +99,6 @@ export default {
                 .then((res) => {
                     this.loanHistory = res.data.loanHistory;
                     this.pager = res.data.pager;
-                    console.log(this.loanHistory)
-
-
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

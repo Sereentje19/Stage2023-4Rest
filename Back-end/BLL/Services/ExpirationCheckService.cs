@@ -6,11 +6,11 @@ using PL.Models;
 
 namespace BLL.Services
 {
-    public class DocumentExpirationCheckService : BackgroundService
+    public class ExpirationCheckService : BackgroundService
     {
         private readonly IServiceProvider _provider;
 
-        public DocumentExpirationCheckService(IServiceProvider provider)
+        public ExpirationCheckService(IServiceProvider provider)
         {
             _provider = provider;
         }
@@ -27,6 +27,7 @@ namespace BLL.Services
                 using (IServiceScope scope = _provider.CreateScope())
                 {
                     await ProcessExpiringDocumentsAsync(scope.ServiceProvider);
+                    await ProcessDeletedProductsAsync(scope.ServiceProvider);
                 }
 
                 TimeSpan delay = TimeSpan.FromDays(1);
@@ -66,6 +67,24 @@ namespace BLL.Services
 
                 mailService.SendDocumentExpirationEmail(bodyEmail, document.FileType, document.File,
                     "Document vervalt Binnenkort!");
+            }
+        }
+
+        private static async Task ProcessDeletedProductsAsync(IServiceProvider serviceProvider)
+        {
+            ApplicationDbContext applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+            DateTime targetDateToDelete = DateTime.Today.AddDays(-90);
+            Console.WriteLine(targetDateToDelete);
+
+            List<Product> deletedProducts = await applicationDbContext.Products
+                .Where(p => p.IsDeleted && p.TimeDeleted == targetDateToDelete)
+                .ToListAsync();
+
+            foreach (Product product in deletedProducts)
+            {
+                applicationDbContext.Products.Remove(product);
+                await applicationDbContext.SaveChangesAsync();
             }
         }
     }

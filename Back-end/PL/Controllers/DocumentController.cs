@@ -137,17 +137,8 @@ namespace PL.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDocumentById(int id)
         {
-            DocumentResponse doc = await _documentService.GetDocumentById(id);
-
-            //kan weg
-            var response = new
-            {
-                Document = doc,
-                doc.Employee,
-                type = doc.Type,        
-            };
-
-            return Ok(response);
+            DocumentResponse document = await _documentService.GetDocumentById(id);
+            return Ok(document);
         }
 
         /// <summary>
@@ -192,7 +183,6 @@ namespace PL.Controllers
         [HttpPut]
         public async Task<IActionResult> PutDocument(EditDocumentRequest doc)
         {
-            Console.WriteLine(doc.Type.ToString());
             await _documentService.PutDocument(doc);
             return Ok(new { message = "Document geupdate." });
         }

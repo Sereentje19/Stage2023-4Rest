@@ -116,7 +116,7 @@
 
 #titles-overview-products {
     display: grid;
-    grid-template-columns: 2% 18% 15% 15% 18% 20% 12%;
+    grid-template-columns: 2% 18% 15% 15% 15% 13% 14% 10%;
 }
 
 #item-products {
@@ -128,7 +128,7 @@
     border-width: 1px;
     border-style: solid;
     display: grid;
-    grid-template-columns: 2% 18% 15% 15% 18% 20% 4%;
+    grid-template-columns: 2% 18% 15% 15% 15% 13% 14% 10%;
     color: black;
     margin-left: auto;
     border-radius: 3px;
@@ -145,6 +145,7 @@
     background-color: #22421f;
     color: white;
     height: fit-content;
+    width: fit-content;
     padding: 8px 12px 8px 12px;
     margin-top: auto;
     margin-bottom: auto;

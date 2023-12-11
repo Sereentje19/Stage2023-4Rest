@@ -18,7 +18,7 @@
                         <a v-if="this.eyeCon == true" @click="eyeconChange" id="eye-icon">
                             <eyeOpen />
                         </a>
-                        <a v-else-if="this.eyeCon == false" class="eyeconClosed" @click="eyeconChange" id="eye-icon">
+                        <a v-else-if="this.eyeCon == false" @click="eyeconChange" id="eye-icon">
                             <eyeClosed />
                         </a>
                     </div>
@@ -31,7 +31,7 @@
                         <a v-if="this.eyeCon == true" @click="eyeconChange" id="eye-icon">
                             <eyeOpen />
                         </a>
-                        <a v-else-if="this.eyeCon == false" class="eyeconClosed" @click="eyeconChange" id="eye-icon">
+                        <a v-else-if="this.eyeCon == false" @click="eyeconChange" id="eye-icon">
                             <eyeClosed />
                         </a>
                     </div>

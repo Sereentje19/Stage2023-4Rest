@@ -7,8 +7,8 @@
 
                 <ul>
                     <form class="gegevens">
-                        <input v-model="this.Employee.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
-                        <input v-model="this.Employee.Email" type="text" class="email" placeholder="Email"
+                        <input v-model="this.employee.name" type="text" class="name" placeholder="Naam" name="Zoek" />
+                        <input v-model="this.employee.email" type="text" class="email" placeholder="Email"
                             name="Email" />
                     </form>
                 </ul>
@@ -36,16 +36,16 @@ export default {
     },
     data() {
         return {
-            Employee: {
+            employee: {
                 employeeId: 0,
                 Name: '',
-                Email: '',
+                email: '',
             },
         };
     },
     methods: {
         PostEmployee() {
-            axios.post("Employee", this.Employee, {
+            axios.post("Employee", this.employee, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 }

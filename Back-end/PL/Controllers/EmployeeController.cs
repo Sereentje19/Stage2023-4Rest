@@ -29,7 +29,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged customers and pagination details.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetPagedEmployee(string? searchfield, int page, int pageSize)
+        public async Task<IActionResult> GetPagedEmployee(string searchfield, int page, int pageSize)
         {
             (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedEmployee(searchfield, page, pageSize);
 
@@ -58,7 +58,7 @@ namespace PL.Controllers
         /// a response object containing a paged list of archived employees and pagination information.
         /// </returns>
         [HttpGet("archive")]
-        public async Task<IActionResult> GetPagedArchivedEmployee(string? searchfield, int page, int pageSize)
+        public async Task<IActionResult> GetPagedArchivedEmployee(string searchfield, int page, int pageSize)
         {
             (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedArchivedEmployee(searchfield, page, pageSize);
 
@@ -83,7 +83,7 @@ namespace PL.Controllers
         /// <param name="searchField">The search field used to filter customers.</param>
         /// <returns>A collection of customers matching the search criteria.</returns>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetFilteredEmployee(string? searchField)
+        public async Task<IActionResult> GetFilteredEmployee(string searchField)
         {
             IEnumerable<Employee> customers = await _employeeService.GetFilteredEmployee(searchField);
             return Ok(customers);
@@ -126,11 +126,10 @@ namespace PL.Controllers
             await _employeeService.PutEmployeeIsArchived(doc);
             return Ok(new { message = "Medewerker geupdate." });
         }
-        
+
         /// <summary>
         /// Updates an existing document with the provided information.
         /// </summary>
-        /// <param name="cus">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
         public async Task<IActionResult> PutEmployee(Employee employee)

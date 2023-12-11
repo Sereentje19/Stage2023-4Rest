@@ -6,7 +6,7 @@
 
             <form>
                 <div class="gegevens-edit">
-                    <select v-model="this.document.Type" class="Type">
+                    <select v-model="this.document.type" class="Type">
                         <option value="0">Selecteer type...</option>
                         <option v-for="(type, index) in documentTypes" :key="index" :value="type">
                             {{ type.name }}
@@ -41,21 +41,14 @@ export default {
     data() {
         return {
             document: {
-                DocumentId: 0,
-                Type: {
+                documentId: 0,
+                type: {
                     id: 0,
                     name: ""
                 },
-                Date: "",
+                date: "",
             },
             documentTypes: [],
-            employeeDocument: {
-                employeeId: 0,
-                Name: '',
-                Email: '',
-                DocumentId: 0,
-            },
-            filteredEmployees: []
         };
     },
     mounted() {
@@ -70,9 +63,8 @@ export default {
                 }
             })
                 .then((res) => {
-                    this.document = res.data.document;
-                    this.document.Date = res.data.document.date;
-                    this.document.Type = res.data.document.type;
+                    this.document = res.data;
+                    console.log(res.data)
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
@@ -92,7 +84,7 @@ export default {
                 });
         },
         editDocument() {
-            this.document.DocumentId = this.id;
+            this.document.documentId = this.id;
 
             axios.put("document", this.document, {
                 headers: {
@@ -110,10 +102,10 @@ export default {
     computed: {
         formattedDate: {
             get() {
-                return this.document.Date.split('T')[0];
+                return this.document.date.split('T')[0];
             },
             set(newDate) {
-                this.document.Date = newDate;
+                this.document.date = newDate;
             },
         }
     },

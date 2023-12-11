@@ -27,8 +27,6 @@ namespace DAL.Repositories
         /// <returns>An IQueryable of DocumentOverviewDTO representing the document overviews.</returns>
         private IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, string dropdown)
         {
-            Console.WriteLine(dropdown);
-
             return _context.Documents
                 .Include(d => d.Employee)
                 .Where(document => (string.IsNullOrEmpty(searchfield) ||
@@ -47,6 +45,9 @@ namespace DAL.Repositories
                 });
         }
 
+        //BRFerFC5AFJwE5A7S3alYFVo9olS0aveXC6IgwYqMc0=
+        //LueZDV6TpgrQ3fkXJrWg20cuqAhvQ5VKPqpEkbbBBdI=
+        
         /// <summary>
         /// Retrieves a paged list of document overviews based on specified criteria.
         /// </summary>

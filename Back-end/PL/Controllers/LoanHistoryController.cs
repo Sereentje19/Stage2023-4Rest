@@ -24,11 +24,13 @@ namespace PL.Controllers
         /// Retrieves loan history based on the specified product ID.
         /// </summary>
         /// <param name="productId">The ID of the product to retrieve loan history for.</param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
         /// <returns>
         /// ActionResult with a JSON response containing loan history details for the specified product.
         /// </returns>
         [HttpGet("product/{product-id}")]
-        public async Task<IActionResult> getLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId, int page, int pageSize)
+        public async Task<IActionResult> GetLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId, int page, int pageSize)
         {
             (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByProductId(productId, page, pageSize);
             

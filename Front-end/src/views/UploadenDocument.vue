@@ -33,27 +33,27 @@
               </li>
             </ul>
 
-            <input v-model="this.employee.Name" type="text" class="name" placeholder="Naam" name="Zoek" />
-            <input v-model="this.employee.Email" type="email" class="email" placeholder="Email" name="email" />
+            <input v-model="this.employee.name" type="text" class="name" placeholder="Naam" name="Zoek" />
+            <input v-model="this.employee.email" type="email" class="email" placeholder="Email" name="email" />
 
             <div id="new-type">
-              <select v-if="this.addDocumentType == false" v-model="this.document.Type.name" class="type" name="Type">
+              <select v-if="this.addDocumentType == false" v-model="this.document.type.name" class="type" name="Type">
                 <option value="0">Selecteer document...</option>
                 <option v-for="(type, index) in documentTypes" :key="index" :value="type.name">
                   {{ type.name }}
                 </option>
               </select>
 
-              <input v-else v-model="this.document.Type.name" class="email" placeholder="Nieuw type" name="email">
+              <input v-else v-model="this.document.type.name" class="email" placeholder="Nieuw type" name="email">
               <div v-if="this.addDocumentType == false" @click="addType()" id="add-button">
                 <IconAdd />
               </div>
-              <div v-else @click="addTypeReverse()" id="add-button" >
+              <div v-else @click="addTypeReverse()" id="add-button">
                 <CardList />
               </div>
             </div>
 
-            <input v-model="this.document.Date" :placeholder="this.document.Date" type="date" class="date" name="Date" />
+            <input v-model="this.document.date" :placeholder="this.document.date" type="date" class="date" name="Date" />
           </form>
         </ul>
 
@@ -92,17 +92,17 @@ export default {
       uploadedFileName: '',
       employee: {
         employeeId: 0,
-        Name: '',
-        Email: '',
+        name: '',
+        email: '',
       },
       documentTypes: [],
       document: {
-        DocumentId: 0,
-        Type: {
+        documentId: 0,
+        type: {
           id: 0,
           name: "0"
         },
-        Date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString().split('T')[0],
         employeeId: 0,
         fileType: ""
       },
@@ -116,11 +116,11 @@ export default {
   methods: {
     addType() {
       this.addDocumentType = !this.addDocumentType;
-      this.document.Type.name = "";
+      this.document.type.name = "";
     },
-    addTypeReverse(){
+    addTypeReverse() {
       this.addDocumentType = !this.addDocumentType;
-      this.document.Type.name = "0";
+      this.document.type.name = "0";
     },
     postDocument() {
       let formData = this.CreateFromData();
@@ -146,10 +146,10 @@ export default {
         formData.append('document.FileType', this.selectedFile.type);
       }
 
-      formData.append('document.Type.name', this.document.Type.name);
-      formData.append('document.Date', this.document.Date);
-      formData.append('document.Employee.Email', this.employee.Email);
-      formData.append('document.Employee.Name', this.employee.Name);
+      formData.append('document.Type.name', this.document.type.name);
+      formData.append('document.Date', this.document.date);
+      formData.append('document.Employee.Email', this.employee.email);
+      formData.append('document.Employee.Name', this.employee.name);
 
       return formData;
     },
@@ -187,8 +187,8 @@ export default {
         });
     },
     fillEmployee(cus) {
-      this.employee.Email = cus.email;
-      this.employee.Name = cus.name;
+      this.employee.email = cus.email;
+      this.employee.name = cus.name;
       this.searchField = "";
     },
     handleFileChange(event) {

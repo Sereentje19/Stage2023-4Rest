@@ -18,7 +18,6 @@
                     </div>
                 </div>
 
-
                 <div v-if="displayedDocuments.length > 0">
                     <div id="titles-overview-history">
                         <div></div>
@@ -110,10 +109,8 @@ export default {
                 },
             })
                 .then((res) => {
-                    console.log(res.data)
                     this.loanHistory = res.data.loanHistory;
                     this.pager = res.data.pager;
-                    this.loanHistory.type = res.data.Type;
 
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
