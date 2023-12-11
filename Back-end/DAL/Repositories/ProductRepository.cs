@@ -77,7 +77,9 @@ namespace DAL.Repositories
         /// <returns>The product with the specified ID.</returns>
         public async Task<Product> GetProductById(int id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _context.Products
+                .Include(p => p.Type)  
+                .FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
         /// <summary>
@@ -116,14 +118,18 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task PutProduct(Product product)
         {
-            Product existingProduct = await _dbSet.FindAsync(product.ProductId);
-            
+            Product existingProduct = await _dbSet
+                .Include(p => p.Type) 
+                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+
             if (existingProduct == null)
             {
                 throw new NotFoundException("Geen product gevonden");
             }
-            
+
             _context.Entry(existingProduct).CurrentValues.SetValues(product);
+            existingProduct.Type = product.Type;
+
             await _context.SaveChangesAsync();
         }
 

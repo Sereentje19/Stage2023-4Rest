@@ -51,6 +51,8 @@ namespace PL.Controllers
         /// Retrieves loan history based on the specified customer ID.
         /// </summary>
         /// <param name="customerId">The ID of the customer to retrieve loan history for.</param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
         /// <returns>
         /// ActionResult with a JSON response containing loan history details for the specified customer.
         /// </returns>

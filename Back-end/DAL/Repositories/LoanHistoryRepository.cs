@@ -45,7 +45,7 @@ namespace DAL.Repositories
                 .Take(pageSize)
                 .Select(loan => new LoanHistoryResponse
                 {
-                    Type = loan.Product.Type.ToString(),
+                    Type = loan.Product.Type,
                     SerialNumber = loan.Product.SerialNumber,
                     Name = loan.Employee.Name,
                     ExpirationDate = loan.Product.ExpirationDate,
@@ -84,7 +84,7 @@ namespace DAL.Repositories
                 .Take(pageSize)
                 .Select(loan => new LoanHistoryResponse
                 {
-                    Type = loan.Product.Type.ToString(),
+                    Type = loan.Product.Type,
                     SerialNumber = loan.Product.SerialNumber,
                     Name = loan.Employee.Name,
                     Email = loan.Employee.Email,

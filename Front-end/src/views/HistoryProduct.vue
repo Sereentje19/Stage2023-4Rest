@@ -8,7 +8,7 @@
                 <div v-if="loanHistory.length > 0" id="loan-data">
                     <div>
                         <div><b> Type:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.loanHistory[0].type }}</div>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ this.loanHistory[0].type.name }}</div>
                         <div><b> Serie nummer:</b> &nbsp; {{ this.loanHistory[0].serialNumber }}</div>
                     </div>
                     <div id="loan-item-data">
@@ -71,7 +71,9 @@ export default {
         return {
             loanHistory: [
                 {
-                    type: "",
+                    type: {
+                        name: ""
+                    },
                     serialNumber: "",
                     productId: 0,
                     expirationDate: "",

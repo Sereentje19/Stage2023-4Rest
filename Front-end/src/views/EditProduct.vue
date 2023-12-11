@@ -8,8 +8,8 @@
                 <div class="gegevens-edit">
                     <select v-model="this.product.type" class="Type">
                         <option value="0">Selecteer type...</option>
-                        <option v-for="(type, index) in productTypes" :key="index" :value="index + 1">
-                            {{ type }}
+                        <option v-for="(type, index) in productTypes" :key="index" :value="type">
+                            {{ type.name }}
                         </option>
                     </select>
                     <input v-model="this.product.purchaseDate" type="date" class="Date" />
@@ -42,7 +42,10 @@ export default {
     data() {
         return {
             product: {
-                type: 0,
+                type: {
+                    id: 0,
+                    name: ""
+                },
                 purchaseDate: "",
                 expirationDate: "",
                 serialNumber: ""
@@ -62,17 +65,13 @@ export default {
                 }
             })
                 .then((res) => {
-                    console.log(res.data)
-                    this.product = res.data.product;
+                    this.product = res.data;
                     this.formatDates();
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         editProduct() {
-            console.log(this.product)
-            this.product.type = parseInt(this.product.type, 10);
-
             axios.put("product", this.product, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -96,7 +95,6 @@ export default {
                     }
                 })
                 .then((res) => {
-                    console.log(res.data)
                     this.productTypes = res.data;
                 })
                 .catch((error) => {

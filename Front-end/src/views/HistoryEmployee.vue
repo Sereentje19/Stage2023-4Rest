@@ -22,7 +22,7 @@
                     <div v-for="(loanHistory, i) in displayedDocuments">
                         <div @click="goToInfoPage(loanHistory)" id="item-history">
                             <div></div>
-                            <div id="geldigTotTekst">{{ loanHistory.type }}</div>
+                            <div id="geldigTotTekst">{{ loanHistory.type.name }}</div>
                             <div id="geldigVanTekst">{{ formatDate(loanHistory.loanDate) }}</div>
                             <div id="geldigTotTekst">{{ formatDate(loanHistory.returnDate) }}</div>
                             <div id="geldigTotTekst">{{ loanHistory.serialNumber }}</div>
@@ -66,10 +66,10 @@ export default {
                 {
                     loanDate: "",
                     returnDate: "",
-                    product: {
-                        type: "",
-                        serialNumber: "",
+                    type: {
+                        name: "",
                     },
+                    serialNumber: "",
                     name: "",
                     email: ""
                 }
@@ -97,10 +97,10 @@ export default {
                 },
             })
                 .then((res) => {
-                    console.log(res.data)
                     this.loanHistory = res.data.loanHistory;
                     this.pager = res.data.pager;
                     console.log(this.loanHistory)
+
 
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);

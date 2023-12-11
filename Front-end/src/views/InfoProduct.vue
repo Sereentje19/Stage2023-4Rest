@@ -17,7 +17,7 @@
                     Serie nummer:
                 </div>
                 <div>
-                    {{ this.product.type }} <br>
+                    {{ this.product.type.name }} <br>
                     {{ formatDate(this.product.purchaseDate) }} <br>
                     {{ formatDate(this.product.expirationDate) }} <br>
                     {{ this.product.serialNumber }}
@@ -116,7 +116,9 @@ export default {
             {
                 expirationDate: "",
                 purchaseDate: "",
-                type: "",
+                type: {
+                    name: ""
+                },
                 serialNumber: "",
                 productId: 0,
                 file: "",
@@ -146,8 +148,6 @@ export default {
         this.getLoanhistory();
         this.getProducts();
         this.getAllFilteredEmployees();
-
-        console.log(this.product)
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
@@ -186,15 +186,12 @@ export default {
                 }
             })
                 .then((res) => {
-                    console.log(res.data)
                     this.filteredEmployees = res.data;
-                    console.log(this.filteredEmployees)
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         returnItem() {
-            console.log(this.loanHistory)
             axios.put("loan-history", this.loanHistory, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
@@ -213,12 +210,10 @@ export default {
                 }
             })
                 .then((res) => {
-                    console.log(res.data)
                     if (res.data.loanHistoryId != null) {
                         this.loanHistory = res.data;
                         this.loanHistory.product.productId = res.data.productId
                     }
-                    console.log(this.loanHistory)
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
@@ -231,8 +226,8 @@ export default {
             })
                 .then((res) => {
                     console.log(res.data)
-                    this.product = res.data.product;
-                    this.product.type = res.data.productType
+                    this.product = res.data;
+                    console.log(this.product)
 
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
@@ -256,12 +251,12 @@ export default {
         },
         deleteProduct() {
             this.emitter.emit('isPopUpTrue', { 'eventContent': true });
-            this.emitter.emit('text', { 'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt verwijderen?` });
+            this.emitter.emit('text', { 'eventContent': `Weet je zeker dat je ${this.product.type.name.toLowerCase()} ${this.product.serialNumber} wilt verwijderen?` });
         },
         returnProduct() {
             this.emitter.emit('isPopUpTrue', { 'eventContent': true });
             this.emitter.emit('toReturn', { 'eventContent': true });
-            this.emitter.emit('text', { 'eventContent': `Weet je zeker dat je ${this.product.type.toLowerCase()} ${this.product.serialNumber} wilt terugbrengen?` });
+            this.emitter.emit('text', { 'eventContent': `Weet je zeker dat je ${this.product.type.name.toLowerCase()} ${this.product.serialNumber} wilt terugbrengen?` });
         },
         formatDate(date) {
             return moment(date).format("DD-MM-YYYY");

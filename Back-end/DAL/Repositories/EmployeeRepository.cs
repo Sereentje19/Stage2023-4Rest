@@ -167,8 +167,6 @@ namespace DAL.Repositories
 
         public async Task UpdateEmployeeIsArchived(Employee employee)
         {
-            await CheckEmailExists(employee);
-            
             Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
             
             if (existingEmployee == null)
@@ -219,7 +217,7 @@ namespace DAL.Repositories
         private async Task CheckEmailExists(Employee employee)
         {
             Employee existingEmployee =
-                await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email);
+                await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email && c.EmployeeId != employee.EmployeeId);
             
             if (existingEmployee != null)
             {

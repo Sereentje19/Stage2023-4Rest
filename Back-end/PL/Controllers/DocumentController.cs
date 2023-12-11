@@ -139,6 +139,7 @@ namespace PL.Controllers
         {
             DocumentResponse doc = await _documentService.GetDocumentById(id);
 
+            //kan weg
             var response = new
             {
                 Document = doc,

@@ -70,17 +70,10 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing details of the specified product.
         /// </returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> getProductById(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
             Product product = await _productService.GetProductById(id);
-
-            var response = new
-            {
-                product,
-                ProductType = product.Type.ToString(),
-            };
-
-            return Ok(response);
+            return Ok(product);
         }
 
         /// <summary>

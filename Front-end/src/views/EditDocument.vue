@@ -6,9 +6,9 @@
 
             <form>
                 <div class="gegevens-edit">
-                    <select v-model="this.document.Type.name" class="Type">
+                    <select v-model="this.document.Type" class="Type">
                         <option value="0">Selecteer type...</option>
-                        <option v-for="(type, index) in documentTypes" :key="index" :value="type.name">
+                        <option v-for="(type, index) in documentTypes" :key="index" :value="type">
                             {{ type.name }}
                         </option>
                     </select>
@@ -44,7 +44,7 @@ export default {
                 DocumentId: 0,
                 Type: {
                     id: 0,
-                    name: "0"
+                    name: ""
                 },
                 Date: "",
             },
@@ -85,7 +85,6 @@ export default {
                     }
                 })
                 .then((res) => {
-                    console.log(res.data)
                     this.documentTypes = res.data;
                 })
                 .catch((error) => {
@@ -93,7 +92,6 @@ export default {
                 });
         },
         editDocument() {
-            this.document.Type = parseInt(this.document.Type, 10);
             this.document.DocumentId = this.id;
 
             axios.put("document", this.document, {
