@@ -8,8 +8,8 @@
 
         <select v-model="dropdown" id="filter-dropdown" @change="getProducts">
           <option value="0">Selecteer type...</option>
-          <option v-for="(type, index) in productTypes" :key="index" :value="index + 1">
-            {{ type }}
+          <option v-for="(type, index) in productTypes" :key="index" :value="type.id">
+            {{ type.name }}
           </option>
         </select>
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek" @input="getProducts" />
@@ -29,7 +29,7 @@
         <div v-for="(product, i) in displayedProducts">
           <div @click="goToInfoPage(product)" id="item-products">
             <div></div>
-            <div id="klantnaamTekst">{{ product.type }}</div>
+            <div id="klantnaamTekst">{{ product.type.name }}</div>
             <div id="geldigVanTekst">{{ formatDate(product.purchaseDate) }}</div>
             <div id="geldigTotTekst">{{ formatDate(product.expirationDate) }}</div>
             <div id="typeTekst">{{ product.serialNumber }}</div>
@@ -81,7 +81,10 @@ export default {
         {
           purchaseDate: "",
           returnDate: "",
-          type: "",
+          type: {
+            id: 0,
+            name: ""
+          },
           serialNumber: "",
           productId: 0,
           expirationDate: ""

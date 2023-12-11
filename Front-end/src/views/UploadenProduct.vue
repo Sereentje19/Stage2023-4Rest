@@ -25,12 +25,26 @@
             <div class="rightside" id="rightside-product">
                 <ul>
                     <form class="gegevens">
-                        <select v-model="this.product.type" class="Type">
-                            <option value="0">Selecteer type...</option>
-                            <option v-for="(type, index) in productTypes" :key="index" :value="type.name">
-                                {{ type.name }}
-                            </option>
-                        </select>
+
+                        <div id="new-type">
+                            <select v-if="this.addProductType == false" v-model="this.product.type.name" class="type"
+                                name="Type">
+                                <option value="0">Selecteer product...</option>
+                                <option v-for="(type, index) in productTypes" :key="index" :value="type.name">
+                                    {{ type.name }}
+                                </option>
+                            </select>
+
+                            <input v-else v-model="this.product.type.name" class="email" placeholder="Nieuw type"
+                                name="email">
+                            <div v-if="this.addProductType == false" @click="addType()" id="add-button">
+                                <IconAdd />
+                            </div>
+                            <div v-else @click="addTypeReverse()" id="add-button">
+                                <CardList />
+                            </div>
+                        </div>
+
                         <input v-model="this.product.purchaseDate" type="date" class="Date" />
                         <input v-model="this.product.expirationDate" type="date" class="Date" />
                         <input class="Email" v-model="this.product.serialNumber" placeholder="Serie nummer" />
@@ -52,11 +66,15 @@
 import axios from '../../axios-auth.js'
 import PopUpMessage from '../components/notifications/PopUpMessage.vue';
 import Header from '../components/layout/Header.vue';
+import IconAdd from '../components/icons/IconAdd.vue';
+import CardList from '../components/icons/IconCardList.vue';
 
 export default {
     components: {
         PopUpMessage,
-        Header
+        Header,
+        IconAdd,
+        CardList
     },
     data() {
         return {
@@ -66,16 +84,27 @@ export default {
             product: {
                 purchaseDate: new Date().toISOString().split('T')[0],
                 expirationDate: new Date().toISOString().split('T')[0],
-                type: 0,
+                type: {
+                    name: "0"
+                },
                 serialNumber: "",
             },
             productTypes: [],
+            addProductType: false
         };
     },
     mounted() {
         this.getProductTypes();
     },
     methods: {
+        addType() {
+            this.addProductType = !this.addProductType;
+            this.product.type.name = "";
+        },
+        addTypeReverse() {
+            this.addProductType = !this.addProductType;
+            this.product.type.name = "0";
+        },
         PostEmployee() {
             let formData = this.CreateFromData();
 
@@ -99,10 +128,10 @@ export default {
                 formData.append('product.FileType', this.selectedFile.type);
             }
 
-            this.product.type = parseInt(this.product.type, 10);
+            // this.product.type = parseInt(this.product.type, 10);
             formData.append('product.expirationDate', this.product.expirationDate);
             formData.append('product.purchaseDate', this.product.purchaseDate);
-            formData.append('product.type', this.product.type);
+            formData.append('product.type.name', this.product.type.name);
             formData.append('product.serialNumber', this.product.serialNumber);
 
             return formData;

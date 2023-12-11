@@ -8,13 +8,9 @@
 
         <select v-model="dropdown" id="filter-dropdown" @change="filterDocuments">
           <option value="0">Selecteer document...</option>
-          <option value="1">Vog</option>
-          <option value="2">Contract</option>
-          <option value="3">Paspoort</option>
-          <option value="4">ID kaart</option>
-          <option value="5">Diploma</option>
-          <option value="6">Certificaat</option>
-          <option value="7">Lease auto</option>
+          <option v-for="(type, index) in documentTypes" :key="index" :value="type.id">
+            {{ type.name }}
+          </option>
         </select>
         <input id="searchfield-overview" v-model="searchField" type="search" placeholder="Zoek"
           @input="filterDocuments" />
@@ -38,7 +34,7 @@
             <div id="klantnaamTekst">{{ document.employeeName }}</div>
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
-            <div id="typeTekst">{{ document.type }}</div>
+            <div id="typeTekst">{{ document.type.name }}</div>
             <div id="checkboxArchive">
               <button id="button-history" @click="toggleCheckbox(document)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive"
@@ -94,6 +90,7 @@ export default {
           isArchived: null
         }
       ],
+      documentTypes: [],
       pager: {
         currentPage: 1,
         totalItems: 0,
@@ -107,6 +104,7 @@ export default {
   },
   mounted() {
     this.filterDocuments();
+    this.getDocumentTypes();
 
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
@@ -161,6 +159,21 @@ export default {
           this.documents = res.data.documents;
           this.pager = res.data.pager;
           console.log(res.data.documents.length)
+        })
+        .catch((error) => {
+          this.$refs.PopUpMessage.popUpError(error.response.data);
+        });
+    },
+    getDocumentTypes() {
+      axios
+        .get("document/types", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwt"),
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          this.documentTypes = res.data;
         })
         .catch((error) => {
           this.$refs.PopUpMessage.popUpError(error.response.data);

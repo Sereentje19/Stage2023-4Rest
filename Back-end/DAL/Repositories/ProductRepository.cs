@@ -30,7 +30,7 @@ namespace DAL.Repositories
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of products per page.</param>
         /// <returns>A tuple containing a collection of products and the total number of products.</returns>
-        public async Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, ProductType dropdown,
+        public async Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, string dropdown,
             int page, int pageSize)
         {
             IQueryable<Product> query = _context.Products
@@ -38,7 +38,7 @@ namespace DAL.Repositories
                                    product.SerialNumber.Contains(searchfield) ||
                                    product.ExpirationDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield) ||
                                    product.PurchaseDate.ToString(CultureInfo.InvariantCulture).Contains(searchfield))
-                                  && (dropdown.ToString() == "Not selected" || product.Type == dropdown));
+                                  && (dropdown == "0" || product.Type.Id.ToString() == dropdown));
 
             int numberOfProducts = await query.CountAsync();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
@@ -51,7 +51,7 @@ namespace DAL.Repositories
                     ProductId = product.ProductId,
                     ExpirationDate = product.ExpirationDate,
                     PurchaseDate = product.PurchaseDate,
-                    Type = product.Type.ToString(),
+                    Type = product.Type,
                     SerialNumber = product.SerialNumber
                 })
                 .ToListAsync();
@@ -65,15 +65,9 @@ namespace DAL.Repositories
         /// <returns>
         /// A list of strings representing product types.
         /// </returns>
-        public List<string> GetProductTypeStrings()
+        public async Task<IEnumerable<ProductType>> GetProductTypes()
         {
-            List<string> productTypeStrings = Enum.GetValues(typeof(ProductType))
-                .Cast<ProductType>()
-                .Skip(1)
-                .Select(enumValue => enumValue.ToString())
-                .ToList();
-
-            return productTypeStrings;
+            return await _context.ProductTypes.ToListAsync();
         }
 
         /// <summary>
@@ -98,9 +92,17 @@ namespace DAL.Repositories
                 throw new InputValidationException("Serie nummer is leeg.");
             }
 
-            if (product.Type.ToString() == "Not selected")
+            if (product.Type.Name == "0")
             {
                 throw new InputValidationException("Type is leeg.");
+            }
+            
+            ProductType type = await _context.ProductTypes
+                .SingleOrDefaultAsync(t => t.Name == product.Type.Name);
+
+            if (type != null)
+            {
+                product.Type = type;
             }
 
             await _dbSet.AddAsync(product);
@@ -132,7 +134,7 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task DeleteProduct(int id)
         {
-            Product product = _dbSet.Find(id);
+            Product product = await _dbSet.FindAsync(id);
             
             if (product == null)
             {

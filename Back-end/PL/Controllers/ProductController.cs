@@ -30,7 +30,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged products and pagination details.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> getAllProducts(string? searchfield, ProductType? dropdown, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> getAllProducts(string searchfield, string dropdown, int page = 1, int pageSize = 5)
         {
             (IEnumerable<object> pagedProducts, Pager pager) = await _productService.GetAllProducts(searchfield, dropdown, page, pageSize);
 
@@ -56,9 +56,9 @@ namespace PL.Controllers
         /// a list of strings representing product types.
         /// </returns>
         [HttpGet("types")]
-        public IActionResult getProductType()
+        public async Task<IActionResult> GetProductTypes()
         {
-            List<string> productType = _productService.GetProductTypeStrings();
+            IEnumerable<ProductType> productType = await _productService.GetProductTypes();
             return Ok(productType);
         }
 
@@ -94,6 +94,7 @@ namespace PL.Controllers
         [HttpPost]
         public async Task<IActionResult> PostProduct([FromForm] IFormFile file, [FromForm] Product product)
         {
+            Console.WriteLine(product.Type.Name);
             
             Product pro = new Product
             {

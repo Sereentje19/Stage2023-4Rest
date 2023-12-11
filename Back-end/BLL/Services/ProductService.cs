@@ -27,7 +27,7 @@ namespace BLL.Services
         /// <returns>
         /// A tuple containing a collection of products and pagination information.
         /// </returns>
-        public async Task<(IEnumerable<object>, Pager)> GetAllProducts(string searchfield, ProductType? dropdown,
+        public async Task<(IEnumerable<object>, Pager)> GetAllProducts(string searchfield, string dropdown,
             int page, int pageSize)
         {
             (IEnumerable<object> products, int numberOfProducts) =
@@ -42,9 +42,9 @@ namespace BLL.Services
         /// <returns>
         /// A list of strings representing product types.
         /// </returns>
-        public List<string> GetProductTypeStrings()
+        public async Task<IEnumerable<ProductType>> GetProductTypes()
         {
-            return _productRepository.GetProductTypeStrings();
+            return await _productRepository.GetProductTypes();
         }
         
         /// <summary>

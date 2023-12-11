@@ -44,12 +44,12 @@
                         </div>
                     </div>
                     <div>
-                        <button id="button-item" @click="returnProduct">{{ this.product.type }} terugbrengen</button>
+                        <button id="button-item" @click="returnProduct">{{ this.product.type.name }} terugbrengen</button>
                     </div>
                 </div>
                 <div v-else id="employee">
                     <div id="second-leftside">
-                        Deze {{ this.product.type.toLowerCase() }} is nog beschikbaar.
+                        Deze {{ this.product.type.name }} is nog beschikbaar.
                     </div>
                 </div>
             </div>
@@ -146,6 +146,8 @@ export default {
         this.getLoanhistory();
         this.getProducts();
         this.getAllFilteredEmployees();
+
+        console.log(this.product)
 
         if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
             this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
