@@ -75,7 +75,6 @@ namespace BLL.Services
             ApplicationDbContext applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
             DateTime targetDateToDelete = DateTime.Today.AddDays(-90);
-            Console.WriteLine(targetDateToDelete);
 
             List<Product> deletedProducts = await applicationDbContext.Products
                 .Where(p => p.IsDeleted && p.TimeDeleted == targetDateToDelete)

@@ -44,9 +44,6 @@ namespace DAL.Repositories
                     Type = doc.Type,
                 });
         }
-
-        //BRFerFC5AFJwE5A7S3alYFVo9olS0aveXC6IgwYqMc0=
-        //LueZDV6TpgrQ3fkXJrWg20cuqAhvQ5VKPqpEkbbBBdI=
         
         /// <summary>
         /// Retrieves a paged list of document overviews based on specified criteria.
@@ -151,19 +148,19 @@ namespace DAL.Repositories
         /// <param name="document">The document entity to be added.</param>
         public async Task AddDocument(Document document)
         {
-            if (document.Type.Name == "0")
+            if (string.IsNullOrWhiteSpace(document.Employee.Name))
             {
-                throw new InputValidationException("Selecteer een type.");
+                throw new InputValidationException("Klant naam is leeg.");
             }
 
             if (string.IsNullOrWhiteSpace(document.Employee.Email) || !document.Employee.Email.Contains("@"))
             {
                 throw new InputValidationException("Geen geldige email.");
             }
-
-            if (string.IsNullOrWhiteSpace(document.Employee.Name))
+            
+            if (document.Type.Name == "0")
             {
-                throw new InputValidationException("Klant naam is leeg.");
+                throw new InputValidationException("Selecteer een type.");
             }
 
             if (document.Date < DateTime.Today)

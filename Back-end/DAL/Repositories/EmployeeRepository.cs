@@ -140,14 +140,14 @@ namespace DAL.Repositories
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
         public async Task<int> AddEmployee(Employee employee)
         {
-            if (string.IsNullOrWhiteSpace(employee.Email) || !employee.Email.Contains("@"))
-            {
-                throw new InputValidationException("Geen geldige email.");
-            }
-
             if (string.IsNullOrWhiteSpace(employee.Name))
             {
                 throw new InputValidationException("Klant naam is leeg.");
+            }
+            
+            if (string.IsNullOrWhiteSpace(employee.Email) || !employee.Email.Contains("@"))
+            {
+                throw new InputValidationException("Geen geldige email.");
             }
 
             //check if the customer already exist, then don't add it again.

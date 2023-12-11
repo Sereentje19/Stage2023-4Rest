@@ -48,7 +48,7 @@
               <div v-if="this.addDocumentType == false" @click="addType()" id="add-button">
                 <IconAdd />
               </div>
-              <div v-else @click="addTypeReverse()" id="add-button">
+              <div v-else @click="addTypeReverse()" id="add-button" >
                 <CardList />
               </div>
             </div>
@@ -92,8 +92,8 @@ export default {
       uploadedFileName: '',
       employee: {
         employeeId: 0,
-        name: '',
-        email: '',
+        name: "",
+        email: "",
       },
       documentTypes: [],
       document: {
@@ -118,7 +118,7 @@ export default {
       this.addDocumentType = !this.addDocumentType;
       this.document.type.name = "";
     },
-    addTypeReverse() {
+    addTypeReverse(){
       this.addDocumentType = !this.addDocumentType;
       this.document.type.name = "0";
     },
@@ -146,10 +146,10 @@ export default {
         formData.append('document.FileType', this.selectedFile.type);
       }
 
-      formData.append('document.Type.name', this.document.type.name);
-      formData.append('document.Date', this.document.date);
-      formData.append('document.Employee.Email', this.employee.email);
-      formData.append('document.Employee.Name', this.employee.name);
+      formData.append('document.type.name', this.document.type.name);
+      formData.append('document.date', this.document.date);
+      formData.append('document.employee.email', this.employee.email);
+      formData.append('document.employee.name', this.employee.name);
 
       return formData;
     },
