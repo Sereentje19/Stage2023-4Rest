@@ -6,7 +6,6 @@ using PL.Models.Responses;
 
 namespace Tests.Repositories
 {
-
     public class ProductRepositoryTests
     {
         private readonly List<Product> _products = new()
@@ -14,19 +13,18 @@ namespace Tests.Repositories
             new Product
             {
                 ProductId = 1, SerialNumber = "12345", ExpirationDate = DateTime.Now.AddDays(30),
-                PurchaseDate = DateTime.Now, Type = ProductType.Laptop
+                PurchaseDate = DateTime.Now, Type = new ProductType() { Id = 1, Name = "Laptop" }
             },
             new Product
             {
                 ProductId = 2, SerialNumber = "67890", ExpirationDate = DateTime.Now.AddDays(60),
-                PurchaseDate = DateTime.Now, Type = ProductType.Not_Selected
+                PurchaseDate = DateTime.Now, Type = new ProductType() { Id = 2, Name = "0" }
             },
             new Product
             {
                 ProductId = 3, SerialNumber = "", ExpirationDate = DateTime.Now.AddDays(60),
-                PurchaseDate = DateTime.Now, Type = ProductType.Monitor
+                PurchaseDate = DateTime.Now, Type = new ProductType() { Id = 3, Name = "Laptop" }
             },
-            
         };
 
         private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
@@ -47,7 +45,8 @@ namespace Tests.Repositories
                 await context.Products.AddRangeAsync(_products);
                 await context.SaveChangesAsync();
 
-                (IEnumerable<object> result, int totalCount) = await productRepository.GetAllProducts("", ProductType.Not_Selected, 1, 5);
+                (IEnumerable<object> result, int totalCount) =
+                    await productRepository.GetAllProducts("", 1, 5, "0");
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);
@@ -65,180 +64,192 @@ namespace Tests.Repositories
                 await context.Products.AddRangeAsync(_products);
                 await context.SaveChangesAsync();
 
-                (IEnumerable<object> result, int totalCount) = await productRepository.GetAllProducts("123", ProductType.Laptop, 1, 10);
+                (IEnumerable<object> result, int totalCount) =
+                    await productRepository.GetAllProducts("123", 1, 10, "laptop");
 
                 IEnumerable<ProductResponse> products = (IEnumerable<ProductResponse>)result;
                 ProductResponse productResponse = products.First();
-                
-                Assert.NotNull(result);
+
+                Assert.NotNull(result); 
                 Assert.Single(result);
                 Assert.Equal(1, totalCount);
                 Assert.Equal("12345", productResponse.SerialNumber);
-                Assert.Equal(ProductType.Laptop.ToString(), productResponse.Type);
-            }
-        }
-        
-        [Fact]
-        public void GetProductTypeStrings_ShouldReturnCorrectList()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
-            {
-                ProductRepository yourClassInstance = new ProductRepository(context);
-                List<string> result = yourClassInstance.GetProductTypeStrings();
-
-                Assert.NotNull(result);
-                Assert.Equal(3, result.Count);
-
-                Assert.Contains("Monitor", result);
-                Assert.Contains("Laptop", result);
-                Assert.Contains("Stoel", result);
-                Assert.DoesNotContain("UndefinedType", result);
-            }
-        }
-    
-        [Fact]
-        public async Task GetProductById_ExistingId_ReturnsProduct()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
-            {
-                ProductRepository productRepository = new ProductRepository(context);
-
-                await context.Products.AddAsync(_products.First());
-                await context.SaveChangesAsync();
-                
-                Product result = await productRepository.GetProductById(1);
-
-                Assert.NotNull(result);
-                Assert.Equal("12345", result.SerialNumber);
-                Assert.Equal(ProductType.Laptop, result.Type);
+                Assert.Equal("Laptop", productResponse.Type.Name);
             }
         }
 
         [Fact]
-        public async Task GetProductById_NonexistentId_ReturnsNull()
+        public async Task GetProductTypes_ShouldReturnListOfProductTypes()
         {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
-            {
-                ProductRepository productRepository = new ProductRepository(context);
-                Product result = await productRepository.GetProductById(1);
-                Assert.Null(result);
-            }
-        }
-        
-        [Fact]
-        public async Task AddProduct_ValidProduct_ShouldAddToDatabase()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
-            {
-                ProductRepository productRepository = new ProductRepository(context);
-                
-                await productRepository.AddProduct(_products.First());
-                Product addedProduct = await context.Products.FindAsync(_products[0].ProductId);
-                
-                Assert.NotNull(addedProduct);
-                Assert.Equal("12345", addedProduct.SerialNumber);
-                Assert.Equal(ProductType.Laptop, addedProduct.Type);
-            }
-        }
 
-        [Fact]
-        public async Task AddProduct_EmptySerialNumber_ShouldThrowException()
-        {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                ProductRepository productRepository = new ProductRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => productRepository.AddProduct(_products[2]));
-            }
-        }
-
-        [Fact]
-        public async Task AddProduct_NotSelectedType_ShouldThrowException()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
-            {
-                ProductRepository productRepository = new ProductRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => productRepository.AddProduct(_products[1]));
-            }
-        }
-        
-        [Fact]
-        public async Task PutProduct_ExistingProduct_ShouldUpdateInDatabase()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
-            {
-                ProductRepository productRepository = new ProductRepository(context);
-
-                Product product = new Product
+                List<ProductType> productTypes = new List<ProductType>
                 {
-                    SerialNumber = "12345",
-                    ExpirationDate = DateTime.Now.AddDays(30),
-                    PurchaseDate = DateTime.Now,
-                    Type = ProductType.Laptop
+                    new ProductType { Id = 1, Name = "Type1" },
+                    new ProductType { Id = 2, Name = "Type2" },
                 };
 
-                await context.Products.AddAsync(product);
+                context.ProductTypes.AddRange(productTypes);
                 await context.SaveChangesAsync();
 
-                product.SerialNumber = "67890";
-                product.Type = ProductType.Monitor;
+                ProductRepository yourService = new ProductRepository(context);
 
-                await productRepository.PutProduct(product);
+                IEnumerable<ProductType> result = await yourService.GetProductTypes();
 
-                Product updatedProductInDatabase = await context.Products.FindAsync(product.ProductId);
-                Assert.NotNull(updatedProductInDatabase);
-                Assert.Equal("67890", updatedProductInDatabase.SerialNumber);
-                Assert.Equal(ProductType.Monitor, updatedProductInDatabase.Type);
+                Assert.NotNull(result);
+                Assert.IsType<List<ProductType>>(result);
+                Assert.Equal(2, result.Count()); 
             }
         }
 
         [Fact]
-        public async Task PutProduct_NonexistentProduct_ShouldNotUpdateInDatabase()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            public async Task GetProductById_ExistingId_ReturnsProduct()
             {
-                ProductRepository productRepository = new ProductRepository(context);
-
-                Product nonexistentProduct = new Product
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
                 {
-                    ProductId = 999, 
-                    SerialNumber = "12345",
-                    ExpirationDate = DateTime.Now.AddDays(30),
-                    PurchaseDate = DateTime.Now,
-                    Type = ProductType.Laptop
-                };
+                    ProductRepository productRepository = new ProductRepository(context);
 
-                NotFoundException actualException =
-                    await Assert.ThrowsAsync<NotFoundException>(() =>
-                        productRepository.PutProduct(nonexistentProduct));
-                Assert.NotNull(actualException);
+                    await context.Products.AddAsync(_products.First());
+                    await context.SaveChangesAsync();
+
+                    Product result = await productRepository.GetProductById(1);
+
+                    Assert.NotNull(result);
+                    Assert.Equal("12345", result.SerialNumber);
+                    Assert.Equal("Laptop", result.Type.Name);
+                }
             }
-        }
-        
-        [Fact]
-        public async Task DeleteProduct_ExistingProduct_ShouldRemoveFromDatabase()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+
+            [Fact]
+            public async Task GetProductById_NonexistentId_ReturnsNull()
             {
-                ProductRepository productRepository = new ProductRepository(context);
-                
-                await context.Products.AddAsync(_products.First());
-                await context.SaveChangesAsync();
-
-                await productRepository.DeleteProduct(_products.First().ProductId);
-
-                Product deletedProduct = await context.Products.FindAsync(_products.First().ProductId);
-                Assert.Null(deletedProduct);
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+                    Product result = await productRepository.GetProductById(1);
+                    Assert.Null(result);
+                }
             }
-        }
 
-        [Fact]
-        public async Task DeleteProduct_NonexistentProduct_ShouldThrowNotFoundException()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            [Fact]
+            public async Task AddProduct_ValidProduct_ShouldAddToDatabase()
             {
-                ProductRepository productRepository = new ProductRepository(context);
-                await Assert.ThrowsAsync<NotFoundException>(() => productRepository.DeleteProduct(999));
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+
+                    await productRepository.AddProduct(_products.First());
+                    Product addedProduct = await context.Products.FindAsync(_products[0].ProductId);
+
+                    Assert.NotNull(addedProduct);
+                    Assert.Equal("12345", addedProduct.SerialNumber);
+                    Assert.Equal("Laptop", addedProduct.Type.Name);
+                }
+            }
+
+            [Fact]
+            public async Task AddProduct_EmptySerialNumber_ShouldThrowException()
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+                    await Assert.ThrowsAsync<InputValidationException>(() =>
+                        productRepository.AddProduct(_products[2]));
+                }
+            }
+
+            [Fact]
+            public async Task AddProduct_NotSelectedType_ShouldThrowException()
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+                    await Assert.ThrowsAsync<InputValidationException>(() =>
+                        productRepository.AddProduct(_products[1]));
+                }
+            }
+
+            [Fact]
+            public async Task PutProduct_ShouldUpdateProduct()
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+                    Product existingProduct = new Product
+                    {
+                        ProductId = 1,
+                        SerialNumber = "12345",
+                        Type = new ProductType { Id = 1, Name = "Laptop" },
+                    };
+
+                    await context.AddAsync(existingProduct);
+                    await context.SaveChangesAsync();
+
+                    Product updatedProduct = new Product
+                    {
+                        ProductId = 1,
+                        SerialNumber = "67890",
+                        Type = new ProductType { Id = 2, Name = "Desktop" },
+                    };
+
+                    await productRepository.PutProduct(updatedProduct);
+
+                    Product result = await context.Products.FindAsync(1);
+                    Assert.NotNull(result);
+                    Assert.Equal(updatedProduct.SerialNumber, result.SerialNumber);
+                    Assert.Equal(updatedProduct.Type.Id, result.Type.Id);
+                }
+            }
+
+            [Fact]
+            public async Task PutProduct_NonexistentProduct_ShouldNotUpdateInDatabase()
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+
+                    Product nonexistentProduct = new Product
+                    {
+                        ProductId = 999,
+                        SerialNumber = "12345",
+                        ExpirationDate = DateTime.Now.AddDays(30),
+                        PurchaseDate = DateTime.Now,
+                        Type = new ProductType() { Id = 1, Name = "Laptop" }
+                    };
+
+                    NotFoundException actualException =
+                        await Assert.ThrowsAsync<NotFoundException>(() =>
+                            productRepository.PutProduct(nonexistentProduct));
+                    Assert.NotNull(actualException);
+                }
+            }
+
+            [Fact]
+            public async Task DeleteProduct_ExistingProduct_ShouldRemoveFromDatabase()
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+
+                    await context.Products.AddAsync(_products.First());
+                    await context.SaveChangesAsync();
+
+                    await productRepository.DeleteProduct(_products.First().ProductId);
+
+                    Product deletedProduct = await context.Products.FindAsync(_products.First().ProductId);
+                    Assert.Null(deletedProduct);
+                }
+            }
+
+            [Fact]
+            public async Task DeleteProduct_NonexistentProduct_ShouldThrowNotFoundException()
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+                {
+                    ProductRepository productRepository = new ProductRepository(context);
+                    await Assert.ThrowsAsync<NotFoundException>(() => productRepository.DeleteProduct(999));
+                }
             }
         }
     }
-}

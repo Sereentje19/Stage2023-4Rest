@@ -240,12 +240,14 @@ namespace DAL.Migrations
                 {
                     b.HasOne("PL.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("PL.Models.DocumentType", "Type")
                         .WithMany()
-                        .HasForeignKey("TypeId");
-
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                    
                     b.Navigation("Employee");
 
                     b.Navigation("Type");
@@ -255,11 +257,13 @@ namespace DAL.Migrations
                 {
                     b.HasOne("PL.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("PL.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Employee");
 
@@ -270,7 +274,8 @@ namespace DAL.Migrations
                 {
                     b.HasOne("PL.Models.ProductType", "Type")
                         .WithMany()
-                        .HasForeignKey("TypeId");
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Type");
                 });

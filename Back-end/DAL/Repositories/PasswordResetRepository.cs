@@ -42,7 +42,7 @@ namespace DAL.Repositories
             {
                 UserId = user.UserId,
                 Code = code,
-                ExpirationTime = DateTime.UtcNow.AddMinutes(5)
+                ExpirationTime = DateTime.Now.AddMinutes(5)
             };
 
             await _dbSet.AddAsync(prc);

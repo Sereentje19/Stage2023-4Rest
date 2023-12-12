@@ -13,19 +13,19 @@ namespace Tests.Repositories
             {
                 LoanHistoryId = 1, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(0),
                 Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 1, Type = ProductType.Laptop, SerialNumber = "123456" }
+                Product = new Product { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" }
             },
             new LoanHistory
             {
                 LoanHistoryId = 2, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(30),
                 Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 2, Type = ProductType.Laptop, SerialNumber = "123456" }
+                Product = new Product { ProductId = 2, Type = new ProductType() { Id = 2, Name = "Laptop" }, SerialNumber = "123456" }
             },
             new LoanHistory
             {
                 LoanHistoryId = 3, LoanDate = DateTime.Now, ReturnDate = null,
                 Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 3, Type = ProductType.Laptop, SerialNumber = "123456" }
+                Product = new Product { ProductId = 3, Type = new ProductType() { Id = 3, Name = "Laptop" }, SerialNumber = "123456" }
             },
         };
 
@@ -58,7 +58,7 @@ namespace Tests.Repositories
                 IEnumerable<LoanHistoryResponse> loanHistories = (IEnumerable<LoanHistoryResponse>)result;
                 LoanHistoryResponse loanHistoryResponse = loanHistories.First();
 
-                Assert.Equal("Laptop", loanHistoryResponse.Type);
+                Assert.Equal("Laptop", loanHistoryResponse.Type.Name);
                 Assert.Equal("123456", loanHistoryResponse.SerialNumber);
                 Assert.Equal("John Doe", loanHistoryResponse.Name);
             }
@@ -107,7 +107,7 @@ namespace Tests.Repositories
                 IEnumerable<LoanHistoryResponse> loanHistories = (IEnumerable<LoanHistoryResponse>)result;
                 LoanHistoryResponse loanHistoryResponse = loanHistories.First();
 
-                Assert.Equal("Laptop", loanHistoryResponse.Type);
+                Assert.Equal("Laptop", loanHistoryResponse.Type.Name);
                 Assert.Equal("123456", loanHistoryResponse.SerialNumber);
                 Assert.Equal("John Doe", loanHistoryResponse.Name);
                 Assert.Equal("john@example.com", loanHistoryResponse.Email);
@@ -204,7 +204,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                Product product = new Product { ProductId = 4, Type = ProductType.Laptop, SerialNumber = "123456" };
+                Product product = new Product { ProductId = 4, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" };
                 Employee employee = new Employee { EmployeeId = 4, Name = "John Doe", Email = "john@example.com", IsArchived = false };
                 LoanHistory loanHistory = new LoanHistory { LoanHistoryId = 4, Product = product, Employee = employee, LoanDate = DateTime.Now.AddDays(-7), ReturnDate = null};
 
@@ -227,7 +227,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                Product product = new Product { ProductId = 1, Type = ProductType.Laptop, SerialNumber = "123456" };
+                Product product = new Product { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" };
                 Employee employee = new Employee { EmployeeId = 1, Name = "John Doe", Email = "john@example.com", IsArchived = false };
                 LoanHistory loanHistoryToPost = new LoanHistory { LoanHistoryId = 1, Product = product, Employee = employee, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(7) };
 

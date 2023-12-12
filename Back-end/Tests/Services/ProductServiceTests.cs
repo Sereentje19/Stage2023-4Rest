@@ -21,13 +21,13 @@ public class ProductServiceTests
     public async Task GetAllProducts_ShouldReturnPagedProducts()
     {
         const string searchField = "test";
-        const ProductType dropdown = ProductType.Laptop;
+        const string dropdown = "Laptop";
         const int page = 1;
         const int pageSize = 10;
 
         Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
         productRepositoryMock
-            .Setup(repo => repo.GetAllProducts(searchField, dropdown, page, pageSize))
+            .Setup(repo => repo.GetAllProducts(searchField, page, pageSize, dropdown))
             .ReturnsAsync((GetSampleProducts(), 20));
 
         ProductService productService = new ProductService(productRepositoryMock.Object);
@@ -45,11 +45,11 @@ public class ProductServiceTests
         Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
         ProductService productService = new ProductService(productRepositoryMock.Object);
 
-        productRepositoryMock.Setup(repo => repo.GetAllProducts(It.IsAny<string>(), It.IsAny<ProductType?>(), It.IsAny<int>(), It.IsAny<int>()))
+        productRepositoryMock.Setup(repo => repo.GetAllProducts(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
             .ReturnsAsync((Enumerable.Empty<object>(), 0));
 
         const string searchField = "test";
-        ProductType? dropdown = ProductType.Laptop;
+        const string dropdown = "Laptop";
         const int page = 1;
         const int pageSize = 10;
 
@@ -62,21 +62,25 @@ public class ProductServiceTests
     }
 
     [Fact]
-    public void GetProductTypeStrings_ShouldReturnProductTypeStrings()
+    public async Task GetProductTypes_ShouldReturnListOfProductTypes()
     {
-        Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
-        List<string> expectedProductTypes = new List<string> { "Laptop", "Desktop", "Mobile" };
+        Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
+        ProductService productService = new ProductService(mockRepository.Object);
 
-        productRepositoryMock
-            .Setup(repo => repo.GetProductTypeStrings())
-            .Returns(expectedProductTypes);
+        List<ProductType> productTypes = new List<ProductType>
+        {
+            new ProductType { Id = 1, Name = "Type1" },
+            new ProductType { Id = 2, Name = "Type2" },
+        };
 
-        ProductService productService = new ProductService(productRepositoryMock.Object);
-        List<string> actualProductTypes = productService.GetProductTypeStrings();
+        mockRepository.Setup(repo => repo.GetProductTypes())
+            .ReturnsAsync(productTypes);
 
-        Assert.NotNull(actualProductTypes);
-        Assert.Equal(expectedProductTypes.Count, actualProductTypes.Count);
-        Assert.Equal(expectedProductTypes, actualProductTypes);
+        IEnumerable<ProductType> result = await productService.GetProductTypes();
+
+        Assert.NotNull(result);
+        Assert.IsType<List<ProductType>>(result);
+        Assert.Equal(2, result.Count()); 
     }
 
     [Fact]
@@ -84,7 +88,7 @@ public class ProductServiceTests
     {
         const int productId = 1;
         Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
-        Product expectedProduct = new Product { ProductId = productId, Type  = ProductType.Laptop, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4"};
+        Product expectedProduct = new Product { ProductId = productId, Type  = new ProductType{ Name = "Laptop", Id = 1}, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4"};
 
         productRepositoryMock
             .Setup(repo => repo.GetProductById(productId))
@@ -107,7 +111,7 @@ public class ProductServiceTests
     {
         Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
         ProductService productService = new ProductService(productRepositoryMock.Object);
-        Product newProduct = new Product {  Type  = ProductType.Laptop, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4"};
+        Product newProduct = new Product {  Type  = new ProductType{ Name = "Laptop", Id = 1}, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4"};
 
         await productService.PostProduct(newProduct);
         productRepositoryMock.Verify(repo => repo.AddProduct(It.IsAny<Product>()), Times.Once);
@@ -119,7 +123,7 @@ public class ProductServiceTests
         Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
         ProductService productService = new ProductService(productRepositoryMock.Object);
 
-        Product existingProduct = new Product { ProductId = 1, Type  = ProductType.Laptop, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4" };
+        Product existingProduct = new Product { ProductId = 1, Type  = new ProductType{ Name = "Laptop", Id = 1}, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4" };
 
         await productService.PutProduct(existingProduct);
         productRepositoryMock.Verify(repo => repo.PutProduct(It.IsAny<Product>()), Times.Once);

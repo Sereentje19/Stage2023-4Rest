@@ -10,35 +10,48 @@ namespace Tests.Services;
 
 public class PasswordresetServiceTests
 {
+    
     [Fact]
     public async Task PostResetCode_ShouldGenerateCodeAndSendEmail()
     {
-        string email = "test@example.com";
-        string code = "123456"; 
+        const string email = "test@example.com";
 
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
+
         mockPasswordResetRepository
             .Setup(repo => repo.PostResetCode(It.IsAny<string>(), email))
-            .ReturnsAsync(new User { Name = "Test User" }); 
+            .ReturnsAsync(new User { Name = "Test User", Email = "test@example.com" });
 
         Mock<IMailService> mockMailService = new Mock<IMailService>();
+        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
 
         Mock<IOptions<MailSettings>> mockMailSettingsOptions = new Mock<IOptions<MailSettings>>();
         mockMailSettingsOptions.Setup(x => x.Value).Returns(new MailSettings());
 
         PasswordResetService passwordResetService = new PasswordResetService(
             mockPasswordResetRepository.Object,
-            mockMailService.Object
+            mockMailService.Object,
+            mockLoginService.Object
         );
+
+        mockPasswordResetRepository
+            .Setup(repo => repo.PostResetCode(It.IsAny<string>(), email))
+            .Callback<string, string>((c, _) => { })
+            .ReturnsAsync(new User { Name = "Test User", Email = "test@example.com" });
 
         await passwordResetService.PostResetCode(email);
 
-        mockPasswordResetRepository.Verify(repo => repo.PostResetCode(It.IsAny<string>(), email), Times.Once);
         mockMailService.Verify(
-            mailService => mailService.SendPasswordEmail(code, email, "Verificatie code.", "Test User"),
+            mailService => mailService.SendPasswordEmail(
+                It.IsAny<string>(), 
+                email,
+                "Verificatie code.",
+                "Test User"
+            ),
             Times.Once
         );
     }
+
     
     [Fact]
     public async Task CheckEnteredCode_ShouldCallPasswordResetRepository()
@@ -47,10 +60,12 @@ public class PasswordresetServiceTests
         string code = "123456"; 
 
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
+        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
 
         PasswordResetService passwordResetService = new PasswordResetService(
             mockPasswordResetRepository.Object,
-            Mock.Of<IMailService>() 
+            Mock.Of<IMailService>() ,
+            mockLoginService.Object
         );
 
         await passwordResetService.CheckEnteredCode(email, code);
@@ -74,9 +89,12 @@ public class PasswordresetServiceTests
 
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
         Mock<IMailService> mockExceptionService = new Mock<IMailService>();
+        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
+        
         PasswordResetService passwordResetService = new PasswordResetService(
             mockPasswordResetRepository.Object,
-            mockExceptionService.Object
+            mockExceptionService.Object,
+            mockLoginService.Object
         );
 
         await Assert.ThrowsAsync<InputValidationException>(() => passwordResetService.PostPassword(request));
@@ -86,8 +104,6 @@ public class PasswordresetServiceTests
             Times.Never
         );
     }
-
-
 
     [Fact]
     public async Task PostPassword_ShouldCallRepository_WhenPasswordsAreEqual()
@@ -100,11 +116,14 @@ public class PasswordresetServiceTests
             Code = "123456" 
         };
 
+        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
         Mock<IMailService> mockExceptionService = new Mock<IMailService>();
+        
         PasswordResetService passwordResetService = new PasswordResetService(
             mockPasswordResetRepository.Object,
-            mockExceptionService.Object
+            mockExceptionService.Object,
+            mockLoginService.Object
         );
 
         await passwordResetService.PostPassword(request);

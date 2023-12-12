@@ -135,7 +135,7 @@ namespace DAL.Repositories
 
             _context.Entry(existingProduct).CurrentValues.SetValues(product);
             existingProduct.Type = product.Type;
-
+            
             await _context.SaveChangesAsync();
         }
 

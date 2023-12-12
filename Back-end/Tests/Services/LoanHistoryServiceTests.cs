@@ -19,7 +19,7 @@ public class LoanHistoryServiceTests
                 Product = new Product
                 {
                     ProductId = 1, ExpirationDate = DateTime.Today.AddDays(15), SerialNumber = "x43124xr4td25",
-                    PurchaseDate = DateTime.Today.AddDays(-10), Type = ProductType.Laptop
+                    PurchaseDate = DateTime.Today.AddDays(-10), Type = new ProductType { Id = 1, Name = "Laptop" }
                 },
                 LoanDate = DateTime.Today.AddDays(-10),
                 ReturnDate = DateTime.Today.AddDays(-1)
@@ -31,7 +31,7 @@ public class LoanHistoryServiceTests
                 Product = new Product
                 {
                     ProductId = 2, ExpirationDate = DateTime.Today.AddDays(15), SerialNumber = "x43124xr4td25",
-                    PurchaseDate = DateTime.Today.AddDays(-10), Type = ProductType.Laptop
+                    PurchaseDate = DateTime.Today.AddDays(-10), Type = new ProductType { Id = 1, Name = "Laptop" }
                 },
                 LoanDate = DateTime.Today.AddDays(-10),
                 ReturnDate = DateTime.Today.AddDays(-1)
@@ -71,7 +71,7 @@ public class LoanHistoryServiceTests
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock
             .Setup(repo => repo.GetLoanHistoryByProductId(productId, page, pageSize))
-            .ReturnsAsync((Enumerable.Empty<object>(), 0)); 
+            .ReturnsAsync((Enumerable.Empty<object>(), 0));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
 
@@ -153,7 +153,8 @@ public class LoanHistoryServiceTests
     public async Task GetLatestLoanHistoryByProductId_ShouldReturnLatestLoanHistory()
     {
         const int productId = 1;
-        LoanHistory expectedLoanHistory = new LoanHistory { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today};
+        LoanHistory expectedLoanHistory = new LoanHistory
+            { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock.Setup(repo => repo.GetLatestLoanHistoryByProductId(productId))
@@ -192,11 +193,12 @@ public class LoanHistoryServiceTests
         LoanHistory result = await loanHistoryService.GetLatestLoanHistoryByProductId(productId);
         Assert.Null(result);
     }
-    
+
     [Fact]
     public async Task UpdateLoanHistory_ShouldCallRepositoryUpdateLoanHistory()
     {
-        LoanHistory loanHistoryToUpdate = new LoanHistory { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
+        LoanHistory loanHistoryToUpdate = new LoanHistory
+            { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistory(It.IsAny<LoanHistory>()))
@@ -211,7 +213,8 @@ public class LoanHistoryServiceTests
     [Fact]
     public async Task UpdateLoanHistory_ShouldHandleRepositoryException()
     {
-        LoanHistory loanHistoryToUpdate = new LoanHistory { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
+        LoanHistory loanHistoryToUpdate = new LoanHistory
+            { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistory(It.IsAny<LoanHistory>()))
@@ -220,11 +223,12 @@ public class LoanHistoryServiceTests
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
         await Assert.ThrowsAsync<Exception>(() => loanHistoryService.UpdateLoanHistory(loanHistoryToUpdate));
     }
-    
+
     [Fact]
     public async Task PostLoanHistory_ShouldCallRepositoryPostLoanHistory()
     {
-        LoanHistory loanHistoryToPost = new LoanHistory { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
+        LoanHistory loanHistoryToPost = new LoanHistory
+            { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock.Setup(repo => repo.PostLoanHistory(It.IsAny<LoanHistory>()))
@@ -239,7 +243,8 @@ public class LoanHistoryServiceTests
     [Fact]
     public async Task PostLoanHistory_ShouldHandleRepositoryException()
     {
-        LoanHistory loanHistoryToPost = new LoanHistory { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
+        LoanHistory loanHistoryToPost = new LoanHistory
+            { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock.Setup(repo => repo.PostLoanHistory(It.IsAny<LoanHistory>()))

@@ -184,7 +184,6 @@ namespace DAL.Repositories
         /// <param name="employee">The document entity to be updated.</param>
         public async Task UpdateEmployee(Employee employee)
         {
-            await CheckEmailExists(employee);
             Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
 
             if (existingEmployee == null)
@@ -192,6 +191,7 @@ namespace DAL.Repositories
                 throw new NotFoundException("Geen medewerker gevonden");
             }
 
+            await CheckEmailExists(employee);
             _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
             await _context.SaveChangesAsync();
         }

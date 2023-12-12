@@ -19,7 +19,7 @@ public class DocumentServiceTests
                 DocumentId = 1,
                 Date = DateTime.Now,
                 Employee = new Employee { Name = "test", Email = "test@test.nl" },
-                Type = DocumentType.Certificaat,
+                Type = new DocumentType { Id = 1, Name = "Contract" },
                 IsArchived = false
             },
             new Document
@@ -27,7 +27,7 @@ public class DocumentServiceTests
                 DocumentId = 2,
                 Date = DateTime.Now.AddDays(-5),
                 Employee = new Employee { Name = "test", Email = "test@test.nl" },
-                Type = DocumentType.Contract,
+                Type = new DocumentType { Id = 1, Name = "Contract" },
                 IsArchived = true
             },
         };
@@ -37,7 +37,7 @@ public class DocumentServiceTests
     public void GetPagedDocuments_ShouldReturnPagedDocuments()
     {
         const string searchfield = "example";
-        const DocumentType dropdown = DocumentType.Contract;
+        const string dropdown = "Contract";
         const int page = 1;
         const int pageSize = 5;
 
@@ -57,7 +57,7 @@ public class DocumentServiceTests
     public void GetPagedDocuments_WhenRepositoryReturnsEmptyList_ShouldReturnEmptyList()
     {
         const string searchfield = "example";
-        const DocumentType dropdown = DocumentType.Contract;
+        const string dropdown = "Contract";
         const int page = 1;
         const int pageSize = 5;
 
@@ -77,7 +77,7 @@ public class DocumentServiceTests
     public void GetArchivedPagedDocuments_ShouldReturnPagedDocuments()
     {
         const string searchfield = "example";
-        const DocumentType dropdown = DocumentType.Contract;
+        const string dropdown = "Contract";
         const int page = 1;
         const int pageSize = 10;
 
@@ -97,7 +97,7 @@ public class DocumentServiceTests
     public void GetArchivedPagedDocuments_WhenRepositoryReturnsEmptyList_ShouldReturnEmptyList()
     {
         const string searchfield = "example";
-        const DocumentType dropdown = DocumentType.Contract;
+        const string dropdown = "Contract";
         const int page = 1;
         const int pageSize = 10;
 
@@ -117,7 +117,7 @@ public class DocumentServiceTests
     public void GetLongValidPagedDocuments_ShouldReturnPagedDocuments()
     {
         const string searchfield = "example";
-        const DocumentType dropdown = DocumentType.Contract;
+        const string dropdown = "Contract";
         const int page = 1;
         const int pageSize = 10;
 
@@ -137,7 +137,7 @@ public class DocumentServiceTests
     public void GetLongValidPagedDocuments_WhenRepositoryReturnsEmptyList_ShouldReturnEmptyList()
     {
         const string searchfield = "example";
-        const DocumentType dropdown = DocumentType.Contract;
+        const string dropdown = "Contract";
         const int page = 1;
         const int pageSize = 10;
 
@@ -154,40 +154,27 @@ public class DocumentServiceTests
     }
 
     [Fact]
-    public void GetDocumentTypeStrings_ShouldReturnDocumentTypeStrings()
+    public async Task GetDocumentTypes_ShouldReturnListOfDocumentTypes()
     {
-        Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.GetDocumentTypeStrings())
-            .Returns(new List<string>
-                { "Vog", "Contract", "Paspoort", "ID kaart", "Diploma", "Certificaat", "Lease auto" });
+        Mock<IDocumentRepository> mockRepository = new Mock<IDocumentRepository>();
+        DocumentService documentService = new DocumentService(mockRepository.Object);
 
-        DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        List<string> documentTypeStrings = documentService.GetDocumentTypeStrings();
+        List<DocumentType> documentTypes = new List<DocumentType>
+        {
+            new DocumentType { Id = 1, Name = "Type1" },
+            new DocumentType { Id = 2, Name = "Type2" },
+        };
 
-        Assert.NotNull(documentTypeStrings);
-        Assert.Equal(7, documentTypeStrings.Count);
-        Assert.Contains("Vog", documentTypeStrings);
-        Assert.Contains("Contract", documentTypeStrings);
-        Assert.Contains("Paspoort", documentTypeStrings);
-        Assert.Contains("ID kaart", documentTypeStrings);
-        Assert.Contains("Diploma", documentTypeStrings);
-        Assert.Contains("Certificaat", documentTypeStrings);
-        Assert.Contains("Lease auto", documentTypeStrings);
+        mockRepository.Setup(repo => repo.GetDocumentTypes())
+            .ReturnsAsync(documentTypes);
+
+        IEnumerable<DocumentType> result = await documentService.GetDocumentTypes();
+
+        Assert.NotNull(result);
+        Assert.IsType<List<DocumentType>>(result);
+        Assert.Equal(2, result.Count()); 
     }
 
-    [Fact]
-    public void GetDocumentTypeStrings_WhenRepositoryReturnsEmptyList_ShouldReturnEmptyList()
-    {
-        Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.GetDocumentTypeStrings())
-            .Returns(new List<string>());
-
-        DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        List<string> documentTypeStrings = documentService.GetDocumentTypeStrings();
-
-        Assert.NotNull(documentTypeStrings);
-        Assert.Empty(documentTypeStrings);
-    }
 
     [Fact]
     public async Task GetDocumentById_ShouldReturnDocumentResponse()
@@ -197,7 +184,7 @@ public class DocumentServiceTests
         {
             Date = DateTime.Today.AddDays(-1),
             Employee = new Employee { Email = "test@test.nl", Name = "test" },
-            Type = DocumentType.Diploma
+            Type = new DocumentType { Id = 1, Name = "Laptop" }
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
@@ -234,7 +221,7 @@ public class DocumentServiceTests
         Document documentToPost = new Document
         {
             DocumentId = 3,
-            Type = DocumentType.Not_selected,
+            Type = new DocumentType { Id = 1, Name = "Laptop" },
             Date = DateTime.Today.AddDays(-1),
             Employee = new Employee { Email = "test@test.nl", Name = "test" }
         };
@@ -249,14 +236,14 @@ public class DocumentServiceTests
 
         documentRepositoryMock.Verify();
     }
-    
+
     [Fact]
     public async Task PostDocument_ShouldHandleRepositoryException()
     {
         Document documentToPost = new Document
         {
             DocumentId = 3,
-            Type = DocumentType.Not_selected,
+            Type = new DocumentType { Id = 1, Name = "Laptop" },
             Date = DateTime.Today.AddDays(-1),
             Employee = new Employee { Email = "test@test.nl", Name = "test" }
         };
@@ -375,7 +362,4 @@ public class DocumentServiceTests
 
         documentRepositoryMock.Verify(repo => repo.DeleteDocument(It.IsAny<int>()), Times.Once);
     }
-
-    
-    
 }

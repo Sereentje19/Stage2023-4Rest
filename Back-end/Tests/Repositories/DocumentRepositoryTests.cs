@@ -16,18 +16,18 @@ namespace Tests.Repositories
             {
                 DocumentId = 1, File = "SampleFile"u8.ToArray(), FileType = "SampleType",
                 Employee = new Employee { EmployeeId = 1, Name = "John", Email = "john@example.com" },
-                Date = DateTime.Now, IsArchived = false, Type = DocumentType.Contract
+                Date = DateTime.Now, IsArchived = false, Type = new DocumentType { Name = "Contract", Id = 1 }
             },
             new Document
             {
                 DocumentId = 2, Employee = new Employee { EmployeeId = 2, Name = "Jane", Email = "jane@example.com" },
-                Date = DateTime.Now.AddDays(30), IsArchived = true, Type = DocumentType.Certificaat
+                Date = DateTime.Now.AddDays(30), IsArchived = true, Type = new DocumentType { Name = "Contract", Id = 2 }
             },
             new Document
             {
                 DocumentId = 3,
                 Employee = new Employee { EmployeeId = 3, Name = "Meredith", Email = "Meredith@example.com" },
-                Date = DateTime.Now.AddDays(60), IsArchived = false, Type = DocumentType.Paspoort
+                Date = DateTime.Now.AddDays(60), IsArchived = false, Type = new DocumentType { Name = "Contract", Id = 3 }
             },
         };
 
@@ -47,7 +47,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 DocumentRepository repository = new DocumentRepository(context);
-                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", "1", 1, 1);
 
                 Assert.Single(result.Item1);
                 Assert.Equal(1, result.Item2);
@@ -63,7 +63,7 @@ namespace Tests.Repositories
             await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 DocumentRepository repository = new DocumentRepository(context);
-                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", "Contract", 1, 1);
                 Assert.Empty(result.Item1.Where(doc => ((Document)doc).IsArchived));
             }
         }
@@ -74,7 +74,7 @@ namespace Tests.Repositories
             await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 DocumentRepository repository = new DocumentRepository(context);
-                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, int) result = repository.GetPagedDocuments("John", "Contract", 1, 1);
                 Assert.Empty(result.Item1);
             }
         }
@@ -88,7 +88,8 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 DocumentRepository repository = new DocumentRepository(context);
-                (IEnumerable<object>, int) result = repository.GetArchivedPagedDocuments("Jane", DocumentType.Certificaat, 1, 1);
+                (IEnumerable<object>, int) result =
+                    repository.GetArchivedPagedDocuments("Jane", "2", 1, 1);
 
                 Assert.Single(result.Item1);
                 Assert.Equal(1, result.Item2);
@@ -102,7 +103,8 @@ namespace Tests.Repositories
             await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 DocumentRepository repository = new DocumentRepository(context);
-                (IEnumerable<object>, int) result = repository.GetArchivedPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, int) result =
+                    repository.GetArchivedPagedDocuments("John", "Contract", 1, 1);
                 Assert.Empty(result.Item1);
             }
         }
@@ -118,7 +120,8 @@ namespace Tests.Repositories
                 DocumentRepository documentRepository = new DocumentRepository(context);
                 DocumentService documentService = new DocumentService(documentRepository);
 
-                (IEnumerable<object>, Pager) result = documentService.GetLongValidPagedDocuments("Meredith", DocumentType.Paspoort, 1, 1);
+                (IEnumerable<object>, Pager) result =
+                    documentService.GetLongValidPagedDocuments("Meredith", "3", 1, 1);
 
                 Assert.Single(result.Item1);
                 Assert.All(result.Item1, doc => Assert.False(((DocumentOverviewResponse)doc).IsArchived));
@@ -138,7 +141,8 @@ namespace Tests.Repositories
                 DocumentRepository documentRepository = new DocumentRepository(context);
                 DocumentService documentService = new DocumentService(documentRepository);
 
-                (IEnumerable<object>, Pager) result = documentService.GetLongValidPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, Pager) result =
+                    documentService.GetLongValidPagedDocuments("John", "Contract", 1, 1);
 
                 Assert.Empty(result.Item1.Where(doc => ((Document)doc).IsArchived));
             }
@@ -152,42 +156,33 @@ namespace Tests.Repositories
                 DocumentRepository documentRepository = new DocumentRepository(context);
                 DocumentService documentService = new DocumentService(documentRepository);
 
-                (IEnumerable<object>, Pager) result = documentService.GetLongValidPagedDocuments("John", DocumentType.Contract, 1, 1);
+                (IEnumerable<object>, Pager) result =
+                    documentService.GetLongValidPagedDocuments("John", "Contract", 1, 1);
 
                 Assert.Empty(result.Item1);
             }
         }
 
         [Fact]
-        public void GetDocumentTypeStrings_ShouldReturnCorrectList()
+        public async Task GetDocumentTypes_ShouldReturnListOfDocumentTypes()
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                DocumentRepository yourClassInstance = new DocumentRepository(context);
-                List<string> result = yourClassInstance.GetDocumentTypeStrings();
+                List<DocumentType> documentTypes = new List<DocumentType>
+                {
+                    new DocumentType { Id = 1, Name = "Type1" },
+                    new DocumentType { Id = 2, Name = "Type2" },
+                };
+
+                context.DocumentTypes.AddRange(documentTypes);
+                await context.SaveChangesAsync();
+
+                DocumentRepository yourService = new DocumentRepository(context);
+                IEnumerable<DocumentType> result = await yourService.GetDocumentTypes();
 
                 Assert.NotNull(result);
-                Assert.Equal(7, result.Count);
-
-                Assert.Contains("Vog", result);
-                Assert.Contains("Contract", result);
-                Assert.Contains("Paspoort", result);
-                Assert.Contains("ID kaart", result);
-                Assert.Contains("Diploma", result);
-                Assert.Contains("Certificaat", result);
-                Assert.Contains("Lease auto", result);
-                Assert.DoesNotContain("UndefinedType", result);
-            }
-        }
-
-        [Fact]
-        public void GetDocumentTypeStrings_ShouldNotContainUnderscore()
-        {
-            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
-            {
-                DocumentRepository repository = new DocumentRepository(context);
-                List<string> result = repository.GetDocumentTypeStrings();
-                Assert.All(result, typeString => Assert.DoesNotContain("_", typeString));
+                Assert.IsType<List<DocumentType>>(result);
+                Assert.Equal(2, result.Count()); 
             }
         }
 
@@ -208,7 +203,7 @@ namespace Tests.Repositories
                 Assert.Equal("SampleType", result.FileType);
                 Assert.Equal(DateTime.Now.Date, result.Date.Date);
                 Assert.Equal("John", result.Employee.Name);
-                Assert.Equal(DocumentType.Contract, result.Type);
+                Assert.Equal("Contract", result.Type.Name);
             }
         }
 
@@ -245,7 +240,7 @@ namespace Tests.Repositories
             {
                 Document document = new Document
                 {
-                    Type = DocumentType.Not_selected,
+                    Type = new DocumentType { Id = 1, Name = "Contract" },
                     Employee = new Employee { Name = "John", Email = "john@example.com" }
                 };
 
@@ -262,7 +257,7 @@ namespace Tests.Repositories
             {
                 Document document = new Document
                 {
-                    Type = DocumentType.Contract,
+                    Type = new DocumentType { Id = 1, Name = "Contract" },
                     Employee = new Employee { Name = "John", Email = "invalidemail" }
                 };
 
@@ -270,7 +265,7 @@ namespace Tests.Repositories
                 await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
             }
         }
-        
+
         [Fact]
         public async Task AddDocument_WithEmptyName_ShouldThrowValidationException()
         {
@@ -278,7 +273,7 @@ namespace Tests.Repositories
             {
                 Document document = new Document
                 {
-                    Type = DocumentType.Contract,
+                    Type = new DocumentType { Id = 1, Name = "Contract" },
                     Employee = new Employee { Name = "", Email = "john@example.com" }
                 };
 
@@ -286,7 +281,7 @@ namespace Tests.Repositories
                 await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
             }
         }
-        
+
         [Fact]
         public async Task AddDocument_WithInvalidDate_ShouldThrowValidationException()
         {
@@ -294,7 +289,7 @@ namespace Tests.Repositories
             {
                 Document document = new Document
                 {
-                    Type = DocumentType.Contract,
+                    Type = new DocumentType { Id = 1, Name = "Contract" },
                     Date = DateTime.Today.AddDays(-1),
                     Employee = new Employee { Name = "John", Email = "john@example.com" }
                 };
@@ -303,7 +298,7 @@ namespace Tests.Repositories
                 await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
             }
         }
-        
+
         [Fact]
         public async Task AddDocument_ShouldSetExistingEmployeeWhenFound()
         {
@@ -318,7 +313,7 @@ namespace Tests.Repositories
 
                 Document document = new Document
                 {
-                    Type = DocumentType.Contract,
+                    Type = new DocumentType { Id = 1, Name = "Contract" },
                     Date = DateTime.Today,
                     Employee = new Employee { Email = existingEmployeeEmail, Name = "test" }
                 };
@@ -331,7 +326,6 @@ namespace Tests.Repositories
         }
 
 
-
         [Fact]
         public async Task UpdateDocument_WithValidInput_ShouldUpdateDocument()
         {
@@ -341,16 +335,15 @@ namespace Tests.Repositories
                 EditDocumentRequest editDocumentRequest = new EditDocumentRequest
                 {
                     DocumentId = documentId,
-                    Type = DocumentType.Contract,
+                    Type = new DocumentType { Id = 5, Name = "Contract" },
                     Date = DateTime.Now.AddDays(10),
                 };
 
                 Document existingDocument = new Document
                 {
                     DocumentId = documentId,
-                    Type = DocumentType.Certificaat,
+                    Type = new DocumentType { Id = 6, Name = "Certificaat" },
                     Date = DateTime.Now,
-                    Employee = new Employee { Email = "test@test.nl", Name = "test" }
                 };
 
                 await context.Documents.AddAsync(existingDocument);
@@ -376,14 +369,14 @@ namespace Tests.Repositories
                 EditDocumentRequest editDocumentRequest = new EditDocumentRequest
                 {
                     DocumentId = documentId,
-                    Type = DocumentType.Not_selected,
+                    Type = new DocumentType { Id = 1, Name = "0" },
                     Date = DateTime.Now.AddDays(10),
                 };
 
                 Document existingDocument = new Document
                 {
                     DocumentId = documentId,
-                    Type = DocumentType.Certificaat,
+                    Type = new DocumentType { Id = 1, Name = "Certificaat" },
                     Date = DateTime.Now,
                     Employee = new Employee { Email = "test@test.nl", Name = "test" }
                 };
@@ -409,14 +402,14 @@ namespace Tests.Repositories
                 EditDocumentRequest editDocumentRequest = new EditDocumentRequest
                 {
                     DocumentId = documentId,
-                    Type = DocumentType.Contract,
+                    Type = new DocumentType { Id = 1, Name = "0" },
                     Date = DateTime.MinValue,
                 };
 
                 Document existingDocument = new Document
                 {
                     DocumentId = documentId,
-                    Type = DocumentType.Certificaat,
+                    Type = new DocumentType { Id = 1, Name = "Certificaat" },
                     Date = DateTime.Now,
                     Employee = new Employee { Email = "test@test.nl", Name = "test" }
                 };

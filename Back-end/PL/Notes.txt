@@ -15,3 +15,9 @@ dotnet ef database update
 nieuwe applicatie starten:
 dotnet new console
 dotnet new webapi
+
+BRFerFC5AFJwE5A7S3alYFVo9olS0aveXC6IgwYqMc0=
+LueZDV6TpgrQ3fkXJrWg20cuqAhvQ5VKPqpEkbbBBdI=
+
+
+.OnDelete(DeleteBehavior.Cascade);

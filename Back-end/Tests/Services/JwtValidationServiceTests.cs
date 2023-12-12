@@ -1,5 +1,6 @@
 ﻿using BLL.Services;
 using Microsoft.Extensions.Configuration;
+using PL.Models;
 using PL.Models.Requests;
 
 namespace Tests.Services;
@@ -18,7 +19,7 @@ public class JwtValidationServiceTests
             })
             .Build();
 
-        LoginRequestDTO user = new LoginRequestDTO { Email = "test@example.com" };
+        User user = new User { UserId = 1, Name = "test", Email = "test@example.com" };
         JwtValidationService tokenService = new JwtValidationService(configuration);
 
         string generatedToken = tokenService.GenerateToken(user);
@@ -39,7 +40,7 @@ public class JwtValidationServiceTests
             })
             .Build();
 
-        LoginRequestDTO user = new LoginRequestDTO { Email = "test@example.com" };
+        User user = new User { Email = "test@example.com" };
         JwtValidationService tokenService = new JwtValidationService(configuration);
 
         Assert.Throws<InvalidOperationException>(() => tokenService.GenerateToken(user));
@@ -48,18 +49,21 @@ public class JwtValidationServiceTests
     [Fact]
     public void GenerateToken_ShouldThrowException_WhenUserIsNull()
     {
+        // Arrange
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Jwt:Key", "your_secret_key" },
+                { "Jwt:Key", "your_secret_key_with_sufficient_length" },
                 { "Jwt:Issuer", "your_issuer" },
                 { "Jwt:Audience", "your_audience" }
             })
             .Build();
 
-        LoginRequestDTO user = new LoginRequestDTO { Email = null };
+        User user = new User(); 
         JwtValidationService tokenService = new JwtValidationService(configuration);
 
-        Assert.Throws<InvalidOperationException>(() => tokenService.GenerateToken(user));
+        Assert.Throws<ArgumentNullException>(() => tokenService.GenerateToken(user));
     }
+
+
 }

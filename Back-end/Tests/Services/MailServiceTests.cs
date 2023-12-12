@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Castle.Core.Smtp;
 using MailKit;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Moq;
@@ -16,7 +17,7 @@ public class MailServiceTests
     public void SendPasswordEmail_ShouldSendEmailWithCorrectParameters()
     {
         // Arrange
-        var mailSettings = new MailSettings
+        MailSettings mailSettings = new MailSettings
         {
             Server = "smtp.gmail.com",
             Port = 587,
@@ -27,20 +28,20 @@ public class MailServiceTests
             Password = "qyhd zpfz yyzb kksr"
         };
 
-        var mockMailSettingsOptions = new Mock<IOptions<MailSettings>>();
+        Mock<IOptions<MailSettings>> mockMailSettingsOptions = new Mock<IOptions<MailSettings>>();
         mockMailSettingsOptions.Setup(x => x.Value).Returns(mailSettings);
 
-        var mockSmtpClient = new Mock<MailKit.Net.Smtp.SmtpClient>();
+        Mock<SmtpClient> mockSmtpClient = new Mock<MailKit.Net.Smtp.SmtpClient>();
 
-        var emailService = new MailService(mockMailSettingsOptions.Object);
+        MailService emailService = new MailService(mockMailSettingsOptions.Object);
 
         // Set the SmtpClient property using reflection
-        var smtpClientField = typeof(MailService).GetField("_smtpClient", BindingFlags.Instance | BindingFlags.NonPublic);
+        FieldInfo smtpClientField = typeof(MailService).GetField("_smtpClient", BindingFlags.Instance | BindingFlags.NonPublic);
         smtpClientField.SetValue(emailService, mockSmtpClient.Object);
 
-        var body = "Password reset content";
-        var email = "test@example.com";
-        var subject = "Password Reset";
+        string body = "Password reset content";
+        string email = "test@example.com";
+        string subject = "Password Reset";
         const string customerName = "Test User";
 
         // Act
