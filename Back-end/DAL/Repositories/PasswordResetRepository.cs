@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
@@ -88,6 +89,13 @@ namespace DAL.Repositories
         public async Task CreatePasswordAsync(string email, string password, string code)
         {
             User user = await CheckEnteredCodeAsync(email, code);
+            
+            // Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.
+            if (!Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"))
+            {
+                throw new InputValidationException("Het wachtwoord moet minimaal 8 tekens lang zijn, minimaal één hoofdletter, één kleine letter en één cijfer bevatten.");
+            }
+            
             await HashAndSavePasswordAsync(user, password);
             await _context.SaveChangesAsync();
         }

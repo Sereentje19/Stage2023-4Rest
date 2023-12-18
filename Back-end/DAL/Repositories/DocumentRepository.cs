@@ -14,7 +14,7 @@ namespace DAL.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<Document> _dbSet;
-
+        private const int SixWeeksFromNow = 42;
         public DocumentRepository(ApplicationDbContext context)
         {
             _context = context;
@@ -82,7 +82,7 @@ namespace DAL.Repositories
         public (IEnumerable<object>, int) GetPagedDocuments(string searchfield, string dropdown, int page,
             int pageSize)
         {
-            DateTime sixWeeksFromNow = DateTime.Now.AddDays(42);
+            DateTime sixWeeksFromNow = DateTime.Now.AddDays(SixWeeksFromNow);
             return GetPagedDocumentsInternal(searchfield, dropdown, page, pageSize,
                 item => item.Date <= sixWeeksFromNow && !item.IsArchived);
         }
@@ -112,7 +112,7 @@ namespace DAL.Repositories
         public (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize)
         {
-            DateTime sixWeeksFromNow = DateTime.Now.AddDays(42);
+            DateTime sixWeeksFromNow = DateTime.Now.AddDays(SixWeeksFromNow);
             return GetPagedDocumentsInternal(searchfield, dropdown, page, pageSize,
                 item => item.Date > sixWeeksFromNow && !item.IsArchived);
         }

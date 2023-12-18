@@ -12,6 +12,11 @@ namespace BLL.Services
     {
         private readonly IServiceProvider _provider;
 
+        private const int WeeksBeforeExpiry5 = 5;
+        private const int WeeksBeforeExpiry6 = 6;
+        private const int Week = 7;
+        private const int DaysBeforeDelete = 90;
+
         public ExpirationCheckService(IServiceProvider provider)
         {
             _provider = provider;
@@ -47,8 +52,8 @@ namespace BLL.Services
             ApplicationDbContext applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
             IMailService mailService = serviceProvider.GetRequiredService<IMailService>();
 
-            DateTime targetDate6Weeks = DateTime.Now.AddDays(6 * 7);
-            DateTime targetDate5Weeks = DateTime.Now.AddDays(5 * 7);
+            DateTime targetDate6Weeks = DateTime.Now.AddDays(WeeksBeforeExpiry5 * Week);
+            DateTime targetDate5Weeks = DateTime.Now.AddDays(WeeksBeforeExpiry5 * Week);
 
             List<Document> expiringDocuments = await applicationDbContext.Documents
                 .Include(d => d.Employee)
@@ -57,7 +62,7 @@ namespace BLL.Services
 
             foreach (Document document in expiringDocuments)
             {
-                int weeks = (document.Date.Date == targetDate5Weeks.Date) ? 5 : 6;
+                int weeks = (document.Date.Date == targetDate5Weeks.Date) ? WeeksBeforeExpiry5 : WeeksBeforeExpiry6;
                 Employee employee =
                     await applicationDbContext.Employees.FirstOrDefaultAsync(c =>
                         c.EmployeeId == document.Employee.EmployeeId);
@@ -76,7 +81,7 @@ namespace BLL.Services
         {
             ApplicationDbContext applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-            DateTime targetDateToDelete = DateTime.Today.AddDays(-90);
+            DateTime targetDateToDelete = DateTime.Today.AddDays(-DaysBeforeDelete);
 
             List<Product> deletedProducts = await applicationDbContext.Products
                 .Where(p => p.IsDeleted && p.TimeDeleted == targetDateToDelete)
