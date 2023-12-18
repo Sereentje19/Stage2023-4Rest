@@ -21,3 +21,18 @@ LueZDV6TpgrQ3fkXJrWg20cuqAhvQ5VKPqpEkbbBBdI=
 
 
 .OnDelete(DeleteBehavior.Cascade);
+
+documentType:
+- Contract
+- Vog
+- Paspoort
+- ID kaart
+- Lease auto
+- Diploma
+- Certificaten
+
+ProductType:
+- Boek
+- Laptop
+- monitor
+- Stoel

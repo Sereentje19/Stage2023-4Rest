@@ -181,7 +181,7 @@ public class DocumentServiceTests
     public async Task GetDocumentById_ShouldReturnDocumentResponse()
     {
         const int documentId = 1;
-        DocumentResponse expectedDocumentResponse = new DocumentResponse
+        DocumentResponseDto expectedDocumentResponseDto = new DocumentResponseDto
         {
             Date = DateTime.Today.AddDays(-1),
             Employee = new Employee { Email = "test@test.nl", Name = "test" },
@@ -190,15 +190,15 @@ public class DocumentServiceTests
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
         documentRepositoryMock.Setup(repo => repo.GetDocumentByIdAsync(documentId))
-            .ReturnsAsync(expectedDocumentResponse);
+            .ReturnsAsync(expectedDocumentResponseDto);
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        DocumentResponse actualDocumentResponse = await documentService.GetDocumentByIdAsync(documentId);
+        DocumentResponseDto actualDocumentResponseDto = await documentService.GetDocumentByIdAsync(documentId);
 
-        Assert.NotNull(actualDocumentResponse);
-        Assert.Equal(expectedDocumentResponse.Date, actualDocumentResponse.Date);
-        Assert.Equal(expectedDocumentResponse.Employee, actualDocumentResponse.Employee);
-        Assert.Equal(expectedDocumentResponse.Type, actualDocumentResponse.Type);
+        Assert.NotNull(actualDocumentResponseDto);
+        Assert.Equal(expectedDocumentResponseDto.Date, actualDocumentResponseDto.Date);
+        Assert.Equal(expectedDocumentResponseDto.Employee, actualDocumentResponseDto.Employee);
+        Assert.Equal(expectedDocumentResponseDto.Type, actualDocumentResponseDto.Type);
     }
 
     [Fact]
@@ -208,12 +208,12 @@ public class DocumentServiceTests
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
         documentRepositoryMock.Setup(repo => repo.GetDocumentByIdAsync(documentId))
-            .ReturnsAsync((DocumentResponse)null);
+            .ReturnsAsync((DocumentResponseDto)null);
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        DocumentResponse actualDocumentResponse = await documentService.GetDocumentByIdAsync(documentId);
+        DocumentResponseDto actualDocumentResponseDto = await documentService.GetDocumentByIdAsync(documentId);
 
-        Assert.Null(actualDocumentResponse);
+        Assert.Null(actualDocumentResponseDto);
     }
 
     [Fact]
@@ -262,75 +262,75 @@ public class DocumentServiceTests
     [Fact]
     public async Task PutDocument_ShouldCallRepositoryUpdateDocument()
     {
-        EditDocumentRequest documentToUpdate = new EditDocumentRequest
+        EditDocumentRequestDto documentToUpdate = new EditDocumentRequestDto
         {
             DocumentId = 3,
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequestDto>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
         await documentService.UpdateDocumentAsync(documentToUpdate);
 
-        documentRepositoryMock.Verify(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequestDto>()), Times.Once);
     }
 
     [Fact]
     public async Task PutDocument_ShouldHandleRepositoryException()
     {
-        EditDocumentRequest documentToUpdate = new EditDocumentRequest
+        EditDocumentRequestDto documentToUpdate = new EditDocumentRequestDto
         {
             DocumentId = 3,
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequestDto>()))
             .ThrowsAsync(new Exception("Simulated repository exception"));
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
         await Assert.ThrowsAsync<Exception>(() => documentService.UpdateDocumentAsync(documentToUpdate));
 
-        documentRepositoryMock.Verify(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequestDto>()), Times.Once);
     }
 
     [Fact]
     public async Task UpdateIsArchived_ShouldCallRepositoryUpdateIsArchived()
     {
-        CheckBoxRequest checkBoxRequest = new CheckBoxRequest
+        CheckBoxRequestDto checkBoxRequestDto = new CheckBoxRequestDto
         {
             DocumentId = 3,
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequestDto>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await documentService.UpdateIsArchivedAsync(checkBoxRequest);
+        await documentService.UpdateIsArchivedAsync(checkBoxRequestDto);
 
-        documentRepositoryMock.Verify(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequestDto>()), Times.Once);
     }
 
     [Fact]
     public async Task UpdateIsArchived_ShouldHandleRepositoryException()
     {
-        CheckBoxRequest checkBoxRequest = new CheckBoxRequest
+        CheckBoxRequestDto checkBoxRequestDto = new CheckBoxRequestDto
         {
             DocumentId = 3,
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequestDto>()))
             .ThrowsAsync(new Exception("Simulated repository exception"));
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => documentService.UpdateIsArchivedAsync(checkBoxRequest));
+        await Assert.ThrowsAsync<Exception>(() => documentService.UpdateIsArchivedAsync(checkBoxRequestDto));
 
-        documentRepositoryMock.Verify(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequestDto>()), Times.Once);
     }
 
     [Fact]

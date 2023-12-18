@@ -52,9 +52,9 @@ namespace Tests.Repositories
 
                 Assert.Single(result.Item1);
                 Assert.Equal(1, result.Item2);
-                Assert.All(result.Item1, doc => Assert.False(((DocumentOverviewResponse)doc).IsArchived));
+                Assert.All(result.Item1, doc => Assert.False(((DocumentOverviewResponseDto)doc).IsArchived));
                 Assert.All(result.Item1,
-                    doc => Assert.True(((DocumentOverviewResponse)doc).Date <= DateTime.Now.AddDays(42)));
+                    doc => Assert.True(((DocumentOverviewResponseDto)doc).Date <= DateTime.Now.AddDays(42)));
             }
         }
 
@@ -94,7 +94,7 @@ namespace Tests.Repositories
 
                 Assert.Single(result.Item1);
                 Assert.Equal(1, result.Item2);
-                Assert.All(result.Item1, doc => Assert.True(((DocumentOverviewResponse)doc).IsArchived));
+                Assert.All(result.Item1, doc => Assert.True(((DocumentOverviewResponseDto)doc).IsArchived));
             }
         }
 
@@ -125,9 +125,9 @@ namespace Tests.Repositories
                     documentService.GetLongValidPagedDocuments("Meredith", "3", 1, 1);
 
                 Assert.Single(result.Item1);
-                Assert.All(result.Item1, doc => Assert.False(((DocumentOverviewResponse)doc).IsArchived));
+                Assert.All(result.Item1, doc => Assert.False(((DocumentOverviewResponseDto)doc).IsArchived));
                 Assert.All(result.Item1,
-                    doc => Assert.True(((DocumentOverviewResponse)doc).Date >= DateTime.Now.AddDays(42)));
+                    doc => Assert.True(((DocumentOverviewResponseDto)doc).Date >= DateTime.Now.AddDays(42)));
             }
         }
 
@@ -196,10 +196,10 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 DocumentRepository repository = new DocumentRepository(context);
-                DocumentResponse result = await repository.GetDocumentByIdAsync(1);
+                DocumentResponseDto result = await repository.GetDocumentByIdAsync(1);
 
                 Assert.NotNull(result);
-                Assert.IsType<DocumentResponse>(result);
+                Assert.IsType<DocumentResponseDto>(result);
                 Assert.Equal("SampleFile"u8.ToArray(), result.File);
                 Assert.Equal("SampleType", result.FileType);
                 Assert.Equal(DateTime.Now.Date, result.Date.Date);
@@ -218,7 +218,7 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                DocumentResponse result = await repository.GetDocumentByIdAsync(999);
+                DocumentResponseDto result = await repository.GetDocumentByIdAsync(999);
                 Assert.Null(result);
             }
         }
@@ -333,7 +333,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                EditDocumentRequest editDocumentRequest = new EditDocumentRequest
+                EditDocumentRequestDto editDocumentRequestDto = new EditDocumentRequestDto
                 {
                     DocumentId = documentId,
                     Type = new DocumentType { Id = 5, Name = "Contract" },
@@ -352,12 +352,12 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                await repository.UpdateDocumentAsync(editDocumentRequest);
+                await repository.UpdateDocumentAsync(editDocumentRequestDto);
                 Document updatedDocument = await context.Documents.FindAsync(documentId);
 
                 Assert.NotNull(updatedDocument);
-                Assert.Equal(editDocumentRequest.Date, updatedDocument.Date);
-                Assert.Equal(editDocumentRequest.Type, updatedDocument.Type);
+                Assert.Equal(editDocumentRequestDto.Date, updatedDocument.Date);
+                Assert.Equal(editDocumentRequestDto.Type, updatedDocument.Type);
             }
         }
 
@@ -367,7 +367,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                EditDocumentRequest editDocumentRequest = new EditDocumentRequest
+                EditDocumentRequestDto editDocumentRequestDto = new EditDocumentRequestDto
                 {
                     DocumentId = documentId,
                     Type = new DocumentType { Id = 1, Name = "0" },
@@ -389,7 +389,7 @@ namespace Tests.Repositories
 
                 InputValidationException actualException =
                     await Assert.ThrowsAsync<InputValidationException>(() =>
-                        repository.UpdateDocumentAsync(editDocumentRequest));
+                        repository.UpdateDocumentAsync(editDocumentRequestDto));
                 Assert.NotNull(actualException);
             }
         }
@@ -400,7 +400,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                EditDocumentRequest editDocumentRequest = new EditDocumentRequest
+                EditDocumentRequestDto editDocumentRequestDto = new EditDocumentRequestDto
                 {
                     DocumentId = documentId,
                     Type = new DocumentType { Id = 1, Name = "0" },
@@ -422,7 +422,7 @@ namespace Tests.Repositories
 
                 InputValidationException actualException =
                     await Assert.ThrowsAsync<InputValidationException>(() =>
-                        repository.UpdateDocumentAsync(editDocumentRequest));
+                        repository.UpdateDocumentAsync(editDocumentRequestDto));
                 Assert.NotNull(actualException);
             }
         }
@@ -433,7 +433,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                CheckBoxRequest checkBoxRequest = new CheckBoxRequest
+                CheckBoxRequestDto checkBoxRequestDto = new CheckBoxRequestDto
                 {
                     DocumentId = documentId,
                     IsArchived = true
@@ -450,7 +450,7 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                await repository.UpdateIsArchivedAsync(checkBoxRequest);
+                await repository.UpdateIsArchivedAsync(checkBoxRequestDto);
                 Document updatedDocument = await context.Documents.FindAsync(documentId);
 
                 Assert.NotNull(updatedDocument);
@@ -464,7 +464,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 const int documentId = 1;
-                CheckBoxRequest checkBoxRequest = new CheckBoxRequest
+                CheckBoxRequestDto checkBoxRequestDto = new CheckBoxRequestDto
                 {
                     DocumentId = 0,
                     IsArchived = true
@@ -483,7 +483,7 @@ namespace Tests.Repositories
 
                 NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
-                        repository.UpdateIsArchivedAsync(checkBoxRequest));
+                        repository.UpdateIsArchivedAsync(checkBoxRequestDto));
                 Assert.NotNull(actualException);
             }
         }

@@ -9,6 +9,7 @@ using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
@@ -35,7 +36,7 @@ namespace DAL.Repositories
                      product.PurchaseDate.ToString().Contains(searchfield))
                     && (dropdown == "0" || product.Type.Id.ToString() == dropdown))
                 .OrderBy(product => product.ExpirationDate);
-        }
+        } 
 
         private (IEnumerable<object>, int) GetPagedProductsInternal(string searchfield, int page, int pageSize,
             Expression<Func<Product, bool>> filter, string dropdown)
@@ -121,38 +122,38 @@ namespace DAL.Repositories
         /// <summary>
         /// Updates an existing product in the system.
         /// </summary>
-        /// <param name="product">The Product object containing updated information.</param>
+        /// <param name="productRequest">The Product object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateProductAsync(Product product)
+        public async Task UpdateProductAsync(ProductRequestDto productRequest)
         {
             Product existingProduct = await _dbSet
                 .Include(p => p.Type)
-                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+                .FirstOrDefaultAsync(p => p.ProductId == productRequest.ProductId);
 
             if (existingProduct == null)
             {
                 throw new NotFoundException("Geen product gevonden");
             }
 
-            _context.Entry(existingProduct).CurrentValues.SetValues(product);
-            existingProduct.Type = product.Type;
+            _context.Entry(existingProduct).CurrentValues.SetValues(productRequest);
+            existingProduct.Type = productRequest.Type;
             
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateIsDeletedAsync(Product product)
+        public async Task UpdateIsDeletedAsync(ProductRequestDto productRequest)
         {
             Product existingProduct = await _dbSet
-                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+                .FirstOrDefaultAsync(p => p.ProductId == productRequest.ProductId);
 
             if (existingProduct == null)
             {
                 throw new NotFoundException("Geen product gevonden");
             }
 
-            existingProduct.TimeDeleted = product.IsDeleted ? DateTime.Today : DateTime.MinValue;
+            existingProduct.TimeDeleted = productRequest.IsDeleted ? DateTime.Today : DateTime.MinValue;
 
-            existingProduct.IsDeleted = product.IsDeleted;
+            existingProduct.IsDeleted = productRequest.IsDeleted;
             await _context.SaveChangesAsync();
         }
 

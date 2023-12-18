@@ -6,11 +6,11 @@ namespace BLL.Interfaces
 {
     public interface ILoginService
     {
-        Task<User> CheckCredentialsAsync(LoginRequestDTO user);
+        Task<User> CheckCredentialsAsync(LoginRequestDto user);
         Task<User> GetUserByEmailAsync(string email);
-        Task UpdateUserAsync(User user, string email, bool updateName);
-        Task CreateUserAsync(User user);
-        Task<IEnumerable<UserResponse>> GetAllUsersAsync();
+        Task UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto);
+        Task CreateUserAsync(CreateUserRequestDto userRequest);
+        Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task DeleteUserAsync(string email);
     }
 }

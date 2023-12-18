@@ -27,7 +27,7 @@ namespace DAL.Repositories
         /// <param name="searchfield">The search criteria for customer names or emails.</param>
         /// <param name="dropdown">The document type filter.</param>
         /// <returns>An IQueryable of DocumentOverviewDTO representing the document overviews.</returns>
-        private IQueryable<DocumentOverviewResponse> QueryGetDocuments(string searchfield, string dropdown)
+        private IQueryable<DocumentOverviewResponseDto> QueryGetDocuments(string searchfield, string dropdown)
         {
             return _context.Documents
                 .Include(d => d.Employee)
@@ -36,7 +36,7 @@ namespace DAL.Repositories
                                     document.Employee.Email.Contains(searchfield))
                                    && (dropdown == "0" || document.Type.Id.ToString() == dropdown))
                 .OrderBy(document => document.Date)
-                .Select(doc => new DocumentOverviewResponse
+                .Select(doc => new DocumentOverviewResponseDto
                 {
                     DocumentId = doc.DocumentId,
                     EmployeeId = doc.Employee.EmployeeId,
@@ -57,13 +57,13 @@ namespace DAL.Repositories
         /// <param name="filter">Additional filtering function for document overviews.</param>
         /// <returns>A tuple containing a collection of document overviews and the total number of document overviews.</returns>
         private (IEnumerable<object>, int) GetPagedDocumentsInternal(string searchfield,
-            string dropdown, int page, int pageSize, Expression<Func<DocumentOverviewResponse, bool>> filter)
+            string dropdown, int page, int pageSize, Expression<Func<DocumentOverviewResponseDto, bool>> filter)
         {
             int skipCount = Math.Max(0, (page - 1) * pageSize);
-            IQueryable<DocumentOverviewResponse> query = QueryGetDocuments(searchfield, dropdown).Where(filter);
+            IQueryable<DocumentOverviewResponseDto> query = QueryGetDocuments(searchfield, dropdown).Where(filter);
             int numberOfCustomers = query.Count();
 
-            IEnumerable<DocumentOverviewResponse> documentList = query
+            IEnumerable<DocumentOverviewResponseDto> documentList = query
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToList();
@@ -128,12 +128,12 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<DocumentResponse> GetDocumentByIdAsync(int id)
+        public async Task<DocumentResponseDto> GetDocumentByIdAsync(int id)
         {
             return await _dbSet
                 .Where(d => d.DocumentId == id)
                 .Include(d => d.Employee)
-                .Select(doc => new DocumentResponse
+                .Select(doc => new DocumentResponseDto
                 {
                     File = doc.File,
                     FileType = doc.FileType,
@@ -194,7 +194,7 @@ namespace DAL.Repositories
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public async Task UpdateDocumentAsync(EditDocumentRequest document)
+        public async Task UpdateDocumentAsync(EditDocumentRequestDto document)
         {
             Document existingDocument = await _dbSet
                 .Include(d => d.Employee)
@@ -217,7 +217,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="document">The CheckBoxDTO containing document information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateIsArchivedAsync(CheckBoxRequest document)
+        public async Task UpdateIsArchivedAsync(CheckBoxRequestDto document)
         {
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
 

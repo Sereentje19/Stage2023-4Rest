@@ -19,15 +19,17 @@
 
             <div id="profile-page">
                 <div id="inputfields">
+                    <div id="inputfield-title">Naam</div> 
                     <div id="input-edit"><input v-bind:readonly="true" class="inputfield-personal-data"
                             :placeholder="this.currentUser.name"> <button id="button-personal-data"
                             @click="editNameField()">edit</button></div>
                     <div v-if="this.editName" id="input-edit"><input v-model="this.user.name"
                             class="inputfield-personal-data" placeholder="Nieuwe naam"> <button @click="updateUser(true)"
                             id="button-personal-data">bevestig</button></div>
-                    <div class="email-personal-data" id="input-edit"><input v-bind:readonly="true"
-                            class="inputfield-personal-data" :placeholder="this.currentUser.email"> <button
-                            id="button-personal-data" @click="editEmailField()">edit</button></div>
+                    <div class="email-personal-data" id="inputfield-title">Email</div>
+                    <div id="input-edit"><input v-bind:readonly="true" class="inputfield-personal-data"
+                            :placeholder="this.currentUser.email"> <button id="button-personal-data"
+                            @click="editEmailField()">edit</button></div>
                     <div v-if="this.editEmail" id="input-edit"><input v-model="this.email" class="inputfield-personal-data"
                             placeholder="Nieuwe email"></div>
                     <div v-if="this.editEmail" id="input-edit"><input v-model="this.user.email"
@@ -72,20 +74,21 @@ export default {
             user: {
                 email: "",
                 name: "",
-                userId: JSON.parse(localStorage.getItem("currentUser")).userId
+                userId: JSON.parse(localStorage.getItem("currentUser")).userId,
+                email: "",
+                updateName: false
             },
             email: "",
         };
     },
     methods: {
         updateUser(bool) {
+            this.user.updateName = bool;
+            this.user.email = this.email;
+
             axios.put("user", this.user, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
-                },
-                params: {
-                    email: this.email,
-                    updateName: bool
                 }
             })
                 .then((res) => {

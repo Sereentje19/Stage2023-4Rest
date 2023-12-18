@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using BLL.Services;
 using DAL.Models;
+using DAL.Models.Requests;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PL.Attributes;
@@ -101,20 +102,20 @@ namespace PL.Controllers
         /// Creates a new product entry.
         /// </summary>
         /// <param name="file"></param>
-        /// <param name="product">The Product object containing information for the new entry.</param>
+        /// <param name="productRequest">The Product object containing information for the new entry.</param>
         /// <returns>
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> CreateProductAsync([FromForm] IFormFile file, [FromForm] Product product)
+        public async Task<IActionResult> CreateProductAsync([FromForm] IFormFile file, [FromForm] ProductRequestDto productRequest)
         {
             Product pro = new Product
             {
-                Type = product.Type,
-                FileType = product.FileType,
-                PurchaseDate = product.PurchaseDate,
-                ExpirationDate = product.ExpirationDate,
-                SerialNumber = product.SerialNumber
+                Type = productRequest.Type,
+                FileType = productRequest.FileType,
+                PurchaseDate = productRequest.PurchaseDate,
+                ExpirationDate = productRequest.ExpirationDate,
+                SerialNumber = productRequest.SerialNumber
             };
 
             if (file != null)
@@ -133,21 +134,21 @@ namespace PL.Controllers
         /// <summary>
         /// Updates product information.
         /// </summary>
-        /// <param name="product">The Product object containing updated information.</param>
+        /// <param name="productRequest">The Product object containing updated information.</param>
         /// <returns>
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateProductAsync(Product product)
+        public async Task<IActionResult> UpdateProductAsync(ProductRequestDto productRequest)
         {
-            await _productService.UpdateProductAsync(product);
+            await _productService.UpdateProductAsync(productRequest);
             return Ok(new { message = "Product geupdate." });
         }
         
         [HttpPut("delete")]
-        public async Task<IActionResult> UpdateIsDeletedAsync(Product product)
+        public async Task<IActionResult> UpdateIsDeletedAsync(ProductRequestDto productRequest)
         {
-            await _productService.UpdateIsDeletedAsync(product);
+            await _productService.UpdateIsDeletedAsync(productRequest);
             return Ok(new { message = "Product geupdate." });
         }
 

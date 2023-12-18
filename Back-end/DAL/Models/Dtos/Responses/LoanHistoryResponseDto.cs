@@ -1,6 +1,6 @@
 ﻿namespace DAL.Models.Responses
 {
-    public class LoanHistoryResponse
+    public class LoanHistoryResponseDto
     {
         public ProductType Type { get; set; }
         public string SerialNumber { get; set; }

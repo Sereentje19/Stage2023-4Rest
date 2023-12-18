@@ -55,22 +55,22 @@ namespace PL.Controllers
         /// <summary>
         /// Adds a new password for a user during the password reset process.
         /// </summary>
-        /// <param name="request">A PasswordChangeRequest object containing the new password and associated information.</param>
+        /// <param name="requestDto">A PasswordChangeRequest object containing the new password and associated information.</param>
         /// <returns>
         /// a success message indicating that the password has been updated.
         /// </returns>
         [AllowAnonymous]
         [HttpPost("code")]
-        public async Task<IActionResult> CreatePasswordAsync(PasswordChangeRequest request)
+        public async Task<IActionResult> CreatePasswordAsync(CreatePasswordRequestDto requestDto)
         {
-            await _passwordResetService.CreatePasswordAsync(request);
+            await _passwordResetService.CreatePasswordAsync(requestDto);
             return Ok(new { message = "Wachtwoord gemaakt" });
         }
         
         [HttpPut]
-        public async Task<IActionResult> UpdatePasswordAsync(User user, string password1, string password2, string password3)
+        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto)
         {
-            await _passwordResetService.UpdatePasswordAsync(user, password1, password2, password3);
+            await _passwordResetService.UpdatePasswordAsync(updatePasswordRequestDto);
             return Ok(new { message = "Wachtwoord aangepast." });
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace DAL.Models.Responses
 {
-    public class ProductResponse
+    public class ProductResponseDto
     {
         public int ProductId { get; set; }
         public DateTime ExpirationDate { get; set; }

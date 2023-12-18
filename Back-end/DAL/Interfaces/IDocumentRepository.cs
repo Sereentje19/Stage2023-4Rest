@@ -17,10 +17,10 @@ namespace DAL.Interfaces
             int page, int pageSize);
 
         Task<IEnumerable<DocumentType>> GetDocumentTypesAsync();
-        Task<DocumentResponse> GetDocumentByIdAsync(int id);
+        Task<DocumentResponseDto> GetDocumentByIdAsync(int id);
         Task CreateDocumentAsync(Document document);
-        Task UpdateDocumentAsync(EditDocumentRequest document);
-        Task UpdateIsArchivedAsync(CheckBoxRequest document);
+        Task UpdateDocumentAsync(EditDocumentRequestDto document);
+        Task UpdateIsArchivedAsync(CheckBoxRequestDto document);
         Task DeleteDocumentAsync(int id);
     }
 }

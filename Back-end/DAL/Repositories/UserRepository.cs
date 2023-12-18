@@ -26,21 +26,21 @@ namespace DAL.Repositories
                 .SingleOrDefaultAsync(l => l.Email == email);
         }
 
-        public async Task<IEnumerable<UserResponse>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
             return await _dbSet
-                .Select(user => new UserResponse
+                .Select(user => new UserResponseDto
                 {
                     Email = user.Email,
                     Name = user.Name
                 }).ToListAsync();
         }
 
-        
+
         public async Task UpdateUserEmailAsync(User user, string email)
         {
             await CheckEmailExistsAsync(user);
-            
+
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
 
@@ -67,7 +67,7 @@ namespace DAL.Repositories
         public async Task UpdateUserNameAsync(User user)
         {
             await CheckEmailExistsAsync(user);
-            
+
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
 
@@ -81,40 +81,46 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task CreateUserAsync(User user)
+        public async Task CreateUserAsync(CreateUserRequestDto userRequestDto)
         {
-             User existingUser = await _dbSet
-                .SingleOrDefaultAsync(l => l.Email == user.Email);
+            User existingUser = await _dbSet
+                .SingleOrDefaultAsync(l => l.Email == userRequestDto.Email);
 
-             if (existingUser != null)
-             {
-                 throw new InputValidationException("Email bestaat al.");
-             }
-            
-            if (string.IsNullOrWhiteSpace(user.Name))
+            if (existingUser != null)
+            {
+                throw new InputValidationException("Email bestaat al.");
+            }
+
+            if (string.IsNullOrWhiteSpace(userRequestDto.Name))
             {
                 throw new InputValidationException("Naam veld is leeg.");
             }
 
-            if (string.IsNullOrWhiteSpace(user.Email))
+            if (string.IsNullOrWhiteSpace(userRequestDto.Email))
             {
                 throw new InputValidationException("Email veld is leeg.");
             }
 
-            if (!user.Email.Contains('@'))
+            if (!userRequestDto.Email.Contains('@'))
             {
                 throw new InputValidationException("Geen geldige email.");
             }
 
+            User user = new User()
+            {
+                Email = userRequestDto.Email,
+                Name = userRequestDto.Name
+            };
+
             _dbSet.Add(user);
             await _context.SaveChangesAsync();
         }
-        
+
         public async Task DeleteUserAsync(string email)
         {
             User user = await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == email);
-            
+
             _dbSet.Remove(user);
             await _context.SaveChangesAsync();
         }
@@ -125,7 +131,7 @@ namespace DAL.Repositories
         /// <param name="user">The user object containing email and password for validation.</param>
         /// <returns>The user object if valid credentials are found; otherwise, throws exceptions for incorrect email or password.</returns>
         /// <exception cref="Exception">Thrown when the email or password is incorrect.</exception>
-        public async Task<User> CheckCredentialsAsync(LoginRequestDTO user)
+        public async Task<User> CheckCredentialsAsync(LoginRequestDto user)
         {
             User matchingUser = await _dbSet.FirstOrDefaultAsync(u => u.Email.ToLower() == user.Email.ToLower());
 
@@ -162,7 +168,7 @@ namespace DAL.Repositories
                 return string.Equals(enteredPasswordHashString, storedHash);
             }
         }
-        
+
         private async Task CheckEmailExistsAsync(User user)
         {
             User existingUserEmail = await _dbSet

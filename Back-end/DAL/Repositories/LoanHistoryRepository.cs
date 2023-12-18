@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DAL.Data;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,10 +43,10 @@ namespace DAL.Repositories
             int numberOfLoanHistory = await query.CountAsync();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
 
-            IEnumerable<LoanHistoryResponse> loanHistoryList = await query
+            IEnumerable<LoanHistoryResponseDto> loanHistoryList = await query
                 .Skip(skipCount)
                 .Take(pageSize)
-                .Select(loan => new LoanHistoryResponse
+                .Select(loan => new LoanHistoryResponseDto
                 {
                     Type = loan.Product.Type,
                     SerialNumber = loan.Product.SerialNumber,
@@ -81,10 +82,10 @@ namespace DAL.Repositories
             int numberOfLoanHistory = await query.CountAsync();
             int skipCount = Math.Max(0, (page - 1) * pageSize);
                 
-            IEnumerable<LoanHistoryResponse> loanHistoryList = await query
+            IEnumerable<LoanHistoryResponseDto> loanHistoryList = await query
                 .Skip(skipCount)
                 .Take(pageSize)
-                .Select(loan => new LoanHistoryResponse
+                .Select(loan => new LoanHistoryResponseDto
                 {
                     Type = loan.Product.Type,
                     SerialNumber = loan.Product.SerialNumber,
@@ -151,7 +152,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="lh">The LoanHistory object to be added.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task CreateLoanHistoryAsync(LoanHistory lh)
+        public async Task CreateLoanHistoryAsync(LoanHistoryRequestDto lh)
         {
             LoanHistory loanHistory = new LoanHistory
             {
@@ -170,9 +171,8 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="lh">The LoanHistory object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateLoanHistoryAsync(LoanHistory lh)
+        public async Task UpdateLoanHistoryAsync(LoanHistoryRequestDto lh)
         {
-            _context.Entry(lh).State = EntityState.Detached;
             LoanHistory loanHistory = new LoanHistory
             {
                 Product = await _context.Products.FindAsync(lh.Product.ProductId),
@@ -181,6 +181,7 @@ namespace DAL.Repositories
                 LoanDate = lh.LoanDate,
                 LoanHistoryId = lh.LoanHistoryId
             };
+            _context.Entry(loanHistory).State = EntityState.Detached;
 
             _dbSet.Update(loanHistory);
             await _context.SaveChangesAsync();

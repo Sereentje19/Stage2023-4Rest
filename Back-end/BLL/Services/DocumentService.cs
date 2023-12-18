@@ -83,7 +83,7 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<DocumentResponse> GetDocumentByIdAsync(int id)
+        public async Task<DocumentResponseDto> GetDocumentByIdAsync(int id)
         {
             return await _documentRepository.GetDocumentByIdAsync(id);
         }
@@ -102,7 +102,7 @@ namespace BLL.Services
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public async Task UpdateDocumentAsync(EditDocumentRequest document)
+        public async Task UpdateDocumentAsync(EditDocumentRequestDto document)
         {
             await _documentRepository.UpdateDocumentAsync(document);
         }
@@ -112,7 +112,7 @@ namespace BLL.Services
         /// </summary>
         /// <param name="entity">The CheckBoxDTO containing update information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateIsArchivedAsync(CheckBoxRequest entity)
+        public async Task UpdateIsArchivedAsync(CheckBoxRequestDto entity)
         {
             await _documentRepository.UpdateIsArchivedAsync(entity);
         }

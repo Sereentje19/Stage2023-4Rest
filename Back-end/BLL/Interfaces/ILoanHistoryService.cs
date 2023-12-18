@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Models.Requests;
 
 namespace BLL.Interfaces
 {
@@ -8,7 +9,7 @@ namespace BLL.Interfaces
         Task<(IEnumerable<object>, Pager)> GetLoanHistoryByCustomerIdAsync(int id, int page, int pageSize);
         Task<DateTime?> GetReturnDatesByProductIdAsync(int productId);
         Task<LoanHistory> GetLatestLoanHistoryByProductIdAsync(int id);
-        Task CreateLoanHistoryAsync(LoanHistory loanHistory);
-        Task UpdateLoanHistoryAsync(LoanHistory loanHistory);
+        Task CreateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest);
+        Task UpdateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest);
     }
 }

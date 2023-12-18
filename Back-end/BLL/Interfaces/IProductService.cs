@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Models.Requests;
 
 namespace BLL.Interfaces
 {
@@ -11,8 +12,8 @@ namespace BLL.Interfaces
         Task<IEnumerable<ProductType>> GetProductTypesAsync();
         Task<Product> GetProductByIdAsync(int id);
         Task CreateProductAsync(Product product);
-        Task UpdateProductAsync(Product product);
-        Task UpdateIsDeletedAsync(Product product);
+        Task UpdateProductAsync(ProductRequestDto productRequest);
+        Task UpdateIsDeletedAsync(ProductRequestDto productRequest);
         Task DeleteProductAsync(int id);
     }
 }

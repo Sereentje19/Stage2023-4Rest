@@ -68,14 +68,14 @@ namespace Tests.Repositories
                 (IEnumerable<object> result, int totalCount) =
                     await productRepository.GetAllProducts("123", 1, 10, "laptop");
 
-                IEnumerable<ProductResponse> products = (IEnumerable<ProductResponse>)result;
-                ProductResponse productResponse = products.First();
+                IEnumerable<ProductResponseDto> products = (IEnumerable<ProductResponseDto>)result;
+                ProductResponseDto productResponseDto = products.First();
 
                 Assert.NotNull(result); 
                 Assert.Single(result);
                 Assert.Equal(1, totalCount);
-                Assert.Equal("12345", productResponse.SerialNumber);
-                Assert.Equal("Laptop", productResponse.Type.Name);
+                Assert.Equal("12345", productResponseDto.SerialNumber);
+                Assert.Equal("Laptop", productResponseDto.Type.Name);
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace DAL.Models.Responses
 {
-    public class DocumentOverviewResponse
+    public class DocumentOverviewResponseDto
     {
         public int DocumentId { get; set; }
         public DateTime Date { get; set; }

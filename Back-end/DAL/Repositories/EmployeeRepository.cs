@@ -9,6 +9,7 @@ using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 
 namespace DAL.Repositories
 {
@@ -137,64 +138,77 @@ namespace DAL.Repositories
         /// <summary>
         /// Adds a new customer to the repository.
         /// </summary>
-        /// <param name="employee">The customer entity to be added.</param>
+        /// <param name="employeeRequest">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer, or the ID of an existing customer if the same name and email combination is found.</returns>
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
-        public async Task<int> CreateEmployeeAsync(Employee employee)
+        public async Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
-            if (string.IsNullOrWhiteSpace(employee.Name))
+            if (string.IsNullOrWhiteSpace(employeeRequest.Name))
             {
                 throw new InputValidationException("Klant naam is leeg.");
             }
             
-            if (string.IsNullOrWhiteSpace(employee.Email) || !employee.Email.Contains("@"))
+            if (string.IsNullOrWhiteSpace(employeeRequest.Email) || !employeeRequest.Email.Contains("@"))
             {
                 throw new InputValidationException("Geen geldige email.");
             }
 
             //check if the customer already exist, then don't add it again.
             Employee existingEmployee =
-                await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email);
+                await _dbSet.FirstOrDefaultAsync(c => c.Email == employeeRequest.Email);
             
             if (existingEmployee != null)
             {
                 throw new InputValidationException("Email bestaat al.");
             }
 
-            await _dbSet.AddAsync(employee);
+            Employee emp = MapDtoToEmployee(employeeRequest);
+
+            await _dbSet.AddAsync(emp);
             await _context.SaveChangesAsync();
 
-            return employee.EmployeeId;
+            return employeeRequest.EmployeeId;
         }
 
-        public async Task UpdateEmployeeIsArchivedAsync(Employee employee)
+        private static Employee MapDtoToEmployee(EmployeeRequestDto employeeRequest)
         {
-            Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
+            return new Employee()
+            {
+                Email = employeeRequest.Email,
+                EmployeeId = employeeRequest.EmployeeId,
+                Name = employeeRequest.Name,
+                IsArchived = employeeRequest.IsArchived
+            };
+        }
+
+        public async Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
+        {
+            Employee existingEmployee = await _dbSet.FindAsync(employeeRequest.EmployeeId);
             
             if (existingEmployee == null)
             {
                 throw new NotFoundException("Geen medewerker gevonden");
             }
             
-            existingEmployee.IsArchived = employee.IsArchived;
+            existingEmployee.IsArchived = employeeRequest.IsArchived;
             await _context.SaveChangesAsync();
         }
 
         /// <summary>
         /// Updates an existing customer in the repository.
         /// </summary>
-        /// <param name="employee">The document entity to be updated.</param>
-        public async Task UpdateEmployeeAsync(Employee employee)
+        /// <param name="employeeRequest">The document entity to be updated.</param>
+        public async Task UpdateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
-            Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
+            Employee existingEmployee = await _dbSet.FindAsync(employeeRequest.EmployeeId);
 
             if (existingEmployee == null)
             {
                 throw new NotFoundException("Geen medewerker gevonden");
             }
-
-            await CheckEmailExistsAsync(employee);
-            _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
+            
+            await CheckEmailExistsAsync(employeeRequest);
+            _context.Entry(existingEmployee).CurrentValues.SetValues(employeeRequest);
             await _context.SaveChangesAsync();
         }
 
@@ -216,10 +230,10 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        private async Task CheckEmailExistsAsync(Employee employee)
+        private async Task CheckEmailExistsAsync(EmployeeRequestDto employeeRequest)
         {
             Employee existingEmployee =
-                await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email && c.EmployeeId != employee.EmployeeId);
+                await _dbSet.FirstOrDefaultAsync(c => c.Email == employeeRequest.Email && c.EmployeeId != employeeRequest.EmployeeId);
             
             if (existingEmployee != null)
             {

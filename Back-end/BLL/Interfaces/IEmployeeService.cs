@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Models.Requests;
 
 namespace BLL.Interfaces
 {
@@ -8,9 +9,9 @@ namespace BLL.Interfaces
         Task<(IEnumerable<object>, Pager)> GetPagedArchivedEmployees(string searchfield, int page, int pageSize);
         Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield);
         Task<Employee> GetEmployeeByIdAsync(int id);
-        Task<int> CreateEmployeeAsync(Employee employee);
-        Task UpdateEmployeeIsArchivedAsync(Employee employee);
-        Task UpdateEmployeeAsync(Employee employees);
+        Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest);
+        Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest);
+        Task UpdateEmployeeAsync(EmployeeRequestDto employeesRequest);
         Task DeleteEmployeeAsync(int id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Models.Requests;
 
 namespace DAL.Interfaces
 {
@@ -9,9 +10,9 @@ namespace DAL.Interfaces
         Task<(IEnumerable<object>, int)> GetAllArchivedEmployees(string searchfield, int page, int pageSize);
         Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield);
         Task<Employee> GetEmployeeByIdAsync(int id);
-        Task<int> CreateEmployeeAsync(Employee employee);
-        Task UpdateEmployeeIsArchivedAsync(Employee employee);
-        Task UpdateEmployeeAsync(Employee entity);
+        Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest);
+        Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest);
+        Task UpdateEmployeeAsync(EmployeeRequestDto employeeRequest);
         Task DeleteEmployeeAsync(int id);
     }
 }

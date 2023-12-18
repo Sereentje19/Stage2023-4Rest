@@ -7,6 +7,6 @@ public interface IPasswordResetService
 {
     Task CreateResetCodeAsync(string email);
     Task CheckEnteredCodeAsync(string email, string code);
-    Task CreatePasswordAsync(PasswordChangeRequest request);
-    Task UpdatePasswordAsync(User user, string password1, string password2, string password3);
+    Task CreatePasswordAsync(CreatePasswordRequestDto requestDto);
+    Task UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto);
 }

@@ -36,7 +36,7 @@ namespace Tests.Repositories
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
 
-                LoginRequestDTO loginRequest = new LoginRequestDTO
+                LoginRequestDto loginRequest = new LoginRequestDto
                 {
                     Email = "test@example.com",
                     Password = "1" 
@@ -56,7 +56,7 @@ namespace Tests.Repositories
             {
                 UserRepository userRepository = new UserRepository(context);
 
-                LoginRequestDTO loginRequest = new LoginRequestDTO
+                LoginRequestDto loginRequest = new LoginRequestDto
                 {
                     Email = "nonexistent@example.com",
                     Password = "user_password" 
@@ -86,7 +86,7 @@ namespace Tests.Repositories
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
 
-                LoginRequestDTO loginRequest = new LoginRequestDTO
+                LoginRequestDto loginRequest = new LoginRequestDto
                 {
                     Email = "test@example.com",
                     Password = "incorrect_password"

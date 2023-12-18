@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 
 namespace BLL.Services
 {
@@ -81,16 +82,16 @@ namespace BLL.Services
         /// <summary>
         /// Updates an existing product in the system.
         /// </summary>
-        /// <param name="product">The Product object containing updated information.</param>
+        /// <param name="productRequest">The Product object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateProductAsync(Product product)
+        public async Task UpdateProductAsync(ProductRequestDto productRequest)
         {
-            await _productRepository.UpdateProductAsync(product);
+            await _productRepository.UpdateProductAsync(productRequest);
         }
         
-        public async Task UpdateIsDeletedAsync(Product product)
+        public async Task UpdateIsDeletedAsync(ProductRequestDto productRequest)
         {
-            await _productRepository.UpdateIsDeletedAsync(product);
+            await _productRepository.UpdateIsDeletedAsync(productRequest);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using BLL.Services;
 using DAL.Models;
+using DAL.Models.Requests;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PL.Attributes;
@@ -114,7 +115,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> CreateLoanHistoryAsync([FromBody] LoanHistory lh)
+        public async Task<IActionResult> CreateLoanHistoryAsync([FromBody] LoanHistoryRequestDto lh)
         {
             await _loanHistoryService.CreateLoanHistoryAsync(lh);
             return Ok(new { message = "Leen geschiedenis toegevoegd." });
@@ -123,14 +124,14 @@ namespace PL.Controllers
         /// <summary>
         /// Updates loan history information.
         /// </summary>
-        /// <param name="loanHistory">The LoanHistory object containing updated information.</param>
+        /// <param name="loanHistoryRequest">The LoanHistory object containing updated information.</param>
         /// <returns>
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateLoanHistoryAsync(LoanHistory loanHistory)
+        public async Task<IActionResult> UpdateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
         {
-            await _loanHistoryService.UpdateLoanHistoryAsync(loanHistory);
+            await _loanHistoryService.UpdateLoanHistoryAsync(loanHistoryRequest);
             return Ok(new { message = "Leen geschiedenis geupdate" });
         }
     }

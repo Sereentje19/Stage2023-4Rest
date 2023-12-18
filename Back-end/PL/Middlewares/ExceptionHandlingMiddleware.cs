@@ -47,7 +47,7 @@ namespace PL.Middlewares
             context.Response.ContentType = "application/json";
             HttpResponse response = context.Response;
 
-            ErrorResponse errorResponse = new ErrorResponse
+            ErrorResponseDto errorResponseDto = new ErrorResponseDto
             {
                 Success = false
             };
@@ -57,28 +57,28 @@ namespace PL.Middlewares
                 case ApplicationException:
                 case InputValidationException:
                     response.StatusCode = (int)HttpStatusCode.BadRequest; //400
-                    errorResponse.Message = exception.Message;
+                    errorResponseDto.Message = exception.Message;
                     break;
                 case TokenValidationException:
                     response.StatusCode = (int)HttpStatusCode.Unauthorized; //401
-                    errorResponse.Message = exception.Message;
+                    errorResponseDto.Message = exception.Message;
                     break;
                 case InvalidCredentialsException:
                     response.StatusCode = (int)HttpStatusCode.Forbidden; //403
-                    errorResponse.Message = exception.Message;
+                    errorResponseDto.Message = exception.Message;
                     break;
                 case NotFoundException:
                     response.StatusCode = (int)HttpStatusCode.NotFound; //404
-                    errorResponse.Message = exception.Message;
+                    errorResponseDto.Message = exception.Message;
                     break;
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError; //500
-                    errorResponse.Message = "Interne serverfout. - " + exception.Message;
+                    errorResponseDto.Message = "Interne serverfout. - " + exception.Message;
                     break;
             }
 
             _logger.LogError(exception.Message);
-            await context.Response.WriteAsync(errorResponse.Message);
+            await context.Response.WriteAsync(errorResponseDto.Message);
         }
     }
 }

@@ -56,12 +56,12 @@ namespace Tests.Repositories
                 Assert.NotEmpty(result);
                 Assert.Equal(1, totalCount);
 
-                IEnumerable<LoanHistoryResponse> loanHistories = (IEnumerable<LoanHistoryResponse>)result;
-                LoanHistoryResponse loanHistoryResponse = loanHistories.First();
+                IEnumerable<LoanHistoryResponseDto> loanHistories = (IEnumerable<LoanHistoryResponseDto>)result;
+                LoanHistoryResponseDto loanHistoryResponseDto = loanHistories.First();
 
-                Assert.Equal("Laptop", loanHistoryResponse.Type.Name);
-                Assert.Equal("123456", loanHistoryResponse.SerialNumber);
-                Assert.Equal("John Doe", loanHistoryResponse.Name);
+                Assert.Equal("Laptop", loanHistoryResponseDto.Type.Name);
+                Assert.Equal("123456", loanHistoryResponseDto.SerialNumber);
+                Assert.Equal("John Doe", loanHistoryResponseDto.Name);
             }
         }
 
@@ -105,15 +105,15 @@ namespace Tests.Repositories
                 Assert.NotEmpty(result);
                 Assert.Equal(1, totalCount);
 
-                IEnumerable<LoanHistoryResponse> loanHistories = (IEnumerable<LoanHistoryResponse>)result;
-                LoanHistoryResponse loanHistoryResponse = loanHistories.First();
+                IEnumerable<LoanHistoryResponseDto> loanHistories = (IEnumerable<LoanHistoryResponseDto>)result;
+                LoanHistoryResponseDto loanHistoryResponseDto = loanHistories.First();
 
-                Assert.Equal("Laptop", loanHistoryResponse.Type.Name);
-                Assert.Equal("123456", loanHistoryResponse.SerialNumber);
-                Assert.Equal("John Doe", loanHistoryResponse.Name);
-                Assert.Equal("john@example.com", loanHistoryResponse.Email);
-                Assert.Equal(_loanHistories.First().LoanDate, loanHistoryResponse.LoanDate);
-                Assert.Equal(_loanHistories.First().ReturnDate, loanHistoryResponse.ReturnDate);
+                Assert.Equal("Laptop", loanHistoryResponseDto.Type.Name);
+                Assert.Equal("123456", loanHistoryResponseDto.SerialNumber);
+                Assert.Equal("John Doe", loanHistoryResponseDto.Name);
+                Assert.Equal("john@example.com", loanHistoryResponseDto.Email);
+                Assert.Equal(_loanHistories.First().LoanDate, loanHistoryResponseDto.LoanDate);
+                Assert.Equal(_loanHistories.First().ReturnDate, loanHistoryResponseDto.ReturnDate);
             }
         }
 

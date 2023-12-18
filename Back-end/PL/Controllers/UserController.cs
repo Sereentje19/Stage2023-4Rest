@@ -27,7 +27,7 @@ namespace PL.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsersAsync()
         {
-            IEnumerable<UserResponse> users = await _loginService.GetAllUsersAsync();   
+            IEnumerable<UserResponseDto> users = await _loginService.GetAllUsersAsync();   
             return Ok(users);
         }
         
@@ -38,7 +38,7 @@ namespace PL.Controllers
         /// <returns>An authentication token if login is successful; otherwise, an error message.</returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDTO userDto)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto userDto)
         {
             await _loginService.CheckCredentialsAsync(userDto);
             User user =  await _loginService.GetUserByEmailAsync(userDto.Email);
@@ -47,16 +47,16 @@ namespace PL.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateUserAsync(User user)
+        public async Task<IActionResult> CreateUserAsync(CreateUserRequestDto userRequest)
         {
-            await _loginService.CreateUserAsync(user);   
+            await _loginService.CreateUserAsync(userRequest);   
             return Ok(new { message = "Gebruiker toegevoegd." });
         }
         
         [HttpPut]
-        public async Task<IActionResult> UpdateUserAsync(string email, User user, bool updateName)
+        public async Task<IActionResult> UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
         {
-            await _loginService.UpdateUserAsync(user, email, updateName);   
+            await _loginService.UpdateUserAsync(updateUserRequestDto);   
             return Ok(new { message = "Gebruiker geupdate." });
         }
         

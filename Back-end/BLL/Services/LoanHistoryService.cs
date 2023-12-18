@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 
 namespace BLL.Services
 {
@@ -66,21 +67,21 @@ namespace BLL.Services
         /// <summary>
         /// Updates an existing loan history record.
         /// </summary>
-        /// <param name="loanHistory">The LoanHistory object containing updated information.</param>
+        /// <param name="loanHistoryRequest">The LoanHistory object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateLoanHistoryAsync(LoanHistory loanHistory)
+        public async Task UpdateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
         {
-            await _loanHistoryRepository.UpdateLoanHistoryAsync(loanHistory);
+            await _loanHistoryRepository.UpdateLoanHistoryAsync(loanHistoryRequest);
         }
 
         /// <summary>
         /// Posts a new loan history record.
         /// </summary>
-        /// <param name="loanHistory">The LoanHistory object to be added.</param>
+        /// <param name="loanHistoryRequest">The LoanHistory object to be added.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task CreateLoanHistoryAsync(LoanHistory loanHistory)
+        public async Task CreateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
         {
-            await _loanHistoryRepository.CreateLoanHistoryAsync(loanHistory);
+            await _loanHistoryRepository.CreateLoanHistoryAsync(loanHistoryRequest);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using BLL.Services;
 using DAL.Models;
+using DAL.Models.Requests;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PL.Attributes;
@@ -108,7 +109,7 @@ namespace PL.Controllers
         /// <param name="cus">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer if successful; otherwise, an error message.</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateEmployeeAsync(Employee cus)
+        public async Task<IActionResult> CreateEmployeeAsync(EmployeeRequestDto cus)
         {
             int id = await _employeeService.CreateEmployeeAsync(cus);
             return Ok(id);
@@ -122,7 +123,7 @@ namespace PL.Controllers
         /// a message indicating that the employee's archived status has been updated.
         /// </returns>
         [HttpPut("archive")]
-        public async Task<IActionResult> UpdateIsArchivedAsync(Employee doc)
+        public async Task<IActionResult> UpdateIsArchivedAsync(EmployeeRequestDto doc)
         {
             await _employeeService.UpdateEmployeeIsArchivedAsync(doc);
             return Ok(new { message = "Medewerker geupdate." });
@@ -133,9 +134,9 @@ namespace PL.Controllers
         /// </summary>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateEmployeeAsync(Employee employee)
+        public async Task<IActionResult> UpdateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
-            await _employeeService.UpdateEmployeeAsync(employee);
+            await _employeeService.UpdateEmployeeAsync(employeeRequest);
             return Ok(new { message = "Medewerker geupdate. " });
         }
 

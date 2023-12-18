@@ -14,10 +14,10 @@ namespace BLL.Interfaces
             int page, int pageSize);
 
         Task<IEnumerable<DocumentType>> GetDocumentTypesAsync();
-        Task<DocumentResponse> GetDocumentByIdAsync(int id);
+        Task<DocumentResponseDto> GetDocumentByIdAsync(int id);
         Task CreateDocumentAsync(Document document);
-        Task UpdateDocumentAsync(EditDocumentRequest document);
-        Task UpdateIsArchivedAsync(CheckBoxRequest entity);
+        Task UpdateDocumentAsync(EditDocumentRequestDto document);
+        Task UpdateIsArchivedAsync(CheckBoxRequestDto entity);
         Task DeleteDocumentAsync(int id);
     }
 }

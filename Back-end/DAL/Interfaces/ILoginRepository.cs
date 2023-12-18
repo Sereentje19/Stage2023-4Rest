@@ -6,12 +6,12 @@ namespace DAL.Interfaces
 {
     public interface ILoginRepository
     {
-        Task<User> CheckCredentialsAsync(LoginRequestDTO user);
+        Task<User> CheckCredentialsAsync(LoginRequestDto user);
         Task<User> GetUserByEmailAsync(string email);
         Task UpdateUserEmailAsync(User user, string email);
         Task UpdateUserNameAsync(User user);
-        Task CreateUserAsync(User user);
-        Task<IEnumerable<UserResponse>> GetAllUsersAsync();
+        Task CreateUserAsync(CreateUserRequestDto userRequest);
+        Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task DeleteUserAsync(string email);
 
     }

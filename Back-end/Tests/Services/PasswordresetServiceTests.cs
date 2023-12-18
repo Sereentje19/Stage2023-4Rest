@@ -82,7 +82,7 @@ public class PasswordresetServiceTests
     [Fact]
     public async Task PostPassword_ShouldThrowException_WhenPasswordsAreNotEqual()
     {
-        PasswordChangeRequest request = new PasswordChangeRequest
+        CreatePasswordRequestDto requestDto = new CreatePasswordRequestDto
         {
             Email = "test@example.com",
             Password1 = "password1",
@@ -100,7 +100,7 @@ public class PasswordresetServiceTests
             mockLoginService.Object
         );
 
-        await Assert.ThrowsAsync<InputValidationException>(() => passwordResetService.CreatePasswordAsync(request));
+        await Assert.ThrowsAsync<InputValidationException>(() => passwordResetService.CreatePasswordAsync(requestDto));
 
         mockPasswordResetRepository.Verify(
             repo => repo.CreatePasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
@@ -111,7 +111,7 @@ public class PasswordresetServiceTests
     [Fact]
     public async Task PostPassword_ShouldCallRepository_WhenPasswordsAreEqual()
     {
-        PasswordChangeRequest request = new PasswordChangeRequest
+        CreatePasswordRequestDto requestDto = new CreatePasswordRequestDto
         {
             Email = "test@example.com",
             Password1 = "password",
@@ -129,10 +129,10 @@ public class PasswordresetServiceTests
             mockLoginService.Object
         );
 
-        await passwordResetService.CreatePasswordAsync(request);
+        await passwordResetService.CreatePasswordAsync(requestDto);
 
         mockPasswordResetRepository.Verify(
-            repo => repo.CreatePasswordAsync(request.Email, request.Password1, request.Code),
+            repo => repo.CreatePasswordAsync(requestDto.Email, requestDto.Password1, requestDto.Code),
             Times.Once
         );
     }

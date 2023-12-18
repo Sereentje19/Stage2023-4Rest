@@ -20,9 +20,11 @@
             <div id="profile-page-add-users">
                 <div id="table-add-users">
                     <div id="inputfields">
-                        <div id="input-edit"><input v-model="this.user.name" class="inputfield-personal-data" placeholder="Naam">
+                        <div id="inputfield-title">Naam</div>
+                        <div id="input-edit"><input v-model="this.user.name" class="inputfield-personal-data">
                         </div>
-                        <div id="input-edit"><input v-model="this.user.email" class="inputfield-personal-data" placeholder="Email"></div>
+                        <div id="inputfield-title">Email</div>
+                        <div id="input-edit"><input v-model="this.user.email" class="inputfield-personal-data"></div>
                         <button @click="addUser()" id="button-personal-data">bevestig</button>
                     </div>
                     <button id="profile-back-button">

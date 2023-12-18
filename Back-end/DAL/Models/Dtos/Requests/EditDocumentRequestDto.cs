@@ -1,6 +1,6 @@
 ﻿namespace DAL.Models.Requests
 {
-    public class EditDocumentRequest
+    public class EditDocumentRequestDto
     {
         public int DocumentId { get; set; }
         public DateTime Date { get; set; }

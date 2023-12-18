@@ -12,7 +12,7 @@ public class UserServiceTests
     [Fact]
     public async Task CheckCredentials_ShouldReturnUser_WhenCredentialsAreValid()
     {
-        LoginRequestDTO userCredentials = new LoginRequestDTO
+        LoginRequestDto userCredentials = new LoginRequestDto
         {
             Email = "validUsername",
             Password = "validPassword"
@@ -37,7 +37,7 @@ public class UserServiceTests
     [Fact]
     public async Task CheckCredentials_ShouldReturnNull_WhenCredentialsAreInvalid()
     {
-        LoginRequestDTO userCredentials = new LoginRequestDTO
+        LoginRequestDto userCredentials = new LoginRequestDto
         {
             Email = "invalidUsername",
             Password = "invalidPassword"

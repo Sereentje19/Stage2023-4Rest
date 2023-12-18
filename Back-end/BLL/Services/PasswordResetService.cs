@@ -62,32 +62,40 @@ public class PasswordResetService : IPasswordResetService
     /// <summary>
     /// Posts a new password for a user after the password recovery process.
     /// </summary>
-    /// <param name="request">A PasswordChangeRequest object containing the new password and associated information.</param>
-    public async Task CreatePasswordAsync(PasswordChangeRequest request)
+    /// <param name="requestDto">A PasswordChangeRequest object containing the new password and associated information.</param>
+    public async Task CreatePasswordAsync(CreatePasswordRequestDto requestDto)
     {
-        if (request.Password1 != request.Password2)
+        if (requestDto.Password1 != requestDto.Password2)
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
         }
         
-        await _passwordResetRepository.CreatePasswordAsync(request.Email, request.Password1, request.Code);
+        await _passwordResetRepository.CreatePasswordAsync(requestDto.Email, requestDto.Password1, requestDto.Code);
     }
     
-    public async Task UpdatePasswordAsync(User user, string password1, string password2, string password3)
+    public async Task UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto)
     {
-        LoginRequestDTO dto = new LoginRequestDTO()
+        LoginRequestDto dto = new LoginRequestDto()
         {
-            Email = user.Email,
-            Password = password1
+            Email = updatePasswordRequestDto.Email,
+            Password = updatePasswordRequestDto.Password1
         };
 
         await _loginService.CheckCredentialsAsync(dto);
         
-        if (password2 != password3)
+        if (updatePasswordRequestDto.Password2 != updatePasswordRequestDto.Password3)
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
         }
+
+        User user = new User()
+        {
+            Email = updatePasswordRequestDto.Email,
+            Name = updatePasswordRequestDto.Name,
+            PasswordHash = updatePasswordRequestDto.PasswordHash,
+            PasswordSalt = updatePasswordRequestDto.PasswordSalt
+        };
         
-        await _passwordResetRepository.UpdatePasswordAsync(user, password2);
+        await _passwordResetRepository.UpdatePasswordAsync(user, updatePasswordRequestDto.Password2);
     }
 }

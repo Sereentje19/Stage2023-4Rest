@@ -138,7 +138,7 @@ namespace PL.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDocumentByIdAsync(int id)
         {
-            DocumentResponse document = await _documentService.GetDocumentByIdAsync(id);
+            DocumentResponseDto document = await _documentService.GetDocumentByIdAsync(id);
             return Ok(document);
         }
 
@@ -149,7 +149,7 @@ namespace PL.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateDocumentAsync([FromForm] IFormFile file, [FromForm] DocumentResponse document)
+        public async Task<IActionResult> CreateDocumentAsync([FromForm] IFormFile file, [FromForm] DocumentResponseDto document)
         {
             Document doc = new Document
             {
@@ -182,7 +182,7 @@ namespace PL.Controllers
         /// <param name="doc">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateDocumentAsync(EditDocumentRequest doc)
+        public async Task<IActionResult> UpdateDocumentAsync(EditDocumentRequestDto doc)
         {
             await _documentService.UpdateDocumentAsync(doc);
             return Ok(new { message = "Document geupdate." });
@@ -196,7 +196,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPut("archive")]
-        public async Task<IActionResult> UpdateIsArchivedAsync(CheckBoxRequest doc)
+        public async Task<IActionResult> UpdateIsArchivedAsync(CheckBoxRequestDto doc)
         {
             await _documentService.UpdateIsArchivedAsync(doc);
             return Ok(new { message = "Document geupdate." });

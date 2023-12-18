@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 
 namespace BLL.Services
 {
@@ -75,33 +76,33 @@ namespace BLL.Services
         /// <summary>
         /// Adds a new customer to the repository.
         /// </summary>
-        /// <param name="employee">The customer entity to be added.</param>
+        /// <param name="employeeRequest">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer.</returns>
-        public async Task<int> CreateEmployeeAsync(Employee employee)
+        public async Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
-            return await _employeeRepository.CreateEmployeeAsync(employee);
+            return await _employeeRepository.CreateEmployeeAsync(employeeRequest);
         }
         
         /// <summary>
         /// Updates the 'IsArchived' status of an employee in the system.
         /// </summary>
-        /// <param name="employee">The Employee object containing updated information.</param>
+        /// <param name="employeeRequest">The Employee object containing updated information.</param>
         /// <returns>
         /// A task representing the asynchronous operation of updating the 'IsArchived' status.
         /// </returns>
-        public async Task UpdateEmployeeIsArchivedAsync(Employee employee)
+        public async Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
         {
-            await _employeeRepository.UpdateEmployeeIsArchivedAsync(employee);
+            await _employeeRepository.UpdateEmployeeIsArchivedAsync(employeeRequest);
         }
 
         /// <summary>
         /// Updates an existing customer's information.
         /// </summary>
-        /// <param name="employee">The Customer object containing updated information.</param>
+        /// <param name="employeeRequest">The Customer object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateEmployeeAsync(Employee employee)
+        public async Task UpdateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
-            await _employeeRepository.UpdateEmployeeAsync(employee);
+            await _employeeRepository.UpdateEmployeeAsync(employeeRequest);
         }
 
         /// <summary>
