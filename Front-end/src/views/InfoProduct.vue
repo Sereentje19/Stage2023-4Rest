@@ -25,7 +25,6 @@
             </div>
             <div id="box">
                 <button @click="toEdit()" id="edit-button">Edit</button>
-                <button @click="deleteProduct()" id="delete-button">Delete</button>
             </div>
         </div>
 
@@ -230,19 +229,6 @@ export default {
             })
                 .then((res) => {
                     this.product = res.data;
-                }).catch((error) => {
-                    this.$refs.PopUpMessage.popUpError(error.response.data);
-                });
-        },
-        deleteProducts() {
-            axios.delete("product/" + this.id, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwt")
-                },
-            })
-                .then((res) => {
-                    localStorage.setItem('popUpSucces', 'true');
-                    this.$router.push({ path: '/overzicht/bruikleen', query: { activePopup: true } });
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

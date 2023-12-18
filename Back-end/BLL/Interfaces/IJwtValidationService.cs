@@ -1,12 +1,6 @@
-﻿using PL.Models.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PL.Models;
+﻿using DAL.Models;
 
-namespace BLL.Services
+namespace BLL.Interfaces
 {
     public interface IJwtValidationService
     {

@@ -1,10 +1,11 @@
 ﻿using BLL.Services;
+using DAL.Data;
+using DAL.Exceptions;
+using DAL.Models;
+using DAL.Models.Requests;
+using DAL.Models.Responses;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
-using PL.Exceptions;
-using PL.Models;
-using PL.Models.Requests;
-using PL.Models.Responses;
 
 namespace Tests.Repositories
 {

@@ -1,6 +1,6 @@
-﻿using PL.Models;
+﻿using DAL.Models;
 
-namespace DAL.Repositories;
+namespace DAL.Interfaces;
 
 public interface IPasswordResetRepository
 {

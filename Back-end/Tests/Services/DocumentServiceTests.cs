@@ -1,10 +1,11 @@
 ﻿using BLL.Services;
+using DAL.Interfaces;
+using DAL.Models;
+using DAL.Models.Requests;
+using DAL.Models.Responses;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using PL.Models;
-using PL.Models.Requests;
-using PL.Models.Responses;
 
 namespace Tests.Services;
 

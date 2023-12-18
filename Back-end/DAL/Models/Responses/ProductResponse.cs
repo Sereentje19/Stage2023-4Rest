@@ -1,4 +1,4 @@
-﻿namespace PL.Models.Responses
+﻿namespace DAL.Models.Responses
 {
     public class ProductResponse
     {

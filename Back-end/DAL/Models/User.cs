@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace PL.Models
+namespace DAL.Models
 {
     [Index(nameof(Email), IsUnique = true)]
     public class User

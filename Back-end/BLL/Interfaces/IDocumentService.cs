@@ -1,14 +1,8 @@
-﻿using Azure;
-using PL.Models.Requests;
-using PL.Models.Responses;
-using PL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DAL.Models;
+using DAL.Models.Requests;
+using DAL.Models.Responses;
 
-namespace BLL.Services
+namespace BLL.Interfaces
 {
     public interface IDocumentService
     {

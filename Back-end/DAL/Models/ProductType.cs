@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PL.Models
+namespace DAL.Models
 {
     public class ProductType
     {

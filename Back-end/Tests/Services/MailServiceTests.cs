@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using Castle.Core.Smtp;
+using DAL.Settings;
 using MailKit;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Moq;
-using PL.Models;
 using MailService = BLL.Services.MailService;
 
 namespace Tests.Services;

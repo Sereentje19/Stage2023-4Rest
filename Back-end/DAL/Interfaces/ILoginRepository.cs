@@ -1,13 +1,8 @@
-﻿using PL.Models.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PL.Models;
-using PL.Models.Responses;
+﻿using DAL.Models;
+using DAL.Models.Requests;
+using DAL.Models.Responses;
 
-namespace DAL.Repositories
+namespace DAL.Interfaces
 {
     public interface ILoginRepository
     {

@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using BLL.Interfaces;
+using DAL.Settings;
+using Microsoft.Extensions.Options;
 using MimeKit;
-using PL.Models;
 
 namespace BLL.Services
 {

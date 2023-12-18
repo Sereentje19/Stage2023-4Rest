@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using DAL.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
-using PL.Exceptions;
 
 namespace PL.Attributes
 {

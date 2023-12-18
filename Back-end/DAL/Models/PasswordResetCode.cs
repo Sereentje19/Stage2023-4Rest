@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PL.Models;
+namespace DAL.Models;
 
 public class PasswordResetCode
 {

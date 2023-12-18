@@ -1,6 +1,6 @@
-﻿using PL.Exceptions;
-using PL.Models.Responses;
-using System.Net;
+﻿using System.Net;
+using DAL.Exceptions;
+using DAL.Models.Responses;
 
 namespace PL.Middlewares
 {

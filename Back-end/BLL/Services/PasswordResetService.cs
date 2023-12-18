@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
-using BLL.Services;
-using DAL.Repositories;
-using PL.Exceptions;
-using PL.Models;
-using PL.Models.Requests;
+﻿using BLL.Interfaces;
+using DAL.Exceptions;
+using DAL.Interfaces;
+using DAL.Models;
+using DAL.Models.Requests;
+
+namespace BLL.Services;
 
 public class PasswordResetService : IPasswordResetService
 {

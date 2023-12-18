@@ -1,7 +1,6 @@
 ﻿using BLL.Services;
+using DAL.Models;
 using Microsoft.Extensions.Configuration;
-using PL.Models;
-using PL.Models.Requests;
 
 namespace Tests.Services;
 

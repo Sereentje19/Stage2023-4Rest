@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BLL.Interfaces;
+using DAL.Data;
+using DAL.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using PL.Models;
 
 namespace BLL.Services
 {
@@ -63,7 +65,7 @@ namespace BLL.Services
                 string bodyEmail = $"Het volgende document zal over {weeks} weken komen te vervallen:" +
                                    $"\nNaam: {employee.Name}" +
                                    $"\nVerloop datum: {document.Date:dd-MM-yyyy}" +
-                                   $"\nType document: {document.Type.ToString().Replace("_", " ")}\n\n";
+                                   $"\nType document: {document.Type.ToString()!.Replace("_", " ")}\n\n";
 
                 mailService.SendDocumentExpirationEmail(bodyEmail, document.FileType, document.File,
                     "Document vervalt Binnenkort!");

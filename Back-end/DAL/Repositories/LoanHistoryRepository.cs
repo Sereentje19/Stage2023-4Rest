@@ -1,10 +1,12 @@
-﻿using PL.Models.Responses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PL.Models;
+using DAL.Data;
+using DAL.Interfaces;
+using DAL.Models;
+using DAL.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories

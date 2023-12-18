@@ -1,6 +1,4 @@
-﻿using PL.Models;
-
-namespace PL.Models.Requests
+﻿namespace DAL.Models.Requests
 {
     public class EditDocumentRequest
     {

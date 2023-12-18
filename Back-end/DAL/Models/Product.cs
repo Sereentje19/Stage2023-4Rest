@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PL.Models
+namespace DAL.Models
 {
     public class Product
     {
@@ -16,5 +16,6 @@ namespace PL.Models
         public string SerialNumber { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime TimeDeleted { get; set; }
+        public ICollection<LoanHistory> LoanHistory { get; set; }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using BLL.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PL.Attributes;
-using PL.Models.Requests;
 using BLL.Services;
-using PL.Models;
-using PL.Models.Responses;
+using DAL.Models;
+using DAL.Models.Requests;
+using DAL.Models.Responses;
 
 namespace PL.Controllers
 {

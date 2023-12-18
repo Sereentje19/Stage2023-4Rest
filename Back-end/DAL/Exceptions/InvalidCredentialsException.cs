@@ -1,4 +1,4 @@
-﻿namespace PL.Exceptions
+﻿namespace DAL.Exceptions
 {
     public class InvalidCredentialsException : Exception
     {

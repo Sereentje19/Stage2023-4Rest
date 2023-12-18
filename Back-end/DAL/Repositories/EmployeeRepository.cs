@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PL.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using PL.Models;
+using DAL.Data;
+using DAL.Exceptions;
+using DAL.Interfaces;
+using DAL.Models;
 
 namespace DAL.Repositories
 {
@@ -209,7 +211,18 @@ namespace DAL.Repositories
             {
                 throw new NotFoundException("Geen medewerker gevonden");
             }
-
+            
+            // List<Document> documentsToDelete = await _context.Documents
+            //     .Where(d => d.Employee.EmployeeId == id)
+            //     .ToListAsync();
+            //
+            // List<LoanHistory> historyToDelete = await _context.LoanHistory
+            //     .Where(d => d.Employee.EmployeeId == id)
+            //     .ToListAsync();
+            //
+            // _context.Documents.RemoveRange(documentsToDelete);
+            // _context.LoanHistory.RemoveRange(historyToDelete);
+            
             _dbSet.Remove(employee);
             await _context.SaveChangesAsync();
         }

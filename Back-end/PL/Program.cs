@@ -1,10 +1,14 @@
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
-using PL.Models;
 using System.Text;
+using System.Text.Json.Serialization;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using BLL.Services;
+using DAL.Data;
+using DAL.Interfaces;
+using DAL.Settings;
 using PL.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -22,10 +26,15 @@ void AddServices()
 {
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddControllersWithViews();
     builder.Services.AddCors();
     builder.Services.AddHttpContextAccessor();
+
+    builder.Services.AddControllersWithViews()
+        .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+        );
 }
+
 
 //add authentication
 void AddAuthentication()

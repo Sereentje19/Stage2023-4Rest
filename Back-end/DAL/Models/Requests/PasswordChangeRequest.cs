@@ -1,4 +1,4 @@
-﻿namespace PL.Models.Requests;
+﻿namespace DAL.Models.Requests;
 
 public class PasswordChangeRequest
 {

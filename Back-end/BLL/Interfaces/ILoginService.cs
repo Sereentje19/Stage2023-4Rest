@@ -1,13 +1,8 @@
-﻿using PL.Models.Requests;
-using PL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PL.Models.Responses;
+﻿using DAL.Models;
+using DAL.Models.Requests;
+using DAL.Models.Responses;
 
-namespace BLL.Services
+namespace BLL.Interfaces
 {
     public interface ILoginService
     {

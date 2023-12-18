@@ -1,7 +1,8 @@
-﻿using DAL.Repositories;
+﻿using DAL.Data;
+using DAL.Models;
+using DAL.Models.Responses;
+using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
-using PL.Models;
-using PL.Models.Responses;
 
 namespace Tests.Repositories
 {

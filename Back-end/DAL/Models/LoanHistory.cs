@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PL.Models
+namespace DAL.Models
 {
     public class LoanHistory
     {
@@ -16,5 +15,6 @@ namespace PL.Models
         [Required]
         public DateTime LoanDate { get; set; }
         public DateTime? ReturnDate { get; set; }
+        
     }
 }

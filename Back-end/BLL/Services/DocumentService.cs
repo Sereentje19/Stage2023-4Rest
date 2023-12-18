@@ -1,13 +1,15 @@
 ﻿using Azure;
 using DAL.Repositories;
-using PL.Models.Requests;
-using PL.Models.Responses;
-using PL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Interfaces;
+using DAL.Interfaces;
+using DAL.Models;
+using DAL.Models.Requests;
+using DAL.Models.Responses;
 
 namespace BLL.Services
 {
@@ -75,7 +77,7 @@ namespace BLL.Services
         {
             return await _documentRepository.GetDocumentTypes();
         }
-        
+    
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).
         /// </summary>

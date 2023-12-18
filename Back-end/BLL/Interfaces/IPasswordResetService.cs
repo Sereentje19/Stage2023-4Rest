@@ -1,7 +1,7 @@
-﻿using PL.Models;
-using PL.Models.Requests;
+﻿using DAL.Models;
+using DAL.Models.Requests;
 
-namespace BLL.Services;
+namespace BLL.Interfaces;
 
 public interface IPasswordResetService
 {

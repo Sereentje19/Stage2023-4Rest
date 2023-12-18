@@ -1,11 +1,12 @@
 ﻿using DAL.Repositories;
-using PL.Models.Responses;
-using PL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Interfaces;
+using DAL.Interfaces;
+using DAL.Models;
 
 namespace BLL.Services
 {

@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace PL.Models
+namespace DAL.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -16,5 +17,25 @@ namespace PL.Models
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<LoanHistory> LoanHistory { get; set; }
         public DbSet<PasswordResetCode> PasswordResetCode { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Employee>()
+                .HasMany(e => e.Documents)
+                .WithOne(d => d.Employee)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Employee>()
+                .HasMany(e => e.LoanHistory)
+                .WithOne(d => d.Employee)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Product>()
+                .HasMany(e => e.LoanHistory)
+                .WithOne(d => d.Product)
+                .OnDelete(DeleteBehavior.Cascade);
+    
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using BLL.Services;
+using DAL.Interfaces;
+using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Repositories;
 using Moq;
-using PL.Models;
-using PL.Models.Requests;
 
 namespace Tests.Services;
 

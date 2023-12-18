@@ -1,4 +1,4 @@
-﻿namespace PL.Models
+﻿namespace DAL.Settings
 {
     public class MailSettings
     {
