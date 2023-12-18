@@ -33,10 +33,10 @@
               </li>
             </ul>
 
-            <input v-model="this.employee.name" type="text" class="name" placeholder="Naam" name="Zoek" />
-            <input v-model="this.employee.email" type="email" class="email" placeholder="Email" name="email" />
+          <div id="inputfield-title"> Naam </div> <input v-model="this.employee.name" type="text" class="name" name="Zoek" />
+           Email  <input v-model="this.employee.email" type="email" class="email" name="email" />
 
-            <div id="new-type">
+           Type <div id="new-type">
               <select v-if="this.addDocumentType == false" v-model="this.document.type.name" class="type" name="Type">
                 <option value="0">Selecteer document...</option>
                 <option v-for="(type, index) in documentTypes" :key="index" :value="type.name">
@@ -53,7 +53,7 @@
               </div>
             </div>
 
-            <input v-model="this.document.date" :placeholder="this.document.date" type="date" class="date" name="Date" />
+           Verloop datum <input v-model="this.document.date" :placeholder="this.document.date" type="date" class="date" name="Date" />
           </form>
         </ul>
 

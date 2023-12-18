@@ -36,7 +36,9 @@
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type.name }}</div>
             <div id="checkboxArchive">
-              <button id="button-history" @click="toggleCheckbox(document)"><Archive/></button>
+              <button id="button-history" @click="toggleCheckbox(document)">
+                <Archive />
+              </button>
             </div>
           </div>
         </div>
@@ -130,6 +132,7 @@ export default {
         }
       })
         .then((res) => {
+          this.filterDocuments();
         }).catch((error) => {
           this.$refs.PopUpMessage.popUpError(error.response.data);
         });

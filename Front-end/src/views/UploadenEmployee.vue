@@ -7,8 +7,8 @@
 
                 <ul>
                     <form class="gegevens">
-                        <input v-model="this.employee.name" type="text" class="name" placeholder="Naam" name="Zoek" />
-                        <input v-model="this.employee.email" type="text" class="email" placeholder="Email"
+                       Naam <input v-model="this.employee.name" type="text" class="name" name="Zoek" />
+                       Email <input v-model="this.employee.email" type="text" class="email"
                             name="Email" />
                     </form>
                 </ul>

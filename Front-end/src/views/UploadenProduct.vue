@@ -25,7 +25,7 @@
             <div class="rightside" id="rightside-product">
                 <ul>
                     <form class="gegevens">
-
+                        Type 
                         <div id="new-type">
                             <select v-if="this.addProductType == false" v-model="this.product.type.name" class="type"
                                 name="Type">
@@ -45,9 +45,9 @@
                             </div>
                         </div>
 
-                        <input v-model="this.product.purchaseDate" type="date" class="Date" />
-                        <input v-model="this.product.expirationDate" type="date" class="Date" />
-                        <input class="Email" v-model="this.product.serialNumber" placeholder="Serie nummer" />
+                       Gekocht op <input v-model="this.product.purchaseDate" type="date" class="date" />
+                       Gebruiken tot <input v-model="this.product.expirationDate" type="date" class="date" />
+                       Serienummer <input class="email" v-model="this.product.serialNumber" />
                     </form>
                 </ul>
 
