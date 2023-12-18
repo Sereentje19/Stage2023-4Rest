@@ -28,7 +28,7 @@ namespace DAL.Repositories
         /// <returns>
         /// The User object associated with the provided email address.
         /// </returns>
-        public async Task<User> PostResetCode(string code, string email)
+        public async Task<User> CreateResetCodeAsync(string code, string email)
         {
             User user = await _context.Users
                 .Where(u => u.Email.ToLower() == email.ToLower())
@@ -59,7 +59,7 @@ namespace DAL.Repositories
         /// <returns>
         /// The User object associated with the provided email address and valid reset code.
         /// </returns>
-        public async Task<User> CheckEnteredCode(string email, string code)
+        public async Task<User> CheckEnteredCodeAsync(string email, string code)
         {
             var userWithCode = await _context.Users
                 .Join(_dbSet,
@@ -85,20 +85,20 @@ namespace DAL.Repositories
         /// <param name="email">The email address of the user.</param>
         /// <param name="password">The new password to be hashed and saved.</param>
         /// <param name="code">The reset code entered by the user.</param>
-        public async Task PostPassword(string email, string password, string code)
+        public async Task CreatePasswordAsync(string email, string password, string code)
         {
-            User user = await CheckEnteredCode(email, code);
-            await HashAndSavePassword(user, password);
+            User user = await CheckEnteredCodeAsync(email, code);
+            await HashAndSavePasswordAsync(user, password);
             await _context.SaveChangesAsync();
         }
         
-        public async Task PutPassword(User user, string password)
+        public async Task UpdatePasswordAsync(User user, string password)
         {
             User existingUser = await _context.Users
                 .Where(u => u.UserId == user.UserId)
                 .FirstOrDefaultAsync();
             
-            User hashedUser = await HashAndSavePassword(existingUser, password);
+            User hashedUser = await HashAndSavePasswordAsync(existingUser, password);
             _context.Update(hashedUser);
             await _context.SaveChangesAsync();
         }
@@ -108,7 +108,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="user">The User object for whom the password is to be hashed and saved.</param>
         /// <param name="password">The new password to be hashed.</param>
-        private static async Task<User> HashAndSavePassword(User user, string password)
+        private static async Task<User> HashAndSavePasswordAsync(User user, string password)
         {
             using (Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, 32, 10000))
             {

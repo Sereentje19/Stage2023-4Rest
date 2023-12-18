@@ -28,40 +28,40 @@ namespace BLL.Services
         /// <returns>
         /// The user object if the credentials are valid; otherwise, returns null.
         /// </returns>
-        public async Task<User> CheckCredentials(LoginRequestDTO user)
+        public async Task<User> CheckCredentialsAsync(LoginRequestDTO user)
         {
-            return await _loginRepository.CheckCredentials(user);
+            return await _loginRepository.CheckCredentialsAsync(user);
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
-            return await _loginRepository.GetUserByEmail(email);
+            return await _loginRepository.GetUserByEmailAsync(email);
         }
         
-        public async Task PostUser(User user)
+        public async Task CreateUserAsync(User user)
         {
-             await _loginRepository.PostUser(user);
+             await _loginRepository.CreateUserAsync(user);
         }
         
-        public async Task<IEnumerable<UserResponse>> GetAllUsers()
+        public async Task<IEnumerable<UserResponse>> GetAllUsersAsync()
         {
-            return await _loginRepository.GetAllUsers();
+            return await _loginRepository.GetAllUsersAsync();
         }
         
-        public async Task DeleteUser(string email)
+        public async Task DeleteUserAsync(string email)
         {
-             await _loginRepository.DeleteUser(email);
+             await _loginRepository.DeleteUserAsync(email);
         }
 
-        public async Task PutUser(User user, string email, bool updateName)
+        public async Task UpdateUserAsync(User user, string email, bool updateName)
         {
             if (updateName)
             {
-                await _loginRepository.PutUserName(user);
+                await _loginRepository.UpdateUserNameAsync(user);
             }
             else
             {
-                await _loginRepository.PutUserEmail(user, email);
+                await _loginRepository.UpdateUserEmailAsync(user, email);
             }
         }
     }

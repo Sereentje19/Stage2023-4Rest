@@ -166,10 +166,10 @@ public class DocumentServiceTests
             new DocumentType { Id = 2, Name = "Type2" },
         };
 
-        mockRepository.Setup(repo => repo.GetDocumentTypes())
+        mockRepository.Setup(repo => repo.GetDocumentTypesAsync())
             .ReturnsAsync(documentTypes);
 
-        IEnumerable<DocumentType> result = await documentService.GetDocumentTypes();
+        IEnumerable<DocumentType> result = await documentService.GetDocumentTypesAsync();
 
         Assert.NotNull(result);
         Assert.IsType<List<DocumentType>>(result);
@@ -189,11 +189,11 @@ public class DocumentServiceTests
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.GetDocumentById(documentId))
+        documentRepositoryMock.Setup(repo => repo.GetDocumentByIdAsync(documentId))
             .ReturnsAsync(expectedDocumentResponse);
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        DocumentResponse actualDocumentResponse = await documentService.GetDocumentById(documentId);
+        DocumentResponse actualDocumentResponse = await documentService.GetDocumentByIdAsync(documentId);
 
         Assert.NotNull(actualDocumentResponse);
         Assert.Equal(expectedDocumentResponse.Date, actualDocumentResponse.Date);
@@ -207,11 +207,11 @@ public class DocumentServiceTests
         const int documentId = 1;
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.GetDocumentById(documentId))
+        documentRepositoryMock.Setup(repo => repo.GetDocumentByIdAsync(documentId))
             .ReturnsAsync((DocumentResponse)null);
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        DocumentResponse actualDocumentResponse = await documentService.GetDocumentById(documentId);
+        DocumentResponse actualDocumentResponse = await documentService.GetDocumentByIdAsync(documentId);
 
         Assert.Null(actualDocumentResponse);
     }
@@ -228,12 +228,12 @@ public class DocumentServiceTests
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.AddDocument(It.IsAny<Document>()))
+        documentRepositoryMock.Setup(repo => repo.CreateDocumentAsync(It.IsAny<Document>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await documentService.PostDocument(documentToPost);
+        await documentService.CreateDocumentAsync(documentToPost);
 
         documentRepositoryMock.Verify();
     }
@@ -250,13 +250,13 @@ public class DocumentServiceTests
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.AddDocument(It.IsAny<Document>()))
+        documentRepositoryMock.Setup(repo => repo.CreateDocumentAsync(It.IsAny<Document>()))
             .ThrowsAsync(new Exception("Simulated repository exception"));
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => documentService.PostDocument(documentToPost));
+        await Assert.ThrowsAsync<Exception>(() => documentService.CreateDocumentAsync(documentToPost));
 
-        documentRepositoryMock.Verify(repo => repo.AddDocument(It.IsAny<Document>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.CreateDocumentAsync(It.IsAny<Document>()), Times.Once);
     }
 
     [Fact]
@@ -268,14 +268,14 @@ public class DocumentServiceTests
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateDocument(It.IsAny<EditDocumentRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await documentService.PutDocument(documentToUpdate);
+        await documentService.UpdateDocumentAsync(documentToUpdate);
 
-        documentRepositoryMock.Verify(repo => repo.UpdateDocument(It.IsAny<EditDocumentRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()), Times.Once);
     }
 
     [Fact]
@@ -287,13 +287,13 @@ public class DocumentServiceTests
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateDocument(It.IsAny<EditDocumentRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()))
             .ThrowsAsync(new Exception("Simulated repository exception"));
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => documentService.PutDocument(documentToUpdate));
+        await Assert.ThrowsAsync<Exception>(() => documentService.UpdateDocumentAsync(documentToUpdate));
 
-        documentRepositoryMock.Verify(repo => repo.UpdateDocument(It.IsAny<EditDocumentRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateDocumentAsync(It.IsAny<EditDocumentRequest>()), Times.Once);
     }
 
     [Fact]
@@ -305,14 +305,14 @@ public class DocumentServiceTests
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateIsArchived(It.IsAny<CheckBoxRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await documentService.UpdateIsArchived(checkBoxRequest);
+        await documentService.UpdateIsArchivedAsync(checkBoxRequest);
 
-        documentRepositoryMock.Verify(repo => repo.UpdateIsArchived(It.IsAny<CheckBoxRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()), Times.Once);
     }
 
     [Fact]
@@ -324,13 +324,13 @@ public class DocumentServiceTests
         };
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.UpdateIsArchived(It.IsAny<CheckBoxRequest>()))
+        documentRepositoryMock.Setup(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()))
             .ThrowsAsync(new Exception("Simulated repository exception"));
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => documentService.UpdateIsArchived(checkBoxRequest));
+        await Assert.ThrowsAsync<Exception>(() => documentService.UpdateIsArchivedAsync(checkBoxRequest));
 
-        documentRepositoryMock.Verify(repo => repo.UpdateIsArchived(It.IsAny<CheckBoxRequest>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.UpdateIsArchivedAsync(It.IsAny<CheckBoxRequest>()), Times.Once);
     }
 
     [Fact]
@@ -339,14 +339,14 @@ public class DocumentServiceTests
         const int documentId = 3;
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.DeleteDocument(It.IsAny<int>()))
+        documentRepositoryMock.Setup(repo => repo.DeleteDocumentAsync(It.IsAny<int>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await documentService.DeleteDocument(documentId);
+        await documentService.DeleteDocumentAsync(documentId);
 
-        documentRepositoryMock.Verify(repo => repo.DeleteDocument(It.IsAny<int>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.DeleteDocumentAsync(It.IsAny<int>()), Times.Once);
     }
 
     [Fact]
@@ -355,12 +355,12 @@ public class DocumentServiceTests
         const int documentId = 3;
 
         Mock<IDocumentRepository> documentRepositoryMock = new Mock<IDocumentRepository>();
-        documentRepositoryMock.Setup(repo => repo.DeleteDocument(It.IsAny<int>()))
+        documentRepositoryMock.Setup(repo => repo.DeleteDocumentAsync(It.IsAny<int>()))
             .ThrowsAsync(new Exception("Simulated repository exception"));
 
         DocumentService documentService = new DocumentService(documentRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => documentService.DeleteDocument(documentId));
+        await Assert.ThrowsAsync<Exception>(() => documentService.DeleteDocumentAsync(documentId));
 
-        documentRepositoryMock.Verify(repo => repo.DeleteDocument(It.IsAny<int>()), Times.Once);
+        documentRepositoryMock.Verify(repo => repo.DeleteDocumentAsync(It.IsAny<int>()), Times.Once);
     }
 }

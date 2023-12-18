@@ -179,7 +179,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 DocumentRepository yourService = new DocumentRepository(context);
-                IEnumerable<DocumentType> result = await yourService.GetDocumentTypes();
+                IEnumerable<DocumentType> result = await yourService.GetDocumentTypesAsync();
 
                 Assert.NotNull(result);
                 Assert.IsType<List<DocumentType>>(result);
@@ -196,7 +196,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 DocumentRepository repository = new DocumentRepository(context);
-                DocumentResponse result = await repository.GetDocumentById(1);
+                DocumentResponse result = await repository.GetDocumentByIdAsync(1);
 
                 Assert.NotNull(result);
                 Assert.IsType<DocumentResponse>(result);
@@ -218,7 +218,7 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                DocumentResponse result = await repository.GetDocumentById(999);
+                DocumentResponse result = await repository.GetDocumentByIdAsync(999);
                 Assert.Null(result);
             }
         }
@@ -247,7 +247,7 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateDocumentAsync(document));
             }
         }
 
@@ -263,7 +263,7 @@ namespace Tests.Repositories
                 };
 
                 DocumentRepository repository = new DocumentRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateDocumentAsync(document));
             }
         }
 
@@ -279,7 +279,7 @@ namespace Tests.Repositories
                 };
 
                 DocumentRepository repository = new DocumentRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateDocumentAsync(document));
             }
         }
 
@@ -296,7 +296,7 @@ namespace Tests.Repositories
                 };
 
                 DocumentRepository repository = new DocumentRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddDocument(document));
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateDocumentAsync(document));
             }
         }
 
@@ -319,7 +319,7 @@ namespace Tests.Repositories
                     Employee = new Employee { Email = existingEmployeeEmail, Name = "test" }
                 };
 
-                await documentRepository.AddDocument(document);
+                await documentRepository.CreateDocumentAsync(document);
 
                 Assert.NotNull(document.Employee);
                 Assert.Equal(existingEmployee, document.Employee);
@@ -352,7 +352,7 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                await repository.UpdateDocument(editDocumentRequest);
+                await repository.UpdateDocumentAsync(editDocumentRequest);
                 Document updatedDocument = await context.Documents.FindAsync(documentId);
 
                 Assert.NotNull(updatedDocument);
@@ -389,7 +389,7 @@ namespace Tests.Repositories
 
                 InputValidationException actualException =
                     await Assert.ThrowsAsync<InputValidationException>(() =>
-                        repository.UpdateDocument(editDocumentRequest));
+                        repository.UpdateDocumentAsync(editDocumentRequest));
                 Assert.NotNull(actualException);
             }
         }
@@ -422,7 +422,7 @@ namespace Tests.Repositories
 
                 InputValidationException actualException =
                     await Assert.ThrowsAsync<InputValidationException>(() =>
-                        repository.UpdateDocument(editDocumentRequest));
+                        repository.UpdateDocumentAsync(editDocumentRequest));
                 Assert.NotNull(actualException);
             }
         }
@@ -450,7 +450,7 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                await repository.UpdateIsArchived(checkBoxRequest);
+                await repository.UpdateIsArchivedAsync(checkBoxRequest);
                 Document updatedDocument = await context.Documents.FindAsync(documentId);
 
                 Assert.NotNull(updatedDocument);
@@ -483,7 +483,7 @@ namespace Tests.Repositories
 
                 NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
-                        repository.UpdateIsArchived(checkBoxRequest));
+                        repository.UpdateIsArchivedAsync(checkBoxRequest));
                 Assert.NotNull(actualException);
             }
         }
@@ -504,7 +504,7 @@ namespace Tests.Repositories
 
                 DocumentRepository repository = new DocumentRepository(context);
 
-                await repository.DeleteDocument(documentId);
+                await repository.DeleteDocumentAsync(documentId);
 
                 Document deletedDocument = await context.Documents.FindAsync(documentId);
                 Assert.Null(deletedDocument);
@@ -529,7 +529,7 @@ namespace Tests.Repositories
 
                 NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
-                        repository.DeleteDocument(documentId));
+                        repository.DeleteDocumentAsync(documentId));
                 Assert.NotNull(actualException);
             }
         }

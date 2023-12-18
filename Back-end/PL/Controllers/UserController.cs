@@ -25,9 +25,9 @@ namespace PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsersAsync()
         {
-            IEnumerable<UserResponse> users = await _loginService.GetAllUsers();   
+            IEnumerable<UserResponse> users = await _loginService.GetAllUsersAsync();   
             return Ok(users);
         }
         
@@ -38,32 +38,32 @@ namespace PL.Controllers
         /// <returns>An authentication token if login is successful; otherwise, an error message.</returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO userDto)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDTO userDto)
         {
-            await _loginService.CheckCredentials(userDto);
-            User user =  await _loginService.GetUserByEmail(userDto.Email);
+            await _loginService.CheckCredentialsAsync(userDto);
+            User user =  await _loginService.GetUserByEmailAsync(userDto.Email);
             string token = _jwtValidationService.GenerateToken(user);
             return Ok(token);
         }
         
         [HttpPost]
-        public async Task<IActionResult> PostUser(User user)
+        public async Task<IActionResult> CreateUserAsync(User user)
         {
-            await _loginService.PostUser(user);   
+            await _loginService.CreateUserAsync(user);   
             return Ok(new { message = "Gebruiker toegevoegd." });
         }
         
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(string email, User user, bool updateName)
+        public async Task<IActionResult> UpdateUserAsync(string email, User user, bool updateName)
         {
-            await _loginService.PutUser(user, email, updateName);   
+            await _loginService.UpdateUserAsync(user, email, updateName);   
             return Ok(new { message = "Gebruiker geupdate." });
         }
         
         [HttpDelete]
-        public async Task<IActionResult> DeleteUser(string email)
+        public async Task<IActionResult> DeleteUserAsync(string email)
         {
-            await _loginService.DeleteUser(email);   
+            await _loginService.DeleteUserAsync(email);   
             return Ok(new { message = "Gebruiker verwijderd." });
         }
     }

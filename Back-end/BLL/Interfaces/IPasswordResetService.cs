@@ -5,8 +5,8 @@ namespace BLL.Interfaces;
 
 public interface IPasswordResetService
 {
-    Task PostResetCode(string email);
-    Task CheckEnteredCode(string email, string code);
-    Task PostPassword(PasswordChangeRequest request);
-    Task PutPassword(User user, string password1, string password2, string password3);
+    Task CreateResetCodeAsync(string email);
+    Task CheckEnteredCodeAsync(string email, string code);
+    Task CreatePasswordAsync(PasswordChangeRequest request);
+    Task UpdatePasswordAsync(User user, string password1, string password2, string password3);
 }

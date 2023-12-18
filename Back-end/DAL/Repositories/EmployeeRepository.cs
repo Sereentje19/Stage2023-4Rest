@@ -30,7 +30,7 @@ namespace DAL.Repositories
         /// <returns>
         /// An IQueryable<Employee> representing the filtered employees based on the search criteria.
         /// </returns>
-        public IQueryable<Employee> QueryGetEmployees(string searchfield)
+        private IQueryable<Employee> QueryGetEmployees(string searchfield)
         {
             return _context.Employees
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
@@ -94,7 +94,7 @@ namespace DAL.Repositories
         ///   1. An IEnumerable<object> representing the paged list of active employees.
         ///   2. An int representing the total number of active employees matching the search criteria.
         /// </returns>
-        public Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page,
+        public Task<(IEnumerable<object>, int)> GetAllEmployees(string searchfield, int page,
             int pageSize)
         {
             return Task.FromResult(GetPagedEmployeesInternal(searchfield, page, pageSize, item => !item.IsArchived));
@@ -106,7 +106,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="searchfield">The search criteria for customer names or emails.</param>
         /// <returns>A collection of customers filtered by the provided search field.</returns>
-        public async Task<IEnumerable<Employee>> GetFilteredEmployee(string searchfield)
+        public async Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield)
         {
             IQueryable<Employee> customers = _dbSet;
 
@@ -128,7 +128,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<Employee> GetEmployeeById(int id)
+        public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -140,7 +140,7 @@ namespace DAL.Repositories
         /// <param name="employee">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer, or the ID of an existing customer if the same name and email combination is found.</returns>
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
-        public async Task<int> AddEmployee(Employee employee)
+        public async Task<int> CreateEmployeeAsync(Employee employee)
         {
             if (string.IsNullOrWhiteSpace(employee.Name))
             {
@@ -167,7 +167,7 @@ namespace DAL.Repositories
             return employee.EmployeeId;
         }
 
-        public async Task UpdateEmployeeIsArchived(Employee employee)
+        public async Task UpdateEmployeeIsArchivedAsync(Employee employee)
         {
             Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
             
@@ -184,7 +184,7 @@ namespace DAL.Repositories
         /// Updates an existing customer in the repository.
         /// </summary>
         /// <param name="employee">The document entity to be updated.</param>
-        public async Task UpdateEmployee(Employee employee)
+        public async Task UpdateEmployeeAsync(Employee employee)
         {
             Employee existingEmployee = await _dbSet.FindAsync(employee.EmployeeId);
 
@@ -193,7 +193,7 @@ namespace DAL.Repositories
                 throw new NotFoundException("Geen medewerker gevonden");
             }
 
-            await CheckEmailExists(employee);
+            await CheckEmailExistsAsync(employee);
             _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
             await _context.SaveChangesAsync();
         }
@@ -203,7 +203,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The ID of the customer to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteEmployee(int id)
+        public async Task DeleteEmployeeAsync(int id)
         {
             Employee employee = await _dbSet.FindAsync(id);
             
@@ -212,22 +212,11 @@ namespace DAL.Repositories
                 throw new NotFoundException("Geen medewerker gevonden");
             }
             
-            // List<Document> documentsToDelete = await _context.Documents
-            //     .Where(d => d.Employee.EmployeeId == id)
-            //     .ToListAsync();
-            //
-            // List<LoanHistory> historyToDelete = await _context.LoanHistory
-            //     .Where(d => d.Employee.EmployeeId == id)
-            //     .ToListAsync();
-            //
-            // _context.Documents.RemoveRange(documentsToDelete);
-            // _context.LoanHistory.RemoveRange(historyToDelete);
-            
             _dbSet.Remove(employee);
             await _context.SaveChangesAsync();
         }
 
-        private async Task CheckEmailExists(Employee employee)
+        private async Task CheckEmailExistsAsync(Employee employee)
         {
             Employee existingEmployee =
                 await _dbSet.FirstOrDefaultAsync(c => c.Email == employee.Email && c.EmployeeId != employee.EmployeeId);

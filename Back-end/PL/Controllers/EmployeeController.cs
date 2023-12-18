@@ -30,9 +30,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged customers and pagination details.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetPagedEmployee(string searchfield, int page, int pageSize)
+        public async Task<IActionResult> GetPagedEmployees(string searchfield, int page, int pageSize)
         {
-            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedEmployee(searchfield, page, pageSize);
+            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedEmployees(searchfield, page, pageSize);
 
             var response = new
             {
@@ -59,9 +59,9 @@ namespace PL.Controllers
         /// a response object containing a paged list of archived employees and pagination information.
         /// </returns>
         [HttpGet("archive")]
-        public async Task<IActionResult> GetPagedArchivedEmployee(string searchfield, int page, int pageSize)
+        public async Task<IActionResult> GetPagedArchivedEmployees(string searchfield, int page, int pageSize)
         {
-            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedArchivedEmployee(searchfield, page, pageSize);
+            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedArchivedEmployees(searchfield, page, pageSize);
 
             var response = new
             {
@@ -84,9 +84,9 @@ namespace PL.Controllers
         /// <param name="searchField">The search field used to filter customers.</param>
         /// <returns>A collection of customers matching the search criteria.</returns>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetFilteredEmployee(string searchField)
+        public async Task<IActionResult> GetFilteredEmployeesAsync(string searchField)
         {
-            IEnumerable<Employee> customers = await _employeeService.GetFilteredEmployee(searchField);
+            IEnumerable<Employee> customers = await _employeeService.GetFilteredEmployeesAsync(searchField);
             return Ok(customers);
         }
 
@@ -96,9 +96,9 @@ namespace PL.Controllers
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById(int id)
+        public async Task<IActionResult> GetEmployeeByIdAsync(int id)
         {
-            Employee employee = await _employeeService.GetEmployeeById(id);
+            Employee employee = await _employeeService.GetEmployeeByIdAsync(id);
             return Ok(employee);
         }
 
@@ -108,9 +108,9 @@ namespace PL.Controllers
         /// <param name="cus">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer if successful; otherwise, an error message.</returns>
         [HttpPost]
-        public async Task<IActionResult> PostEmployee(Employee cus)
+        public async Task<IActionResult> CreateEmployeeAsync(Employee cus)
         {
-            int id = await _employeeService.PostEmployee(cus);
+            int id = await _employeeService.CreateEmployeeAsync(cus);
             return Ok(id);
         }
 
@@ -122,9 +122,9 @@ namespace PL.Controllers
         /// a message indicating that the employee's archived status has been updated.
         /// </returns>
         [HttpPut("archive")]
-        public async Task<IActionResult> PutIsArchived(Employee doc)
+        public async Task<IActionResult> UpdateIsArchivedAsync(Employee doc)
         {
-            await _employeeService.PutEmployeeIsArchived(doc);
+            await _employeeService.UpdateEmployeeIsArchivedAsync(doc);
             return Ok(new { message = "Medewerker geupdate." });
         }
 
@@ -133,9 +133,9 @@ namespace PL.Controllers
         /// </summary>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public async Task<IActionResult> PutEmployee(Employee employee)
+        public async Task<IActionResult> UpdateEmployeeAsync(Employee employee)
         {
-            await _employeeService.PutEmployee(employee);
+            await _employeeService.UpdateEmployeeAsync(employee);
             return Ok(new { message = "Medewerker geupdate. " });
         }
 
@@ -147,9 +147,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteEmployeeAsync(int id)
         {
-            await _employeeService.DeleteEmployee(id);
+            await _employeeService.DeleteEmployeeAsync(id);
             return Ok(new { message = "Medewerker verwijderd." });
         }
     }

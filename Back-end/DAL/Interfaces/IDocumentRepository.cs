@@ -16,11 +16,11 @@ namespace DAL.Interfaces
         (IEnumerable<object>, int) GetLongValidPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize);
 
-        Task<IEnumerable<DocumentType>> GetDocumentTypes();
-        Task<DocumentResponse> GetDocumentById(int id);
-        Task AddDocument(Document document);
-        Task UpdateDocument(EditDocumentRequest document);
-        Task UpdateIsArchived(CheckBoxRequest document);
-        Task DeleteDocument(int id);
+        Task<IEnumerable<DocumentType>> GetDocumentTypesAsync();
+        Task<DocumentResponse> GetDocumentByIdAsync(int id);
+        Task CreateDocumentAsync(Document document);
+        Task UpdateDocumentAsync(EditDocumentRequest document);
+        Task UpdateIsArchivedAsync(CheckBoxRequest document);
+        Task DeleteDocumentAsync(int id);
     }
 }

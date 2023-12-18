@@ -24,9 +24,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the product.</param>
         /// <returns>A collection of LoanHistoryDTO representing loan history for the product.</returns>
-        public async Task<(IEnumerable<object>, Pager)> GetLoanHistoryByProductId(int id, int page, int pageSize)
+        public async Task<(IEnumerable<object>, Pager)> GetLoanHistoryByProductIdAsync(int id, int page, int pageSize)
         {
-            (IEnumerable<object> pagedHistory, int numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByProductId(id, page, pageSize);
+            (IEnumerable<object> pagedHistory, int numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByProductIdAsync(id, page, pageSize);
             Pager pager = new Pager(numberOfHistory, page, pageSize);
             return (pagedHistory, pager);
         }
@@ -36,9 +36,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the customer.</param>
         /// <returns>A collection of LoanHistoryDTO representing loan history for the customer.</returns>
-        public async Task<(IEnumerable<object>, Pager)> GetLoanHistoryByCustomerId(int id, int page, int pageSize)
+        public async Task<(IEnumerable<object>, Pager)> GetLoanHistoryByCustomerIdAsync(int id, int page, int pageSize)
         {
-            (IEnumerable<object> pagedHistory, int numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByCustomerId(id, page, pageSize);
+            (IEnumerable<object> pagedHistory, int numberOfHistory) = await _loanHistoryRepository.GetLoanHistoryByCustomerIdAsync(id, page, pageSize);
             Pager pager = new Pager(numberOfHistory, page, pageSize);
             return (pagedHistory, pager);
         }
@@ -48,9 +48,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="productId">The ID of the product.</param>
         /// <returns>Nullable DateTime representing the return date.</returns>
-        public async Task<DateTime?> GetReturnDatesByProductId(int productId)
+        public async Task<DateTime?> GetReturnDatesByProductIdAsync(int productId)
         {
-            return await _loanHistoryRepository.GetReturnDatesByProductId(productId);
+            return await _loanHistoryRepository.GetReturnDatesByProductIdAsync(productId);
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the product.</param>
         /// <returns>The latest LoanHistory record for the product.</returns>
-        public async Task<LoanHistory> GetLatestLoanHistoryByProductId(int id)
+        public async Task<LoanHistory> GetLatestLoanHistoryByProductIdAsync(int id)
         {
-            return await _loanHistoryRepository.GetLatestLoanHistoryByProductId(id);
+            return await _loanHistoryRepository.GetLatestLoanHistoryByProductIdAsync(id);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="loanHistory">The LoanHistory object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateLoanHistory(LoanHistory loanHistory)
+        public async Task UpdateLoanHistoryAsync(LoanHistory loanHistory)
         {
-            await _loanHistoryRepository.UpdateLoanHistory(loanHistory);
+            await _loanHistoryRepository.UpdateLoanHistoryAsync(loanHistory);
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="loanHistory">The LoanHistory object to be added.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task PostLoanHistory(LoanHistory loanHistory)
+        public async Task CreateLoanHistoryAsync(LoanHistory loanHistory)
         {
-            await _loanHistoryRepository.PostLoanHistory(loanHistory);
+            await _loanHistoryRepository.CreateLoanHistoryAsync(loanHistory);
         }
     }
 }

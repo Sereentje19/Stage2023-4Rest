@@ -8,11 +8,11 @@ namespace BLL.Interfaces
 
         Task<(IEnumerable<object>, Pager)> GetAllDeletedProducts(string searchfield, string dropdown,
             int page, int pageSize);
-        Task<IEnumerable<ProductType>> GetProductTypes();
-        Task<Product> GetProductById(int id);
-        Task PostProduct(Product product);
-        Task PutProduct(Product product);
-        Task PutIsDeleted(Product product);
-        Task DeleteProduct(int id);
+        Task<IEnumerable<ProductType>> GetProductTypesAsync();
+        Task<Product> GetProductByIdAsync(int id);
+        Task CreateProductAsync(Product product);
+        Task UpdateProductAsync(Product product);
+        Task UpdateIsDeletedAsync(Product product);
+        Task DeleteProductAsync(int id);
     }
 }

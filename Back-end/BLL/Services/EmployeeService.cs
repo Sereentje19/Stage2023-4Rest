@@ -27,9 +27,9 @@ namespace BLL.Services
         /// <param name="page">The current page number.</param>
         /// <param name="pageSize">The number of customers per page.</param>
         /// <returns>A tuple containing paged customers and pagination information.</returns>
-        public async Task<(IEnumerable<object>, Pager)> GetPagedEmployee(string searchfield, int page, int pageSize)
+        public async Task<(IEnumerable<object>, Pager)> GetPagedEmployees(string searchfield, int page, int pageSize)
         {
-            (IEnumerable<object> pagedCustomers, int numberOfcustomers) = await _employeeRepository.GetAllEmployee(searchfield, page, pageSize);
+            (IEnumerable<object> pagedCustomers, int numberOfcustomers) = await _employeeRepository.GetAllEmployees(searchfield, page, pageSize);
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
             return (pagedCustomers, pager);
         }
@@ -45,7 +45,7 @@ namespace BLL.Services
         ///   1. An enumerable collection of archived employee objects.
         ///   2. A Pager object providing information about the pagination.
         /// </returns>
-        public async Task<(IEnumerable<object>, Pager)> GetPagedArchivedEmployee(string searchfield, int page, int pageSize)
+        public async Task<(IEnumerable<object>, Pager)> GetPagedArchivedEmployees(string searchfield, int page, int pageSize)
         {
             (IEnumerable<object> pagedCustomers, int numberOfcustomers) = await _employeeRepository.GetAllArchivedEmployees(searchfield, page, pageSize);
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
@@ -57,9 +57,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="searchfield">The search criteria.</param>
         /// <returns>A collection of matching Customer objects.</returns>
-        public async Task<IEnumerable<Employee>> GetFilteredEmployee(string searchfield)
+        public async Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield)
         {
-            return await _employeeRepository.GetFilteredEmployee(searchfield);
+            return await _employeeRepository.GetFilteredEmployeesAsync(searchfield);
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<Employee> GetEmployeeById(int id)
+        public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
-            return await _employeeRepository.GetEmployeeById(id);
+            return await _employeeRepository.GetEmployeeByIdAsync(id);
         }
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="employee">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer.</returns>
-        public async Task<int> PostEmployee(Employee employee)
+        public async Task<int> CreateEmployeeAsync(Employee employee)
         {
-            return await _employeeRepository.AddEmployee(employee);
+            return await _employeeRepository.CreateEmployeeAsync(employee);
         }
         
         /// <summary>
@@ -89,9 +89,9 @@ namespace BLL.Services
         /// <returns>
         /// A task representing the asynchronous operation of updating the 'IsArchived' status.
         /// </returns>
-        public async Task PutEmployeeIsArchived(Employee employee)
+        public async Task UpdateEmployeeIsArchivedAsync(Employee employee)
         {
-            await _employeeRepository.UpdateEmployeeIsArchived(employee);
+            await _employeeRepository.UpdateEmployeeIsArchivedAsync(employee);
         }
 
         /// <summary>
@@ -99,9 +99,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="employee">The Customer object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task PutEmployee(Employee employee)
+        public async Task UpdateEmployeeAsync(Employee employee)
         {
-            await _employeeRepository.UpdateEmployee(employee);
+            await _employeeRepository.UpdateEmployeeAsync(employee);
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the customer to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteEmployee(int id)
+        public async Task DeleteEmployeeAsync(int id)
         {
-            await _employeeRepository.DeleteEmployee(id);
+            await _employeeRepository.DeleteEmployeeAsync(id);
         }
     }
 }

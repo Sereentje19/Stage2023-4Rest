@@ -42,10 +42,10 @@ public class PasswordResetService : IPasswordResetService
     /// Posts a reset code for password recovery and sends an email notification.
     /// </summary>
     /// <param name="email">The email address of the user requesting a password reset.</param>
-    public async Task PostResetCode(string email)
+    public async Task CreateResetCodeAsync(string email)
     {
         string code = GenerateVerificationCode(6);
-        User user = await _passwordResetRepository.PostResetCode(code, email);
+        User user = await _passwordResetRepository.CreateResetCodeAsync(code, email);
         _mailService.SendPasswordEmail(code, email, "Verificatie code.", user.Name);
     }
 
@@ -54,26 +54,26 @@ public class PasswordResetService : IPasswordResetService
     /// </summary>
     /// <param name="email">The email address of the user.</param>
     /// <param name="code">The verification code entered by the user.</param>
-    public async Task CheckEnteredCode(string email, string code)
+    public async Task CheckEnteredCodeAsync(string email, string code)
     {
-        await _passwordResetRepository.CheckEnteredCode(email, code);
+        await _passwordResetRepository.CheckEnteredCodeAsync(email, code);
     }
     
     /// <summary>
     /// Posts a new password for a user after the password recovery process.
     /// </summary>
     /// <param name="request">A PasswordChangeRequest object containing the new password and associated information.</param>
-    public async Task PostPassword(PasswordChangeRequest request)
+    public async Task CreatePasswordAsync(PasswordChangeRequest request)
     {
         if (request.Password1 != request.Password2)
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
         }
         
-        await _passwordResetRepository.PostPassword(request.Email, request.Password1, request.Code);
+        await _passwordResetRepository.CreatePasswordAsync(request.Email, request.Password1, request.Code);
     }
     
-    public async Task PutPassword(User user, string password1, string password2, string password3)
+    public async Task UpdatePasswordAsync(User user, string password1, string password2, string password3)
     {
         LoginRequestDTO dto = new LoginRequestDTO()
         {
@@ -81,13 +81,13 @@ public class PasswordResetService : IPasswordResetService
             Password = password1
         };
 
-        await _loginService.CheckCredentials(dto);
+        await _loginService.CheckCredentialsAsync(dto);
         
         if (password2 != password3)
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
         }
         
-        await _passwordResetRepository.PutPassword(user, password2);
+        await _passwordResetRepository.UpdatePasswordAsync(user, password2);
     }
 }

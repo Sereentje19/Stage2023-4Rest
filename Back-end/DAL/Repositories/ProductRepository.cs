@@ -24,7 +24,7 @@ namespace DAL.Repositories
             _dbSet = _context.Set<Product>();
         }
 
-        public IQueryable<Product> QueryGetProducts(string searchfield, string dropdown)
+        private IQueryable<Product> QueryGetProducts(string searchfield, string dropdown)
         {
             return _context.Products
                 .Include(l => l.Type)
@@ -72,7 +72,7 @@ namespace DAL.Repositories
         /// <returns>
         /// A list of strings representing product types.
         /// </returns>
-        public async Task<IEnumerable<ProductType>> GetProductTypes()
+        public async Task<IEnumerable<ProductType>> GetProductTypesAsync()
         {
             return await _context.ProductTypes.ToListAsync();
         }
@@ -82,7 +82,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The ID of the product.</param>
         /// <returns>The product with the specified ID.</returns>
-        public async Task<Product> GetProductById(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
             return await _context.Products
                 .Include(p => p.Type)
@@ -94,7 +94,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="product">The Product object to be added.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task AddProduct(Product product)
+        public async Task CreateProductAsync(Product product)
         {
             if (product.Type.Name == "0")
             {
@@ -123,7 +123,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="product">The Product object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task PutProduct(Product product)
+        public async Task UpdateProductAsync(Product product)
         {
             Product existingProduct = await _dbSet
                 .Include(p => p.Type)
@@ -140,7 +140,7 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task PutIsDeleted(Product product)
+        public async Task UpdateIsDeletedAsync(Product product)
         {
             Product existingProduct = await _dbSet
                 .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
@@ -162,7 +162,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The ID of the product to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteProduct(int id)
+        public async Task DeleteProductAsync(int id)
         {
             Product product = await _dbSet.FindAsync(id);
 

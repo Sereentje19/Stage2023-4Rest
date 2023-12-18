@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Tests.Repositories
 {
 
-    public class LoginRepositoryTests
+    public class UserRepositoryTests
     {
         private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
         {
@@ -42,7 +42,7 @@ namespace Tests.Repositories
                     Password = "1" 
                 };
 
-                User result = await userRepository.CheckCredentials(loginRequest);
+                User result = await userRepository.CheckCredentialsAsync(loginRequest);
 
                 Assert.NotNull(result);
                 Assert.Equal(user.UserId, result.UserId);
@@ -63,7 +63,7 @@ namespace Tests.Repositories
                 };
 
                 await Assert.ThrowsAsync<InvalidCredentialsException>(() =>
-                    userRepository.CheckCredentials(loginRequest));
+                    userRepository.CheckCredentialsAsync(loginRequest));
             }
         }
 
@@ -93,7 +93,7 @@ namespace Tests.Repositories
                 };
 
                 await Assert.ThrowsAsync<InvalidCredentialsException>(() =>
-                    userRepository.CheckCredentials(loginRequest));
+                    userRepository.CheckCredentialsAsync(loginRequest));
             }
         }
 

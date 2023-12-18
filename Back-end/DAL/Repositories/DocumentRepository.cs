@@ -118,7 +118,7 @@ namespace DAL.Repositories
         }
 
 
-        public async Task<IEnumerable<DocumentType>> GetDocumentTypes()
+        public async Task<IEnumerable<DocumentType>> GetDocumentTypesAsync()
         {
             return await _context.DocumentTypes.ToListAsync();
         }
@@ -128,7 +128,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<DocumentResponse> GetDocumentById(int id)
+        public async Task<DocumentResponse> GetDocumentByIdAsync(int id)
         {
             return await _dbSet
                 .Where(d => d.DocumentId == id)
@@ -148,7 +148,7 @@ namespace DAL.Repositories
         /// Adds a new document to the repository.
         /// </summary>
         /// <param name="document">The document entity to be added.</param>
-        public async Task AddDocument(Document document)
+        public async Task CreateDocumentAsync(Document document)
         {
             if (string.IsNullOrWhiteSpace(document.Employee.Name))
             {
@@ -194,7 +194,7 @@ namespace DAL.Repositories
         /// Updates an existing document in the repository.
         /// </summary>
         /// <param name="document">The document entity to be updated.</param>
-        public async Task UpdateDocument(EditDocumentRequest document)
+        public async Task UpdateDocumentAsync(EditDocumentRequest document)
         {
             Document existingDocument = await _dbSet
                 .Include(d => d.Employee)
@@ -217,7 +217,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="document">The CheckBoxDTO containing document information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateIsArchived(CheckBoxRequest document)
+        public async Task UpdateIsArchivedAsync(CheckBoxRequest document)
         {
             Document existingDocument = await _dbSet.FindAsync(document.DocumentId);
 
@@ -235,7 +235,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The ID of the document to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteDocument(int id)
+        public async Task DeleteDocumentAsync(int id)
         {
             Document doc = await _dbSet.FindAsync(id);
 

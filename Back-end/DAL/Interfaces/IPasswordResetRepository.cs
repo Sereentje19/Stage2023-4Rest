@@ -4,8 +4,8 @@ namespace DAL.Interfaces;
 
 public interface IPasswordResetRepository
 {
-    Task<User> PostResetCode(string code, string email);
-    Task<User> CheckEnteredCode(string email, string code);
-    Task PostPassword(string email, string password, string code);
-    Task PutPassword(User user, string password);
+    Task<User> CreateResetCodeAsync(string code, string email);
+    Task<User> CheckEnteredCodeAsync(string email, string code);
+    Task CreatePasswordAsync(string email, string password, string code);
+    Task UpdatePasswordAsync(User user, string password);
 }

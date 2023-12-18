@@ -20,13 +20,13 @@ namespace DAL.Repositories
             _dbSet = _context.Set<User>();
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == email);
         }
 
-        public async Task<IEnumerable<UserResponse>> GetAllUsers()
+        public async Task<IEnumerable<UserResponse>> GetAllUsersAsync()
         {
             return await _dbSet
                 .Select(user => new UserResponse
@@ -37,9 +37,9 @@ namespace DAL.Repositories
         }
 
         
-        public async Task PutUserEmail(User user, string email)
+        public async Task UpdateUserEmailAsync(User user, string email)
         {
-            await CheckEmailExists(user);
+            await CheckEmailExistsAsync(user);
             
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
@@ -64,9 +64,9 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task PutUserName(User user)
+        public async Task UpdateUserNameAsync(User user)
         {
-            await CheckEmailExists(user);
+            await CheckEmailExistsAsync(user);
             
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
@@ -81,7 +81,7 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task PostUser(User user)
+        public async Task CreateUserAsync(User user)
         {
              User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == user.Email);
@@ -110,7 +110,7 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
         
-        public async Task DeleteUser(string email)
+        public async Task DeleteUserAsync(string email)
         {
             User user = await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == email);
@@ -125,7 +125,7 @@ namespace DAL.Repositories
         /// <param name="user">The user object containing email and password for validation.</param>
         /// <returns>The user object if valid credentials are found; otherwise, throws exceptions for incorrect email or password.</returns>
         /// <exception cref="Exception">Thrown when the email or password is incorrect.</exception>
-        public async Task<User> CheckCredentials(LoginRequestDTO user)
+        public async Task<User> CheckCredentialsAsync(LoginRequestDTO user)
         {
             User matchingUser = await _dbSet.FirstOrDefaultAsync(u => u.Email.ToLower() == user.Email.ToLower());
 
@@ -163,7 +163,7 @@ namespace DAL.Repositories
             }
         }
         
-        private async Task CheckEmailExists(User user)
+        private async Task CheckEmailExistsAsync(User user)
         {
             User existingUserEmail = await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == user.Email);

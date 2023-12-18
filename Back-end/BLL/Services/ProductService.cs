@@ -53,9 +53,9 @@ namespace BLL.Services
         /// <returns>
         /// A list of strings representing product types.
         /// </returns>
-        public async Task<IEnumerable<ProductType>> GetProductTypes()
+        public async Task<IEnumerable<ProductType>> GetProductTypesAsync()
         {
-            return await _productRepository.GetProductTypes();
+            return await _productRepository.GetProductTypesAsync();
         }
         
         /// <summary>
@@ -63,9 +63,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the product.</param>
         /// <returns>The product with the specified ID.</returns>
-        public async Task<Product> GetProductById(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _productRepository.GetProductById(id);
+            return await _productRepository.GetProductByIdAsync(id);
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="product">The Product object to be added.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task PostProduct(Product product)
+        public async Task CreateProductAsync(Product product)
         {
-            await _productRepository.AddProduct(product);
+            await _productRepository.CreateProductAsync(product);
         }
 
         /// <summary>
@@ -83,14 +83,14 @@ namespace BLL.Services
         /// </summary>
         /// <param name="product">The Product object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task PutProduct(Product product)
+        public async Task UpdateProductAsync(Product product)
         {
-            await _productRepository.PutProduct(product);
+            await _productRepository.UpdateProductAsync(product);
         }
         
-        public async Task PutIsDeleted(Product product)
+        public async Task UpdateIsDeletedAsync(Product product)
         {
-            await _productRepository.PutIsDeleted(product);
+            await _productRepository.UpdateIsDeletedAsync(product);
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the product to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteProduct(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            await _productRepository.DeleteProduct(id);
+            await _productRepository.DeleteProductAsync(id);
         }
     }
 }

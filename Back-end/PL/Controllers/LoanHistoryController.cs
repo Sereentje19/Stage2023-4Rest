@@ -30,9 +30,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing loan history details for the specified product.
         /// </returns>
         [HttpGet("product/{product-id}")]
-        public async Task<IActionResult> GetLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId, int page, int pageSize)
+        public async Task<IActionResult> GetLoanHistoryByProductIdAsync([FromRoute(Name = "product-id")] int productId, int page, int pageSize)
         {
-            (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByProductId(productId, page, pageSize);
+            (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
             
             var response = new
             {
@@ -59,9 +59,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing loan history details for the specified customer.
         /// </returns>
         [HttpGet("employee/{customer-id}")]
-        public async Task<IActionResult> GetLoanHistoryByCustomerId([FromRoute(Name = "customer-id")] int customerId, int page, int pageSize)
+        public async Task<IActionResult> GetLoanHistoryByCustomerIdAsync([FromRoute(Name = "customer-id")] int customerId, int page, int pageSize)
         {
-            (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByCustomerId(customerId, page, pageSize);
+            (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize);
             
             var response = new
             {
@@ -86,9 +86,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing the return dates for the specified product.
         /// </returns>
         [HttpGet("date/{product-id}")]
-        public async Task<IActionResult> GetReturnDatesByProductId([FromRoute(Name = "product-id")] int productId)
+        public async Task<IActionResult> GetReturnDatesByProductIdAsync([FromRoute(Name = "product-id")] int productId)
         {
-            DateTime? returnDateList = await _loanHistoryService.GetReturnDatesByProductId(productId);
+            DateTime? returnDateList = await _loanHistoryService.GetReturnDatesByProductIdAsync(productId);
             return Ok(returnDateList);
         }
 
@@ -100,9 +100,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing the latest loan history for the specified product.
         /// </returns>
         [HttpGet("recent/{product-id}")]
-        public async Task<IActionResult> GetLatestLoanHistoryByProductId([FromRoute(Name = "product-id")] int productId)
+        public async Task<IActionResult> GetLatestLoanHistoryByProductIdAsync([FromRoute(Name = "product-id")] int productId)
         {
-            LoanHistory loanHistory = await _loanHistoryService.GetLatestLoanHistoryByProductId(productId);
+            LoanHistory loanHistory = await _loanHistoryService.GetLatestLoanHistoryByProductIdAsync(productId);
             return Ok(loanHistory);
         }
 
@@ -114,9 +114,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> PostLoanHistory([FromBody] LoanHistory lh)
+        public async Task<IActionResult> CreateLoanHistoryAsync([FromBody] LoanHistory lh)
         {
-            await _loanHistoryService.PostLoanHistory(lh);
+            await _loanHistoryService.CreateLoanHistoryAsync(lh);
             return Ok(new { message = "Leen geschiedenis toegevoegd." });
         }
 
@@ -128,9 +128,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateLoanHistory(LoanHistory loanHistory)
+        public async Task<IActionResult> UpdateLoanHistoryAsync(LoanHistory loanHistory)
         {
-            await _loanHistoryService.UpdateLoanHistory(loanHistory);
+            await _loanHistoryService.UpdateLoanHistoryAsync(loanHistory);
             return Ok(new { message = "Leen geschiedenis geupdate" });
         }
     }

@@ -31,7 +31,7 @@ namespace DAL.Repositories
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified product.
         /// </returns>
-        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByProductId(int id, int page, int pageSize)
+        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByProductIdAsync(int id, int page, int pageSize)
         {
             IQueryable<LoanHistory> query = _context.LoanHistory
                 .Include(l => l.Employee)
@@ -70,7 +70,7 @@ namespace DAL.Repositories
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified customer.
         /// </returns>
-        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByCustomerId(int id, int page, int pageSize)
+        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByCustomerIdAsync(int id, int page, int pageSize)
         {
             IQueryable<LoanHistory> query = _context.LoanHistory
                 .Include(l => l.Employee)
@@ -104,7 +104,7 @@ namespace DAL.Repositories
         /// <returns>
         /// Nullable DateTime representing the return date for the specified product.
         /// </returns>
-        public async Task<DateTime?> GetReturnDatesByProductId(int productId)
+        public async Task<DateTime?> GetReturnDatesByProductIdAsync(int productId)
         {
             
             int loanHistoryId = await _dbSet
@@ -134,7 +134,7 @@ namespace DAL.Repositories
         /// <returns>
         /// The latest LoanHistory record for the specified product.
         /// </returns>
-        public async Task<LoanHistory> GetLatestLoanHistoryByProductId(int id)
+        public async Task<LoanHistory> GetLatestLoanHistoryByProductIdAsync(int id)
         {
             LoanHistory loanHistory = await _dbSet
                 .Include(l => l.Employee)
@@ -151,7 +151,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="lh">The LoanHistory object to be added.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task PostLoanHistory(LoanHistory lh)
+        public async Task CreateLoanHistoryAsync(LoanHistory lh)
         {
             LoanHistory loanHistory = new LoanHistory
             {
@@ -170,7 +170,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="lh">The LoanHistory object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateLoanHistory(LoanHistory lh)
+        public async Task UpdateLoanHistoryAsync(LoanHistory lh)
         {
             _context.Entry(lh).State = EntityState.Detached;
             LoanHistory loanHistory = new LoanHistory

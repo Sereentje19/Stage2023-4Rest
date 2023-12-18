@@ -72,15 +72,15 @@ namespace Tests.Repositories
 
                 EmployeeRepository repository = new EmployeeRepository(context);
 
-                (IEnumerable<object>, int) nonExistentResult = await repository.GetAllEmployee("Doe", 1, 10);
+                (IEnumerable<object>, int) nonExistentResult = await repository.GetAllEmployees("Doe", 1, 10);
                 Assert.Empty(nonExistentResult.Item1);
                 Assert.Equal(0, nonExistentResult.Item2);
 
-                (IEnumerable<object>, int) result = await repository.GetAllEmployee("John", 1, 10);
+                (IEnumerable<object>, int) result = await repository.GetAllEmployees("John", 1, 10);
                 Assert.Single(result.Item1);
                 Assert.Equal(1, result.Item2);
 
-                (IEnumerable<object>, int) pageTwoResult = await repository.GetAllEmployee("jane", 2, 1);
+                (IEnumerable<object>, int) pageTwoResult = await repository.GetAllEmployees("jane", 2, 1);
                 Assert.Equal(2, pageTwoResult.Item2);
             }
         }
@@ -94,7 +94,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                IEnumerable<Employee> result = await repository.GetFilteredEmployee("Regina");
+                IEnumerable<Employee> result = await repository.GetFilteredEmployeesAsync("Regina");
 
                 Assert.NotNull(result);
                 Assert.Single(result);
@@ -111,7 +111,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                IEnumerable<Employee> result = await repository.GetFilteredEmployee("");
+                IEnumerable<Employee> result = await repository.GetFilteredEmployeesAsync("");
 
                 Assert.NotNull(result);
                 Assert.Equal(5, result.Count());
@@ -131,7 +131,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                Employee result = await repository.GetEmployeeById(employeeId);
+                Employee result = await repository.GetEmployeeByIdAsync(employeeId);
 
                 Assert.NotNull(result);
                 Assert.Equal(employeeId, result.EmployeeId);
@@ -149,7 +149,7 @@ namespace Tests.Repositories
                 int nonExistentId = 999;
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                Employee result = await repository.GetEmployeeById(nonExistentId);
+                Employee result = await repository.GetEmployeeByIdAsync(nonExistentId);
 
                 Assert.Null(result);
             }
@@ -161,7 +161,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 EmployeeRepository repository = new EmployeeRepository(context);
-                int result = await repository.AddEmployee(_employees.First());
+                int result = await repository.CreateEmployeeAsync(_employees.First());
 
                 Assert.NotEqual(0, result);
             }
@@ -176,7 +176,7 @@ namespace Tests.Repositories
                     { Name = "John Doe", Email = "invalidemail", IsArchived = false };
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddEmployee(invalidEmailEmployee));
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateEmployeeAsync(invalidEmailEmployee));
             }
         }
 
@@ -188,7 +188,7 @@ namespace Tests.Repositories
                 Employee emptyNameEmployee = new Employee { Name = "", Email = "john@example.com", IsArchived = false };
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.AddEmployee(emptyNameEmployee));
+                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateEmployeeAsync(emptyNameEmployee));
             }
         }
 
@@ -209,7 +209,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 EmployeeRepository repository = new EmployeeRepository(context);
-                int result = await repository.AddEmployee(newEmployeeWithExistingEmail);
+                int result = await repository.CreateEmployeeAsync(newEmployeeWithExistingEmail);
 
                 Assert.Equal(existingEmployee.EmployeeId, result);
             }
@@ -230,7 +230,7 @@ namespace Tests.Repositories
 
                 Employee updatedEmployee = new Employee { EmployeeId = employee.EmployeeId, IsArchived = true };
 
-                await repository.UpdateEmployeeIsArchived(updatedEmployee);
+                await repository.UpdateEmployeeIsArchivedAsync(updatedEmployee);
 
                 Employee resultEmployee = await context.Employees.FindAsync(employee.EmployeeId);
                 Assert.NotNull(resultEmployee);
@@ -256,7 +256,7 @@ namespace Tests.Repositories
 
                 NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
-                        repository.UpdateEmployeeIsArchived(updatedEmployee));
+                        repository.UpdateEmployeeIsArchivedAsync(updatedEmployee));
                 Assert.NotNull(actualException);
             }
         }
@@ -276,7 +276,7 @@ namespace Tests.Repositories
 
                 employee.Name = "Updated John";
 
-                await repository.UpdateEmployee(employee);
+                await repository.UpdateEmployeeAsync(employee);
                 Employee resultEmployee = await context.Employees.FindAsync(employee.EmployeeId);
 
                 Assert.NotNull(resultEmployee);
@@ -302,7 +302,7 @@ namespace Tests.Repositories
 
                 NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
-                        repository.UpdateEmployee(updatedEmployee));
+                        repository.UpdateEmployeeAsync(updatedEmployee));
                 Assert.NotNull(actualException);
             }
         }
@@ -317,7 +317,7 @@ namespace Tests.Repositories
 
                 EmployeeRepository repository = new EmployeeRepository(context);
 
-                await repository.DeleteEmployee(_employees.First().EmployeeId);
+                await repository.DeleteEmployeeAsync(_employees.First().EmployeeId);
 
                 Employee deletedEmployee = await context.Employees.FindAsync(_employees.First().EmployeeId);
                 Assert.Null(deletedEmployee);
@@ -332,7 +332,7 @@ namespace Tests.Repositories
                 EmployeeRepository repository = new EmployeeRepository(context);
 
                 NotFoundException actualException = await Assert.ThrowsAsync<NotFoundException>(() =>
-                    repository.DeleteEmployee(999));
+                    repository.DeleteEmployeeAsync(999));
                 Assert.NotNull(actualException);
             }
         }

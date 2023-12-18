@@ -9,11 +9,11 @@ namespace DAL.Interfaces
 
         Task<(IEnumerable<object>, int)> GetAllDeletedProducts(string searchfield, int page,
             int pageSize, string dropdown);
-        Task<IEnumerable<ProductType>> GetProductTypes();
-        Task<Product> GetProductById(int id);
-        Task AddProduct(Product product);
-        Task PutProduct(Product product);
-        Task PutIsDeleted(Product product);
-        Task DeleteProduct(int id);
+        Task<IEnumerable<ProductType>> GetProductTypesAsync();
+        Task<Product> GetProductByIdAsync(int id);
+        Task CreateProductAsync(Product product);
+        Task UpdateProductAsync(Product product);
+        Task UpdateIsDeletedAsync(Product product);
+        Task DeleteProductAsync(int id);
     }
 }

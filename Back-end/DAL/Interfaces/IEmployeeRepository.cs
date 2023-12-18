@@ -4,14 +4,14 @@ namespace DAL.Interfaces
 {
     public interface IEmployeeRepository
     {
-        Task<(IEnumerable<object>, int)> GetAllEmployee(string searchfield, int page, int pageSize);
+        Task<(IEnumerable<object>, int)> GetAllEmployees(string searchfield, int page, int pageSize);
 
         Task<(IEnumerable<object>, int)> GetAllArchivedEmployees(string searchfield, int page, int pageSize);
-        Task<IEnumerable<Employee>> GetFilteredEmployee(string searchfield);
-        Task<Employee> GetEmployeeById(int id);
-        Task<int> AddEmployee(Employee employee);
-        Task UpdateEmployeeIsArchived(Employee employee);
-        Task UpdateEmployee(Employee entity);
-        Task DeleteEmployee(int id);
+        Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield);
+        Task<Employee> GetEmployeeByIdAsync(int id);
+        Task<int> CreateEmployeeAsync(Employee employee);
+        Task UpdateEmployeeIsArchivedAsync(Employee employee);
+        Task UpdateEmployeeAsync(Employee entity);
+        Task DeleteEmployeeAsync(int id);
     }
 }

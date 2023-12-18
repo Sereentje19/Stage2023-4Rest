@@ -13,11 +13,11 @@ namespace BLL.Interfaces
         public (IEnumerable<object>, Pager) GetPagedDocuments(string searchfield, string dropdown,
             int page, int pageSize);
 
-        Task<IEnumerable<DocumentType>> GetDocumentTypes();
-        Task<DocumentResponse> GetDocumentById(int id);
-        Task PostDocument(Document document);
-        Task PutDocument(EditDocumentRequest document);
-        Task UpdateIsArchived(CheckBoxRequest entity);
-        Task DeleteDocument(int id);
+        Task<IEnumerable<DocumentType>> GetDocumentTypesAsync();
+        Task<DocumentResponse> GetDocumentByIdAsync(int id);
+        Task CreateDocumentAsync(Document document);
+        Task UpdateDocumentAsync(EditDocumentRequest document);
+        Task UpdateIsArchivedAsync(CheckBoxRequest entity);
+        Task DeleteDocumentAsync(int id);
     }
 }

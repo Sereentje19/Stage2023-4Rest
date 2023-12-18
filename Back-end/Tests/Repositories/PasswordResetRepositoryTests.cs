@@ -51,7 +51,7 @@ namespace Tests.Repositories
 
                 const string code = "123456";
 
-                User result = await userRepository.PostResetCode(code, _users.First().Email);
+                User result = await userRepository.CreateResetCodeAsync(code, _users.First().Email);
 
                 Assert.NotNull(result);
                 Assert.Equal(_users.First().UserId, result.UserId);
@@ -71,7 +71,7 @@ namespace Tests.Repositories
                 const string email = "nonexistent@example.com";
                 const string code = "123456";
 
-                await Assert.ThrowsAsync<InvalidCredentialsException>(() => userRepository.PostResetCode(code, email));
+                await Assert.ThrowsAsync<InvalidCredentialsException>(() => userRepository.CreateResetCodeAsync(code, email));
             }
         }
 
@@ -87,7 +87,7 @@ namespace Tests.Repositories
 
                 string code = "123456";
 
-                User result = await userRepository.PostResetCode(code, _users.First().Email);
+                User result = await userRepository.CreateResetCodeAsync(code, _users.First().Email);
 
                 Assert.NotNull(result);
                 Assert.Equal(_users.First().UserId, result.UserId);
@@ -109,7 +109,7 @@ namespace Tests.Repositories
                 await context.PasswordResetCode.AddAsync(_passwordResetCode.First());
                 await context.SaveChangesAsync();
 
-                User result = await userRepository.CheckEnteredCode(_users.First().Email, _passwordResetCode.First().Code);
+                User result = await userRepository.CheckEnteredCodeAsync(_users.First().Email, _passwordResetCode.First().Code);
 
                 Assert.NotNull(result);
                 Assert.Equal(_users.First().UserId, result.UserId);
@@ -128,7 +128,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 await Assert.ThrowsAsync<InputValidationException>(() =>
-                    userRepository.CheckEnteredCode(_users.First().Email, _passwordResetCode.Last().Code));
+                    userRepository.CheckEnteredCodeAsync(_users.First().Email, _passwordResetCode.Last().Code));
             }
         }
 
@@ -143,7 +143,7 @@ namespace Tests.Repositories
                 await context.PasswordResetCode.AddAsync(_passwordResetCode.First());
                 await context.SaveChangesAsync();
 
-                await userRepository.PostPassword(_users.First().Email, "new_password", _passwordResetCode.First().Code);
+                await userRepository.CreatePasswordAsync(_users.First().Email, "new_password", _passwordResetCode.First().Code);
 
                 User updatedUser = await context.Users.FindAsync(_users.First().UserId);
                 Assert.NotNull(updatedUser);
@@ -162,7 +162,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 await Assert.ThrowsAsync<InputValidationException>(() =>
-                    userRepository.PostPassword(_users.First().Email, "new_password", _passwordResetCode.Last().Code));
+                    userRepository.CreatePasswordAsync(_users.First().Email, "new_password", _passwordResetCode.Last().Code));
             }
         }
         

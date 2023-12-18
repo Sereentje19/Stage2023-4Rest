@@ -7,7 +7,7 @@ using Moq;
 
 namespace Tests.Services;
 
-public class LoginServiceTests
+public class UserServiceTests
 {
     [Fact]
     public async Task CheckCredentials_ShouldReturnUser_WhenCredentialsAreValid()
@@ -24,11 +24,11 @@ public class LoginServiceTests
         };
 
         Mock<ILoginRepository> loginRepositoryMock = new Mock<ILoginRepository>();
-        loginRepositoryMock.Setup(repo => repo.CheckCredentials(userCredentials))
+        loginRepositoryMock.Setup(repo => repo.CheckCredentialsAsync(userCredentials))
             .ReturnsAsync(expectedUser);
 
         UserService userService = new UserService(loginRepositoryMock.Object);
-        User resultUser = await userService.CheckCredentials(userCredentials);
+        User resultUser = await userService.CheckCredentialsAsync(userCredentials);
 
         Assert.NotNull(resultUser);
         Assert.Equal(expectedUser.UserId, resultUser.UserId);
@@ -44,11 +44,11 @@ public class LoginServiceTests
         };
 
         Mock<ILoginRepository> loginRepositoryMock = new Mock<ILoginRepository>();
-        loginRepositoryMock.Setup(repo => repo.CheckCredentials(userCredentials))
+        loginRepositoryMock.Setup(repo => repo.CheckCredentialsAsync(userCredentials))
             .ReturnsAsync((User)null);
 
         UserService userService = new UserService(loginRepositoryMock.Object);
-        User resultUser = await userService.CheckCredentials(userCredentials);
+        User resultUser = await userService.CheckCredentialsAsync(userCredentials);
 
         Assert.Null(resultUser);
     }

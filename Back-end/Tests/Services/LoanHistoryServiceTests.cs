@@ -50,13 +50,13 @@ public class LoanHistoryServiceTests
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock
-            .Setup(repo => repo.GetLoanHistoryByProductId(productId, page, pageSize))
+            .Setup(repo => repo.GetLoanHistoryByProductIdAsync(productId, page, pageSize))
             .ReturnsAsync((GetSampleLoanHistory(), 20));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
 
         (IEnumerable<object> pagedHistory, Pager pager) =
-            await loanHistoryService.GetLoanHistoryByProductId(productId, page, pageSize);
+            await loanHistoryService.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
 
         Assert.NotNull(pagedHistory);
         Assert.Equal(20, pager.TotalItems);
@@ -71,13 +71,13 @@ public class LoanHistoryServiceTests
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock
-            .Setup(repo => repo.GetLoanHistoryByProductId(productId, page, pageSize))
+            .Setup(repo => repo.GetLoanHistoryByProductIdAsync(productId, page, pageSize))
             .ReturnsAsync((Enumerable.Empty<object>(), 0));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
 
         (IEnumerable<object> pagedHistory, Pager pager) =
-            await loanHistoryService.GetLoanHistoryByProductId(productId, page, pageSize);
+            await loanHistoryService.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
 
         Assert.Empty(pagedHistory);
         Assert.Equal(0, pager.TotalItems);
@@ -92,13 +92,13 @@ public class LoanHistoryServiceTests
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock
-            .Setup(repo => repo.GetLoanHistoryByCustomerId(customerId, page, pageSize))
+            .Setup(repo => repo.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize))
             .ReturnsAsync((GetSampleLoanHistory(), 15));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
 
         (IEnumerable<object> pagedHistory, Pager pager) =
-            await loanHistoryService.GetLoanHistoryByCustomerId(customerId, page, pageSize);
+            await loanHistoryService.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize);
 
         Assert.NotNull(pagedHistory);
         Assert.Equal(15, pager.TotalItems);
@@ -113,12 +113,12 @@ public class LoanHistoryServiceTests
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock
-            .Setup(repo => repo.GetLoanHistoryByCustomerId(customerId, page, pageSize))
+            .Setup(repo => repo.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
         await Assert.ThrowsAsync<Exception>(() =>
-            loanHistoryService.GetLoanHistoryByCustomerId(customerId, page, pageSize));
+            loanHistoryService.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize));
     }
 
     [Fact]
@@ -127,11 +127,11 @@ public class LoanHistoryServiceTests
         const int productId = 1;
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.GetReturnDatesByProductId(productId))
+        loanHistoryRepositoryMock.Setup(repo => repo.GetReturnDatesByProductIdAsync(productId))
             .ReturnsAsync(DateTime.Today.AddDays(5));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        DateTime? returnDate = await loanHistoryService.GetReturnDatesByProductId(productId);
+        DateTime? returnDate = await loanHistoryService.GetReturnDatesByProductIdAsync(productId);
 
         Assert.NotNull(returnDate);
         Assert.Equal(DateTime.Today.AddDays(5), returnDate);
@@ -143,11 +143,11 @@ public class LoanHistoryServiceTests
         const int productId = 1;
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.GetReturnDatesByProductId(productId))
+        loanHistoryRepositoryMock.Setup(repo => repo.GetReturnDatesByProductIdAsync(productId))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.GetReturnDatesByProductId(productId));
+        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.GetReturnDatesByProductIdAsync(productId));
     }
 
     [Fact]
@@ -158,11 +158,11 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.GetLatestLoanHistoryByProductId(productId))
+        loanHistoryRepositoryMock.Setup(repo => repo.GetLatestLoanHistoryByProductIdAsync(productId))
             .ReturnsAsync(expectedLoanHistory);
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        LoanHistory result = await loanHistoryService.GetLatestLoanHistoryByProductId(productId);
+        LoanHistory result = await loanHistoryService.GetLatestLoanHistoryByProductIdAsync(productId);
 
         Assert.NotNull(result);
         Assert.Equal(expectedLoanHistory.LoanHistoryId, result.LoanHistoryId);
@@ -174,11 +174,11 @@ public class LoanHistoryServiceTests
         const int productId = 1;
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.GetLatestLoanHistoryByProductId(productId))
+        loanHistoryRepositoryMock.Setup(repo => repo.GetLatestLoanHistoryByProductIdAsync(productId))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.GetLatestLoanHistoryByProductId(productId));
+        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.GetLatestLoanHistoryByProductIdAsync(productId));
     }
 
     [Fact]
@@ -187,11 +187,11 @@ public class LoanHistoryServiceTests
         const int productId = 1;
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.GetLatestLoanHistoryByProductId(productId))
+        loanHistoryRepositoryMock.Setup(repo => repo.GetLatestLoanHistoryByProductIdAsync(productId))
             .ReturnsAsync((LoanHistory)null);
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        LoanHistory result = await loanHistoryService.GetLatestLoanHistoryByProductId(productId);
+        LoanHistory result = await loanHistoryService.GetLatestLoanHistoryByProductIdAsync(productId);
         Assert.Null(result);
     }
 
@@ -202,13 +202,13 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistory(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistory>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await loanHistoryService.UpdateLoanHistory(loanHistoryToUpdate);
-        loanHistoryRepositoryMock.Verify(repo => repo.UpdateLoanHistory(It.IsAny<LoanHistory>()), Times.Once);
+        await loanHistoryService.UpdateLoanHistoryAsync(loanHistoryToUpdate);
+        loanHistoryRepositoryMock.Verify(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistory>()), Times.Once);
     }
 
     [Fact]
@@ -218,11 +218,11 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistory(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistory>()))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.UpdateLoanHistory(loanHistoryToUpdate));
+        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.UpdateLoanHistoryAsync(loanHistoryToUpdate));
     }
 
     [Fact]
@@ -232,13 +232,13 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.PostLoanHistory(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistory>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await loanHistoryService.PostLoanHistory(loanHistoryToPost);
-        loanHistoryRepositoryMock.Verify(repo => repo.PostLoanHistory(It.IsAny<LoanHistory>()), Times.Once);
+        await loanHistoryService.CreateLoanHistoryAsync(loanHistoryToPost);
+        loanHistoryRepositoryMock.Verify(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistory>()), Times.Once);
     }
 
     [Fact]
@@ -248,10 +248,10 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.PostLoanHistory(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistory>()))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.PostLoanHistory(loanHistoryToPost));
+        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.CreateLoanHistoryAsync(loanHistoryToPost));
     }
 }

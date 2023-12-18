@@ -50,7 +50,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByProductId(productId, page, pageSize);
+                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);
@@ -76,7 +76,7 @@ namespace Tests.Repositories
             {
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByProductId(productId, page, pageSize);
+                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
 
                 Assert.NotNull(result);
                 Assert.Empty(result);
@@ -99,7 +99,7 @@ namespace Tests.Repositories
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByCustomerId(customerId, page, pageSize);
+                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);
@@ -126,7 +126,7 @@ namespace Tests.Repositories
             {
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByCustomerId(customerId, 1, 10);
+                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByCustomerIdAsync(customerId, 1, 10);
 
                 Assert.NotNull(result);
                 Assert.Empty(result);
@@ -146,7 +146,7 @@ namespace Tests.Repositories
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                DateTime? latestReturnDate = await repository.GetReturnDatesByProductId(productId);
+                DateTime? latestReturnDate = await repository.GetReturnDatesByProductIdAsync(productId);
 
                 Assert.NotNull(latestReturnDate);
                 Assert.Equal(_loanHistories[0].ReturnDate, latestReturnDate);
@@ -161,7 +161,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                DateTime? result = await repository.GetReturnDatesByProductId(productId);
+                DateTime? result = await repository.GetReturnDatesByProductIdAsync(productId);
 
                 Assert.NotNull(result);
                 Assert.Equal(DateTime.Now.Date, result.Value.Date);
@@ -179,7 +179,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                LoanHistory latestLoanHistory = await repository.GetLatestLoanHistoryByProductId(productId);
+                LoanHistory latestLoanHistory = await repository.GetLatestLoanHistoryByProductIdAsync(productId);
 
                 Assert.NotNull(latestLoanHistory);
                 Assert.Equal(_loanHistories[0].ReturnDate, latestLoanHistory.ReturnDate);
@@ -195,7 +195,7 @@ namespace Tests.Repositories
             await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                LoanHistory result = await repository.GetLatestLoanHistoryByProductId(productId);
+                LoanHistory result = await repository.GetLatestLoanHistoryByProductIdAsync(productId);
                 Assert.Null(result);
             }
         }
@@ -215,7 +215,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
                 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                await repository.UpdateLoanHistory(loanHistory);
+                await repository.UpdateLoanHistoryAsync(loanHistory);
                 
                 LoanHistory updatedLoanHistory = await context.LoanHistory.FindAsync(loanHistory.LoanHistoryId);
                 Assert.NotNull(updatedLoanHistory);
@@ -238,7 +238,7 @@ namespace Tests.Repositories
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                await repository.PostLoanHistory(loanHistoryToPost);
+                await repository.CreateLoanHistoryAsync(loanHistoryToPost);
                 LoanHistory loanHistoryInDatabase = await context.LoanHistory.FindAsync(loanHistoryToPost.LoanHistoryId);
 
                 Assert.NotNull(loanHistoryInDatabase);

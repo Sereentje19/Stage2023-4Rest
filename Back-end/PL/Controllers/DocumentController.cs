@@ -124,9 +124,9 @@ namespace PL.Controllers
         /// a list of strings representing document types.
         /// </returns>
         [HttpGet("types")]
-        public async Task<IActionResult> GetDocumentTypeStrings()
+        public async Task<IActionResult> GetDocumentTypesAsync()
         {
-            IEnumerable<DocumentType> documentTypes = await _documentService.GetDocumentTypes();
+            IEnumerable<DocumentType> documentTypes = await _documentService.GetDocumentTypesAsync();
             return Ok(documentTypes);
         }
         
@@ -136,9 +136,9 @@ namespace PL.Controllers
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document and its type information if found; otherwise, an error message.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDocumentById(int id)
+        public async Task<IActionResult> GetDocumentByIdAsync(int id)
         {
-            DocumentResponse document = await _documentService.GetDocumentById(id);
+            DocumentResponse document = await _documentService.GetDocumentByIdAsync(id);
             return Ok(document);
         }
 
@@ -149,7 +149,7 @@ namespace PL.Controllers
         /// <param name="document">The document information, including type, date, and customer ID.</param>
         /// <returns>A success message if the document is created; otherwise, an error message.</returns>
         [HttpPost]
-        public async Task<IActionResult> PostDocument([FromForm] IFormFile file, [FromForm] DocumentResponse document)
+        public async Task<IActionResult> CreateDocumentAsync([FromForm] IFormFile file, [FromForm] DocumentResponse document)
         {
             Document doc = new Document
             {
@@ -172,7 +172,7 @@ namespace PL.Controllers
                 }
             }
 
-            await _documentService.PostDocument(doc);
+            await _documentService.CreateDocumentAsync(doc);
             return Ok(new { message = "Document toegevoegd." });
         }
 
@@ -182,9 +182,9 @@ namespace PL.Controllers
         /// <param name="doc">The document entity to be updated.</param>
         /// <returns>A success message if the document is updated; otherwise, an error message.</returns>
         [HttpPut]
-        public async Task<IActionResult> PutDocument(EditDocumentRequest doc)
+        public async Task<IActionResult> UpdateDocumentAsync(EditDocumentRequest doc)
         {
-            await _documentService.PutDocument(doc);
+            await _documentService.UpdateDocumentAsync(doc);
             return Ok(new { message = "Document geupdate." });
         }
 
@@ -196,9 +196,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPut("archive")]
-        public async Task<IActionResult> PutIsArchived(CheckBoxRequest doc)
+        public async Task<IActionResult> UpdateIsArchivedAsync(CheckBoxRequest doc)
         {
-            await _documentService.UpdateIsArchived(doc);
+            await _documentService.UpdateIsArchivedAsync(doc);
             return Ok(new { message = "Document geupdate." });
         }
 
@@ -210,9 +210,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDocument(int id)
+        public async Task<IActionResult> DeleteDocumentAsync(int id)
         {
-            await _documentService.DeleteDocument(id);
+            await _documentService.DeleteDocumentAsync(id);
             return Ok(new { message = "Document verwijderd." });
         }
     }

@@ -30,9 +30,9 @@ namespace PL.Controllers
         /// </returns>
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> CreateResetCodeAsync(string email)
         {
-            await _passwordResetService.PostResetCode(email);
+            await _passwordResetService.CreateResetCodeAsync(email);
             return Ok(new { message = "Mail gestuurd." });
         }
 
@@ -46,9 +46,9 @@ namespace PL.Controllers
         /// </returns>
         [AllowAnonymous]
         [HttpGet("check-code")]
-        public async Task<IActionResult> CheckEnteredCode(string email, string code)
+        public async Task<IActionResult> CheckEnteredCodeAsync(string email, string code)
         {
-            await _passwordResetService.CheckEnteredCode(email, code);
+            await _passwordResetService.CheckEnteredCodeAsync(email, code);
             return Ok(new { message = "Mail gestuurd." });
         }
         
@@ -61,16 +61,16 @@ namespace PL.Controllers
         /// </returns>
         [AllowAnonymous]
         [HttpPost("code")]
-        public async Task<IActionResult> AddPassword(PasswordChangeRequest request)
+        public async Task<IActionResult> CreatePasswordAsync(PasswordChangeRequest request)
         {
-            await _passwordResetService.PostPassword(request);
+            await _passwordResetService.CreatePasswordAsync(request);
             return Ok(new { message = "Wachtwoord gemaakt" });
         }
         
         [HttpPut]
-        public async Task<IActionResult> PutPassword(User user, string password1, string password2, string password3)
+        public async Task<IActionResult> UpdatePasswordAsync(User user, string password1, string password2, string password3)
         {
-            await _passwordResetService.PutPassword(user, password1, password2, password3);
+            await _passwordResetService.UpdatePasswordAsync(user, password1, password2, password3);
             return Ok(new { message = "Wachtwoord aangepast." });
         }
     }

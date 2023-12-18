@@ -22,7 +22,7 @@ public class PasswordresetServiceTests
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
 
         mockPasswordResetRepository
-            .Setup(repo => repo.PostResetCode(It.IsAny<string>(), email))
+            .Setup(repo => repo.CreateResetCodeAsync(It.IsAny<string>(), email))
             .ReturnsAsync(new User { Name = "Test User", Email = "test@example.com" });
 
         Mock<IMailService> mockMailService = new Mock<IMailService>();
@@ -38,11 +38,11 @@ public class PasswordresetServiceTests
         );
 
         mockPasswordResetRepository
-            .Setup(repo => repo.PostResetCode(It.IsAny<string>(), email))
+            .Setup(repo => repo.CreateResetCodeAsync(It.IsAny<string>(), email))
             .Callback<string, string>((c, _) => { })
             .ReturnsAsync(new User { Name = "Test User", Email = "test@example.com" });
 
-        await passwordResetService.PostResetCode(email);
+        await passwordResetService.CreateResetCodeAsync(email);
 
         mockMailService.Verify(
             mailService => mailService.SendPasswordEmail(
@@ -71,10 +71,10 @@ public class PasswordresetServiceTests
             mockLoginService.Object
         );
 
-        await passwordResetService.CheckEnteredCode(email, code);
+        await passwordResetService.CheckEnteredCodeAsync(email, code);
 
         mockPasswordResetRepository.Verify(
-            repo => repo.CheckEnteredCode(email, code),
+            repo => repo.CheckEnteredCodeAsync(email, code),
             Times.Once
         );
     }
@@ -100,10 +100,10 @@ public class PasswordresetServiceTests
             mockLoginService.Object
         );
 
-        await Assert.ThrowsAsync<InputValidationException>(() => passwordResetService.PostPassword(request));
+        await Assert.ThrowsAsync<InputValidationException>(() => passwordResetService.CreatePasswordAsync(request));
 
         mockPasswordResetRepository.Verify(
-            repo => repo.PostPassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
+            repo => repo.CreatePasswordAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
             Times.Never
         );
     }
@@ -129,10 +129,10 @@ public class PasswordresetServiceTests
             mockLoginService.Object
         );
 
-        await passwordResetService.PostPassword(request);
+        await passwordResetService.CreatePasswordAsync(request);
 
         mockPasswordResetRepository.Verify(
-            repo => repo.PostPassword(request.Email, request.Password1, request.Code),
+            repo => repo.CreatePasswordAsync(request.Email, request.Password1, request.Code),
             Times.Once
         );
     }

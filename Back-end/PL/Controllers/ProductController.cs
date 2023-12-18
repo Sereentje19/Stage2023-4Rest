@@ -77,9 +77,9 @@ namespace PL.Controllers
         /// a list of strings representing product types.
         /// </returns>
         [HttpGet("types")]
-        public async Task<IActionResult> GetProductTypes()
+        public async Task<IActionResult> GetProductTypesAsync()
         {
-            IEnumerable<ProductType> productType = await _productService.GetProductTypes();
+            IEnumerable<ProductType> productType = await _productService.GetProductTypesAsync();
             return Ok(productType);
         }
 
@@ -91,9 +91,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing details of the specified product.
         /// </returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById(int id)
+        public async Task<IActionResult> GetProductByIdAsync(int id)
         {
-            Product product = await _productService.GetProductById(id);
+            Product product = await _productService.GetProductByIdAsync(id);
             return Ok(product);
         }
 
@@ -106,7 +106,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> PostProduct([FromForm] IFormFile file, [FromForm] Product product)
+        public async Task<IActionResult> CreateProductAsync([FromForm] IFormFile file, [FromForm] Product product)
         {
             Product pro = new Product
             {
@@ -126,7 +126,7 @@ namespace PL.Controllers
                 }
             }
             
-            await _productService.PostProduct(pro);
+            await _productService.CreateProductAsync(pro);
             return Ok(new { message = "Product toegevoegd." });
         }
 
@@ -138,16 +138,16 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPut]
-        public async Task<IActionResult> PutProduct(Product product)
+        public async Task<IActionResult> UpdateProductAsync(Product product)
         {
-            await _productService.PutProduct(product);
+            await _productService.UpdateProductAsync(product);
             return Ok(new { message = "Product geupdate." });
         }
         
         [HttpPut("delete")]
-        public async Task<IActionResult> PutIsDeleted(Product product)
+        public async Task<IActionResult> UpdateIsDeletedAsync(Product product)
         {
-            await _productService.PutIsDeleted(product);
+            await _productService.UpdateIsDeletedAsync(product);
             return Ok(new { message = "Product geupdate." });
         }
 
@@ -159,9 +159,9 @@ namespace PL.Controllers
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProductAsync(int id)
         {
-            await _productService.DeleteProduct(id);
+            await _productService.DeleteProductAsync(id);
             return Ok(new { message = "Product verwijderd." });
         }
     }

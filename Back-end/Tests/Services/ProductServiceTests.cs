@@ -74,10 +74,10 @@ public class ProductServiceTests
             new ProductType { Id = 2, Name = "Type2" },
         };
 
-        mockRepository.Setup(repo => repo.GetProductTypes())
+        mockRepository.Setup(repo => repo.GetProductTypesAsync())
             .ReturnsAsync(productTypes);
 
-        IEnumerable<ProductType> result = await productService.GetProductTypes();
+        IEnumerable<ProductType> result = await productService.GetProductTypesAsync();
 
         Assert.NotNull(result);
         Assert.IsType<List<ProductType>>(result);
@@ -92,12 +92,12 @@ public class ProductServiceTests
         Product expectedProduct = new Product { ProductId = productId, Type  = new ProductType{ Name = "Laptop", Id = 1}, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4"};
 
         productRepositoryMock
-            .Setup(repo => repo.GetProductById(productId))
+            .Setup(repo => repo.GetProductByIdAsync(productId))
             .ReturnsAsync(expectedProduct);
 
         ProductService productService = new ProductService(productRepositoryMock.Object);
 
-        Product actualProduct = await productService.GetProductById(productId);
+        Product actualProduct = await productService.GetProductByIdAsync(productId);
 
         Assert.NotNull(actualProduct);
         Assert.Equal(expectedProduct.ProductId, actualProduct.ProductId);
@@ -114,8 +114,8 @@ public class ProductServiceTests
         ProductService productService = new ProductService(productRepositoryMock.Object);
         Product newProduct = new Product {  Type  = new ProductType{ Name = "Laptop", Id = 1}, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4"};
 
-        await productService.PostProduct(newProduct);
-        productRepositoryMock.Verify(repo => repo.AddProduct(It.IsAny<Product>()), Times.Once);
+        await productService.CreateProductAsync(newProduct);
+        productRepositoryMock.Verify(repo => repo.CreateProductAsync(It.IsAny<Product>()), Times.Once);
     }
 
     [Fact]
@@ -126,8 +126,8 @@ public class ProductServiceTests
 
         Product existingProduct = new Product { ProductId = 1, Type  = new ProductType{ Name = "Laptop", Id = 1}, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4" };
 
-        await productService.PutProduct(existingProduct);
-        productRepositoryMock.Verify(repo => repo.PutProduct(It.IsAny<Product>()), Times.Once);
+        await productService.UpdateProductAsync(existingProduct);
+        productRepositoryMock.Verify(repo => repo.UpdateProductAsync(It.IsAny<Product>()), Times.Once);
     }
 
     [Fact]
@@ -138,8 +138,8 @@ public class ProductServiceTests
 
         const int productIdToDelete = 1;
 
-        await productService.DeleteProduct(productIdToDelete);
-        productRepositoryMock.Verify(repo => repo.DeleteProduct(productIdToDelete), Times.Once);
+        await productService.DeleteProductAsync(productIdToDelete);
+        productRepositoryMock.Verify(repo => repo.DeleteProductAsync(productIdToDelete), Times.Once);
     }
 
 
