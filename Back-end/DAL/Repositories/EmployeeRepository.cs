@@ -170,17 +170,6 @@ namespace DAL.Repositories
             return employeeRequest.EmployeeId;
         }
 
-        private static Employee MapDtoToEmployee(EmployeeRequestDto employeeRequest)
-        {
-            return new Employee()
-            {
-                Email = employeeRequest.Email,
-                EmployeeId = employeeRequest.EmployeeId,
-                Name = employeeRequest.Name,
-                IsArchived = employeeRequest.IsArchived
-            };
-        }
-
         public async Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
         {
             Employee existingEmployee = await _dbSet.FindAsync(employeeRequest.EmployeeId);
@@ -228,6 +217,17 @@ namespace DAL.Repositories
             
             _dbSet.Remove(employee);
             await _context.SaveChangesAsync();
+        }
+        
+        private static Employee MapDtoToEmployee(EmployeeRequestDto employeeRequest)
+        {
+            return new Employee()
+            {
+                Email = employeeRequest.Email,
+                EmployeeId = employeeRequest.EmployeeId,
+                Name = employeeRequest.Name,
+                IsArchived = employeeRequest.IsArchived
+            };
         }
 
         private async Task CheckEmailExistsAsync(EmployeeRequestDto employeeRequest)

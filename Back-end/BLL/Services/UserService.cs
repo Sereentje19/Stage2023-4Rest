@@ -12,13 +12,13 @@ using DAL.Models.Responses;
 
 namespace BLL.Services
 {
-    public class UserService : ILoginService
+    public class UserService : IUserService
     {
-        private readonly ILoginRepository _loginRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(ILoginRepository loginRepository)
+        public UserService(IUserRepository userRepository)
         {
-            _loginRepository = loginRepository;
+            _userRepository = userRepository;
         }
 
         /// <summary>
@@ -30,31 +30,33 @@ namespace BLL.Services
         /// </returns>
         public async Task<User> CheckCredentialsAsync(LoginRequestDto user)
         {
-            return await _loginRepository.CheckCredentialsAsync(user);
+            return await _userRepository.CheckCredentialsAsync(user);
         }
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
-            return await _loginRepository.GetUserByEmailAsync(email);
+            return await _userRepository.GetUserByEmailAsync(email);
         }
         
         public async Task CreateUserAsync(CreateUserRequestDto userRequest)
         {
-             await _loginRepository.CreateUserAsync(userRequest);
+             await _userRepository.CreateUserAsync(userRequest);
         }
         
         public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
-            return await _loginRepository.GetAllUsersAsync();
+            return await _userRepository.GetAllUsersAsync();
         }
         
         public async Task DeleteUserAsync(string email)
         {
-             await _loginRepository.DeleteUserAsync(email);
+             await _userRepository.DeleteUserAsync(email);
         }
 
         public async Task UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
         {
+            Console.WriteLine(updateUserRequestDto.Email1);
+            Console.WriteLine(updateUserRequestDto.Email2);
             User user = new User()
             {
                 Email = updateUserRequestDto.Email1,
@@ -66,11 +68,11 @@ namespace BLL.Services
             
             if (updateUserRequestDto.UpdateName)
             {
-                await _loginRepository.UpdateUserNameAsync(user);
+                await _userRepository.UpdateUserNameAsync(user);
             }
             else
             {
-                await _loginRepository.UpdateUserEmailAsync(user, updateUserRequestDto.Email2);
+                await _userRepository.UpdateUserEmailAsync(user, updateUserRequestDto.Email2);
             }
         }
     }

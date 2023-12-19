@@ -23,7 +23,7 @@ public class UserServiceTests
             UserId = 1,
         };
 
-        Mock<ILoginRepository> loginRepositoryMock = new Mock<ILoginRepository>();
+        Mock<IUserRepository> loginRepositoryMock = new Mock<IUserRepository>();
         loginRepositoryMock.Setup(repo => repo.CheckCredentialsAsync(userCredentials))
             .ReturnsAsync(expectedUser);
 
@@ -43,7 +43,7 @@ public class UserServiceTests
             Password = "invalidPassword"
         };
 
-        Mock<ILoginRepository> loginRepositoryMock = new Mock<ILoginRepository>();
+        Mock<IUserRepository> loginRepositoryMock = new Mock<IUserRepository>();
         loginRepositoryMock.Setup(repo => repo.CheckCredentialsAsync(userCredentials))
             .ReturnsAsync((User)null);
 

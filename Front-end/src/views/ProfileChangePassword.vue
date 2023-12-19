@@ -20,12 +20,12 @@
             <div id="profile-page">
                 <div id="inputfields">
                     <div id="inputfield-title">Huidig wachtwoord</div>
-                    <div id="input-edit"><input v-model="this.password1" class="inputfield-personal-data"> </div><br>
+                    <div id="input-edit"><input v-model="this.currentUser.password1" class="inputfield-personal-data"> </div><br>
                     <div id="inputfield-title">Nieuwe wachtwoord</div>
-                    <div id="input-edit"><input v-model="this.password2" class="inputfield-personal-data">
+                    <div id="input-edit"><input v-model="this.currentUser.password2" class="inputfield-personal-data">
                     </div>
                     <div id="inputfield-title">Nieuwe wachtwoord</div>
-                    <div id="input-edit"><input v-model="this.password3" class="inputfield-personal-data"></div>
+                    <div id="input-edit"><input v-model="this.currentUser.password3" class="inputfield-personal-data"></div>
                     <button @click="changePassword()" id="button-personal-data">bevestig</button>
                 </div>
             </div>

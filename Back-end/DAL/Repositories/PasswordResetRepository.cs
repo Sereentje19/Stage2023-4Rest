@@ -52,33 +52,6 @@ namespace DAL.Repositories
             return user;
         }
 
-        /// <summary>
-        /// Checks the validity of the entered reset code and retrieves the associated user.
-        /// </summary>
-        /// <param name="email">The email address of the user.</param>
-        /// <param name="code">The reset code entered by the user.</param>
-        /// <returns>
-        /// The User object associated with the provided email address and valid reset code.
-        /// </returns>
-        public async Task<User> CheckEnteredCodeAsync(string email, string code)
-        {
-            var userWithCode = await _context.Users
-                .Join(_dbSet,
-                    user => user.UserId,
-                    prc => prc.UserId,
-                    (user, prc) => new { User = user, Prc = prc })
-                .FirstOrDefaultAsync(joined =>
-                    joined.User.Email == email &&
-                    joined.Prc.Code == code &&
-                    joined.Prc.ExpirationTime > DateTime.UtcNow);
-
-            if (userWithCode == null)
-            {
-                throw new InputValidationException("Sessie verlopen of ongeldige code. Probeer het opnieuw.");
-            }
-
-            return userWithCode.User;
-        }
 
         /// <summary>
         /// Posts a new password for a user after the password recovery process.
@@ -126,6 +99,34 @@ namespace DAL.Repositories
             }
 
             return user;
+        }
+        
+        /// <summary>
+        /// Checks the validity of the entered reset code and retrieves the associated user.
+        /// </summary>
+        /// <param name="email">The email address of the user.</param>
+        /// <param name="code">The reset code entered by the user.</param>
+        /// <returns>
+        /// The User object associated with the provided email address and valid reset code.
+        /// </returns>
+        public async Task<User> CheckEnteredCodeAsync(string email, string code)
+        {
+            var userWithCode = await _context.Users
+                .Join(_dbSet,
+                    user => user.UserId,
+                    prc => prc.UserId,
+                    (user, prc) => new { User = user, Prc = prc })
+                .FirstOrDefaultAsync(joined =>
+                    joined.User.Email == email &&
+                    joined.Prc.Code == code &&
+                    joined.Prc.ExpirationTime > DateTime.UtcNow);
+
+            if (userWithCode == null)
+            {
+                throw new InputValidationException("Sessie verlopen of ongeldige code. Probeer het opnieuw.");
+            }
+
+            return userWithCode.User;
         }
     }
 }

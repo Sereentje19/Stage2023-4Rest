@@ -84,8 +84,8 @@ void ConnectionInterfaces()
 {
     builder.Services.AddScoped<IDocumentService, DocumentService>();
     builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-    builder.Services.AddScoped<ILoginService, UserService>();
-    builder.Services.AddScoped<ILoginRepository, UserRepository>();
+    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
     builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
     builder.Services.AddScoped<IEmployeeService, EmployeeService>();

@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Azure.Core;
 using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class UserRepository : ILoginRepository
+    public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<User> _dbSet;
@@ -20,12 +21,6 @@ namespace DAL.Repositories
             _dbSet = _context.Set<User>();
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
-        {
-            return await _dbSet
-                .SingleOrDefaultAsync(l => l.Email == email);
-        }
-
         public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
             return await _dbSet
@@ -33,10 +28,52 @@ namespace DAL.Repositories
                 {
                     Email = user.Email,
                     Name = user.Name
-                }).ToListAsync();
+                })
+                .OrderBy(u => u.Name)
+                .ToListAsync();
         }
 
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _dbSet
+                .SingleOrDefaultAsync(l => l.Email == email);
+        }
+        
+        public async Task CreateUserAsync(CreateUserRequestDto userRequestDto)
+        {
+            User existingUser = await _dbSet
+                .SingleOrDefaultAsync(l => l.Email == userRequestDto.Email);
 
+            if (existingUser != null)
+            {
+                throw new InputValidationException("Email bestaat al.");
+            }
+
+            if (string.IsNullOrWhiteSpace(userRequestDto.Name))
+            {
+                throw new InputValidationException("Naam veld is leeg.");
+            }
+
+            if (string.IsNullOrWhiteSpace(userRequestDto.Email))
+            {
+                throw new InputValidationException("Email veld is leeg.");
+            }
+
+            if (!userRequestDto.Email.Contains('@'))
+            {
+                throw new InputValidationException("Geen geldige email.");
+            }
+
+            User user = new User()
+            {
+                Email = userRequestDto.Email,
+                Name = userRequestDto.Name
+            };
+
+            _dbSet.Add(user);
+            await _context.SaveChangesAsync();
+        }
+        
         public async Task UpdateUserEmailAsync(User user, string email)
         {
             await CheckEmailExistsAsync(user);
@@ -78,41 +115,6 @@ namespace DAL.Repositories
 
             existingUser.Name = user.Name;
             _dbSet.Update(existingUser);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CreateUserAsync(CreateUserRequestDto userRequestDto)
-        {
-            User existingUser = await _dbSet
-                .SingleOrDefaultAsync(l => l.Email == userRequestDto.Email);
-
-            if (existingUser != null)
-            {
-                throw new InputValidationException("Email bestaat al.");
-            }
-
-            if (string.IsNullOrWhiteSpace(userRequestDto.Name))
-            {
-                throw new InputValidationException("Naam veld is leeg.");
-            }
-
-            if (string.IsNullOrWhiteSpace(userRequestDto.Email))
-            {
-                throw new InputValidationException("Email veld is leeg.");
-            }
-
-            if (!userRequestDto.Email.Contains('@'))
-            {
-                throw new InputValidationException("Geen geldige email.");
-            }
-
-            User user = new User()
-            {
-                Email = userRequestDto.Email,
-                Name = userRequestDto.Name
-            };
-
-            _dbSet.Add(user);
             await _context.SaveChangesAsync();
         }
 

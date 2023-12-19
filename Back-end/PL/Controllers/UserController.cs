@@ -15,19 +15,19 @@ namespace PL.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly ILoginService _loginService;
+        private readonly IUserService _userService;
         private readonly IJwtValidationService _jwtValidationService;
 
-        public UserController(ILoginService loginService, IJwtValidationService jwtValidationService)
+        public UserController(IUserService userService, IJwtValidationService jwtValidationService)
         {
-            _loginService = loginService;
+            _userService = userService;
             _jwtValidationService = jwtValidationService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsersAsync()
         {
-            IEnumerable<UserResponseDto> users = await _loginService.GetAllUsersAsync();   
+            IEnumerable<UserResponseDto> users = await _userService.GetAllUsersAsync();   
             return Ok(users);
         }
         
@@ -40,8 +40,8 @@ namespace PL.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto userDto)
         {
-            await _loginService.CheckCredentialsAsync(userDto);
-            User user =  await _loginService.GetUserByEmailAsync(userDto.Email);
+            await _userService.CheckCredentialsAsync(userDto);
+            User user =  await _userService.GetUserByEmailAsync(userDto.Email);
             string token = _jwtValidationService.GenerateToken(user);
             return Ok(token);
         }
@@ -49,21 +49,21 @@ namespace PL.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync(CreateUserRequestDto userRequest)
         {
-            await _loginService.CreateUserAsync(userRequest);   
+            await _userService.CreateUserAsync(userRequest);   
             return Ok(new { message = "Gebruiker toegevoegd." });
         }
         
         [HttpPut]
         public async Task<IActionResult> UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
         {
-            await _loginService.UpdateUserAsync(updateUserRequestDto);   
+            await _userService.UpdateUserAsync(updateUserRequestDto);   
             return Ok(new { message = "Gebruiker geupdate." });
         }
         
         [HttpDelete]
         public async Task<IActionResult> DeleteUserAsync(string email)
         {
-            await _loginService.DeleteUserAsync(email);   
+            await _userService.DeleteUserAsync(email);   
             return Ok(new { message = "Gebruiker verwijderd." });
         }
     }

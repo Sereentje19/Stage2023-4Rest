@@ -1,6 +1,7 @@
 <template>
     <body>
         <Header ref="Header"></Header>
+        <PopupChoice ref="PopupChoice" @return="returnItem" />
         <div id="body-profile">
             <div id="nav-profile">
                 <a href="/profiel/persoonsgegevens" class="nav-item" id="current-nav-item">
@@ -30,9 +31,9 @@
                     <div id="input-edit"><input v-bind:readonly="true" class="inputfield-personal-data"
                             :placeholder="this.currentUser.email"> <button id="button-personal-data"
                             @click="editEmailField()">edit</button></div>
-                    <div v-if="this.editEmail" id="input-edit"><input v-model="this.email" class="inputfield-personal-data"
+                    <div v-if="this.editEmail" id="input-edit"><input v-model="this.user.email1" class="inputfield-personal-data"
                             placeholder="Nieuwe email"></div>
-                    <div v-if="this.editEmail" id="input-edit"><input v-model="this.user.email"
+                    <div v-if="this.editEmail" id="input-edit"><input v-model="this.user.email2"
                             class="inputfield-personal-data" placeholder="Nieuwe email"> <button @click="updateUser(false)"
                             id="button-personal-data">bevestig</button></div>
                 </div>
@@ -53,6 +54,7 @@ import profileFill from "../components/icons/iconLoginProfileFill.vue";
 import lockClosed from "../components/icons/iconLoginLockClosed.vue";
 import ProfilePeople from "../components/icons/IconProfilePeople.vue";
 import ArrowRight from "../components/icons/iconArrowRight.vue";
+import PopupChoice from '../components/notifications/PopUpChoice.vue';
 
 
 export default {
@@ -63,7 +65,8 @@ export default {
         profileFill,
         lockClosed,
         ProfilePeople,
-        ArrowRight
+        ArrowRight,
+        PopupChoice
     },
 
     data() {
@@ -72,19 +75,22 @@ export default {
             editEmail: false,
             currentUser: JSON.parse(localStorage.getItem("currentUser")),
             user: {
-                email: "",
+                email1: "",
                 name: "",
                 userId: JSON.parse(localStorage.getItem("currentUser")).userId,
-                email: "",
+                email2: "",
                 updateName: false
             },
-            email: "",
         };
     },
     methods: {
+
+        
         updateUser(bool) {
             this.user.updateName = bool;
-            this.user.email = this.email;
+
+            console.log(this.user.email)
+            console.log(this.email)
 
             axios.put("user", this.user, {
                 headers: {
@@ -98,7 +104,6 @@ export default {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
-
         editNameField() {
             this.editName = !this.editName;
         },

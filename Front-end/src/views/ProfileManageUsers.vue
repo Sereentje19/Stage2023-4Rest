@@ -1,6 +1,7 @@
 <template>
     <body>
         <Header ref="Header"></Header>
+        <PopupChoice ref="PopupChoice" @delete="deleteUser()" />
         <div id="body-profile">
             <div id="nav-profile">
                 <a href="/profiel/persoonsgegevens" class="nav-item">
@@ -36,7 +37,7 @@
                                     <td class="first-row-users">{{ user.name }}</td>
                                     <td id="second-row-users">{{ user.email }}</td>
                                     <td id="third-row-users">
-                                        <Trash @click="deleteUser(user.email)" id="trash" />
+                                        <Trash @click="popUp(user)" id="trash" />
                                     </td>
                                 </tr>
                             </table>
@@ -66,6 +67,7 @@ import ArrowRight from "../components/icons/iconArrowRight.vue";
 import ProfileAdd from "../components/icons/IconProfileAdd.vue";
 import Trash from "../components/icons/IconTrash.vue";
 import ProfileDelete from "../components/icons/IconProfileDelete.vue";
+import PopupChoice from '../components/notifications/PopUpChoice.vue';
 
 
 export default {
@@ -79,7 +81,8 @@ export default {
         ArrowRight,
         ProfileAdd,
         Trash,
-        ProfileDelete
+        ProfileDelete,
+        PopupChoice
     },
 
     data() {
@@ -87,7 +90,8 @@ export default {
             users: {
                 name: "",
                 email: ""
-            }
+            },
+            email: ""
         };
     },
     mounted() {
@@ -109,13 +113,13 @@ export default {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
-        deleteUser(userEmail) {
+        deleteUser() {
             axios.delete("user", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
                 },
                 params: {
-                    email: userEmail
+                    email: this.email
                 }
             })
                 .then((res) => {
@@ -124,6 +128,11 @@ export default {
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
+        },
+        popUp(user) {
+            this.email = user.email;
+            this.emitter.emit('isPopUpTrue', { 'eventContent': true });
+            this.emitter.emit('text', { 'eventContent': `Weet je zeker dat je ${user.name} wilt verwijderen?` });
         },
     },
 };

@@ -26,7 +26,7 @@ public class PasswordresetServiceTests
             .ReturnsAsync(new User { Name = "Test User", Email = "test@example.com" });
 
         Mock<IMailService> mockMailService = new Mock<IMailService>();
-        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
+        Mock<IUserService> mockLoginService = new Mock<IUserService>();
 
         Mock<IOptions<MailSettings>> mockMailSettingsOptions = new Mock<IOptions<MailSettings>>();
         mockMailSettingsOptions.Setup(x => x.Value).Returns(new MailSettings());
@@ -63,7 +63,7 @@ public class PasswordresetServiceTests
         string code = "123456"; 
 
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
-        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
+        Mock<IUserService> mockLoginService = new Mock<IUserService>();
 
         PasswordResetService passwordResetService = new PasswordResetService(
             mockPasswordResetRepository.Object,
@@ -92,7 +92,7 @@ public class PasswordresetServiceTests
 
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
         Mock<IMailService> mockExceptionService = new Mock<IMailService>();
-        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
+        Mock<IUserService> mockLoginService = new Mock<IUserService>();
         
         PasswordResetService passwordResetService = new PasswordResetService(
             mockPasswordResetRepository.Object,
@@ -119,7 +119,7 @@ public class PasswordresetServiceTests
             Code = "123456" 
         };
 
-        Mock<ILoginService> mockLoginService = new Mock<ILoginService>();
+        Mock<IUserService> mockLoginService = new Mock<IUserService>();
         Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
         Mock<IMailService> mockExceptionService = new Mock<IMailService>();
         

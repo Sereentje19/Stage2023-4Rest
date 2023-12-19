@@ -4,7 +4,7 @@ using DAL.Models.Responses;
 
 namespace DAL.Interfaces
 {
-    public interface ILoginRepository
+    public interface IUserRepository
     {
         Task<User> CheckCredentialsAsync(LoginRequestDto user);
         Task<User> GetUserByEmailAsync(string email);

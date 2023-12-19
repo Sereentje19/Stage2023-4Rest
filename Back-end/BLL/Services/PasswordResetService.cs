@@ -10,13 +10,13 @@ public class PasswordResetService : IPasswordResetService
 {
     private readonly IPasswordResetRepository _passwordResetRepository;
     private readonly IMailService _mailService;
-    private readonly ILoginService _loginService;
+    private readonly IUserService _userService;
 
-    public PasswordResetService(IPasswordResetRepository passwordResetRepository, IMailService mailService, ILoginService loginService)
+    public PasswordResetService(IPasswordResetRepository passwordResetRepository, IMailService mailService, IUserService userService)
     {
         _passwordResetRepository = passwordResetRepository;
         _mailService = mailService;
-        _loginService = loginService;
+        _userService = userService;
     }
 
     /// <summary>
@@ -75,13 +75,14 @@ public class PasswordResetService : IPasswordResetService
     
     public async Task UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto)
     {
+        
         LoginRequestDto dto = new LoginRequestDto()
         {
             Email = updatePasswordRequestDto.Email,
             Password = updatePasswordRequestDto.Password1
         };
 
-        await _loginService.CheckCredentialsAsync(dto);
+        await _userService.CheckCredentialsAsync(dto);
         
         if (updatePasswordRequestDto.Password2 != updatePasswordRequestDto.Password3)
         {
@@ -93,7 +94,8 @@ public class PasswordResetService : IPasswordResetService
             Email = updatePasswordRequestDto.Email,
             Name = updatePasswordRequestDto.Name,
             PasswordHash = updatePasswordRequestDto.PasswordHash,
-            PasswordSalt = updatePasswordRequestDto.PasswordSalt
+            PasswordSalt = updatePasswordRequestDto.PasswordSalt,
+            UserId = updatePasswordRequestDto.UserId
         };
         
         await _passwordResetRepository.UpdatePasswordAsync(user, updatePasswordRequestDto.Password2);
