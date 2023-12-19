@@ -32,7 +32,9 @@
                         <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
                         <div id="typeTekst">{{ document.type.name }}</div>
                         <div id="checkboxArchive">
-                            <button id="button-history" @click="toggleCheckbox(document)"><Archive/></button>
+                            <button id="button-history" @click="toggleCheckbox(document)">
+                                <Archive />
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -51,6 +53,12 @@
             </div>
             <div v-else>
                 <br> Nog geen documenten gearchiveerd.
+                <br>
+                <br>
+                <a href="/overzicht/documenten/lang-geldig" id="doc-link">Documenten bekijken die langer dan 6 weken
+                    geldig zijn
+                    <ArrowRight />
+                </a>
             </div>
 
             <br><br><br>
@@ -131,7 +139,7 @@ export default {
                 }
             })
                 .then((res) => {
-        this.filterDocuments();
+                    this.filterDocuments();
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

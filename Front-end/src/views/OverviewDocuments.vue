@@ -40,7 +40,9 @@
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
             <div id="typeTekst">{{ document.type.name }}</div>
             <div id="checkboxArchive">
-              <button id="button-history" @click="toggleCheckbox(document)"><Archive/></button>
+              <button id="button-history" @click="toggleCheckbox(document)">
+                <Archive />
+              </button>
             </div>
           </div>
         </div>
@@ -60,6 +62,12 @@
       <div v-else>
         <br>
         Er zijn momenteel geen documenten bekend met een datum binnen het tijdsbestek van nu tot de komende zes weken.
+        <br>
+        <br>
+        <a href="/overzicht/documenten/lang-geldig" id="doc-link">Documenten bekijken die langer dan 6 weken
+          geldig zijn
+          <ArrowRight />
+        </a>
       </div>
 
       <br><br><br>

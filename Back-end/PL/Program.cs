@@ -20,13 +20,13 @@ AddCors();
 AddDbConnection();
 ConnectionInterfaces();
 BuildApp();
+return;
 
 //services
 void AddServices()
 {
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    // builder.Services.AddCors();
     builder.Services.AddHttpContextAccessor();
 
     builder.Services.AddControllersWithViews()
@@ -61,9 +61,9 @@ void AddAuthentication()
 //cors
 void AddCors()
 {
-    builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+    builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", corsPolicyBuilder =>
     {
-        builder.WithOrigins("http://localhost:5173")
+        corsPolicyBuilder.WithOrigins("http://localhost:5173")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -76,9 +76,9 @@ void AddDbConnection()
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-            options => options.EnableRetryOnFailure()).EnableSensitiveDataLogging());
+            optionsBuilder => optionsBuilder.EnableRetryOnFailure()).EnableSensitiveDataLogging());
 }
-
+ 
 //connect interfaces
 void ConnectionInterfaces()
 {

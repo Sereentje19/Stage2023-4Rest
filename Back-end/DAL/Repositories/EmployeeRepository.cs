@@ -5,11 +5,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Authentication;
 using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Requests;
+using Microsoft.Graph;
 
 namespace DAL.Repositories
 {
@@ -24,6 +26,20 @@ namespace DAL.Repositories
             _dbSet = _context.Set<Employee>();
         }
 
+        private async void GetEmployeesFromGal()
+        {
+            const string clientId = "133fe8d9-7037-4c05-bd81-7724b52de083";
+            const string clientSecret = "APM8Q~YatdGa2S~TETexhKQeflJ8f3Fy2LicIdqO";
+            const string authority = "https://login.microsoftonline.com/347afa52-35d4-48fc-abb4-b04cb1ff683e";
+            string[] scopes = { "https://graph.microsoft.com/.default" };
+
+            MyAuthProvider authenticationProvider = new MyAuthProvider(clientId, clientSecret, authority, scopes);
+            GraphServiceClient graphClient = new GraphServiceClient(authenticationProvider);
+
+            var employees = await graphClient.Users["{user-id}"].GetAsync();
+            Console.WriteLine(employees);
+        }
+
         /// <summary>
         /// Queries the database for employees based on a search field.
         /// </summary>
@@ -33,6 +49,8 @@ namespace DAL.Repositories
         /// </returns>
         private IQueryable<Employee> QueryGetEmployees(string searchfield)
         {
+            GetEmployeesFromGal();
+            
             return _context.Employees
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
                                    customer.Name.Contains(searchfield) ||
@@ -147,7 +165,7 @@ namespace DAL.Repositories
             {
                 throw new InputValidationException("Klant naam is leeg.");
             }
-            
+
             if (string.IsNullOrWhiteSpace(employeeRequest.Email) || !employeeRequest.Email.Contains("@"))
             {
                 throw new InputValidationException("Geen geldige email.");
@@ -156,7 +174,7 @@ namespace DAL.Repositories
             //check if the customer already exist, then don't add it again.
             Employee existingEmployee =
                 await _dbSet.FirstOrDefaultAsync(c => c.Email == employeeRequest.Email);
-            
+
             if (existingEmployee != null)
             {
                 throw new InputValidationException("Email bestaat al.");
@@ -173,12 +191,12 @@ namespace DAL.Repositories
         public async Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
         {
             Employee existingEmployee = await _dbSet.FindAsync(employeeRequest.EmployeeId);
-            
+
             if (existingEmployee == null)
             {
                 throw new NotFoundException("Geen medewerker gevonden");
             }
-            
+
             existingEmployee.IsArchived = employeeRequest.IsArchived;
             await _context.SaveChangesAsync();
         }
@@ -195,7 +213,7 @@ namespace DAL.Repositories
             {
                 throw new NotFoundException("Geen medewerker gevonden");
             }
-            
+
             await CheckEmailExistsAsync(employeeRequest);
             _context.Entry(existingEmployee).CurrentValues.SetValues(employeeRequest);
             await _context.SaveChangesAsync();
@@ -209,16 +227,16 @@ namespace DAL.Repositories
         public async Task DeleteEmployeeAsync(int id)
         {
             Employee employee = await _dbSet.FindAsync(id);
-            
+
             if (employee == null)
             {
                 throw new NotFoundException("Geen medewerker gevonden");
             }
-            
+
             _dbSet.Remove(employee);
             await _context.SaveChangesAsync();
         }
-        
+
         private static Employee MapDtoToEmployee(EmployeeRequestDto employeeRequest)
         {
             return new Employee()
@@ -233,8 +251,9 @@ namespace DAL.Repositories
         private async Task CheckEmailExistsAsync(EmployeeRequestDto employeeRequest)
         {
             Employee existingEmployee =
-                await _dbSet.FirstOrDefaultAsync(c => c.Email == employeeRequest.Email && c.EmployeeId != employeeRequest.EmployeeId);
-            
+                await _dbSet.FirstOrDefaultAsync(c =>
+                    c.Email == employeeRequest.Email && c.EmployeeId != employeeRequest.EmployeeId);
+
             if (existingEmployee != null)
             {
                 throw new InputValidationException("Email bestaat al.");

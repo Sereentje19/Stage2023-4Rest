@@ -19,7 +19,6 @@ dotnet new webapi
 BRFerFC5AFJwE5A7S3alYFVo9olS0aveXC6IgwYqMc0=
 LueZDV6TpgrQ3fkXJrWg20cuqAhvQ5VKPqpEkbbBBdI=
 
-
 .OnDelete(DeleteBehavior.Cascade);
 
 documentType:
@@ -36,3 +35,10 @@ ProductType:
 - Laptop
 - monitor
 - Stoel
+
+Database connectionstrings:
+Localhost:
+"DefaultConnection": "Server=localhost;Database=Automated_notifications;Integrated Security=SSPI;TrustServerCertificate=True;Encrypt=False;"
+
+Azure:
+"DefaultConnection": "Server=tcp:stage-2023-sever.database.windows.net,1433;Database=DTM;User ID=admin-server;Password=Stage2023-4-rest!;Trusted_Connection=False;Encrypt=True;"

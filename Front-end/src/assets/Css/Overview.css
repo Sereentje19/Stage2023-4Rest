@@ -232,3 +232,13 @@
     padding: 10px;
     cursor: pointer;
 }
+
+#doc-link{
+    font-size: 15px;
+    color: black;
+}
+
+#doc-link svg {
+    margin-left: 5px;
+    margin-bottom: -3px; 
+}
