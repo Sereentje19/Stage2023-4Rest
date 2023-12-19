@@ -1,6 +1,7 @@
 ﻿using BLL.Services;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -37,6 +38,18 @@ public class LoanHistoryServiceTests
                 LoanDate = DateTime.Today.AddDays(-10),
                 ReturnDate = DateTime.Today.AddDays(-1)
             }
+        };
+    }
+    
+    private static LoanHistoryRequestDto MapLoanhistoryToDto(LoanHistory lh)
+    {
+        return new LoanHistoryRequestDto()
+        {
+            LoanHistoryId = lh.LoanHistoryId,
+            LoanDate = lh.LoanDate,
+            ReturnDate = lh.ReturnDate,
+            Employee = lh.Employee,
+            Product = lh.Product,
         };
     }
 
@@ -202,13 +215,13 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistoryRequestDto>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await loanHistoryService.UpdateLoanHistoryAsync(loanHistoryToUpdate);
-        loanHistoryRepositoryMock.Verify(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistory>()), Times.Once);
+        await loanHistoryService.UpdateLoanHistoryAsync(MapLoanhistoryToDto(loanHistoryToUpdate));
+        loanHistoryRepositoryMock.Verify(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistoryRequestDto>()), Times.Once);
     }
 
     [Fact]
@@ -218,11 +231,11 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.UpdateLoanHistoryAsync(It.IsAny<LoanHistoryRequestDto>()))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.UpdateLoanHistoryAsync(loanHistoryToUpdate));
+        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.UpdateLoanHistoryAsync(MapLoanhistoryToDto(loanHistoryToUpdate)));
     }
 
     [Fact]
@@ -232,13 +245,13 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistoryRequestDto>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await loanHistoryService.CreateLoanHistoryAsync(loanHistoryToPost);
-        loanHistoryRepositoryMock.Verify(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistory>()), Times.Once);
+        await loanHistoryService.CreateLoanHistoryAsync(MapLoanhistoryToDto(loanHistoryToPost));
+        loanHistoryRepositoryMock.Verify(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistoryRequestDto>()), Times.Once);
     }
 
     [Fact]
@@ -248,10 +261,10 @@ public class LoanHistoryServiceTests
             { LoanHistoryId = 1, LoanDate = DateTime.Today.AddDays(-5), ReturnDate = DateTime.Today };
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
-        loanHistoryRepositoryMock.Setup(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistory>()))
+        loanHistoryRepositoryMock.Setup(repo => repo.CreateLoanHistoryAsync(It.IsAny<LoanHistoryRequestDto>()))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
-        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.CreateLoanHistoryAsync(loanHistoryToPost));
+        await Assert.ThrowsAsync<Exception>(() => loanHistoryService.CreateLoanHistoryAsync(MapLoanhistoryToDto(loanHistoryToPost)));
     }
 }

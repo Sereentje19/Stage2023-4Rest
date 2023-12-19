@@ -1,6 +1,7 @@
 ﻿using DAL.Data;
 using DAL.Exceptions;
 using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,17 @@ namespace Tests.Repositories
                 EmployeeId = 5, Name = "Jane", Email = "jane@example.com", IsArchived = false
             },
         };
+
+        private static EmployeeRequestDto MapEmployeeToDto(Employee emp)
+        {
+            return new EmployeeRequestDto()
+            {
+                EmployeeId = emp.EmployeeId,
+                Name = emp.Name,
+                Email = emp.Email,
+                IsArchived = emp.IsArchived
+            };
+        }
 
         private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
         {
@@ -161,7 +173,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 EmployeeRepository repository = new EmployeeRepository(context);
-                int result = await repository.CreateEmployeeAsync(_employees.First());
+                int result = await repository.CreateEmployeeAsync(MapEmployeeToDto(_employees.First()));
 
                 Assert.NotEqual(0, result);
             }
@@ -176,7 +188,8 @@ namespace Tests.Repositories
                     { Name = "John Doe", Email = "invalidemail", IsArchived = false };
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateEmployeeAsync(invalidEmailEmployee));
+                await Assert.ThrowsAsync<InputValidationException>(() =>
+                    repository.CreateEmployeeAsync(MapEmployeeToDto(invalidEmailEmployee)));
             }
         }
 
@@ -188,14 +201,16 @@ namespace Tests.Repositories
                 Employee emptyNameEmployee = new Employee { Name = "", Email = "john@example.com", IsArchived = false };
 
                 EmployeeRepository repository = new EmployeeRepository(context);
-                await Assert.ThrowsAsync<InputValidationException>(() => repository.CreateEmployeeAsync(emptyNameEmployee));
+                await Assert.ThrowsAsync<InputValidationException>(() =>
+                    repository.CreateEmployeeAsync(MapEmployeeToDto(emptyNameEmployee)));
             }
         }
 
         [Fact]
         public async Task AddEmployee_WithExistingEmail_ShouldNotAddAndReturnExistingEmployeeId()
         {
-            Employee existingEmployee = new Employee { Name = "John Doe", Email = "john@example.com", IsArchived = false };
+            Employee existingEmployee = new Employee
+                { Name = "John Doe", Email = "john@example.com", IsArchived = false };
 
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
@@ -209,7 +224,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 EmployeeRepository repository = new EmployeeRepository(context);
-                int result = await repository.CreateEmployeeAsync(newEmployeeWithExistingEmail);
+                int result = await repository.CreateEmployeeAsync(MapEmployeeToDto(newEmployeeWithExistingEmail));
 
                 Assert.Equal(existingEmployee.EmployeeId, result);
             }
@@ -230,7 +245,7 @@ namespace Tests.Repositories
 
                 Employee updatedEmployee = new Employee { EmployeeId = employee.EmployeeId, IsArchived = true };
 
-                await repository.UpdateEmployeeIsArchivedAsync(updatedEmployee);
+                await repository.UpdateEmployeeIsArchivedAsync(MapEmployeeToDto(updatedEmployee));
 
                 Employee resultEmployee = await context.Employees.FindAsync(employee.EmployeeId);
                 Assert.NotNull(resultEmployee);
@@ -256,7 +271,7 @@ namespace Tests.Repositories
 
                 NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
-                        repository.UpdateEmployeeIsArchivedAsync(updatedEmployee));
+                        repository.UpdateEmployeeIsArchivedAsync(MapEmployeeToDto(updatedEmployee)));
                 Assert.NotNull(actualException);
             }
         }
@@ -276,7 +291,7 @@ namespace Tests.Repositories
 
                 employee.Name = "Updated John";
 
-                await repository.UpdateEmployeeAsync(employee);
+                await repository.UpdateEmployeeAsync(MapEmployeeToDto(employee));
                 Employee resultEmployee = await context.Employees.FindAsync(employee.EmployeeId);
 
                 Assert.NotNull(resultEmployee);
@@ -302,11 +317,11 @@ namespace Tests.Repositories
 
                 NotFoundException actualException =
                     await Assert.ThrowsAsync<NotFoundException>(() =>
-                        repository.UpdateEmployeeAsync(updatedEmployee));
+                        repository.UpdateEmployeeAsync(MapEmployeeToDto(updatedEmployee)));
                 Assert.NotNull(actualException);
             }
         }
-        
+
         [Fact]
         public async Task DeleteEmployee_WithExistingEmployee_ShouldDeleteEmployee()
         {

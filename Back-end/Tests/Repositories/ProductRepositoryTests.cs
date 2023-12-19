@@ -1,6 +1,7 @@
 ﻿using DAL.Data;
 using DAL.Exceptions;
 using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Models.Responses;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,18 @@ namespace Tests.Repositories
                 PurchaseDate = DateTime.Now, Type = new ProductType() { Id = 3, Name = "Laptop" }
             },
         };
+        
+        private static ProductRequestDto MapProductToDto(Product pro)
+        {
+            return new ProductRequestDto()
+            {
+                ProductId = pro.ProductId,
+                SerialNumber = pro.SerialNumber,
+                ExpirationDate = pro.ExpirationDate,
+                PurchaseDate = pro.PurchaseDate,
+                Type = pro.Type
+            };
+        }
 
         private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
         {
@@ -194,7 +207,7 @@ namespace Tests.Repositories
                         Type = new ProductType { Id = 2, Name = "Desktop" },
                     };
 
-                    await productRepository.UpdateProductAsync(updatedProduct);
+                    await productRepository.UpdateProductAsync(MapProductToDto(updatedProduct));
 
                     Product result = await context.Products.FindAsync(1);
                     Assert.NotNull(result);
@@ -221,7 +234,7 @@ namespace Tests.Repositories
 
                     NotFoundException actualException =
                         await Assert.ThrowsAsync<NotFoundException>(() =>
-                            productRepository.UpdateProductAsync(nonexistentProduct));
+                            productRepository.UpdateProductAsync(MapProductToDto(nonexistentProduct)));
                     Assert.NotNull(actualException);
                 }
             }

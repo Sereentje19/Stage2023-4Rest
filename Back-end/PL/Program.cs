@@ -26,7 +26,7 @@ void AddServices()
 {
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddCors();
+    // builder.Services.AddCors();
     builder.Services.AddHttpContextAccessor();
 
     builder.Services.AddControllersWithViews()

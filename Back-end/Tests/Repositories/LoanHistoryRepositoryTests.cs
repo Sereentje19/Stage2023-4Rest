@@ -1,5 +1,6 @@
 ﻿using DAL.Data;
 using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Models.Responses;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,18 @@ namespace Tests.Repositories
                 Product = new Product { ProductId = 3, Type = new ProductType() { Id = 3, Name = "Laptop" }, SerialNumber = "123456" }
             },
         };
+
+        private static LoanHistoryRequestDto MapLoanhistoryToDto(LoanHistory lh)
+        {
+            return new LoanHistoryRequestDto()
+            {
+                LoanHistoryId = lh.LoanHistoryId,
+                LoanDate = lh.LoanDate,
+                ReturnDate = lh.ReturnDate,
+                Employee = lh.Employee,
+                Product = lh.Product,
+            };
+        }
 
         private static DbContextOptions<ApplicationDbContext> CreateNewOptions()
         {
@@ -215,7 +228,7 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
                 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                await repository.UpdateLoanHistoryAsync(loanHistory);
+                await repository.UpdateLoanHistoryAsync(MapLoanhistoryToDto(loanHistory));
                 
                 LoanHistory updatedLoanHistory = await context.LoanHistory.FindAsync(loanHistory.LoanHistoryId);
                 Assert.NotNull(updatedLoanHistory);
@@ -238,7 +251,7 @@ namespace Tests.Repositories
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                await repository.CreateLoanHistoryAsync(loanHistoryToPost);
+                await repository.CreateLoanHistoryAsync(MapLoanhistoryToDto(loanHistoryToPost));
                 LoanHistory loanHistoryInDatabase = await context.LoanHistory.FindAsync(loanHistoryToPost.LoanHistoryId);
 
                 Assert.NotNull(loanHistoryInDatabase);

@@ -1,6 +1,7 @@
 ﻿using BLL.Services;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Repositories;
 using Moq;
 
@@ -15,6 +16,18 @@ public class ProductServiceTests
         {
             new { ProductId = 1, Name = "Product1", Price = 100.00 },
             new { ProductId = 2, Name = "Product2", Price = 150.00 },
+        };
+    }
+        
+    private static ProductRequestDto MapProductToDto(Product pro)
+    {
+        return new ProductRequestDto()
+        {
+            ProductId = pro.ProductId,
+            SerialNumber = pro.SerialNumber,
+            ExpirationDate = pro.ExpirationDate,
+            PurchaseDate = pro.PurchaseDate,
+            Type = pro.Type
         };
     }
     
@@ -126,8 +139,8 @@ public class ProductServiceTests
 
         Product existingProduct = new Product { ProductId = 1, Type  = new ProductType{ Name = "Laptop", Id = 1}, ExpirationDate = DateTime.Today, PurchaseDate = DateTime.Today.AddDays(-10), SerialNumber = "cr42w85nf4" };
 
-        await productService.UpdateProductAsync(existingProduct);
-        productRepositoryMock.Verify(repo => repo.UpdateProductAsync(It.IsAny<Product>()), Times.Once);
+        await productService.UpdateProductAsync(MapProductToDto(existingProduct));
+        productRepositoryMock.Verify(repo => repo.UpdateProductAsync(It.IsAny<ProductRequestDto>()), Times.Once);
     }
 
     [Fact]

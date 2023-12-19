@@ -1,6 +1,7 @@
 ﻿using BLL.Services;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Models.Requests;
 using DAL.Repositories;
 using Moq;
 
@@ -31,7 +32,6 @@ namespace Tests.Services
                     Name = "Archived John Doe",
                     Email = "archivedjohn@example.com",
                     IsArchived = true
-                    // Add other properties as needed
                 },
                 new Employee
                 {
@@ -39,8 +39,18 @@ namespace Tests.Services
                     Name = "Archived Jane Doe",
                     Email = "archivedjane@example.com",
                     IsArchived = true
-                    // Add other properties as needed
                 },
+            };
+        }
+
+        private static EmployeeRequestDto MapEmployeeToDto(Employee emp)
+        {
+            return new EmployeeRequestDto()
+            {
+                EmployeeId = emp.EmployeeId,
+                Name = emp.Name,
+                Email = emp.Email,
+                IsArchived = emp.IsArchived
             };
         }
 
@@ -184,11 +194,11 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<Employee>()))
+            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<EmployeeRequestDto>()))
                 .ReturnsAsync(1); 
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);
-            int resultEmployeeId = await employeeService.CreateEmployeeAsync(employeeToPost);
+            int resultEmployeeId = await employeeService.CreateEmployeeAsync(MapEmployeeToDto(employeeToPost));
 
             Assert.Equal(1, resultEmployeeId); 
         }
@@ -203,11 +213,11 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<Employee>()))
+            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<EmployeeRequestDto>()))
                 .ThrowsAsync(new Exception("Simulated repository exception"));
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);
-            await Assert.ThrowsAsync<Exception>(() => employeeService.CreateEmployeeAsync(employeeToPost));
+            await Assert.ThrowsAsync<Exception>(() => employeeService.CreateEmployeeAsync(MapEmployeeToDto(employeeToPost)));
         }
 
         [Fact]
@@ -221,14 +231,14 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeIsArchivedAsync(It.IsAny<Employee>()))
+            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeIsArchivedAsync(It.IsAny<EmployeeRequestDto>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);
-            await employeeService.UpdateEmployeeIsArchivedAsync(employeeToUpdate);
+            await employeeService.UpdateEmployeeIsArchivedAsync(MapEmployeeToDto(employeeToUpdate));
 
-            employeeRepositoryMock.Verify(repo => repo.UpdateEmployeeIsArchivedAsync(It.IsAny<Employee>()), Times.Once);
+            employeeRepositoryMock.Verify(repo => repo.UpdateEmployeeIsArchivedAsync(It.IsAny<EmployeeRequestDto>()), Times.Once);
         }
 
         [Fact]
@@ -242,11 +252,11 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeIsArchivedAsync(It.IsAny<Employee>()))
+            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeIsArchivedAsync(It.IsAny<EmployeeRequestDto>()))
                 .ThrowsAsync(new Exception("Simulated repository exception"));
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);
-            await Assert.ThrowsAsync<Exception>(() => employeeService.UpdateEmployeeIsArchivedAsync(employeeToUpdate));
+            await Assert.ThrowsAsync<Exception>(() => employeeService.UpdateEmployeeIsArchivedAsync(MapEmployeeToDto(employeeToUpdate)));
         }
 
         [Fact]
@@ -260,14 +270,14 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeAsync(It.IsAny<Employee>()))
+            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeAsync(It.IsAny<EmployeeRequestDto>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);
-            await employeeService.UpdateEmployeeAsync(employeeToUpdate);
+            await employeeService.UpdateEmployeeAsync(MapEmployeeToDto(employeeToUpdate));
 
-            employeeRepositoryMock.Verify(repo => repo.UpdateEmployeeAsync(It.IsAny<Employee>()), Times.Once);
+            employeeRepositoryMock.Verify(repo => repo.UpdateEmployeeAsync(It.IsAny<EmployeeRequestDto>()), Times.Once);
         }
 
         [Fact]
@@ -281,11 +291,11 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeAsync(It.IsAny<Employee>()))
+            employeeRepositoryMock.Setup(repo => repo.UpdateEmployeeAsync(It.IsAny<EmployeeRequestDto>()))
                 .ThrowsAsync(new Exception("Simulated repository exception"));
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);
-            await Assert.ThrowsAsync<Exception>(() => employeeService.UpdateEmployeeAsync(employeeToUpdate));
+            await Assert.ThrowsAsync<Exception>(() => employeeService.UpdateEmployeeAsync(MapEmployeeToDto(employeeToUpdate)));
         }
 
         [Fact]
