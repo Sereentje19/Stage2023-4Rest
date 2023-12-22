@@ -4,8 +4,8 @@ using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Models.Requests;
-using DAL.Models.Responses;
+using DAL.Models.Dtos.Requests;
+using DAL.Models.Dtos.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
@@ -118,10 +118,15 @@ namespace DAL.Repositories
         }
 
 
+        /// <summary>
+        /// Retrieves a list of all document types asynchronously.
+        /// </summary>
+        /// <returns>An IEnumerable of DocumentType representing the list of document types.</returns>
         public async Task<IEnumerable<DocumentType>> GetDocumentTypesAsync()
         {
             return await _context.DocumentTypes.ToListAsync();
         }
+
 
         /// <summary>
         /// Retrieves a document by its unique identifier (ID).

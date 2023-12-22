@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using DAL.Exceptions;
-using DAL.Models.Responses;
+using DAL.Models.Dtos.Responses;
 
 namespace PL.Middlewares
 {

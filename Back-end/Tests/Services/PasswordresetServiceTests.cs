@@ -3,7 +3,7 @@ using BLL.Services;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Models.Requests;
+using DAL.Models.Dtos.Requests;
 using DAL.Repositories;
 using DAL.Settings;
 using Microsoft.Extensions.Options;

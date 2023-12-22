@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PL.Attributes;
 using BLL.Services;
 using DAL.Models;
-using DAL.Models.Requests;
+using DAL.Models.Dtos.Requests;
 
 namespace PL.Controllers
 {

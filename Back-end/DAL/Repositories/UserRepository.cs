@@ -4,8 +4,8 @@ using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Models.Requests;
-using DAL.Models.Responses;
+using DAL.Models.Dtos.Requests;
+using DAL.Models.Dtos.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
@@ -21,6 +21,10 @@ namespace DAL.Repositories
             _dbSet = _context.Set<User>();
         }
 
+        /// <summary>
+        /// Retrieves all users from the database.
+        /// </summary>
+        /// <returns>A collection of user objects.</returns>
         public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
             return await _dbSet
@@ -33,12 +37,21 @@ namespace DAL.Repositories
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieves a user from the database based on their email.
+        /// </summary>
+        /// <param name="email">The email address of the user to retrieve.</param>
+        /// <returns>The user object matching the provided email.</returns>
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == email);
         }
         
+        /// <summary>
+        /// Creates a new user in the database.
+        /// </summary>
+        /// <param name="userRequestDto">The data required to create a new user.</param>
         public async Task CreateUserAsync(CreateUserRequestDto userRequestDto)
         {
             User existingUser = await _dbSet
@@ -74,6 +87,11 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
         
+        /// <summary>
+        /// Updates the email address of a user in the database.
+        /// </summary>
+        /// <param name="user">The user object to update.</param>
+        /// <param name="email">The new email address for the user.</param>
         public async Task UpdateUserEmailAsync(User user, string email)
         {
             await CheckEmailExistsAsync(user);
@@ -101,6 +119,10 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Updates the name of a user in the database.
+        /// </summary>
+        /// <param name="user">The user object to update.</param>
         public async Task UpdateUserNameAsync(User user)
         {
             await CheckEmailExistsAsync(user);
@@ -118,6 +140,10 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Deletes a user from the database based on their email.
+        /// </summary>
+        /// <param name="email">The email address of the user to delete.</param>
         public async Task DeleteUserAsync(string email)
         {
             User user = await _dbSet
@@ -171,6 +197,11 @@ namespace DAL.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks if an email already exists for a user in the database.
+        /// </summary>
+        /// <param name="user">The user object containing the email to check.</param>
+        /// <exception cref="InputValidationException">Thrown when the email already exists.</exception>
         private async Task CheckEmailExistsAsync(User user)
         {
             User existingUserEmail = await _dbSet
@@ -181,5 +212,6 @@ namespace DAL.Repositories
                 throw new InputValidationException("Email bestaat al.");
             }
         }
+
     }
 }

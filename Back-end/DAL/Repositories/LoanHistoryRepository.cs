@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using DAL.Data;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Models.Requests;
-using DAL.Models.Responses;
+using DAL.Models.Dtos.Requests;
+using DAL.Models.Dtos.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories

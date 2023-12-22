@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Models.Requests;
+using DAL.Models.Dtos.Requests;
 
 namespace BLL.Services
 {

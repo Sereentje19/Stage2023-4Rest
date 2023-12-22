@@ -1,12 +1,11 @@
 ﻿using BLL.Interfaces;
 using DAL.Data;
 using DAL.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BLL.Services
+namespace BLL.Services.Background
 {
     public class ExpirationCheckService : BackgroundService
     {
@@ -77,6 +76,10 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Asynchronously processes and permanently deletes products that have been marked as deleted.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider for accessing the required services.</param>
         private static async Task ProcessDeletedProductsAsync(IServiceProvider serviceProvider)
         {
             ApplicationDbContext applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();

@@ -73,16 +73,24 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
         
+        /// <summary>
+        /// Updates the password for the specified user asynchronously.
+        /// </summary>
+        /// <param name="user">The user for whom to update the password.</param>
+        /// <param name="password">The new password to set for the user.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         public async Task UpdatePasswordAsync(User user, string password)
         {
             User existingUser = await _context.Users
                 .Where(u => u.UserId == user.UserId)
                 .FirstOrDefaultAsync();
-            
+    
             User hashedUser = await HashAndSavePasswordAsync(existingUser, password);
+
             _context.Update(hashedUser);
             await _context.SaveChangesAsync();
         }
+
 
         /// <summary>
         /// Hashes and saves the provided password for a user.

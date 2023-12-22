@@ -1,4 +1,4 @@
-﻿namespace DAL.Models.Responses
+﻿namespace DAL.Models.Dtos.Responses
 {
     public class LoanHistoryResponseDto
     {

@@ -9,7 +9,7 @@ using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Models.Requests;
+using DAL.Models.Dtos.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
@@ -25,6 +25,12 @@ namespace DAL.Repositories
             _dbSet = _context.Set<Product>();
         }
 
+        /// <summary>
+        /// Builds a query to retrieve products based on search criteria and dropdown selection.
+        /// </summary>
+        /// <param name="searchfield">The search criteria to filter products.</param>
+        /// <param name="dropdown">The dropdown selection for filtering products by type.</param>
+        /// <returns>An IQueryable<Product> representing the query to retrieve products.</returns>
         private IQueryable<Product> QueryGetProducts(string searchfield, string dropdown)
         {
             return _context.Products
@@ -38,6 +44,18 @@ namespace DAL.Repositories
                 .OrderBy(product => product.ExpirationDate);
         } 
 
+        /// <summary>
+        /// Retrieves a paged list of products based on search criteria, page, page size, filter, and dropdown selection.
+        /// </summary>
+        /// <param name="searchfield">The search criteria to filter products.</param>
+        /// <param name="page">The page number.</param>
+        /// <param name="pageSize">The number of products per page.</param>
+        /// <param name="filter">The filter expression to further narrow down the products.</param>
+        /// <param name="dropdown">The dropdown selection for filtering products by type.</param>
+        /// <returns>
+        /// A tuple containing an IEnumerable<object> representing the paged list of products and an integer representing
+        /// the total number of products that match the filter criteria.
+        /// </returns>
         private (IEnumerable<object>, int) GetPagedProductsInternal(string searchfield, int page, int pageSize,
             Expression<Func<Product, bool>> filter, string dropdown)
         {
@@ -53,6 +71,17 @@ namespace DAL.Repositories
             return (productList, numberOfProducts);
         }
 
+        /// <summary>
+        /// Retrieves all deleted products based on search criteria, page, page size, and dropdown selection.
+        /// </summary>
+        /// <param name="searchfield">The search criteria to filter deleted products.</param>
+        /// <param name="page">The page number.</param>
+        /// <param name="pageSize">The number of deleted products per page.</param>
+        /// <param name="dropdown">The dropdown selection for filtering deleted products by type.</param>
+        /// <returns>
+        /// A Task containing a tuple with an IEnumerable<object> representing the paged list of deleted products
+        /// and an integer representing the total number of deleted products that match the criteria.
+        /// </returns>
         public Task<(IEnumerable<object>, int)> GetAllDeletedProducts(string searchfield, int page,
             int pageSize, string dropdown)
         {
@@ -60,6 +89,17 @@ namespace DAL.Repositories
                 dropdown));
         }
 
+        /// <summary>
+        /// Retrieves all non-deleted products based on search criteria, page, page size, and dropdown selection.
+        /// </summary>
+        /// <param name="searchfield">The search criteria to filter non-deleted products.</param>
+        /// <param name="page">The page number.</param>
+        /// <param name="pageSize">The number of non-deleted products per page.</param>
+        /// <param name="dropdown">The dropdown selection for filtering non-deleted products by type.</param>
+        /// <returns>
+        /// A Task containing a tuple with an IEnumerable<object> representing the paged list of non-deleted products
+        /// and an integer representing the total number of non-deleted products that match the criteria.
+        /// </returns>
         public Task<(IEnumerable<object>, int)> GetAllProducts(string searchfield, int page,
             int pageSize, string dropdown)
         {
@@ -141,6 +181,11 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Updates the deletion status of the specified product asynchronously.
+        /// </summary>
+        /// <param name="productRequest">The product request containing information about the product and the desired deletion status.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         public async Task UpdateIsDeletedAsync(ProductRequestDto productRequest)
         {
             Product existingProduct = await _dbSet
@@ -152,7 +197,6 @@ namespace DAL.Repositories
             }
 
             existingProduct.TimeDeleted = productRequest.IsDeleted ? DateTime.Today : DateTime.MinValue;
-
             existingProduct.IsDeleted = productRequest.IsDeleted;
             await _context.SaveChangesAsync();
         }

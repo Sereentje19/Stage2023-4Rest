@@ -1,4 +1,4 @@
-﻿namespace DAL.Models.Requests;
+﻿namespace DAL.Models.Dtos.Requests;
 
 public class ProductRequestDto
 {

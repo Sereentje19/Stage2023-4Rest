@@ -5,12 +5,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using DAL.Authentication;
 using DAL.Data;
 using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Models.Requests;
+using DAL.Models.Dtos.Requests;
 using Microsoft.Graph;
 
 namespace DAL.Repositories
@@ -25,21 +24,7 @@ namespace DAL.Repositories
             _context = context;
             _dbSet = _context.Set<Employee>();
         }
-
-        private async void GetEmployeesFromGal()
-        {
-            const string clientId = "133fe8d9-7037-4c05-bd81-7724b52de083";
-            const string clientSecret = "APM8Q~YatdGa2S~TETexhKQeflJ8f3Fy2LicIdqO";
-            const string authority = "https://login.microsoftonline.com/347afa52-35d4-48fc-abb4-b04cb1ff683e";
-            string[] scopes = { "https://graph.microsoft.com/.default" };
-
-            MyAuthProvider authenticationProvider = new MyAuthProvider(clientId, clientSecret, authority, scopes);
-            GraphServiceClient graphClient = new GraphServiceClient(authenticationProvider);
-
-            var employees = await graphClient.Users["{user-id}"].GetAsync();
-            Console.WriteLine(employees);
-        }
-
+        
         /// <summary>
         /// Queries the database for employees based on a search field.
         /// </summary>
@@ -49,8 +34,6 @@ namespace DAL.Repositories
         /// </returns>
         private IQueryable<Employee> QueryGetEmployees(string searchfield)
         {
-            GetEmployeesFromGal();
-            
             return _context.Employees
                 .Where(customer => string.IsNullOrEmpty(searchfield) ||
                                    customer.Name.Contains(searchfield) ||
@@ -188,6 +171,12 @@ namespace DAL.Repositories
             return employeeRequest.EmployeeId;
         }
 
+        /// <summary>
+        /// Updates the IsArchived property of an existing employee.
+        /// </summary>
+        /// <param name="employeeRequest">The EmployeeRequestDto containing the EmployeeId and the new IsArchived value.</param>
+        /// <exception cref="NotFoundException">Thrown if no employee is found with the specified EmployeeId.</exception>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         public async Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
         {
             Employee existingEmployee = await _dbSet.FindAsync(employeeRequest.EmployeeId);
@@ -200,6 +189,7 @@ namespace DAL.Repositories
             existingEmployee.IsArchived = employeeRequest.IsArchived;
             await _context.SaveChangesAsync();
         }
+
 
         /// <summary>
         /// Updates an existing customer in the repository.
@@ -236,7 +226,12 @@ namespace DAL.Repositories
             _dbSet.Remove(employee);
             await _context.SaveChangesAsync();
         }
-
+        
+        /// <summary>
+        /// Maps an EmployeeRequestDto to an Employee entity.
+        /// </summary>
+        /// <param name="employeeRequest">The EmployeeRequestDto to map.</param>
+        /// <returns>The mapped Employee entity.</returns>
         private static Employee MapDtoToEmployee(EmployeeRequestDto employeeRequest)
         {
             return new Employee()
@@ -248,6 +243,12 @@ namespace DAL.Repositories
             };
         }
 
+        /// <summary>
+        /// Checks if an employee with the specified email already exists, excluding the provided EmployeeId.
+        /// </summary>
+        /// <param name="employeeRequest">The EmployeeRequestDto containing the email to check.</param>
+        /// <exception cref="InputValidationException">Thrown if the email already exists for a different employee.</exception>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         private async Task CheckEmailExistsAsync(EmployeeRequestDto employeeRequest)
         {
             Employee existingEmployee =
@@ -259,5 +260,6 @@ namespace DAL.Repositories
                 throw new InputValidationException("Email bestaat al.");
             }
         }
+
     }
 }
