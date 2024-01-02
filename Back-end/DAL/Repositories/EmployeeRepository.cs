@@ -158,7 +158,7 @@ namespace DAL.Repositories
             Employee existingEmployee =
                 await _dbSet.FirstOrDefaultAsync(c => c.Email == employeeRequest.Email);
 
-            if (existingEmployee != null)
+            if (existingEmployee != null && existingEmployee.Name != employeeRequest.Name)
             {
                 throw new InputValidationException("Email bestaat al.");
             }

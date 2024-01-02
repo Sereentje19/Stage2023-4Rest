@@ -39,6 +39,16 @@ namespace BLL.Services
             return (products, pager);
         }
         
+        /// <summary>
+        /// Retrieves a collection of deleted products based on the specified search criteria and paging parameters.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for filtering products.</param>
+        /// <param name="dropdown">The dropdown value for additional filtering.</param>
+        /// <param name="page">The page number for pagination.</param>
+        /// <param name="pageSize">The number of items per page for pagination.</param>
+        /// <returns>
+        /// A tuple containing the collection of deleted products and pagination information represented by a <see cref="Pager"/>.
+        /// </returns>
         public async Task<(IEnumerable<object>, Pager)> GetAllDeletedProducts(string searchfield, string dropdown,
             int page, int pageSize)
         {

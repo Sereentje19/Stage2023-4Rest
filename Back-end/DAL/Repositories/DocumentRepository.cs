@@ -150,10 +150,10 @@ namespace DAL.Repositories
         }
 
         /// <summary>
-        /// Adds a new document to the repository.
+        /// Checks the specified fields of a Document object for empty or invalid values and throws InputValidationException if conditions are not met.
         /// </summary>
-        /// <param name="document">The document entity to be added.</param>
-        public async Task CreateDocumentAsync(Document document)
+        /// <param name="document">The Document object to validate.</param>
+        private static void checkFieldsOnEmpty(Document document)
         {
             if (string.IsNullOrWhiteSpace(document.Employee.Name))
             {
@@ -174,7 +174,16 @@ namespace DAL.Repositories
             {
                 throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
             }
-
+        }
+        
+        /// <summary>
+        /// Adds a new document to the repository.
+        /// </summary>
+        /// <param name="document">The document entity to be added.</param>
+        public async Task CreateDocumentAsync(Document document)
+        {
+            checkFieldsOnEmpty(document);
+            
             Employee existingEmployee = await _context.Employees
                 .SingleOrDefaultAsync(l => l.Email == document.Employee.Email);
 

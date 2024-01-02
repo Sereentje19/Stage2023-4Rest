@@ -11,6 +11,7 @@ using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace BLL.Services
 {
@@ -33,7 +34,7 @@ namespace BLL.Services
             MyAuthProvider authenticationProvider = new MyAuthProvider(clientId, clientSecret, authority, scopes);
             GraphServiceClient graphClient = new GraphServiceClient(authenticationProvider);
 
-            var employees = await graphClient.Users.GetAsync();
+            UserCollectionResponse employees = await graphClient.Users.GetAsync();
             Console.WriteLine(employees);
         }
         

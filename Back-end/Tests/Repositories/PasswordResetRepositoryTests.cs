@@ -1,8 +1,11 @@
-﻿using DAL.Data;
+﻿using BLL.Services;
+using DAL.Data;
 using DAL.Exceptions;
+using DAL.Interfaces;
 using DAL.Models;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.Repositories
 {
@@ -143,10 +146,38 @@ namespace Tests.Repositories
                 await context.PasswordResetCode.AddAsync(_passwordResetCode.First());
                 await context.SaveChangesAsync();
 
-                await userRepository.CreatePasswordAsync(_users.First().Email, "new_password", _passwordResetCode.First().Code);
+                await userRepository.CreatePasswordAsync(_users.First().Email, "new_password1@2freD", _passwordResetCode.First().Code);
 
                 User updatedUser = await context.Users.FindAsync(_users.First().UserId);
                 Assert.NotNull(updatedUser);
+            }
+        }
+        
+        [Fact]
+        public async Task CreatePasswordAsync_InvalidPassword_ShouldThrowException()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                User testUser = new User { UserId = 1, Name = "Test", Email = "test@example.com" };
+                PasswordResetCode prc = new PasswordResetCode()
+                {
+                    Code = "123456",
+                    ExpirationTime = DateTime.Now.AddMinutes(-5),
+                    UserId = 1,
+                    ResetCodeId = 1
+                };
+
+                await context.AddAsync(prc);
+                await context.AddAsync(testUser);
+                await context.SaveChangesAsync();
+                
+                PasswordResetRepository passwordService = new PasswordResetRepository(context);
+
+                InputValidationException exception = await Assert.ThrowsAsync<InputValidationException>(() =>
+                    passwordService.CreatePasswordAsync("test@example.com", "invalidpassword", "123456"));
+                
+                Assert.Equal("Het wachtwoord moet minimaal 8 tekens lang zijn, minimaal één hoofdletter, één kleine letter en één cijfer bevatten.", exception.Message);
+
             }
         }
 
@@ -165,6 +196,55 @@ namespace Tests.Repositories
                     userRepository.CreatePasswordAsync(_users.First().Email, "new_password", _passwordResetCode.Last().Code));
             }
         }
+        
+        [Fact]
+        public async Task UpdatePasswordAsync_ShouldUpdateUserPasswordInContext()
+        {
+            // Arrange
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                PasswordResetRepository userService = new PasswordResetRepository(context); // Assuming you have an implementation of IUserService
+                User user = new User { UserId = 1, PasswordHash = "oldHashedPassword", Email = "Blabla@blabla.nl" };
+                context.Users.Add(user);
+                await context.SaveChangesAsync();
+
+                // Act
+                await userService.UpdatePasswordAsync(user, "newPassword");
+
+                // Assert
+                User updatedUser = await context.Users.FindAsync(1);
+                Assert.NotNull(updatedUser);
+
+                // Verify that the password has been updated
+                Assert.NotEqual("oldHashedPassword", updatedUser.PasswordHash);
+                // Add more assertions based on your password hashing logic or behavior
+            }
+        }
+
+
+        [Fact]
+        public async Task UpdatePasswordAsync_InvalidUserId_ShouldNotUpdatePassword()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                PasswordResetRepository userService = new PasswordResetRepository(context); // Assuming you have an implementation of IUserService
+                User user = new User { UserId = 1, PasswordHash = "oldHashedPassword", Email = "Blabla@blabla.nl" };
+                context.Users.Add(user);
+                await context.SaveChangesAsync();
+
+                // Act
+                await Assert.ThrowsAsync<NullReferenceException>(() =>
+                    userService.UpdatePasswordAsync(new User { UserId = 2 }, "newPassword"));
+
+                // Assert
+                User unchangedUser = await context.Users.FindAsync(1);
+                Assert.NotNull(unchangedUser);
+
+                // Verify that the password has not been updated
+                Assert.Equal("oldHashedPassword", unchangedUser.PasswordHash);
+            }
+        }
+
         
         
     }

@@ -1,4 +1,6 @@
-﻿using DAL.Data;
+﻿using BLL.Services;
+using DAL.Data;
+using DAL.Exceptions;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
 using DAL.Models.Dtos.Responses;
@@ -15,19 +17,22 @@ namespace Tests.Repositories
             {
                 LoanHistoryId = 1, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(0),
                 Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" }
+                Product = new Product
+                    { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" }
             },
             new LoanHistory
             {
                 LoanHistoryId = 2, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(30),
                 Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 2, Type = new ProductType() { Id = 2, Name = "Laptop" }, SerialNumber = "123456" }
+                Product = new Product
+                    { ProductId = 2, Type = new ProductType() { Id = 2, Name = "Laptop" }, SerialNumber = "123456" }
             },
             new LoanHistory
             {
                 LoanHistoryId = 3, LoanDate = DateTime.Now, ReturnDate = null,
                 Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
-                Product = new Product { ProductId = 3, Type = new ProductType() { Id = 3, Name = "Laptop" }, SerialNumber = "123456" }
+                Product = new Product
+                    { ProductId = 3, Type = new ProductType() { Id = 3, Name = "Laptop" }, SerialNumber = "123456" }
             },
         };
 
@@ -63,7 +68,8 @@ namespace Tests.Repositories
                 await context.SaveChangesAsync();
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
+                (IEnumerable<object> result, int totalCount) =
+                    await repository.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);
@@ -89,7 +95,8 @@ namespace Tests.Repositories
             {
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
+                (IEnumerable<object> result, int totalCount) =
+                    await repository.GetLoanHistoryByProductIdAsync(productId, page, pageSize);
 
                 Assert.NotNull(result);
                 Assert.Empty(result);
@@ -112,7 +119,8 @@ namespace Tests.Repositories
 
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize);
+                (IEnumerable<object> result, int totalCount) =
+                    await repository.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);
@@ -139,7 +147,8 @@ namespace Tests.Repositories
             {
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
-                (IEnumerable<object> result, int totalCount) = await repository.GetLoanHistoryByCustomerIdAsync(customerId, 1, 10);
+                (IEnumerable<object> result, int totalCount) =
+                    await repository.GetLoanHistoryByCustomerIdAsync(customerId, 1, 10);
 
                 Assert.NotNull(result);
                 Assert.Empty(result);
@@ -214,36 +223,94 @@ namespace Tests.Repositories
         }
 
         [Fact]
-        public async Task UpdateLoanHistory_ShouldUpdateLoanHistory()
+        public async Task UpdateLoanHistoryAsync_WithValidInput_ShouldUpdateLoanHistory()
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                Product product = new Product { ProductId = 4, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" };
-                Employee employee = new Employee { EmployeeId = 4, Name = "John Doe", Email = "john@example.com", IsArchived = false };
-                LoanHistory loanHistory = new LoanHistory { LoanHistoryId = 4, Product = product, Employee = employee, LoanDate = DateTime.Now.AddDays(-7), ReturnDate = null};
+                LoanHistoryRepository loanHistoryRepository = new LoanHistoryRepository(context);
+                LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepository);
 
-                await context.Products.AddAsync(product);
-                await context.Employees.AddAsync(employee);
-                await context.LoanHistory.AddAsync(loanHistory);
+                // Create an instance of LoanHistory entity
+                LoanHistory updatedLoanHistoryEntity = new LoanHistory
+                {
+                    LoanHistoryId = 5,
+                    LoanDate = DateTime.Now,
+                    ReturnDate = DateTime.Now.AddDays(0),
+                    Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
+                    Product = new Product
+                        { ProductId = 5, Type = new ProductType() { Id = 5, Name = "Laptop" }, SerialNumber = "123456" }
+                };
+
+                // Add the entity to the context
+                await context.AddAsync(updatedLoanHistoryEntity);
                 await context.SaveChangesAsync();
-                
-                LoanHistoryRepository repository = new LoanHistoryRepository(context);
-                await repository.UpdateLoanHistoryAsync(MapLoanhistoryToDto(loanHistory));
-                
-                LoanHistory updatedLoanHistory = await context.LoanHistory.FindAsync(loanHistory.LoanHistoryId);
+
+                // Call the service method
+                await loanHistoryService.UpdateLoanHistoryAsync(new LoanHistoryRequestDto
+                {
+                    LoanHistoryId = 5,
+                    LoanDate = DateTime.Now,
+                    ReturnDate = DateTime.Now.AddDays(0),
+                    Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
+                    Product = new Product
+                        { ProductId = 5, Type = new ProductType() { Id = 5, Name = "Laptop" }, SerialNumber = "123456" }
+                });
+
+                // Retrieve the updated entity from the context
+                LoanHistory updatedLoanHistory = await context.LoanHistory.FindAsync(5); // Assuming LoanHistoryId is 5
                 Assert.NotNull(updatedLoanHistory);
-                Assert.Equal(DateTime.Now.Date, updatedLoanHistory.ReturnDate?.Date);
+                Assert.Equal(updatedLoanHistoryEntity.Product.ProductId, updatedLoanHistory.Product.ProductId);
+                Assert.Equal(updatedLoanHistoryEntity.Employee.EmployeeId, updatedLoanHistory.Employee.EmployeeId);
+                Assert.NotNull(updatedLoanHistory.ReturnDate);
+                Assert.Equal(updatedLoanHistoryEntity.LoanDate, updatedLoanHistory.LoanDate);
             }
         }
+        
+        [Fact]
+        public async Task UpdateLoanHistoryAsync_WithInvalidLoanHistoryId_ShouldThrowNotFoundException()
+        {
+            // Arrange
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                LoanHistoryRepository loanHistoryRepository = new LoanHistoryRepository(context);
+                LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepository);
+
+                // Invalid LoanHistoryId that doesn't exist in the database
+                int invalidLoanHistoryId = -1;
+
+                LoanHistoryRequestDto invalidLoanHistoryDto = new LoanHistoryRequestDto
+                {
+                    LoanHistoryId = invalidLoanHistoryId,
+                    LoanDate = DateTime.Now,
+                    ReturnDate = DateTime.Now.AddDays(0),
+                    Employee = new Employee { Name = "John Doe", Email = "john@example.com" },
+                    Product = new Product { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" }
+                };
+
+                // Act and Assert
+                NotFoundException exception = await Assert.ThrowsAsync<NotFoundException>(() =>
+                    loanHistoryService.UpdateLoanHistoryAsync(invalidLoanHistoryDto));
+
+                // Assert that the exception message contains the expected text
+                Assert.Equal("LoanHistory not found", exception.Message);
+            }
+        }
+
 
         [Fact]
         public async Task PostLoanHistory_ShouldAddLoanHistoryToDatabase()
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                Product product = new Product { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" };
-                Employee employee = new Employee { EmployeeId = 1, Name = "John Doe", Email = "john@example.com", IsArchived = false };
-                LoanHistory loanHistoryToPost = new LoanHistory { LoanHistoryId = 1, Product = product, Employee = employee, LoanDate = DateTime.Now, ReturnDate = DateTime.Now.AddDays(7) };
+                Product product = new Product
+                    { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" };
+                Employee employee = new Employee
+                    { EmployeeId = 1, Name = "John Doe", Email = "john@example.com", IsArchived = false };
+                LoanHistory loanHistoryToPost = new LoanHistory
+                {
+                    LoanHistoryId = 1, Product = product, Employee = employee, LoanDate = DateTime.Now,
+                    ReturnDate = DateTime.Now.AddDays(7)
+                };
 
                 await context.Products.AddAsync(product);
                 await context.Employees.AddAsync(employee);
@@ -252,7 +319,8 @@ namespace Tests.Repositories
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
                 await repository.CreateLoanHistoryAsync(MapLoanhistoryToDto(loanHistoryToPost));
-                LoanHistory loanHistoryInDatabase = await context.LoanHistory.FindAsync(loanHistoryToPost.LoanHistoryId);
+                LoanHistory loanHistoryInDatabase =
+                    await context.LoanHistory.FindAsync(loanHistoryToPost.LoanHistoryId);
 
                 Assert.NotNull(loanHistoryInDatabase);
                 Assert.Equal(loanHistoryToPost.LoanDate, loanHistoryInDatabase.LoanDate);
@@ -261,7 +329,5 @@ namespace Tests.Repositories
                 Assert.Equal(loanHistoryToPost.Employee.EmployeeId, loanHistoryInDatabase.Employee.EmployeeId);
             }
         }
-
-        
     }
 }

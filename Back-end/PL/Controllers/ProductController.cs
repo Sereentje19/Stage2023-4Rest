@@ -51,6 +51,14 @@ namespace PL.Controllers
             return Ok(response);
         }
         
+        /// <summary>
+        /// Retrieves a paginated list of all deleted products based on the specified search criteria.
+        /// </summary>
+        /// <param name="searchfield">The search criteria for filtering products.</param>
+        /// <param name="dropdown">The dropdown selection for filtering products.</param>
+        /// <param name="page">The page number for paginated results (default is 1).</param>
+        /// <param name="pageSize">The number of items per page (default is 5).</param>
+        /// <returns>An IActionResult containing a response with paginated deleted products and pager information.</returns>
         [HttpGet("deleted")]
         public async Task<IActionResult> GetAllDeletedProducts(string searchfield, string dropdown, int page = 1, int pageSize = 5)
         {
@@ -145,6 +153,11 @@ namespace PL.Controllers
             return Ok(new { message = "Product geupdate." });
         }
         
+        /// <summary>
+        /// Updates the IsDeleted status of a product based on the provided ProductRequestDto.
+        /// </summary>
+        /// <param name="productRequest">The ProductRequestDto containing information for updating the product.</param>
+        /// <returns>An IActionResult indicating the success of the operation.</returns>
         [HttpPut("delete")]
         public async Task<IActionResult> UpdateIsDeletedAsync(ProductRequestDto productRequest)
         {

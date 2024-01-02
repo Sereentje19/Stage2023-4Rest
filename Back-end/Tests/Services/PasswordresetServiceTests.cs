@@ -137,5 +137,102 @@ public class PasswordresetServiceTests
         );
     }
     
+    [Fact]
+    public async Task UpdatePassword_ShouldCallCheckCredentialsAsync_Once()
+    {
+        // Arrange
+        UpdatePasswordRequestDto requestDto = new UpdatePasswordRequestDto
+        {
+            Email = "test@example.com",
+            Password1 = "oldPassword",
+            Password2 = "newPassword",
+            Password3 = "newPassword",
+            Name = "TestUser",
+            PasswordHash = "oldHash",
+            PasswordSalt = "oldSalt",
+            UserId = 1
+        };
 
+        Mock<IUserService> mockUserService = new Mock<IUserService>();
+        Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
+
+        PasswordResetService passwordResetService = new PasswordResetService(
+            mockPasswordResetRepository.Object,
+            null, // Assuming no need for IMailService in this case
+            mockUserService.Object
+        );
+
+        // Act
+        await passwordResetService.UpdatePasswordAsync(requestDto);
+
+        // Assert
+        mockUserService.Verify(
+            userService => userService.CheckCredentialsAsync(It.IsAny<LoginRequestDto>()),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task UpdatePassword_ShouldThrowException_WhenPasswordsNotEqual()
+    {
+        // Arrange
+        UpdatePasswordRequestDto requestDto = new UpdatePasswordRequestDto
+        {
+            Email = "test@example.com",
+            Password1 = "oldPassword",
+            Password2 = "newPassword",
+            Password3 = "differentPassword",
+            Name = "TestUser",
+            PasswordHash = "oldHash",
+            PasswordSalt = "oldSalt",
+            UserId = 1
+        };
+
+        Mock<IUserService> mockUserService = new Mock<IUserService>();
+        Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
+
+        PasswordResetService passwordResetService = new PasswordResetService(
+            mockPasswordResetRepository.Object,
+            null, // Assuming no need for IMailService in this case
+            mockUserService.Object
+        );
+
+        // Act and Assert
+        await Assert.ThrowsAsync<InputValidationException>(() => passwordResetService.UpdatePasswordAsync(requestDto));
+    }
+
+    [Fact]
+    public async Task UpdatePassword_ShouldCallUpdatePasswordAsync_Once()
+    {
+        // Arrange
+        UpdatePasswordRequestDto requestDto = new UpdatePasswordRequestDto
+        {
+            Email = "test@example.com",
+            Password1 = "oldPassword",
+            Password2 = "newPassword",
+            Password3 = "newPassword",
+            Name = "TestUser",
+            PasswordHash = "oldHash",
+            PasswordSalt = "oldSalt",
+            UserId = 1
+        };
+
+        Mock<IUserService> mockUserService = new Mock<IUserService>();
+        Mock<IPasswordResetRepository> mockPasswordResetRepository = new Mock<IPasswordResetRepository>();
+
+        PasswordResetService passwordResetService = new PasswordResetService(
+            mockPasswordResetRepository.Object,
+            null, // Assuming no need for IMailService in this case
+            mockUserService.Object
+        );
+
+        // Act
+        await passwordResetService.UpdatePasswordAsync(requestDto);
+
+        // Assert
+        mockPasswordResetRepository.Verify(
+            repo => repo.UpdatePasswordAsync(It.IsAny<User>(), requestDto.Password2),
+            Times.Once
+        );
+    }
 }

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using BLL.Services;
 using BLL.Services.Authentication;
 using BLL.Services.Background;
+using BLL.Services.Mail;
 using DAL.Data;
 using DAL.Interfaces;
 using DAL.Settings;

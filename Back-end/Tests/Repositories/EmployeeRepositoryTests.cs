@@ -1,4 +1,5 @@
-﻿using DAL.Data;
+﻿using BLL.Services;
+using DAL.Data;
 using DAL.Exceptions;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
@@ -207,26 +208,65 @@ namespace Tests.Repositories
         }
 
         [Fact]
-        public async Task AddEmployee_WithExistingEmail_ShouldNotAddAndReturnExistingEmployeeId()
+        public async Task CreateEmployeeAsync_WithValidInput_ShouldReturnEmployeeId()
         {
-            Employee existingEmployee = new Employee
-                { Name = "John Doe", Email = "john@example.com", IsArchived = false };
-
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                await context.Employees.AddAsync(existingEmployee);
-                await context.SaveChangesAsync();
+                EmployeeRequestDto employeeRequest = new EmployeeRequestDto
+                {
+                    Name = "John Doe",
+                    Email = "john.doe@example.com",
+                    EmployeeId = 1
+                };
+
+                EmployeeRepository employeeService = new EmployeeRepository(context);
+
+                int result = await employeeService.CreateEmployeeAsync(employeeRequest);
+
+                Assert.Equal(employeeRequest.EmployeeId, result);
             }
+        }
 
-            Employee newEmployeeWithExistingEmail = new Employee
-                { Name = "Jane Doe", Email = "john@example.com", IsArchived = false };
-
+        [Fact]
+        public async Task CreateEmployeeAsync_WithInvalidInput_ShouldThrowException()
+        {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                EmployeeRepository repository = new EmployeeRepository(context);
-                int result = await repository.CreateEmployeeAsync(MapEmployeeToDto(newEmployeeWithExistingEmail));
+                EmployeeRequestDto employeeRequest = new EmployeeRequestDto
+                {
+                    Email = "john.doe@example.com",
+                    EmployeeId = 1
+                };
 
-                Assert.Equal(existingEmployee.EmployeeId, result);
+                EmployeeRepository employeeRepository = new EmployeeRepository(context);
+
+                await Assert.ThrowsAsync<InputValidationException>(() =>
+                    employeeRepository.CreateEmployeeAsync(employeeRequest));
+            }
+        }
+
+        [Fact]
+        public async Task CreateEmployeeAsync_WithInvalidEmail_ShouldThrowException()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                EmployeeRequestDto employeeRequest1 = new EmployeeRequestDto
+                {
+                    Email = "john.doe@example.com",
+                    Name = "test"
+                };
+
+                EmployeeRequestDto employeeRequest2 = new EmployeeRequestDto
+                {
+                    Email = "john.doe@example.com",
+                    Name = "t"
+                };
+
+                EmployeeRepository employeeRepository = new EmployeeRepository(context);
+                await employeeRepository.CreateEmployeeAsync(employeeRequest1);
+
+                await Assert.ThrowsAsync<InputValidationException>(() =>
+                    employeeRepository.CreateEmployeeAsync(employeeRequest2));
             }
         }
 
@@ -351,5 +391,43 @@ namespace Tests.Repositories
                 Assert.NotNull(actualException);
             }
         }
+
+        [Fact]
+        public async Task CheckEmailExistsAsync_EmailExists_ShouldThrowInputValidationException()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                Employee existingEmployee = new Employee
+                {
+                    EmployeeId = 1,
+                    Name = "John Doe",
+                    Email = "john.doe@example.com"
+                };
+                
+                Employee existingEmployee2 = new Employee
+                {
+                    EmployeeId = 2,
+                    Name = "1",
+                    Email = "1@" 
+                };
+
+                await context.Employees.AddAsync(existingEmployee);
+                await context.Employees.AddAsync(existingEmployee2);
+                await context.SaveChangesAsync();
+
+                EmployeeRequestDto employeeRequest = new EmployeeRequestDto
+                {
+                    EmployeeId = 1,
+                    Name = "1",
+                    Email = "1@" 
+                };
+
+                EmployeeRepository employeeService = new EmployeeRepository(context);
+
+                await Assert.ThrowsAsync<InputValidationException>(() =>
+                    employeeService.UpdateEmployeeAsync(employeeRequest));
+            }
+        }
+        
     }
 }

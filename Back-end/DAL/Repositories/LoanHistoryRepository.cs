@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.Data;
+using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
@@ -173,18 +174,20 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task UpdateLoanHistoryAsync(LoanHistoryRequestDto lh)
         {
-            LoanHistory loanHistory = new LoanHistory
-            {
-                Product = await _context.Products.FindAsync(lh.Product.ProductId),
-                Employee = lh.Employee,
-                ReturnDate = DateTime.Now,
-                LoanDate = lh.LoanDate,
-                LoanHistoryId = lh.LoanHistoryId
-            };
-            _context.Entry(loanHistory).State = EntityState.Detached;
+            LoanHistory existingLoanHistory = await _context.LoanHistory.FindAsync(lh.LoanHistoryId);
 
-            _dbSet.Update(loanHistory);
+            if (existingLoanHistory == null)
+            {
+                throw new NotFoundException("LoanHistory not found");
+            }
+
+            existingLoanHistory.Product = await _context.Products.FindAsync(lh.Product.ProductId);
+            existingLoanHistory.Employee = lh.Employee;
+            existingLoanHistory.ReturnDate = DateTime.Now;
+            existingLoanHistory.LoanDate = lh.LoanDate;
+
             await _context.SaveChangesAsync();
         }
+
     }
 }

@@ -16,8 +16,4 @@
     <PackageReference Include="Microsoft.Graph" Version="5.37.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Responses\" />
-  </ItemGroup>
-
 </Project>

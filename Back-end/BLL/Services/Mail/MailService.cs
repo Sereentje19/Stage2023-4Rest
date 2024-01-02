@@ -3,7 +3,7 @@ using DAL.Settings;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace BLL.Services
+namespace BLL.Services.Mail
 {
     public class MailService : IMailService
     {
@@ -18,6 +18,7 @@ namespace BLL.Services
         /// Creates a MIME part for embedding an image in the email.
         /// </summary>
         /// <param name="image">The byte array representing the image data.</param>
+        /// <param name="fileType"></param>
         /// <returns>The MIME part representing the embedded image.</returns>
         private static MimePart SetImage(byte[] image, string fileType)
         {
@@ -79,20 +80,15 @@ namespace BLL.Services
         /// Sends an email with document expiration information to a specified recipient.
         /// </summary>
         /// <param name="customerName">The name of the customer.</param>
-        /// <param name="date">The expiration date of the document.</param>
-        /// <param name="type">The type of the document.</param>
-        /// <param name="image">The byte array representing the embedded image.</param>
+        /// <param name="email"></param>
         private MimeMessage SetMailSettings(string customerName, string email)
         {
-            using (MimeMessage emailMessage = new MimeMessage())
-            {
-                 MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
-                emailMessage.From.Add(emailFrom);
-                MailboxAddress emailTo = new MailboxAddress(customerName, email);
-                emailMessage.To.Add(emailTo);
-
-                return emailMessage;
-            }
+            MimeMessage emailMessage = new MimeMessage();
+            MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
+            emailMessage.From.Add(emailFrom);
+            MailboxAddress emailTo = new MailboxAddress(customerName, email);
+            emailMessage.To.Add(emailTo);
+            return emailMessage;
         }
 
         /// <summary>

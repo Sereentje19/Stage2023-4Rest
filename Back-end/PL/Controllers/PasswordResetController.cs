@@ -67,6 +67,11 @@ namespace PL.Controllers
             return Ok(new { message = "Wachtwoord gemaakt" });
         }
         
+        /// <summary>
+        /// Updates the password for a user based on the provided update password request.
+        /// </summary>
+        /// <param name="updatePasswordRequestDto">The request containing information for updating the password.</param>
+        /// <returns>An IActionResult indicating the success of the password update.</returns>
         [HttpPut]
         public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto)
         {

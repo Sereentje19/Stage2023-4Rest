@@ -73,6 +73,11 @@ public class PasswordResetService : IPasswordResetService
         await _passwordResetRepository.CreatePasswordAsync(requestDto.Email, requestDto.Password1, requestDto.Code);
     }
     
+    /// <summary>
+    /// Updates the password for the specified user based on the provided request.
+    /// </summary>
+    /// <param name="updatePasswordRequestDto">The data transfer object containing update password information.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto)
     {
         

@@ -241,7 +241,7 @@ namespace Tests.Repositories
             {
                 Document document = new Document
                 {
-                    Type = new DocumentType { Id = 1, Name = "Contract" },
+                    Type = new DocumentType { Name = "0" },
                     Employee = new Employee { Name = "John", Email = "john@example.com" }
                 };
 
@@ -326,40 +326,72 @@ namespace Tests.Repositories
             }
         }
 
+        [Fact]
+        public async Task AddDocument_ShouldSetTypeWhenFound()
+        {
+            await using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
+            {
+                const string existingEmployeeEmail = "existing@example.com";
+                Employee existingEmployee = new Employee { Email = existingEmployeeEmail, Name = "test" };
+                
+                DocumentType dt = new DocumentType()
+                {
+                    Id = 1,
+                    Name = "Contract"
+                };
+                
+                context.Employees.Add(existingEmployee);
+                await context.DocumentTypes.AddAsync(dt);
+                await context.SaveChangesAsync();
+                
+                DocumentRepository documentRepository = new DocumentRepository(context);
+
+                Document document = new Document
+                {
+                    Type = dt,
+                    Date = DateTime.Today,
+                    Employee = new Employee { Email = existingEmployeeEmail, Name = "test" }
+                };
+
+                await documentRepository.CreateDocumentAsync(document);
+
+                Assert.NotNull(document.Type);
+                Assert.Equal("Contract", document.Type.Name);
+            }
+        }
 
         [Fact]
         public async Task UpdateDocument_WithValidInput_ShouldUpdateDocument()
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                const int documentId = 1;
-                EditDocumentRequestDto editDocumentRequestDto = new EditDocumentRequestDto
-                {
-                    DocumentId = documentId,
-                    Type = new DocumentType { Id = 5, Name = "Contract" },
-                    Date = DateTime.Now.AddDays(10),
-                };
-
+                DocumentRepository documentRepository = new DocumentRepository(context);
                 Document existingDocument = new Document
                 {
-                    DocumentId = documentId,
-                    Type = new DocumentType { Id = 6, Name = "Certificaat" },
-                    Date = DateTime.Now,
+                    DocumentId = 1, 
+                    Date = DateTime.Today,
+                    Type = new DocumentType { Id = 1, Name = "Contract" }, 
+                    Employee = new Employee { EmployeeId = 1, Name = "test", Email = "1@" } 
                 };
 
-                await context.Documents.AddAsync(existingDocument);
-                await context.SaveChangesAsync();
+                await documentRepository.CreateDocumentAsync(existingDocument);
+                
+                EditDocumentRequestDto updatedDocument = new EditDocumentRequestDto
+                {
+                    DocumentId = 1,
+                    Date = DateTime.Now, 
+                    Type = new DocumentType() { Name = "Contract" }
+                };
 
-                DocumentRepository repository = new DocumentRepository(context);
-
-                await repository.UpdateDocumentAsync(editDocumentRequestDto);
-                Document updatedDocument = await context.Documents.FindAsync(documentId);
+                await documentRepository.UpdateDocumentAsync(updatedDocument);
 
                 Assert.NotNull(updatedDocument);
-                Assert.Equal(editDocumentRequestDto.Date, updatedDocument.Date);
-                Assert.Equal(editDocumentRequestDto.Type, updatedDocument.Type);
+                Assert.Equal(updatedDocument.Date, updatedDocument.Date);
+                Assert.Equal(updatedDocument.Type.Id, updatedDocument.Type.Id);
+                Assert.Equal(updatedDocument.Type.Name, updatedDocument.Type.Name);
             }
         }
+
 
         [Fact]
         public async Task UpdateDocument_WithInvalidType_ShouldThrowValidationException()

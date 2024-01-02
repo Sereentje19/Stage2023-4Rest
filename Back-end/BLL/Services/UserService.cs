@@ -33,26 +33,47 @@ namespace BLL.Services
             return await _userRepository.CheckCredentialsAsync(user);
         }
 
+        /// <summary>
+        /// Retrieves a user by their email address.
+        /// </summary>
+        /// <param name="email">The email address of the user to retrieve.</param>
+        /// <returns>The user with the specified email address.</returns>
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userRepository.GetUserByEmailAsync(email);
         }
         
+        /// <summary>
+        /// Creates a new user based on the provided user request.
+        /// </summary>
+        /// <param name="userRequest">The user request information used to create the new user.</param>
         public async Task CreateUserAsync(CreateUserRequestDto userRequest)
         {
              await _userRepository.CreateUserAsync(userRequest);
         }
         
+        /// <summary>
+        /// Retrieves a collection of user response DTOs representing all users.
+        /// </summary>
+        /// <returns>A collection of user response DTOs.</returns>
         public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
             return await _userRepository.GetAllUsersAsync();
         }
         
+        /// <summary>
+        /// Deletes a user with the specified email address.
+        /// </summary>
+        /// <param name="email">The email address of the user to delete.</param>
         public async Task DeleteUserAsync(string email)
         {
              await _userRepository.DeleteUserAsync(email);
         }
 
+        /// <summary>
+        /// Updates a user's name or email based on the provided update request.
+        /// </summary>
+        /// <param name="updateUserRequestDto">The update request containing information about the user update.</param>
         public async Task UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
         {
             Console.WriteLine(updateUserRequestDto.Email1);
