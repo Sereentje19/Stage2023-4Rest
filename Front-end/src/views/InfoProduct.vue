@@ -3,7 +3,7 @@
     <div class="info-container">
         <h1>Info</h1>
 
-        <PopupChoice ref="PopupChoice" @delete="deleteProducts" @return="returnItem" />
+        <PopupChoice ref="PopupChoice" @return="returnItem" />
 
         <div id="leftside">
             <div id="loan-title">

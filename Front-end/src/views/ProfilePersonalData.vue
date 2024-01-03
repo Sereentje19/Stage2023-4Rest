@@ -1,7 +1,6 @@
 <template>
     <body>
         <Header ref="Header"></Header>
-        <PopupChoice ref="PopupChoice" @return="returnItem" />
         <div id="body-profile">
             <div id="nav-profile">
                 <a href="/profiel/persoonsgegevens" class="nav-item" id="current-nav-item">
@@ -54,7 +53,6 @@ import profileFill from "../components/icons/iconLoginProfileFill.vue";
 import lockClosed from "../components/icons/iconLoginLockClosed.vue";
 import ProfilePeople from "../components/icons/IconProfilePeople.vue";
 import ArrowRight from "../components/icons/iconArrowRight.vue";
-import PopupChoice from '../components/notifications/PopUpChoice.vue';
 
 
 export default {
@@ -65,8 +63,7 @@ export default {
         profileFill,
         lockClosed,
         ProfilePeople,
-        ArrowRight,
-        PopupChoice
+        ArrowRight
     },
 
     data() {

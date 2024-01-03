@@ -24,20 +24,6 @@ namespace BLL.Services
             _employeeRepository = employeeRepository;
         }
         
-        private async void GetEmployeesFromGal()
-        {
-            const string clientId = "133fe8d9-7037-4c05-bd81-7724b52de083";
-            const string clientSecret = "APM8Q~YatdGa2S~TETexhKQeflJ8f3Fy2LicIdqO";
-            const string authority = "https://login.microsoftonline.com/347afa52-35d4-48fc-abb4-b04cb1ff683e";
-            string[] scopes = { "https://graph.microsoft.com/.default" };
-
-            MyAuthProvider authenticationProvider = new MyAuthProvider(clientId, clientSecret, authority, scopes);
-            GraphServiceClient graphClient = new GraphServiceClient(authenticationProvider);
-
-            UserCollectionResponse employees = await graphClient.Users.GetAsync();
-            Console.WriteLine(employees);
-        }
-        
         /// <summary>
         /// Retrieves a paged list of customers based on the specified search field.
         /// </summary>
@@ -47,8 +33,6 @@ namespace BLL.Services
         /// <returns>A tuple containing paged customers and pagination information.</returns>
         public async Task<(IEnumerable<object>, Pager)> GetPagedEmployees(string searchfield, int page, int pageSize)
         {
-            GetEmployeesFromGal();
-            
             (IEnumerable<object> pagedCustomers, int numberOfcustomers) = await _employeeRepository.GetAllEmployees(searchfield, page, pageSize);
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
             return (pagedCustomers, pager);

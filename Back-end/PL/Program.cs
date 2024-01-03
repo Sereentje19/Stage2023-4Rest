@@ -101,6 +101,7 @@ void ConnectionInterfaces()
     builder.Services.AddScoped<IMailService, MailService>();
     builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
     builder.Services.AddHostedService<ExpirationCheckService>();
+    builder.Services.AddHostedService<LoadEmployeeService>();
 }
 
 
