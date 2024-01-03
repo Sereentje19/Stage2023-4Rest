@@ -12,7 +12,7 @@ namespace BLL.Services.Authentication
         private const string Authority = "https://login.microsoftonline.com/347afa52-35d4-48fc-abb4-b04cb1ff683e";
         private readonly string[] _scopes = { "https://graph.microsoft.com/.default" };
 
-        public async Task AuthenticateRequestAsync(RequestInformation  requestInfo, Dictionary<string, object>? additionalAuthenticationContext = default, CancellationToken cancellationToken = default)
+        public async Task AuthenticateRequestAsync(RequestInformation  requestInfo, Dictionary<string, object> additionalAuthenticationContext = default, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(_accessToken))
             {
