@@ -72,7 +72,7 @@ namespace DAL.Repositories
         /// <returns>
         /// A collection of LoanHistoryDTO representing loan history for the specified customer.
         /// </returns>
-        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByCustomerIdAsync(int id, int page, int pageSize)
+        public async Task<(IEnumerable<object>, int)> GetLoanHistoryByEmployeeIdAsync(int id, int page, int pageSize)
         {
             IQueryable<LoanHistory> query = _context.LoanHistory
                 .Include(l => l.Employee)
