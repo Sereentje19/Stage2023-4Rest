@@ -77,9 +77,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="searchfield">The search criteria.</param>
         /// <returns>A collection of matching Customer objects.</returns>
-        public async Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield)
+        public Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield)
         {
-            return await _employeeRepository.GetFilteredEmployeesAsync(searchfield);
+            return _employeeRepository.GetFilteredEmployeesAsync(searchfield);
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The unique identifier of the customer to retrieve.</param>
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<Employee> GetEmployeeByIdAsync(int id)
+        public Task<Employee> GetEmployeeByIdAsync(int id)
         {
-            return await _employeeRepository.GetEmployeeByIdAsync(id);
+            return _employeeRepository.GetEmployeeByIdAsync(id);
         }
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="employeeRequest">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer.</returns>
-        public async Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest)
+        public Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
-            return await _employeeRepository.CreateEmployeeAsync(employeeRequest);
+            return _employeeRepository.CreateEmployeeAsync(employeeRequest);
         }
         
         /// <summary>
@@ -109,9 +109,9 @@ namespace BLL.Services
         /// <returns>
         /// A task representing the asynchronous operation of updating the 'IsArchived' status.
         /// </returns>
-        public async Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
+        public Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
         {
-            await _employeeRepository.UpdateEmployeeIsArchivedAsync(employeeRequest);
+            return _employeeRepository.UpdateEmployeeIsArchivedAsync(employeeRequest);
         }
 
         /// <summary>
@@ -119,9 +119,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="employeeRequest">The Customer object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateEmployeeAsync(EmployeeRequestDto employeeRequest)
+        public Task UpdateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
-            await _employeeRepository.UpdateEmployeeAsync(employeeRequest);
+            return _employeeRepository.UpdateEmployeeAsync(employeeRequest);
         }
 
         /// <summary>
@@ -129,9 +129,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the customer to be deleted.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task DeleteEmployeeAsync(int id)
+        public Task DeleteEmployeeAsync(int id)
         {
-            await _employeeRepository.DeleteEmployeeAsync(id);
+            return _employeeRepository.DeleteEmployeeAsync(id);
         }
     }
 }

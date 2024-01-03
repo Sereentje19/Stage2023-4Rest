@@ -106,7 +106,7 @@ namespace Tests.Repositories
 
 
         [Fact]
-        public async Task GetLoanHistoryByCustomerId_ShouldReturnLoanHistory()
+        public async Task GetLoanHistoryByEmployeeId_ShouldReturnLoanHistory()
         {
             const int customerId = 1;
             const int page = 1;
@@ -120,7 +120,7 @@ namespace Tests.Repositories
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
                 (IEnumerable<object> result, int totalCount) =
-                    await repository.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize);
+                    await repository.GetLoanHistoryByEmployeeIdAsync(customerId, page, pageSize);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);
@@ -139,7 +139,7 @@ namespace Tests.Repositories
         }
 
         [Fact]
-        public async Task GetLoanHistoryByCustomerId_ShouldReturnEmptyResult()
+        public async Task GetLoanHistoryByEmployeeId_ShouldReturnEmptyResult()
         {
             const int customerId = 999;
 
@@ -148,7 +148,7 @@ namespace Tests.Repositories
                 LoanHistoryRepository repository = new LoanHistoryRepository(context);
 
                 (IEnumerable<object> result, int totalCount) =
-                    await repository.GetLoanHistoryByCustomerIdAsync(customerId, 1, 10);
+                    await repository.GetLoanHistoryByEmployeeIdAsync(customerId, 1, 10);
 
                 Assert.NotNull(result);
                 Assert.Empty(result);

@@ -49,9 +49,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="productId">The ID of the product.</param>
         /// <returns>Nullable DateTime representing the return date.</returns>
-        public async Task<DateTime?> GetReturnDatesByProductIdAsync(int productId)
+        public Task<DateTime?> GetReturnDatesByProductIdAsync(int productId)
         {
-            return await _loanHistoryRepository.GetReturnDatesByProductIdAsync(productId);
+            return _loanHistoryRepository.GetReturnDatesByProductIdAsync(productId);
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id">The ID of the product.</param>
         /// <returns>The latest LoanHistory record for the product.</returns>
-        public async Task<LoanHistory> GetLatestLoanHistoryByProductIdAsync(int id)
+        public Task<LoanHistory> GetLatestLoanHistoryByProductIdAsync(int id)
         {
-            return await _loanHistoryRepository.GetLatestLoanHistoryByProductIdAsync(id);
+            return _loanHistoryRepository.GetLatestLoanHistoryByProductIdAsync(id);
         }
 
         /// <summary>
@@ -69,9 +69,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="loanHistoryRequest">The LoanHistory object containing updated information.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task UpdateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
+        public Task UpdateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
         {
-            await _loanHistoryRepository.UpdateLoanHistoryAsync(loanHistoryRequest);
+            return _loanHistoryRepository.UpdateLoanHistoryAsync(loanHistoryRequest);
         }
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="loanHistoryRequest">The LoanHistory object to be added.</param>
         /// <returns>Task representing the asynchronous operation.</returns>
-        public async Task CreateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
+        public Task CreateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
         {
-            await _loanHistoryRepository.CreateLoanHistoryAsync(loanHistoryRequest);
+            return _loanHistoryRepository.CreateLoanHistoryAsync(loanHistoryRequest);
         }
     }
 }

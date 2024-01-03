@@ -63,14 +63,14 @@ public class PasswordResetService : IPasswordResetService
     /// Posts a new password for a user after the password recovery process.
     /// </summary>
     /// <param name="requestDto">A PasswordChangeRequest object containing the new password and associated information.</param>
-    public async Task CreatePasswordAsync(CreatePasswordRequestDto requestDto)
+    public Task CreatePasswordAsync(CreatePasswordRequestDto requestDto)
     {
         if (requestDto.Password1 != requestDto.Password2)
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
         }
-        
-        await _passwordResetRepository.CreatePasswordAsync(requestDto.Email, requestDto.Password1, requestDto.Code);
+
+        return _passwordResetRepository.CreatePasswordAsync(requestDto.Email, requestDto.Password1, requestDto.Code);
     }
     
     /// <summary>

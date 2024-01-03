@@ -28,9 +28,9 @@ namespace BLL.Services
         /// <returns>
         /// The user object if the credentials are valid; otherwise, returns null.
         /// </returns>
-        public async Task<User> CheckCredentialsAsync(LoginRequestDto user)
+        public Task<User> CheckCredentialsAsync(LoginRequestDto user)
         {
-            return await _userRepository.CheckCredentialsAsync(user);
+            return _userRepository.CheckCredentialsAsync(user);
         }
 
         /// <summary>
@@ -38,46 +38,44 @@ namespace BLL.Services
         /// </summary>
         /// <param name="email">The email address of the user to retrieve.</param>
         /// <returns>The user with the specified email address.</returns>
-        public async Task<User> GetUserByEmailAsync(string email)
+        public Task<User> GetUserByEmailAsync(string email)
         {
-            return await _userRepository.GetUserByEmailAsync(email);
+            return _userRepository.GetUserByEmailAsync(email);
         }
         
         /// <summary>
         /// Creates a new user based on the provided user request.
         /// </summary>
         /// <param name="userRequest">The user request information used to create the new user.</param>
-        public async Task CreateUserAsync(CreateUserRequestDto userRequest)
+        public Task CreateUserAsync(CreateUserRequestDto userRequest)
         {
-             await _userRepository.CreateUserAsync(userRequest);
+            return _userRepository.CreateUserAsync(userRequest);
         }
         
         /// <summary>
         /// Retrieves a collection of user response DTOs representing all users.
         /// </summary>
         /// <returns>A collection of user response DTOs.</returns>
-        public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
+        public Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
-            return await _userRepository.GetAllUsersAsync();
+            return _userRepository.GetAllUsersAsync();
         }
         
         /// <summary>
         /// Deletes a user with the specified email address.
         /// </summary>
         /// <param name="email">The email address of the user to delete.</param>
-        public async Task DeleteUserAsync(string email)
+        public Task DeleteUserAsync(string email)
         {
-             await _userRepository.DeleteUserAsync(email);
+            return _userRepository.DeleteUserAsync(email);
         }
 
         /// <summary>
         /// Updates a user's name or email based on the provided update request.
         /// </summary>
         /// <param name="updateUserRequestDto">The update request containing information about the user update.</param>
-        public async Task UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
+        public Task UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
         {
-            Console.WriteLine(updateUserRequestDto.Email1);
-            Console.WriteLine(updateUserRequestDto.Email2);
             User user = new User()
             {
                 Email = updateUserRequestDto.Email1,
@@ -89,12 +87,10 @@ namespace BLL.Services
             
             if (updateUserRequestDto.UpdateName)
             {
-                await _userRepository.UpdateUserNameAsync(user);
+                return _userRepository.UpdateUserNameAsync(user);
             }
-            else
-            {
-                await _userRepository.UpdateUserEmailAsync(user, updateUserRequestDto.Email2);
-            }
+
+            return _userRepository.UpdateUserEmailAsync(user, updateUserRequestDto.Email2);
         }
     }
 }

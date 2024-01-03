@@ -91,14 +91,14 @@ public class LoanHistoryControllerTests
     }
 
     [Fact]
-    public async Task GetLoanHistoryByCustomerIdAsync_ReturnsOkResultWithPagedLoanHistory()
+    public async Task GetLoanHistoryByEmployeeIdAsync_ReturnsOkResultWithPagedLoanHistory()
     {
         Mock<ILoanHistoryService> loanHistoryServiceMock = new Mock<ILoanHistoryService>();
-        loanHistoryServiceMock.Setup(s => s.GetLoanHistoryByCustomerIdAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+        loanHistoryServiceMock.Setup(s => s.GetLoanHistoryByEmployeeIdAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
             .ReturnsAsync((GetSampleLoanHistory(), new Pager(totalItems: 10, currentPage: 1, pageSize: 5)));
 
         LoanHistoryController controller = new LoanHistoryController(loanHistoryServiceMock.Object);
-        IActionResult result = await controller.GetLoanHistoryByCustomerIdAsync(1, 1, 5);
+        IActionResult result = await controller.GetLoanHistoryByEmployeeIdAsync(1, 1, 5);
 
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
         object response = okResult.Value;
@@ -110,7 +110,7 @@ public class LoanHistoryControllerTests
         object pager = response.GetType().GetProperty("Pager")?.GetValue(response);
 
         Assert.NotNull(pager);
-        loanHistoryServiceMock.Verify(s => s.GetLoanHistoryByCustomerIdAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+        loanHistoryServiceMock.Verify(s => s.GetLoanHistoryByEmployeeIdAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
     }
     
     [Fact]

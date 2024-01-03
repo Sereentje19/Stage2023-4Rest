@@ -97,7 +97,7 @@ public class LoanHistoryServiceTests
     }
 
     [Fact]
-    public async Task GetLoanHistoryByCustomerId_ShouldReturnPagedHistory()
+    public async Task GetLoanHistoryByEmployeeId_ShouldReturnPagedHistory()
     {
         const int customerId = 1;
         const int page = 1;
@@ -105,20 +105,20 @@ public class LoanHistoryServiceTests
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock
-            .Setup(repo => repo.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize))
+            .Setup(repo => repo.GetLoanHistoryByEmployeeIdAsync(customerId, page, pageSize))
             .ReturnsAsync((GetSampleLoanHistory(), 15));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
 
         (IEnumerable<object> pagedHistory, Pager pager) =
-            await loanHistoryService.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize);
+            await loanHistoryService.GetLoanHistoryByEmployeeIdAsync(customerId, page, pageSize);
 
         Assert.NotNull(pagedHistory);
         Assert.Equal(15, pager.TotalItems);
     }
 
     [Fact]
-    public async Task GetLoanHistoryByCustomerId_ShouldHandleRepositoryException()
+    public async Task GetLoanHistoryByEmployeeId_ShouldHandleRepositoryException()
     {
         const int customerId = 1;
         const int page = 1;
@@ -126,12 +126,12 @@ public class LoanHistoryServiceTests
 
         Mock<ILoanHistoryRepository> loanHistoryRepositoryMock = new Mock<ILoanHistoryRepository>();
         loanHistoryRepositoryMock
-            .Setup(repo => repo.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize))
+            .Setup(repo => repo.GetLoanHistoryByEmployeeIdAsync(customerId, page, pageSize))
             .ThrowsAsync(new Exception("repository exception"));
 
         LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepositoryMock.Object);
         await Assert.ThrowsAsync<Exception>(() =>
-            loanHistoryService.GetLoanHistoryByCustomerIdAsync(customerId, page, pageSize));
+            loanHistoryService.GetLoanHistoryByEmployeeIdAsync(customerId, page, pageSize));
     }
 
     [Fact]

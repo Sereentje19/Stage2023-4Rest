@@ -59,8 +59,8 @@ namespace PL.Controllers
         /// <returns>
         /// ActionResult with a JSON response containing loan history details for the specified customer.
         /// </returns>
-        [HttpGet("employee/{customer-id}")]
-        public async Task<IActionResult> GetLoanHistoryByEmployeeIdAsync([FromRoute(Name = "customer-id")] int customerId, int page, int pageSize)
+        [HttpGet("employee/{employee-id}")]
+        public async Task<IActionResult> GetLoanHistoryByEmployeeIdAsync([FromRoute(Name = "employee-id")] int customerId, int page, int pageSize)
         {
             (IEnumerable<object> pagedHistory, Pager pager) = await _loanHistoryService.GetLoanHistoryByEmployeeIdAsync(customerId, page, pageSize);
             
