@@ -150,40 +150,11 @@ namespace DAL.Repositories
         }
 
         /// <summary>
-        /// Checks the specified fields of a Document object for empty or invalid values and throws InputValidationException if conditions are not met.
-        /// </summary>
-        /// <param name="document">The Document object to validate.</param>
-        private static void checkFieldsOnEmpty(Document document)
-        {
-            if (string.IsNullOrWhiteSpace(document.Employee.Name))
-            {
-                throw new InputValidationException("Klant naam is leeg.");
-            }
-
-            if (string.IsNullOrWhiteSpace(document.Employee.Email) || !document.Employee.Email.Contains("@"))
-            {
-                throw new InputValidationException("Geen geldige email.");
-            }
-            
-            if (document.Type.Name == "0")
-            {
-                throw new InputValidationException("Selecteer een type.");
-            }
-
-            if (document.Date < DateTime.Today)
-            {
-                throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
-            }
-        }
-        
-        /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
         /// <param name="document">The document entity to be added.</param>
         public async Task CreateDocumentAsync(Document document)
         {
-            checkFieldsOnEmpty(document);
-            
             Employee existingEmployee = await _context.Employees
                 .SingleOrDefaultAsync(l => l.Email == document.Employee.Email);
 
@@ -214,11 +185,6 @@ namespace DAL.Repositories
                 .Include(d => d.Employee)
                 .Where(d => d.DocumentId == document.DocumentId)
                 .FirstOrDefaultAsync();
-
-            if (document.Type.Name == "0")
-            {
-                throw new InputValidationException("Selecteer een type.");
-            }
 
             existingDocument.Date = document.Date;
             existingDocument.Type = document.Type;

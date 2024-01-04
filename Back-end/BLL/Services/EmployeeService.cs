@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BLL.Interfaces;
 using BLL.Services.Authentication;
+using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
@@ -84,9 +85,38 @@ namespace BLL.Services
         public Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
             ValidationHelper.ValidateObject(employeeRequest);
-            return _employeeRepository.CreateEmployeeAsync(employeeRequest);
+            
+            if (string.IsNullOrWhiteSpace(employeeRequest.Name))
+            {
+                throw new InputValidationException("Klant naam is leeg.");
+            }
+
+            if (string.IsNullOrWhiteSpace(employeeRequest.Email) || !employeeRequest.Email.Contains("@"))
+            {
+                throw new InputValidationException("Geen geldige email.");
+            }
+
+            Employee emp = MapDtoToEmployee(employeeRequest);
+            
+            return _employeeRepository.CreateEmployeeAsync(emp);
         }
-        
+
+        /// <summary>
+        /// Maps an EmployeeRequestDto to an Employee entity.
+        /// </summary>
+        /// <param name="employeeRequest">The EmployeeRequestDto to map.</param>
+        /// <returns>The mapped Employee entity.</returns>
+        private static Employee MapDtoToEmployee(EmployeeRequestDto employeeRequest)
+        {
+            return new Employee()
+            {
+                Email = employeeRequest.Email,
+                EmployeeId = employeeRequest.EmployeeId,
+                Name = employeeRequest.Name,
+                IsArchived = employeeRequest.IsArchived
+            };
+        }
+
         /// <summary>
         /// Updates the 'IsArchived' status of an employee in the system.
         /// </summary>

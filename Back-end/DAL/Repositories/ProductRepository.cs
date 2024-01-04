@@ -138,16 +138,6 @@ namespace DAL.Repositories
         /// <returns>Task representing the asynchronous operation.</returns>
         public async Task CreateProductAsync(Product product)
         {
-            if (product.Type.Name == "0")
-            {
-                throw new InputValidationException("Type is leeg.");
-            }
-            
-            if (string.IsNullOrWhiteSpace(product.SerialNumber))
-            {
-                throw new InputValidationException("Serie nummer is leeg.");
-            }
-
             ProductType type = await _context.ProductTypes
                 .SingleOrDefaultAsync(t => t.Name == product.Type.Name);
 

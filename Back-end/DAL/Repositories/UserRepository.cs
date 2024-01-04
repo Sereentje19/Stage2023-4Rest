@@ -47,46 +47,25 @@ namespace DAL.Repositories
             return await _dbSet
                 .SingleOrDefaultAsync(l => l.Email == email);
         }
-        
+
         /// <summary>
         /// Creates a new user in the database.
         /// </summary>
-        /// <param name="userRequestDto">The data required to create a new user.</param>
-        public async Task CreateUserAsync(CreateUserRequestDto userRequestDto)
+        /// <param name="user"></param>
+        public async Task CreateUserAsync(User user)
         {
             User existingUser = await _dbSet
-                .SingleOrDefaultAsync(l => l.Email == userRequestDto.Email);
+                .SingleOrDefaultAsync(l => l.Email == user.Email);
 
             if (existingUser != null)
             {
                 throw new InputValidationException("Email bestaat al.");
             }
 
-            if (string.IsNullOrWhiteSpace(userRequestDto.Name))
-            {
-                throw new InputValidationException("Naam veld is leeg.");
-            }
-
-            if (string.IsNullOrWhiteSpace(userRequestDto.Email))
-            {
-                throw new InputValidationException("Email veld is leeg.");
-            }
-
-            if (!userRequestDto.Email.Contains('@'))
-            {
-                throw new InputValidationException("Geen geldige email.");
-            }
-
-            User user = new User()
-            {
-                Email = userRequestDto.Email,
-                Name = userRequestDto.Name
-            };
-
             _dbSet.Add(user);
             await _context.SaveChangesAsync();
         }
-        
+
         /// <summary>
         /// Updates the email address of a user in the database.
         /// </summary>
@@ -98,21 +77,6 @@ namespace DAL.Repositories
 
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
-
-            if (string.IsNullOrWhiteSpace(user.Email))
-            {
-                throw new InputValidationException("Email veld is leeg.");
-            }
-
-            if (user.Email != email)
-            {
-                throw new InputValidationException("Email velden zijn niet gelijk aan elkaar.");
-            }
-
-            if (!user.Email.Contains('@'))
-            {
-                throw new InputValidationException("Geen geldige email.");
-            }
 
             existingUser.Email = user.Email;
             _dbSet.Update(existingUser);
@@ -129,11 +93,6 @@ namespace DAL.Repositories
 
             User existingUser = await _dbSet
                 .SingleOrDefaultAsync(l => l.UserId == user.UserId);
-
-            if (string.IsNullOrWhiteSpace(user.Name))
-            {
-                throw new InputValidationException("Naam veld is leeg.");
-            }
 
             existingUser.Name = user.Name;
             _dbSet.Update(existingUser);
@@ -163,17 +122,12 @@ namespace DAL.Repositories
         {
             User matchingUser = await _dbSet.FirstOrDefaultAsync(u => u.Email.ToLower() == user.Email.ToLower());
 
-            if (matchingUser != null)
+            if (VerifyPassword(user.Password, matchingUser.PasswordHash, matchingUser.PasswordSalt))
             {
-                if (VerifyPassword(user.Password, matchingUser.PasswordHash, matchingUser.PasswordSalt))
-                {
-                    return matchingUser;
-                }
-
-                throw new InvalidCredentialsException("Wachtwoord is incorrect!");
+                return matchingUser;
             }
 
-            throw new InvalidCredentialsException("Email is incorrect!");
+            throw new InvalidCredentialsException("Email of wachtwoord is incorrect.");
         }
 
         /// <summary>
@@ -212,6 +166,5 @@ namespace DAL.Repositories
                 throw new InputValidationException("Email bestaat al.");
             }
         }
-
     }
 }

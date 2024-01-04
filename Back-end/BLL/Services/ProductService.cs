@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Interfaces;
+using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
@@ -87,6 +88,17 @@ namespace BLL.Services
         public Task CreateProductAsync(Product product)
         {
             ValidationHelper.ValidateObject(product);
+            
+            if (product.Type.Name == "0")
+            {
+                throw new InputValidationException("Type is leeg.");
+            }
+            
+            if (string.IsNullOrWhiteSpace(product.SerialNumber))
+            {
+                throw new InputValidationException("Serie nummer is leeg.");
+            }
+            
             return _productRepository.CreateProductAsync(product);
         }
 

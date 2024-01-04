@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Interfaces;
+using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
@@ -96,6 +97,27 @@ namespace BLL.Services
         public Task CreateDocumentAsync(Document document)
         {
             ValidationHelper.ValidateObject(document);
+            
+            if (string.IsNullOrWhiteSpace(document.Employee.Name))
+            {
+                throw new InputValidationException("Klant naam is leeg.");
+            }
+
+            if (string.IsNullOrWhiteSpace(document.Employee.Email) || !document.Employee.Email.Contains("@"))
+            {
+                throw new InputValidationException("Geen geldige email.");
+            }
+            
+            if (document.Type.Name == "0")
+            {
+                throw new InputValidationException("Selecteer een type.");
+            }
+
+            if (document.Date < DateTime.Today)
+            {
+                throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
+            }
+            
             return _documentRepository.CreateDocumentAsync(document);
         }
 
@@ -106,6 +128,12 @@ namespace BLL.Services
         public Task UpdateDocumentAsync(EditDocumentRequestDto document)
         {
             ValidationHelper.ValidateObject(document);
+            
+            if (document.Type.Name == "0")
+            {
+                throw new InputValidationException("Selecteer een type.");
+            }
+            
             return _documentRepository.UpdateDocumentAsync(document);
         }
 

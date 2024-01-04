@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Interfaces;
+using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
@@ -50,7 +51,29 @@ namespace BLL.Services
         public Task CreateUserAsync(CreateUserRequestDto userRequest)
         {
             ValidationHelper.ValidateObject(userRequest);
-            return _userRepository.CreateUserAsync(userRequest);
+            
+            if (string.IsNullOrWhiteSpace(userRequest.Name))
+            {
+                throw new InputValidationException("Naam veld is leeg.");
+            }
+
+            if (string.IsNullOrWhiteSpace(userRequest.Email))
+            {
+                throw new InputValidationException("Email veld is leeg.");
+            }
+
+            if (!userRequest.Email.Contains('@'))
+            {
+                throw new InputValidationException("Geen geldige email.");
+            }
+
+            User user = new User()
+            {
+                Email = userRequest.Email,
+                Name = userRequest.Name
+            };
+            
+            return _userRepository.CreateUserAsync(user);
         }
         
         /// <summary>
@@ -78,6 +101,7 @@ namespace BLL.Services
         public Task UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
         {
             ValidationHelper.ValidateObject(updateUserRequestDto);
+            
             User user = new User()
             {
                 Email = updateUserRequestDto.Email1,
@@ -89,10 +113,35 @@ namespace BLL.Services
             
             if (updateUserRequestDto.UpdateName)
             {
+                if (string.IsNullOrWhiteSpace(user.Name))
+                {
+                    throw new InputValidationException("Naam veld is leeg.");
+                }
+                
                 return _userRepository.UpdateUserNameAsync(user);
             }
 
+            CheckInputfields(user, updateUserRequestDto);
+            
             return _userRepository.UpdateUserEmailAsync(user, updateUserRequestDto.Email2);
+        }
+
+        private static void CheckInputfields(User user,UpdateUserRequestDto updateUserRequestDto)
+        {
+            if (string.IsNullOrWhiteSpace(user.Email))
+            {
+                throw new InputValidationException("Email veld is leeg.");
+            }
+
+            if (user.Email != updateUserRequestDto.Email2)
+            {
+                throw new InputValidationException("Email velden zijn niet gelijk aan elkaar.");
+            }
+
+            if (!user.Email.Contains('@'))
+            {
+                throw new InputValidationException("Geen geldige email.");
+            }
         }
     }
 }

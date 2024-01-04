@@ -10,7 +10,7 @@ namespace DAL.Interfaces
         Task<User> GetUserByEmailAsync(string email);
         Task UpdateUserEmailAsync(User user, string email);
         Task UpdateUserNameAsync(User user);
-        Task CreateUserAsync(CreateUserRequestDto userRequest);
+        Task CreateUserAsync(User userRequest);
         Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task DeleteUserAsync(string email);
 

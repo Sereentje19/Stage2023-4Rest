@@ -62,13 +62,6 @@ namespace DAL.Repositories
         public async Task CreatePasswordAsync(string email, string password, string code)
         {
             User user = await CheckEnteredCodeAsync(email, code);
-            
-            // Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.
-            if (!Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"))
-            {
-                throw new InputValidationException("Het wachtwoord moet minimaal 8 tekens lang zijn, minimaal één hoofdletter, één kleine letter en één cijfer bevatten.");
-            }
-            
             await HashAndSavePasswordAsync(user, password);
             await _context.SaveChangesAsync();
         }
@@ -97,7 +90,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="user">The User object for whom the password is to be hashed and saved.</param>
         /// <param name="password">The new password to be hashed.</param>
-        private static async Task<User> HashAndSavePasswordAsync(User user, string password)
+        private static Task<User> HashAndSavePasswordAsync(User user, string password)
         {
             using (Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, 32, 10000))
             {
@@ -106,7 +99,7 @@ namespace DAL.Repositories
                 user.PasswordSalt = Convert.ToBase64String(deriveBytes.Salt);
             }
 
-            return user;
+            return Task.FromResult(user);
         }
         
         /// <summary>

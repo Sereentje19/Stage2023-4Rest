@@ -142,18 +142,8 @@ namespace DAL.Repositories
         /// <param name="employeeRequest">The customer entity to be added.</param>
         /// <returns>The unique identifier (ID) of the added customer, or the ID of an existing customer if the same name and email combination is found.</returns>
         /// <exception cref="Exception">Thrown when the customer's name or email is empty.</exception>
-        public async Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest)
+        public async Task<int> CreateEmployeeAsync(Employee employeeRequest)
         {
-            if (string.IsNullOrWhiteSpace(employeeRequest.Name))
-            {
-                throw new InputValidationException("Klant naam is leeg.");
-            }
-
-            if (string.IsNullOrWhiteSpace(employeeRequest.Email) || !employeeRequest.Email.Contains("@"))
-            {
-                throw new InputValidationException("Geen geldige email.");
-            }
-
             //check if the customer already exist, then don't add it again.
             Employee existingEmployee =
                 await _dbSet.FirstOrDefaultAsync(c => c.Email == employeeRequest.Email);
@@ -162,15 +152,12 @@ namespace DAL.Repositories
             {
                 throw new InputValidationException("Email bestaat al.");
             }
-
-            Employee emp = MapDtoToEmployee(employeeRequest);
-
-            await _dbSet.AddAsync(emp);
+            
+            await _dbSet.AddAsync(employeeRequest);
             await _context.SaveChangesAsync();
-
             return employeeRequest.EmployeeId;
         }
-
+        
         /// <summary>
         /// Updates the IsArchived property of an existing employee.
         /// </summary>
@@ -227,22 +214,6 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
         
-        /// <summary>
-        /// Maps an EmployeeRequestDto to an Employee entity.
-        /// </summary>
-        /// <param name="employeeRequest">The EmployeeRequestDto to map.</param>
-        /// <returns>The mapped Employee entity.</returns>
-        private static Employee MapDtoToEmployee(EmployeeRequestDto employeeRequest)
-        {
-            return new Employee()
-            {
-                Email = employeeRequest.Email,
-                EmployeeId = employeeRequest.EmployeeId,
-                Name = employeeRequest.Name,
-                IsArchived = employeeRequest.IsArchived
-            };
-        }
-
         /// <summary>
         /// Checks if an employee with the specified email already exists, excluding the provided EmployeeId.
         /// </summary>
