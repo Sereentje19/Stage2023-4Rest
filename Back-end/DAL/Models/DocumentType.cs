@@ -6,6 +6,7 @@ namespace DAL.Models
     {
         [Key]
         public int Id { get; set; }
+        [StringLength(200, ErrorMessage = "De naam mag niet meer dan {1} tekens bevatten.")]
         public string Name { get; set; }
     }
 }

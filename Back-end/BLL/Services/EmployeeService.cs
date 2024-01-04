@@ -83,6 +83,7 @@ namespace BLL.Services
         /// <returns>The unique identifier (ID) of the added customer.</returns>
         public Task<int> CreateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
+            ValidationHelper.ValidateObject(employeeRequest);
             return _employeeRepository.CreateEmployeeAsync(employeeRequest);
         }
         
@@ -95,6 +96,7 @@ namespace BLL.Services
         /// </returns>
         public Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
         {
+            ValidationHelper.ValidateObject(employeeRequest);
             return _employeeRepository.UpdateEmployeeIsArchivedAsync(employeeRequest);
         }
 
@@ -105,6 +107,7 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task UpdateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
+            ValidationHelper.ValidateObject(employeeRequest);
             return _employeeRepository.UpdateEmployeeAsync(employeeRequest);
         }
 

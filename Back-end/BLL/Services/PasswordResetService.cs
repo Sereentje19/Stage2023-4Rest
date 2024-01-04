@@ -26,6 +26,7 @@ public class PasswordResetService : IPasswordResetService
     /// <returns>A string representing the generated verification code.</returns>
     private static string GenerateVerificationCode(int length)
     {
+        ValidationHelper.ValidateObject(length);
         Random random = new Random();
         const string chars = "0123456789";
 
@@ -45,6 +46,8 @@ public class PasswordResetService : IPasswordResetService
     public async Task CreateResetCodeAsync(string email)
     {
         string code = GenerateVerificationCode(6);
+        ValidationHelper.ValidateObject(email);
+        ValidationHelper.ValidateObject(code);
         User user = await _passwordResetRepository.CreateResetCodeAsync(code, email);
         _mailService.SendPasswordEmail(code, email, "Verificatie code.", user.Name);
     }
@@ -65,6 +68,7 @@ public class PasswordResetService : IPasswordResetService
     /// <param name="requestDto">A PasswordChangeRequest object containing the new password and associated information.</param>
     public Task CreatePasswordAsync(CreatePasswordRequestDto requestDto)
     {
+        ValidationHelper.ValidateObject(requestDto);
         if (requestDto.Password1 != requestDto.Password2)
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
@@ -80,7 +84,7 @@ public class PasswordResetService : IPasswordResetService
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto)
     {
-        
+        ValidationHelper.ValidateObject(updatePasswordRequestDto);
         LoginRequestDto dto = new LoginRequestDto()
         {
             Email = updatePasswordRequestDto.Email,

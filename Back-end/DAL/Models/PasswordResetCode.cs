@@ -11,6 +11,7 @@ public class PasswordResetCode
     [Required]
     public int UserId { get; set; } 
     [Required]
+    [StringLength(10, ErrorMessage = "Er is is fout gegaan bij het versturen van de code, probeer het later nog eens.")]
     public string Code { get; set; }
     [Required]
     public DateTime ExpirationTime { get; set; }

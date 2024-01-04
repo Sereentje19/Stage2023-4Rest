@@ -12,7 +12,7 @@
             int currentPage = 1,
             int pageSize = 5)
         {
-            Int32 totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
+            int totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
 
             if (currentPage < 1)
             {

@@ -110,22 +110,22 @@ namespace PL.Controllers
         /// Creates a new product entry.
         /// </summary>
         /// <param name="file"></param>
-        /// <param name="productRequest">The Product object containing information for the new entry.</param>
+        /// <param name="product"></param>
         /// <returns>
         /// ActionResult with a JSON response indicating the success of the operation.
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> CreateProductAsync([FromForm] IFormFile file, [FromForm] ProductRequestDto productRequest)
+        public async Task<IActionResult> CreateProductAsync([FromForm] IFormFile file, [FromForm] ProductRequestDto product)
         {
             Product pro = new Product
             {
-                Type = productRequest.Type,
-                FileType = productRequest.FileType,
-                PurchaseDate = productRequest.PurchaseDate,
-                ExpirationDate = productRequest.ExpirationDate,
-                SerialNumber = productRequest.SerialNumber
+                Type = product.Type,
+                FileType = product.FileType,
+                PurchaseDate = product.PurchaseDate,
+                ExpirationDate = product.ExpirationDate,
+                SerialNumber = product.SerialNumber
             };
-
+            
             if (file != null)
             {
                 using (MemoryStream memoryStream = new MemoryStream())

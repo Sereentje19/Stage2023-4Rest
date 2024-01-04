@@ -95,6 +95,7 @@ namespace BLL.Services
         /// <param name="document">The document entity to be added.</param>
         public Task CreateDocumentAsync(Document document)
         {
+            ValidationHelper.ValidateObject(document);
             return _documentRepository.CreateDocumentAsync(document);
         }
 
@@ -104,6 +105,7 @@ namespace BLL.Services
         /// <param name="document">The document entity to be updated.</param>
         public Task UpdateDocumentAsync(EditDocumentRequestDto document)
         {
+            ValidationHelper.ValidateObject(document);
             return _documentRepository.UpdateDocumentAsync(document);
         }
 
@@ -114,6 +116,7 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task UpdateIsArchivedAsync(CheckBoxRequestDto entity)
         {
+            ValidationHelper.ValidateObject(entity);
             return _documentRepository.UpdateIsArchivedAsync(entity);
         }
 

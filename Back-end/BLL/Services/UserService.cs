@@ -49,6 +49,7 @@ namespace BLL.Services
         /// <param name="userRequest">The user request information used to create the new user.</param>
         public Task CreateUserAsync(CreateUserRequestDto userRequest)
         {
+            ValidationHelper.ValidateObject(userRequest);
             return _userRepository.CreateUserAsync(userRequest);
         }
         
@@ -76,6 +77,7 @@ namespace BLL.Services
         /// <param name="updateUserRequestDto">The update request containing information about the user update.</param>
         public Task UpdateUserAsync(UpdateUserRequestDto updateUserRequestDto)
         {
+            ValidationHelper.ValidateObject(updateUserRequestDto);
             User user = new User()
             {
                 Email = updateUserRequestDto.Email1,

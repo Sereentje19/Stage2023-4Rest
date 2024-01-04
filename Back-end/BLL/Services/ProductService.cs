@@ -86,6 +86,7 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task CreateProductAsync(Product product)
         {
+            ValidationHelper.ValidateObject(product);
             return _productRepository.CreateProductAsync(product);
         }
 
@@ -96,11 +97,13 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task UpdateProductAsync(ProductRequestDto productRequest)
         {
+            ValidationHelper.ValidateObject(productRequest);
             return _productRepository.UpdateProductAsync(productRequest);
         }
         
         public Task UpdateIsDeletedAsync(ProductRequestDto productRequest)
         {
+            ValidationHelper.ValidateObject(productRequest);
             return _productRepository.UpdateIsDeletedAsync(productRequest);
         }
 

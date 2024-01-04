@@ -128,6 +128,8 @@ export default {
                 formData.append('product.FileType', this.selectedFile.type);
             }
 
+            console.log(this.product.type.name)
+
             formData.append('product.expirationDate', this.product.expirationDate);
             formData.append('product.purchaseDate', this.product.purchaseDate);
             formData.append('product.type.name', this.product.type.name);
