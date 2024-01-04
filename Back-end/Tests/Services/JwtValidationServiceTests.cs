@@ -31,7 +31,6 @@ public class JwtValidationServiceTests
     [Fact]
     public void GenerateToken_ShouldThrowException_WhenConfigurationIsMissing()
     {
-        // Create a configuration with missing Jwt:Key
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
@@ -49,7 +48,6 @@ public class JwtValidationServiceTests
     [Fact]
     public void GenerateToken_ShouldThrowException_WhenUserIsNull()
     {
-        // Arrange
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {

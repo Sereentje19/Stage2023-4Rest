@@ -85,7 +85,7 @@ public class DocumentControllerTests
     }
 
 
-    private IEnumerable<object> GetSampleDocuments()
+    private static IEnumerable<object> GetSampleDocuments()
     {
         return Enumerable.Range(1, 10).Select(i => new { Id = i, Title = $"Document {i}" });
     }
@@ -119,7 +119,7 @@ public class DocumentControllerTests
     [Fact]
     public async Task GetDocumentByIdAsync_ReturnsOkResultWithDocument()
     {
-        int documentId = 1;
+        const int documentId = 1;
         Mock<IDocumentService> documentServiceMock = new Mock<IDocumentService>();
 
         DocumentResponseDto expectedDocument = new DocumentResponseDto
@@ -256,7 +256,7 @@ public class DocumentControllerTests
     public async Task DeleteDocumentAsync_ReturnsOkResult()
     {
         Mock<IDocumentService> documentServiceMock = new Mock<IDocumentService>();
-        int documentId = 1; 
+        const int documentId = 1; 
 
         DocumentController controller = new DocumentController(documentServiceMock.Object);
         IActionResult result = await controller.DeleteDocumentAsync(documentId);

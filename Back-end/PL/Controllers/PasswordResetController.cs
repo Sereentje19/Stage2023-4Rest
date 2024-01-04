@@ -66,7 +66,7 @@ namespace PL.Controllers
             await _passwordResetService.CreatePasswordAsync(requestDto);
             return Ok(new { message = "Wachtwoord gemaakt" });
         }
-        
+          
         /// <summary>
         /// Updates the password for a user based on the provided update password request.
         /// </summary>

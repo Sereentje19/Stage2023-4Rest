@@ -136,7 +136,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                int employeeId = 1;
+                const int employeeId = 1;
                 Employee employee = new Employee
                     { EmployeeId = employeeId, Name = "John", Email = "john@example.com", IsArchived = false };
 
@@ -159,7 +159,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                int nonExistentId = 999;
+                const int nonExistentId = 999;
 
                 EmployeeRepository repository = new EmployeeRepository(context);
                 Employee result = await repository.GetEmployeeByIdAsync(nonExistentId);

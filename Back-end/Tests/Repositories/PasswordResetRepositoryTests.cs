@@ -88,7 +88,7 @@ namespace Tests.Repositories
                 await context.Users.AddAsync(_users.First());
                 await context.SaveChangesAsync();
 
-                string code = "123456";
+                const string code = "123456";
 
                 User result = await userRepository.CreateResetCodeAsync(code, _users.First().Email);
 
@@ -200,24 +200,19 @@ namespace Tests.Repositories
         [Fact]
         public async Task UpdatePasswordAsync_ShouldUpdateUserPasswordInContext()
         {
-            // Arrange
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                PasswordResetRepository userService = new PasswordResetRepository(context); // Assuming you have an implementation of IUserService
+                PasswordResetRepository userService = new PasswordResetRepository(context); 
                 User user = new User { UserId = 1, PasswordHash = "oldHashedPassword", Email = "Blabla@blabla.nl" };
+                
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
 
-                // Act
                 await userService.UpdatePasswordAsync(user, "newPassword");
-
-                // Assert
                 User updatedUser = await context.Users.FindAsync(1);
+                
                 Assert.NotNull(updatedUser);
-
-                // Verify that the password has been updated
                 Assert.NotEqual("oldHashedPassword", updatedUser.PasswordHash);
-                // Add more assertions based on your password hashing logic or behavior
             }
         }
 
@@ -227,20 +222,18 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                PasswordResetRepository userService = new PasswordResetRepository(context); // Assuming you have an implementation of IUserService
+                PasswordResetRepository userService = new PasswordResetRepository(context); 
                 User user = new User { UserId = 1, PasswordHash = "oldHashedPassword", Email = "Blabla@blabla.nl" };
+                
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
 
-                // Act
                 await Assert.ThrowsAsync<NullReferenceException>(() =>
                     userService.UpdatePasswordAsync(new User { UserId = 2 }, "newPassword"));
 
-                // Assert
                 User unchangedUser = await context.Users.FindAsync(1);
+                
                 Assert.NotNull(unchangedUser);
-
-                // Verify that the password has not been updated
                 Assert.Equal("oldHashedPassword", unchangedUser.PasswordHash);
             }
         }

@@ -11,7 +11,7 @@ public class PasswordResetControllerTests
         [Fact]
         public async Task CreateResetCodeAsync_ReturnsOkResult()
         {
-            string email = "test@example.com";
+            const string email = "test@example.com";
             Mock<IPasswordResetService> passwordResetServiceMock = new Mock<IPasswordResetService>();
             PasswordResetController controller = new PasswordResetController(passwordResetServiceMock.Object);
 
@@ -24,8 +24,8 @@ public class PasswordResetControllerTests
         [Fact]
         public async Task CheckEnteredCodeAsync_ReturnsOkResult()
         {
-            string email = "test@example.com";
-            string code = "123456";
+            const string email = "test@example.com";
+            const string code = "123456";
             Mock<IPasswordResetService> passwordResetServiceMock = new Mock<IPasswordResetService>();
             PasswordResetController controller = new PasswordResetController(passwordResetServiceMock.Object);
 
@@ -58,7 +58,6 @@ public class PasswordResetControllerTests
         [Fact]
         public async Task UpdatePasswordAsync_ReturnsOkResult()
         {
-            // Arrange
             UpdatePasswordRequestDto updatePasswordRequestDto = new UpdatePasswordRequestDto
             {
                 Email = "test@example.com",

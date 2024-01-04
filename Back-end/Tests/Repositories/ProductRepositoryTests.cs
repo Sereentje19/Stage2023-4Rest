@@ -13,7 +13,7 @@ namespace Tests.Repositories
 {
     public class ProductRepositoryTests
     {
-        private readonly List<Product> _products = new()
+        private readonly List<Product> _products = new List<Product>
         {
             new Product
             {
@@ -248,7 +248,6 @@ namespace Tests.Repositories
         [Fact]
         public async Task CreateProductAsync_TypeExists_ShouldSetProductType()
         {
-            // Arrange
             DbContextOptions<ApplicationDbContext> options = CreateNewOptions();
             await using (ApplicationDbContext context = new ApplicationDbContext(options))
             {
@@ -264,7 +263,7 @@ namespace Tests.Repositories
                 {
                     SerialNumber = "drftr",
                     ProductId = 1,
-                    Type = new ProductType { Name = "ExistingType" }, // Existing type
+                    Type = new ProductType { Name = "ExistingType" }, 
                 };
 
                 await repository.CreateProductAsync(product);

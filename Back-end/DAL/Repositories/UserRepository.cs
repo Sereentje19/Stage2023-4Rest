@@ -42,9 +42,9 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="email">The email address of the user to retrieve.</param>
         /// <returns>The user object matching the provided email.</returns>
-        public async Task<User> GetUserByEmailAsync(string email)
+        public Task<User> GetUserByEmailAsync(string email)
         {
-            return await _dbSet
+            return _dbSet
                 .SingleOrDefaultAsync(l => l.Email == email);
         }
 

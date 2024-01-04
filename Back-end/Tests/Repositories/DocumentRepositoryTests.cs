@@ -525,7 +525,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                int documentId = 1;
+                const int documentId = 1;
                 Document existingDocument = new Document
                 {
                     DocumentId = documentId,
@@ -548,7 +548,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                int documentId = 0;
+                const int documentId = 0;
                 Document existingDocument = new Document
                 {
                     DocumentId = 1,

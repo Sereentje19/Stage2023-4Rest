@@ -60,7 +60,7 @@ namespace DAL.Repositories
         private (IEnumerable<object>, int) GetPagedProductsInternal(string searchfield, int page, int pageSize,
             Expression<Func<Product, bool>> filter, string dropdown)
         {
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            int skipCount = (page - 1) * pageSize;
             IQueryable<Product> query = QueryGetProducts(searchfield, dropdown).Where(filter);
             int numberOfProducts = query.Count();
 
@@ -124,9 +124,9 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The ID of the product.</param>
         /// <returns>The product with the specified ID.</returns>
-        public async Task<Product> GetProductByIdAsync(int id)
+        public Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products
+            return _context.Products
                 .Include(p => p.Type)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
         }

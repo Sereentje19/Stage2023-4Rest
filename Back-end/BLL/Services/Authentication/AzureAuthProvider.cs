@@ -4,7 +4,7 @@ using Microsoft.Kiota.Abstractions.Authentication;
 
 namespace BLL.Services.Authentication
 {
-    public class AuthProvider : IAuthenticationProvider
+    public class AzureAuthProvider : IAuthenticationProvider
     {
         private string _accessToken;
         private const string ClientId = "133fe8d9-7037-4c05-bd81-7724b52de083";

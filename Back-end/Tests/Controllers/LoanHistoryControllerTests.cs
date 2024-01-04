@@ -37,10 +37,6 @@ public class LoanHistoryControllerTests
         loanHistoryServiceMock.Verify(s => s.GetReturnDatesByProductIdAsync(productId), Times.Once);
     }
 
-
-
-
-
     
     [Fact]
     public async Task GetLatestLoanHistoryByProductIdAsync_ReturnsOkResultWithLoanHistory()
@@ -137,7 +133,7 @@ public class LoanHistoryControllerTests
     }
 
 
-    private IEnumerable<LoanHistory> GetSampleLoanHistory()
+    private static IEnumerable<LoanHistory> GetSampleLoanHistory()
     {
         return new List<LoanHistory>
         {

@@ -40,7 +40,7 @@ public class ProductControllerTests
     }
 
 
-    private IEnumerable<object> GetSampleProducts()
+    private static IEnumerable<object> GetSampleProducts()
     {
         return new List<object>
         {
@@ -49,7 +49,7 @@ public class ProductControllerTests
         };
     }
     
-    private IEnumerable<ProductType> GetSampleProductTypes()
+    private static IEnumerable<ProductType> GetSampleProductTypes()
     {
         return new List<ProductType>
         {
@@ -114,7 +114,7 @@ public class ProductControllerTests
         productServiceMock.Verify(s => s.CreateProductAsync(It.IsAny<Product>()), Times.Once);
     }
 
-    private IFormFile GetSampleFormFile()
+    private static IFormFile GetSampleFormFile()
     {
         byte[] fileBytes = "SampleFileContent"u8.ToArray();
         MemoryStream fileStream = new MemoryStream(fileBytes);

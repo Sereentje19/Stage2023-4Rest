@@ -34,11 +34,11 @@ namespace PL.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPagedEmployees(string searchfield, int page, int pageSize)
         {
-            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedEmployees(searchfield, page, pageSize);
+            (IEnumerable<object> pagedEmployees, Pager pager) = await _employeeService.GetPagedEmployees(searchfield, page, pageSize);
 
             var response = new
             {
-                Employees = pagedCustomers,
+                Employees = pagedEmployees,
                 Pager = new
                 {
                     pager.TotalItems,
@@ -63,11 +63,11 @@ namespace PL.Controllers
         [HttpGet("archive")]
         public async Task<IActionResult> GetPagedArchivedEmployees(string searchfield, int page, int pageSize)
         {
-            (IEnumerable<object> pagedCustomers, Pager pager) = await _employeeService.GetPagedArchivedEmployees(searchfield, page, pageSize);
+            (IEnumerable<object> pagedEmployees, Pager pager) = await _employeeService.GetPagedArchivedEmployees(searchfield, page, pageSize);
 
             var response = new
             {
-                Employees = pagedCustomers,
+                Employees = pagedEmployees,
                 Pager = new
                 {
                     pager.TotalItems,

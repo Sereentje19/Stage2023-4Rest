@@ -10,7 +10,7 @@ namespace Tests.Controllers;
 public class EmployeeControllerTests
 {
     
-    private IEnumerable<Employee> GetSampleEmployees()
+    private static IEnumerable<Employee> GetSampleEmployees()
     {
         return new List<Employee>
         {
@@ -72,70 +72,58 @@ public class EmployeeControllerTests
     [Fact]
     public async Task GetFilteredEmployeesAsync_ReturnsOkResultWithFilteredEmployees()
     {
-        // Arrange
         Mock<IEmployeeService> employeeServiceMock = new Mock<IEmployeeService>();
         IEnumerable<Employee> expectedEmployees = GetSampleEmployees(); 
-        string searchField = "John"; // Set a search field value
+        const string searchField = "John"; 
 
         employeeServiceMock.Setup(s => s.GetFilteredEmployeesAsync(searchField))
             .ReturnsAsync(expectedEmployees);
 
         EmployeeController controller = new EmployeeController(employeeServiceMock.Object);
-
-        // Act
         IActionResult result = await controller.GetFilteredEmployeesAsync(searchField);
 
-        // Assert
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
         IEnumerable<Employee> actualEmployees = okResult.Value as IEnumerable<Employee>;
 
         Assert.NotNull(actualEmployees);
-        Assert.Equal(expectedEmployees, actualEmployees); // Assuming Employee class overrides Equals appropriately
+        Assert.Equal(expectedEmployees, actualEmployees); 
         employeeServiceMock.Verify(s => s.GetFilteredEmployeesAsync(searchField), Times.Once);
     }
 
     [Fact]
     public async Task GetEmployeeByIdAsync_ReturnsOkResultWithEmployee()
     {
-        // Arrange
         Mock<IEmployeeService> employeeServiceMock = new Mock<IEmployeeService>();
-        Employee expectedEmployee = new Employee { EmployeeId = 1, Name = "John Doe", Email = "john.doe@example.com" }; // Create a sample employee
-        int employeeId = 1; // Set the employee ID
+        Employee expectedEmployee = new Employee { EmployeeId = 1, Name = "John Doe", Email = "john.doe@example.com" };
+        const int employeeId = 1; 
 
         employeeServiceMock.Setup(s => s.GetEmployeeByIdAsync(employeeId))
             .ReturnsAsync(expectedEmployee);
 
         EmployeeController controller = new EmployeeController(employeeServiceMock.Object);
-
-        // Act
         IActionResult result = await controller.GetEmployeeByIdAsync(employeeId);
 
-        // Assert
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
         Employee actualEmployee = okResult.Value as Employee;
 
         Assert.NotNull(actualEmployee);
-        Assert.Equal(expectedEmployee, actualEmployee); // Assuming Employee class overrides Equals appropriately
+        Assert.Equal(expectedEmployee, actualEmployee); 
         employeeServiceMock.Verify(s => s.GetEmployeeByIdAsync(employeeId), Times.Once);
     }
 
     [Fact]
     public async Task CreateEmployeeAsync_ReturnsOkResultWithEmployeeId()
     {
-        // Arrange
         Mock<IEmployeeService> employeeServiceMock = new Mock<IEmployeeService>();
-        int expectedEmployeeId = 1; // Set the expected employee ID
-        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto { Name = "John Doe", Email = "john.doe@example.com" }; // Create a sample employee request DTO
+        const int expectedEmployeeId = 1;
+        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto { Name = "John Doe", Email = "john.doe@example.com" }; 
 
         employeeServiceMock.Setup(s => s.CreateEmployeeAsync(employeeRequestDto))
             .ReturnsAsync(expectedEmployeeId);
 
         EmployeeController controller = new EmployeeController(employeeServiceMock.Object);
-
-        // Act
         IActionResult result = await controller.CreateEmployeeAsync(employeeRequestDto);
 
-        // Assert
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
         int actualEmployeeId = (int)okResult.Value;
 
@@ -146,66 +134,48 @@ public class EmployeeControllerTests
     [Fact]
     public async Task UpdateIsArchivedAsync_ReturnsOkResultWithMessage()
     {
-        // Arrange
         Mock<IEmployeeService> employeeServiceMock = new Mock<IEmployeeService>();
-        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto { EmployeeId = 1, IsArchived = true }; // Set the sample data
+        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto { EmployeeId = 1, IsArchived = true };
 
         employeeServiceMock.Setup(s => s.UpdateEmployeeIsArchivedAsync(employeeRequestDto))
             .Returns(Task.CompletedTask);
 
         EmployeeController controller = new EmployeeController(employeeServiceMock.Object);
-
-        // Act
         IActionResult result = await controller.UpdateIsArchivedAsync(employeeRequestDto);
 
-        // Assert
-        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
-        dynamic response = okResult.Value as dynamic;
-
+        Assert.IsType<OkObjectResult>(result);
         employeeServiceMock.Verify(s => s.UpdateEmployeeIsArchivedAsync(employeeRequestDto), Times.Once);
     }
 
     [Fact]
     public async Task UpdateEmployeeAsync_ReturnsOkResultWithMessage()
     {
-        // Arrange
         Mock<IEmployeeService> employeeServiceMock = new Mock<IEmployeeService>();
-        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto { EmployeeId = 1, /* other properties */ }; // Set the sample data
+        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto { EmployeeId = 1,  }; 
 
         employeeServiceMock.Setup(s => s.UpdateEmployeeAsync(employeeRequestDto))
             .Returns(Task.CompletedTask);
 
         EmployeeController controller = new EmployeeController(employeeServiceMock.Object);
-
-        // Act
         IActionResult result = await controller.UpdateEmployeeAsync(employeeRequestDto);
 
-        // Assert
-        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
-        dynamic response = okResult.Value as dynamic;
-
+        Assert.IsType<OkObjectResult>(result);
         employeeServiceMock.Verify(s => s.UpdateEmployeeAsync(employeeRequestDto), Times.Once);
     }
 
     [Fact]
     public async Task DeleteEmployeeAsync_ReturnsOkResultWithMessage()
     {
-        // Arrange
         Mock<IEmployeeService> employeeServiceMock = new Mock<IEmployeeService>();
-        int employeeIdToDelete = 1; // Set the employee ID to delete
+        const int employeeIdToDelete = 1; 
 
         employeeServiceMock.Setup(s => s.DeleteEmployeeAsync(employeeIdToDelete))
             .Returns(Task.CompletedTask);
 
         EmployeeController controller = new EmployeeController(employeeServiceMock.Object);
-
-        // Act
         IActionResult result = await controller.DeleteEmployeeAsync(employeeIdToDelete);
 
-        // Assert
-        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
-        dynamic response = okResult.Value as dynamic;
-
+        Assert.IsType<OkObjectResult>(result);
         employeeServiceMock.Verify(s => s.DeleteEmployeeAsync(employeeIdToDelete), Times.Once);
     }
 

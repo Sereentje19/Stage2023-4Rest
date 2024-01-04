@@ -158,11 +158,10 @@ public class ProductServiceTests
 [Fact]
     public async Task GetAllDeletedProducts_ShouldCallRepositoryWithCorrectParameters()
     {
-        // Arrange
-        string searchfield = "test";
-        string dropdown = "category";
-        int page = 1;
-        int pageSize = 10;
+        const string searchfield = "test";
+        const string dropdown = "category";
+        const int page = 1;
+        const int pageSize = 10;
 
         Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
         mockProductRepository.Setup(repo =>
@@ -171,14 +170,11 @@ public class ProductServiceTests
 
         ProductService productService = new ProductService(mockProductRepository.Object);
 
-        // Act
         (IEnumerable<object>, Pager) result = await productService.GetAllDeletedProducts(searchfield, dropdown, page, pageSize);
 
-        // Assert
         mockProductRepository.Verify(repo =>
             repo.GetAllDeletedProducts(searchfield, page, pageSize, dropdown), Times.Once);
 
-        Assert.NotNull(result);
         Assert.Empty(result.Item1);
         Assert.NotNull(result.Item2);
     }
@@ -186,11 +182,10 @@ public class ProductServiceTests
     [Fact]
     public async Task GetAllDeletedProducts_ShouldReturnProductsAndPager()
     {
-        // Arrange
-        string searchfield = "test";
-        string dropdown = "category";
-        int page = 1;
-        int pageSize = 10;
+        const string searchfield = "test";
+        const string dropdown = "category";
+        const int page = 1;
+        const int pageSize = 10;
 
         IEnumerable<object> products = new List<object> { new { Id = 1, Name = "Product1" } };
         int numberOfProducts = products.Count();
@@ -202,11 +197,8 @@ public class ProductServiceTests
 
         ProductService productService = new ProductService(mockProductRepository.Object);
 
-        // Act
         (IEnumerable<object>, Pager) result = await productService.GetAllDeletedProducts(searchfield, dropdown, page, pageSize);
 
-        // Assert
-        Assert.NotNull(result);
         Assert.Equal(products, result.Item1);
         Assert.NotNull(result.Item2);
         Assert.Equal(numberOfProducts, result.Item2.TotalItems);
@@ -215,20 +207,17 @@ public class ProductServiceTests
     [Fact]
     public async Task UpdateIsDeletedAsync_ShouldCallRepositoryWithCorrectParameter()
     {
-        // Arrange
         ProductRequestDto productRequest = new ProductRequestDto
         {
             ProductId = 1,
-            IsDeleted = true // or false, depending on your test case
+            IsDeleted = true 
         };
 
         Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
         ProductService productService = new ProductService(mockProductRepository.Object);
 
-        // Act
         await productService.UpdateIsDeletedAsync(productRequest);
 
-        // Assert
         mockProductRepository.Verify(repo =>
             repo.UpdateIsDeletedAsync(productRequest), Times.Once);
     }

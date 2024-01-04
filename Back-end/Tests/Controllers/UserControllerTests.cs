@@ -28,7 +28,7 @@ public class UserControllerTests
         userServiceMock.Verify(s => s.GetAllUsersAsync(), Times.Once);
     }
 
-    private IEnumerable<UserResponseDto> GetSampleUserResponseDtoList()
+    private static IEnumerable<UserResponseDto> GetSampleUserResponseDtoList()
     {
         return new List<UserResponseDto>
         {

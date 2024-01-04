@@ -35,7 +35,7 @@ public class LoadEmployeeService : BackgroundService
     {
         try
         {
-            AuthProvider authenticationProvider = new AuthProvider();
+            AzureAuthProvider authenticationProvider = new AzureAuthProvider();
             GraphServiceClient graphClient = new GraphServiceClient(authenticationProvider);
 
             UserCollectionResponse employees = await graphClient.Users.GetAsync();

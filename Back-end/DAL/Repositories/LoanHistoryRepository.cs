@@ -42,7 +42,7 @@ namespace DAL.Repositories
                 .OrderByDescending(l => l.LoanDate);
             
             int numberOfLoanHistory = await query.CountAsync();
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            int skipCount = (page - 1) * pageSize;
 
             IEnumerable<LoanHistoryResponseDto> loanHistoryList = await query
                 .Skip(skipCount)
@@ -81,7 +81,7 @@ namespace DAL.Repositories
                 .OrderByDescending(l => l.LoanDate);
                 
             int numberOfLoanHistory = await query.CountAsync();
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            int skipCount = (page - 1) * pageSize;
                 
             IEnumerable<LoanHistoryResponseDto> loanHistoryList = await query
                 .Skip(skipCount)
@@ -108,7 +108,6 @@ namespace DAL.Repositories
         /// </returns>
         public async Task<DateTime?> GetReturnDatesByProductIdAsync(int productId)
         {
-            
             int loanHistoryId = await _dbSet
                 .Where(l => l.Product.ProductId == productId)
                 .Select(l => l.LoanHistoryId)

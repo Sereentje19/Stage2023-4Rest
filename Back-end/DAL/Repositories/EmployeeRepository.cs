@@ -35,10 +35,10 @@ namespace DAL.Repositories
         private IQueryable<Employee> QueryGetEmployees(string searchfield)
         {
             return _context.Employees
-                .Where(customer => string.IsNullOrEmpty(searchfield) ||
-                                   customer.Name.Contains(searchfield) ||
-                                   customer.Email.Contains(searchfield))
-                .OrderBy(customer => customer.Name);
+                .Where(employee => string.IsNullOrEmpty(searchfield) ||
+                                   employee.Name.Contains(searchfield) ||
+                                   employee.Email.Contains(searchfield))
+                .OrderBy(employee => employee.Name);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace DAL.Repositories
         private (IEnumerable<object>, int) GetPagedEmployeesInternal(string searchfield, int page, int pageSize,
             Expression<Func<Employee, bool>> filter)
         {
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            int skipCount = (page - 1) * pageSize;
             IQueryable<Employee> query = QueryGetEmployees(searchfield).Where(filter);
             int numberOfEmployees = query.Count();
 
@@ -110,18 +110,18 @@ namespace DAL.Repositories
         /// <returns>A collection of customers filtered by the provided search field.</returns>
         public async Task<IEnumerable<Employee>> GetFilteredEmployeesAsync(string searchfield)
         {
-            IQueryable<Employee> customers = _dbSet;
+            IQueryable<Employee> employee = _dbSet;
 
             if (!string.IsNullOrWhiteSpace(searchfield))
             {
                 searchfield = searchfield.ToLower();
-                customers = customers.Where(customer =>
-                    customer.Name.ToLower().Contains(searchfield) ||
-                    customer.Email.ToLower().Contains(searchfield)
+                employee = employee.Where(emp =>
+                    emp.Name.ToLower().Contains(searchfield) ||
+                    emp.Email.ToLower().Contains(searchfield)
                 );
             }
 
-            return await customers.OrderBy(customer => customer.Name).ToListAsync();
+            return await employee.OrderBy(customer => customer.Name).ToListAsync();
         }
 
 

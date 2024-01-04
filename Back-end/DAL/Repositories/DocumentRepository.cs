@@ -59,10 +59,10 @@ namespace DAL.Repositories
         private (IEnumerable<object>, int) GetPagedDocumentsInternal(string searchfield,
             string dropdown, int page, int pageSize, Expression<Func<DocumentOverviewResponseDto, bool>> filter)
         {
-            int skipCount = Math.Max(0, (page - 1) * pageSize);
+            int skipCount = (page - 1) * pageSize;
             IQueryable<DocumentOverviewResponseDto> query = QueryGetDocuments(searchfield, dropdown).Where(filter);
             int numberOfCustomers = query.Count();
-
+            
             IEnumerable<DocumentOverviewResponseDto> documentList = query
                 .Skip(skipCount)
                 .Take(pageSize)
@@ -133,9 +133,9 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the document to retrieve.</param>
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
-        public async Task<DocumentResponseDto> GetDocumentByIdAsync(int id)
+        public Task<DocumentResponseDto> GetDocumentByIdAsync(int id)
         {
-            return await _dbSet
+            return _dbSet
                 .Where(d => d.DocumentId == id)
                 .Include(d => d.Employee)
                 .Select(doc => new DocumentResponseDto
@@ -207,7 +207,7 @@ namespace DAL.Repositories
             }
 
             existingDocument.IsArchived = document.IsArchived;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); 
         }
 
         /// <summary>

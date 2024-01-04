@@ -34,9 +34,9 @@ namespace BLL.Services
         /// <returns>A tuple containing paged customers and pagination information.</returns>
         public async Task<(IEnumerable<object>, Pager)> GetPagedEmployees(string searchfield, int page, int pageSize)
         {
-            (IEnumerable<object> pagedCustomers, int numberOfcustomers) = await _employeeRepository.GetAllEmployees(searchfield, page, pageSize);
+            (IEnumerable<object> pagedEmployees, int numberOfcustomers) = await _employeeRepository.GetAllEmployees(searchfield, page, pageSize);
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
-            return (pagedCustomers, pager);
+            return (pagedEmployees, pager);
         }
         
         /// <summary>
@@ -52,9 +52,9 @@ namespace BLL.Services
         /// </returns>
         public async Task<(IEnumerable<object>, Pager)> GetPagedArchivedEmployees(string searchfield, int page, int pageSize)
         {
-            (IEnumerable<object> pagedCustomers, int numberOfcustomers) = await _employeeRepository.GetAllArchivedEmployees(searchfield, page, pageSize);
+            (IEnumerable<object> pagedEmployees, int numberOfcustomers) = await _employeeRepository.GetAllArchivedEmployees(searchfield, page, pageSize);
             Pager pager = new Pager(numberOfcustomers, page, pageSize);
-            return (pagedCustomers, pager);
+            return (pagedEmployees, pager);
         }
 
         /// <summary>

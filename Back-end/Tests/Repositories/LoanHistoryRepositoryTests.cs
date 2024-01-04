@@ -178,7 +178,7 @@ namespace Tests.Repositories
         [Fact]
         public async Task GetReturnDatesByProductId_ShouldReturnCurrentDateTimeWhenNoLoanHistory()
         {
-            int productId = 999;
+            const int productId = 999;
 
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
@@ -230,7 +230,6 @@ namespace Tests.Repositories
                 LoanHistoryRepository loanHistoryRepository = new LoanHistoryRepository(context);
                 LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepository);
 
-                // Create an instance of LoanHistory entity
                 LoanHistory updatedLoanHistoryEntity = new LoanHistory
                 {
                     LoanHistoryId = 5,
@@ -241,11 +240,9 @@ namespace Tests.Repositories
                         { ProductId = 5, Type = new ProductType() { Id = 5, Name = "Laptop" }, SerialNumber = "123456" }
                 };
 
-                // Add the entity to the context
                 await context.AddAsync(updatedLoanHistoryEntity);
                 await context.SaveChangesAsync();
 
-                // Call the service method
                 await loanHistoryService.UpdateLoanHistoryAsync(new LoanHistoryRequestDto
                 {
                     LoanHistoryId = 5,
@@ -256,8 +253,7 @@ namespace Tests.Repositories
                         { ProductId = 5, Type = new ProductType() { Id = 5, Name = "Laptop" }, SerialNumber = "123456" }
                 });
 
-                // Retrieve the updated entity from the context
-                LoanHistory updatedLoanHistory = await context.LoanHistory.FindAsync(5); // Assuming LoanHistoryId is 5
+                LoanHistory updatedLoanHistory = await context.LoanHistory.FindAsync(5); 
                 Assert.NotNull(updatedLoanHistory);
                 Assert.Equal(updatedLoanHistoryEntity.Product.ProductId, updatedLoanHistory.Product.ProductId);
                 Assert.Equal(updatedLoanHistoryEntity.Employee.EmployeeId, updatedLoanHistory.Employee.EmployeeId);
@@ -269,14 +265,12 @@ namespace Tests.Repositories
         [Fact]
         public async Task UpdateLoanHistoryAsync_WithInvalidLoanHistoryId_ShouldThrowNotFoundException()
         {
-            // Arrange
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 LoanHistoryRepository loanHistoryRepository = new LoanHistoryRepository(context);
                 LoanHistoryService loanHistoryService = new LoanHistoryService(loanHistoryRepository);
 
-                // Invalid LoanHistoryId that doesn't exist in the database
-                int invalidLoanHistoryId = -1;
+                const int invalidLoanHistoryId = -1;
 
                 LoanHistoryRequestDto invalidLoanHistoryDto = new LoanHistoryRequestDto
                 {
@@ -287,11 +281,9 @@ namespace Tests.Repositories
                     Product = new Product { ProductId = 1, Type = new ProductType() { Id = 1, Name = "Laptop" }, SerialNumber = "123456" }
                 };
 
-                // Act and Assert
                 NotFoundException exception = await Assert.ThrowsAsync<NotFoundException>(() =>
                     loanHistoryService.UpdateLoanHistoryAsync(invalidLoanHistoryDto));
 
-                // Assert that the exception message contains the expected text
                 Assert.Equal("LoanHistory not found", exception.Message);
             }
         }
