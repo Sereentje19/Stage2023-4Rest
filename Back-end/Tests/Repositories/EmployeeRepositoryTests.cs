@@ -174,7 +174,7 @@ namespace Tests.Repositories
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
                 EmployeeRepository repository = new EmployeeRepository(context);
-                int result = await repository.CreateEmployeeAsync(MapEmployeeToDto(_employees.First()));
+                int result = await repository.CreateEmployeeAsync(_employees.First());
 
                 Assert.NotEqual(0, result);
             }
@@ -190,7 +190,7 @@ namespace Tests.Repositories
 
                 EmployeeRepository repository = new EmployeeRepository(context);
                 await Assert.ThrowsAsync<InputValidationException>(() =>
-                    repository.CreateEmployeeAsync(MapEmployeeToDto(invalidEmailEmployee)));
+                    repository.CreateEmployeeAsync(invalidEmailEmployee));
             }
         }
 
@@ -203,7 +203,7 @@ namespace Tests.Repositories
 
                 EmployeeRepository repository = new EmployeeRepository(context);
                 await Assert.ThrowsAsync<InputValidationException>(() =>
-                    repository.CreateEmployeeAsync(MapEmployeeToDto(emptyNameEmployee)));
+                    repository.CreateEmployeeAsync(emptyNameEmployee));
             }
         }
 
@@ -212,7 +212,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                EmployeeRequestDto employeeRequest = new EmployeeRequestDto
+                Employee employeeRequest = new Employee
                 {
                     Name = "John Doe",
                     Email = "john.doe@example.com",
@@ -232,7 +232,7 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                EmployeeRequestDto employeeRequest = new EmployeeRequestDto
+                Employee employeeRequest = new Employee
                 {
                     Email = "john.doe@example.com",
                     EmployeeId = 1
@@ -250,13 +250,13 @@ namespace Tests.Repositories
         {
             using (ApplicationDbContext context = new ApplicationDbContext(CreateNewOptions()))
             {
-                EmployeeRequestDto employeeRequest1 = new EmployeeRequestDto
+                Employee employeeRequest1 = new Employee
                 {
                     Email = "john.doe@example.com",
                     Name = "test"
                 };
 
-                EmployeeRequestDto employeeRequest2 = new EmployeeRequestDto
+                Employee employeeRequest2 = new Employee
                 {
                     Email = "john.doe@example.com",
                     Name = "t"

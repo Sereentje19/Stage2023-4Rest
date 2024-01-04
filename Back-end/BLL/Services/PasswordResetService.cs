@@ -27,7 +27,6 @@ public class PasswordResetService : IPasswordResetService
     /// <returns>A string representing the generated verification code.</returns>
     private static string GenerateVerificationCode(int length)
     {
-        ValidationHelper.ValidateObject(length);
         Random random = new Random();
         const string chars = "0123456789";
 
@@ -92,6 +91,12 @@ public class PasswordResetService : IPasswordResetService
     public async Task UpdatePasswordAsync(UpdatePasswordRequestDto updatePasswordRequestDto)
     {
         ValidationHelper.ValidateObject(updatePasswordRequestDto);
+        
+        if (updatePasswordRequestDto.UserId == 0)
+        {
+            throw new NotFoundException("Oeps, er gaat iets fout! Het wachtwoord kan niet geupdate worden.");
+        }
+        
         LoginRequestDto dto = new LoginRequestDto()
         {
             Email = updatePasswordRequestDto.Email,

@@ -194,7 +194,7 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<EmployeeRequestDto>()))
+            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<Employee>()))
                 .ReturnsAsync(1); 
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);
@@ -213,7 +213,7 @@ namespace Tests.Services
             };
 
             Mock<IEmployeeRepository> employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<EmployeeRequestDto>()))
+            employeeRepositoryMock.Setup(repo => repo.CreateEmployeeAsync(It.IsAny<Employee>()))
                 .ThrowsAsync(new Exception("Simulated repository exception"));
 
             EmployeeService employeeService = new EmployeeService(employeeRepositoryMock.Object);

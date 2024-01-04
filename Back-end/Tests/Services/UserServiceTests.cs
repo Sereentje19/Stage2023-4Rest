@@ -137,22 +137,24 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_ShouldCallRepository_WhenUserRequestIsProvided()
     {
-        // Arrange
         CreateUserRequestDto userRequest = new CreateUserRequestDto
         {
             Email = "test@example.com",
             Name = "John Doe",
-            // Set other properties as needed for your test case
         };
 
         Mock<IUserRepository> mockUserRepository = new Mock<IUserRepository>();
-        IUserService userService = new UserService(mockUserRepository.Object); // Assuming you have a UserService class implementing IUserService
+        IUserService userService = new UserService(mockUserRepository.Object); 
 
-        // Act
         await userService.CreateUserAsync(userRequest);
+        
+        User userRequest2 = new User
+        {
+            Email = "test@example.com",
+            Name = "John Doe",
+        };
 
-        // Assert
-        mockUserRepository.Verify(repo => repo.CreateUserAsync(userRequest), Times.Once);
+        mockUserRepository.Verify(repo => repo.CreateUserAsync(userRequest2), Times.Once);
     }
     
      [Fact]

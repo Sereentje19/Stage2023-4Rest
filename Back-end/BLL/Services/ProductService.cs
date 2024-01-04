@@ -77,6 +77,11 @@ namespace BLL.Services
         /// <returns>The product with the specified ID.</returns>
         public Task<Product> GetProductByIdAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het product kan niet worden opgehaald.");
+            }
+
             return _productRepository.GetProductByIdAsync(id);
         }
 
@@ -110,12 +115,24 @@ namespace BLL.Services
         public Task UpdateProductAsync(ProductRequestDto productRequest)
         {
             ValidationHelper.ValidateObject(productRequest);
+            
+            if (productRequest.ProductId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het product kan niet geupdate worden.");
+            }
+
             return _productRepository.UpdateProductAsync(productRequest);
         }
         
         public Task UpdateIsDeletedAsync(ProductRequestDto productRequest)
         {
             ValidationHelper.ValidateObject(productRequest);
+            
+            if (productRequest.ProductId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het product kan niet geupdate worden.");
+            }
+
             return _productRepository.UpdateIsDeletedAsync(productRequest);
         }
 
@@ -126,6 +143,11 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task DeleteProductAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het product kan niet worden verwijderd.");
+            }
+
             return _productRepository.DeleteProductAsync(id);
         }
     }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Interfaces;
+using DAL.Exceptions;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.Dtos.Requests;
@@ -51,6 +52,11 @@ namespace BLL.Services
         /// <returns>Nullable DateTime representing the return date.</returns>
         public Task<DateTime?> GetReturnDatesByProductIdAsync(int productId)
         {
+            if (productId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De geschiedenis kan niet worden opgehaald.");
+            }
+
             return _loanHistoryRepository.GetReturnDatesByProductIdAsync(productId);
         }
 
@@ -61,6 +67,11 @@ namespace BLL.Services
         /// <returns>The latest LoanHistory record for the product.</returns>
         public Task<LoanHistory> GetLatestLoanHistoryByProductIdAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De geschiedenis kan niet worden opgehaald.");
+            }
+
             return _loanHistoryRepository.GetLatestLoanHistoryByProductIdAsync(id);
         }
 
@@ -71,6 +82,11 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task UpdateLoanHistoryAsync(LoanHistoryRequestDto loanHistoryRequest)
         {
+            if (loanHistoryRequest.LoanHistoryId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De geschiedenis kan niet worden opgehaald.");
+            }
+
             return _loanHistoryRepository.UpdateLoanHistoryAsync(loanHistoryRequest);
         }
 

@@ -74,6 +74,11 @@ namespace BLL.Services
         /// <returns>The customer with the specified ID if found; otherwise, returns null.</returns>
         public Task<Employee> GetEmployeeByIdAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De medewerker kan niet worden opgehaald.");
+            }
+
             return _employeeRepository.GetEmployeeByIdAsync(id);
         }
 
@@ -127,6 +132,12 @@ namespace BLL.Services
         public Task UpdateEmployeeIsArchivedAsync(EmployeeRequestDto employeeRequest)
         {
             ValidationHelper.ValidateObject(employeeRequest);
+            
+            if (employeeRequest.EmployeeId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De medewerker kan niet geupdate worden.");
+            }
+
             return _employeeRepository.UpdateEmployeeIsArchivedAsync(employeeRequest);
         }
 
@@ -138,6 +149,12 @@ namespace BLL.Services
         public Task UpdateEmployeeAsync(EmployeeRequestDto employeeRequest)
         {
             ValidationHelper.ValidateObject(employeeRequest);
+            
+            if (employeeRequest.EmployeeId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De medewerker kan niet geupdate worden.");
+            }
+
             return _employeeRepository.UpdateEmployeeAsync(employeeRequest);
         }
 
@@ -148,6 +165,11 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task DeleteEmployeeAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De medewerker kan niet worden verwijderd.");
+            }
+
             return _employeeRepository.DeleteEmployeeAsync(id);
         }
     }

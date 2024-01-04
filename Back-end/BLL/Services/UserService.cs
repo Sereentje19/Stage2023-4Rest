@@ -102,6 +102,11 @@ namespace BLL.Services
         {
             ValidationHelper.ValidateObject(updateUserRequestDto);
             
+            if (updateUserRequestDto.UserId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! De gebruiker kan niet geupdate worden.");
+            }
+
             User user = new User()
             {
                 Email = updateUserRequestDto.Email1,

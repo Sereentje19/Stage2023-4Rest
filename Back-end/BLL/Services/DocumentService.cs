@@ -86,10 +86,15 @@ namespace BLL.Services
         /// <returns>The document with the specified ID if found; otherwise, returns null.</returns>
         public Task<DocumentResponseDto> GetDocumentByIdAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het document kan niet worden opgehaald.");
+            }
+            
             return _documentRepository.GetDocumentByIdAsync(id);
         }
         
-
+    
         /// <summary>
         /// Adds a new document to the repository.
         /// </summary>
@@ -134,6 +139,11 @@ namespace BLL.Services
                 throw new InputValidationException("Selecteer een type.");
             }
             
+            if (document.DocumentId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het document kan niet geupdate worden.");
+            }
+            
             return _documentRepository.UpdateDocumentAsync(document);
         }
 
@@ -145,6 +155,12 @@ namespace BLL.Services
         public Task UpdateIsArchivedAsync(CheckBoxRequestDto entity)
         {
             ValidationHelper.ValidateObject(entity);
+            
+            if (entity.DocumentId == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het document kan niet geupdate worden.");
+            }
+            
             return _documentRepository.UpdateIsArchivedAsync(entity);
         }
 
@@ -155,6 +171,11 @@ namespace BLL.Services
         /// <returns>Task representing the asynchronous operation.</returns>
         public Task DeleteDocumentAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new NotFoundException("Oeps, er gaat iets fout! Het document kan niet worden verwijderd.");
+            }
+
             return _documentRepository.DeleteDocumentAsync(id);
         }
     }
