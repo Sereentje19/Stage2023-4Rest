@@ -14,7 +14,7 @@
             Type: <br>
             Verval datum: <br>
           </div>
-          <div>
+          <div id="info-item-div-document">
             {{ this.document.type.name }} <br>
             {{ formatDate(this.document.date) }} <br>
           </div>
@@ -34,7 +34,7 @@
             Naam: <br>
             Email: <br>
           </div>
-          <div>
+          <div id="info-item-div-document">
             {{ this.employee.name }} <br>
             {{ this.employee.email }} <br>
           </div>

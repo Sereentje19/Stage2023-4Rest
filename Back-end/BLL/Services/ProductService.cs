@@ -98,6 +98,11 @@ namespace BLL.Services
             {
                 throw new InputValidationException("Type is leeg.");
             }
+
+            if (product.ExpirationDate < DateTime.Today || product.PurchaseDate < DateTime.Today)
+            {
+                throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
+            }
             
             if (string.IsNullOrWhiteSpace(product.SerialNumber))
             {

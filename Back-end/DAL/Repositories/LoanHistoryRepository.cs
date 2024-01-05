@@ -42,7 +42,12 @@ namespace DAL.Repositories
                 .OrderByDescending(l => l.LoanDate);
             
             int numberOfLoanHistory = await query.CountAsync();
-            int skipCount = (page - 1) * pageSize;
+            int skipCount = page * pageSize;
+            
+            if (skipCount > 0)
+            {
+                skipCount -= 5;
+            }
 
             IEnumerable<LoanHistoryResponseDto> loanHistoryList = await query
                 .Skip(skipCount)
@@ -81,7 +86,12 @@ namespace DAL.Repositories
                 .OrderByDescending(l => l.LoanDate);
                 
             int numberOfLoanHistory = await query.CountAsync();
-            int skipCount = (page - 1) * pageSize;
+            int skipCount = page * pageSize;
+            
+            if (skipCount > 0)
+            {
+                skipCount -= 5;
+            }
                 
             IEnumerable<LoanHistoryResponseDto> loanHistoryList = await query
                 .Skip(skipCount)

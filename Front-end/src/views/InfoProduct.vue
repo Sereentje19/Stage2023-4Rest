@@ -16,7 +16,7 @@
                     Geldig tot: <br>
                     Serie nummer:
                 </div>
-                <div>
+                <div id="info-item-div">
                     {{ this.product.type.name }} <br>
                     {{ formatDate(this.product.purchaseDate) }} <br>
                     {{ formatDate(this.product.expirationDate) }} <br>

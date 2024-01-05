@@ -122,7 +122,7 @@ namespace DAL.Repositories
         {
             User matchingUser = await _dbSet.FirstOrDefaultAsync(u => u.Email.ToLower() == user.Email.ToLower());
 
-            if (VerifyPassword(user.Password, matchingUser.PasswordHash, matchingUser.PasswordSalt))
+            if (matchingUser != null && VerifyPassword(user.Password, matchingUser.PasswordHash, matchingUser.PasswordSalt))
             {
                 return matchingUser;
             }

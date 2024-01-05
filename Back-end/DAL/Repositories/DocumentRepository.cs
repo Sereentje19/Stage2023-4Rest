@@ -15,6 +15,7 @@ namespace DAL.Repositories
         private readonly ApplicationDbContext _context;
         private readonly DbSet<Document> _dbSet;
         private const int SixWeeksFromNow = 42;
+
         public DocumentRepository(ApplicationDbContext context)
         {
             _context = context;
@@ -46,7 +47,7 @@ namespace DAL.Repositories
                     Type = doc.Type,
                 });
         }
-        
+
         /// <summary>
         /// Retrieves a paged list of document overviews based on specified criteria.
         /// </summary>
@@ -59,7 +60,13 @@ namespace DAL.Repositories
         private (IEnumerable<object>, int) GetPagedDocumentsInternal(string searchfield,
             string dropdown, int page, int pageSize, Expression<Func<DocumentOverviewResponseDto, bool>> filter)
         {
-            int skipCount = (page - 1) * pageSize;
+            int skipCount = page * pageSize;
+            
+            if (skipCount > 0)
+            {
+              skipCount -= 5;
+            }
+            
             IQueryable<DocumentOverviewResponseDto> query = QueryGetDocuments(searchfield, dropdown).Where(filter);
             int numberOfCustomers = query.Count();
             
@@ -207,7 +214,7 @@ namespace DAL.Repositories
             }
 
             existingDocument.IsArchived = document.IsArchived;
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>

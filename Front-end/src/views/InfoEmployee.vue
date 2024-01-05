@@ -14,7 +14,7 @@
                     Name: <br>
                     Email: <br>
                 </div>
-                <div>
+                <div id="info-item-div">
                     {{ this.employee.name }} <br>
                     {{ this.employee.email }} <br>
                 </div>

@@ -42,7 +42,7 @@
 #leftside-documents{
     background-color: #f7f7f7;
     padding: 30px;
-    width: 155%;
+    width: 100%;
     border-radius: 10px;
     border: solid 1px #868686;
     margin-bottom: 30px;
@@ -55,11 +55,6 @@
     border-radius: 10px;
     border: solid 1px #868686;
     margin-bottom: 30px;
-}
-
-#loan-info {
-    font-size: 20px;
-    display: flex;
 }
 
 #loan-info-leftside {
@@ -240,4 +235,25 @@ tr:nth-child(odd) {
 
 .foto-product{
     margin-top: 30px;
+}
+
+#info-item-div{
+    width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+#info-item-div-document{
+    width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+#loan-info {
+    font-size: 20px;
+    display: flex;
 }

@@ -56,7 +56,13 @@ namespace DAL.Repositories
         private (IEnumerable<object>, int) GetPagedEmployeesInternal(string searchfield, int page, int pageSize,
             Expression<Func<Employee, bool>> filter)
         {
-            int skipCount = (page - 1) * pageSize;
+            int skipCount = page * pageSize;
+            
+            if (skipCount > 0)
+            {
+                skipCount -= 5;
+            }
+
             IQueryable<Employee> query = QueryGetEmployees(searchfield).Where(filter);
             int numberOfEmployees = query.Count();
 

@@ -109,6 +109,12 @@ public class PasswordResetService : IPasswordResetService
         {
             throw new InputValidationException("Wachtwoorden zijn niet gelijk aan elkaar!");
         }
+        
+        // Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.
+        if (!Regex.IsMatch(updatePasswordRequestDto.Password2, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"))
+        {
+            throw new InputValidationException("Het wachtwoord moet minimaal 8 tekens lang zijn, minimaal één hoofdletter, één kleine letter en één cijfer bevatten.");
+        }
 
         User user = new User()
         {

@@ -60,7 +60,13 @@ namespace DAL.Repositories
         private (IEnumerable<object>, int) GetPagedProductsInternal(string searchfield, int page, int pageSize,
             Expression<Func<Product, bool>> filter, string dropdown)
         {
-            int skipCount = (page - 1) * pageSize;
+            int skipCount = page * pageSize;
+            
+            if (skipCount > 0)
+            {
+                skipCount -= 5;
+            }
+
             IQueryable<Product> query = QueryGetProducts(searchfield, dropdown).Where(filter);
             int numberOfProducts = query.Count();
 
