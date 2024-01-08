@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
 
+    - name: Build
+      run: npm run build
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -37,7 +40,6 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "Front-end/src" # App source code path
           api_location: "" # Api source code path - optional
-          default_file: index.html
           platform: 'nodejs/20.6.0'
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
