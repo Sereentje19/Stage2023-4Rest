@@ -25,7 +25,7 @@
             <div class="rightside" id="rightside-product">
                 <ul>
                     <form class="gegevens">
-                        Type 
+                        Type
                         <div id="new-type">
                             <select v-if="this.addProductType == false" v-model="this.product.type.name" class="type"
                                 name="Type">
@@ -45,9 +45,9 @@
                             </div>
                         </div>
 
-                       Gekocht op <input v-model="this.product.purchaseDate" type="date" class="date" />
-                       Gebruiken tot <input v-model="this.product.expirationDate" type="date" class="date" />
-                       Serienummer <input class="email" v-model="this.product.serialNumber" />
+                        Gekocht op <input v-model="this.product.purchaseDate" type="date" class="date" />
+                        Gebruiken tot <input v-model="this.product.expirationDate" type="date" class="date" />
+                        Serienummer <input class="email" v-model="this.product.serialNumber" />
                     </form>
                 </ul>
 
@@ -123,12 +123,17 @@ export default {
         CreateFromData() {
             let formData = new FormData();
 
+            if (this.product.purchaseDate == "" || this.product.expirationDate == "") {
+                this.product.purchaseDate = "2022-01-01T00:00:00Z";
+                this.product.expirationDate = "2022-01-01T00:00:00Z";
+            }
+
+            console.log(this.product.purchaseDate)
+
             if (this.selectedFile != null) {
                 formData.append('file', this.selectedFile);
                 formData.append('product.FileType', this.selectedFile.type);
             }
-
-            console.log(this.product.type.name)
 
             formData.append('product.expirationDate', this.product.expirationDate);
             formData.append('product.purchaseDate', this.product.purchaseDate);

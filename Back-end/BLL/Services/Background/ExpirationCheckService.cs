@@ -51,12 +51,12 @@ namespace BLL.Services.Background
             ApplicationDbContext applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
             IMailService mailService = serviceProvider.GetRequiredService<IMailService>();
 
-            DateTime targetDate6Weeks = DateTime.Now.AddDays(WeeksBeforeExpiry5 * Week);
-            DateTime targetDate5Weeks = DateTime.Now.AddDays(WeeksBeforeExpiry5 * Week);
+            DateTime targetDate6Weeks = DateTime.Today.AddDays(WeeksBeforeExpiry6 * Week);
+            DateTime targetDate5Weeks = DateTime.Today.AddDays(WeeksBeforeExpiry5 * Week);
 
             List<Document> expiringDocuments = await applicationDbContext.Documents
-                .Include(d => d.Employee)
-                .Where(d => d.Date.Date == targetDate5Weeks.Date || d.Date.Date == targetDate6Weeks.Date)
+                .Include(d => d.Employee).Include(document => document.Type)
+                .Where(d => d.Date == targetDate5Weeks || d.Date == targetDate6Weeks)
                 .ToListAsync();
 
             foreach (Document document in expiringDocuments)
@@ -69,7 +69,7 @@ namespace BLL.Services.Background
                 string bodyEmail = $"Het volgende document zal over {weeks} weken komen te vervallen:" +
                                    $"\nNaam: {employee.Name}" +
                                    $"\nVerloop datum: {document.Date:dd-MM-yyyy}" +
-                                   $"\nType document: {document.Type.ToString()!.Replace("_", " ")}\n\n";
+                                   $"\nType document: {document.Type.Name}\n\n";
 
                 mailService.SendDocumentExpirationEmail(bodyEmail, document.FileType, document.File,
                     "Document vervalt Binnenkort!");

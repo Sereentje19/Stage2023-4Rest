@@ -6,9 +6,9 @@
 
             <form>
                 <div class="gegevens-edit">
-                    <select v-model="this.product.type" class="Type">
+                    <select v-model="this.product.type.name" class="Type">
                         <option value="0">Selecteer type...</option>
-                        <option v-for="(type, index) in productTypes" :key="index" :value="type">
+                        <option v-for="(type, index) in productTypes" :key="index" :value="type.name">
                             {{ type.name }}
                         </option>
                     </select>
@@ -72,6 +72,12 @@ export default {
                 });
         },
         editProduct() {
+            if (this.product.purchaseDate == "" || this.product.expirationDate == "") {
+                this.product.purchaseDate = new Date(1, 0, 1);
+            }
+
+            console.log(this.product.type.id)
+
             axios.put("product", this.product, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

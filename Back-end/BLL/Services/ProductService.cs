@@ -99,7 +99,8 @@ namespace BLL.Services
                 throw new InputValidationException("Type is leeg.");
             }
 
-            if (product.ExpirationDate < DateTime.Today || product.PurchaseDate < DateTime.Today)
+            Console.WriteLine(product.PurchaseDate);
+            if (product.PurchaseDate < DateTime.Today || product.ExpirationDate < DateTime.Today)
             {
                 throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
             }
@@ -124,6 +125,11 @@ namespace BLL.Services
             if (productRequest.ProductId == 0)
             {
                 throw new NotFoundException("Oeps, er gaat iets fout! Het product kan niet geupdate worden.");
+            }
+
+            if (productRequest.PurchaseDate < DateTime.Today || productRequest.ExpirationDate < DateTime.Today)
+            {
+                throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
             }
 
             return _productRepository.UpdateProductAsync(productRequest);

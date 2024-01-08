@@ -54,7 +54,7 @@
             </div>
             <div id="customers-list">
 
-                <div v-if="this.filteredEmployees.length != 0">
+                <div v-if="this.filteredEmployees.length != 0 || this.searchField != ''">
                     <div v-if="this.loanHistory.returnDate != null" id="rightside">
                         <input @input="getAllFilteredEmployees" v-model="searchField" type="search"
                             class="searchfield-loanhistory" placeholder="Zoek klant" />

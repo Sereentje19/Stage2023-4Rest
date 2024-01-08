@@ -138,6 +138,11 @@ namespace BLL.Services
             {
                 throw new InputValidationException("Selecteer een type.");
             }
+
+            if (document.Date < DateTime.Today)
+            {
+                throw new InputValidationException("Datum is incorrect, de datum moet in de toekomst zijn.");
+            }
             
             if (document.DocumentId == 0)
             {

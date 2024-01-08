@@ -33,10 +33,11 @@
               </li>
             </ul>
 
-          <div id="inputfield-title"> Naam </div> <input v-model="this.employee.name" type="text" class="name" name="Zoek" />
-           Email  <input v-model="this.employee.email" type="email" class="email" name="email" />
+            <div id="inputfield-title"> Naam </div> <input v-model="this.employee.name" type="text" class="name"
+              name="Zoek" />
+            Email <input v-model="this.employee.email" type="email" class="email" name="email" />
 
-           Type <div id="new-type">
+            Type <div id="new-type">
               <select v-if="this.addDocumentType == false" v-model="this.document.type.name" class="type" name="Type">
                 <option value="0">Selecteer document...</option>
                 <option v-for="(type, index) in documentTypes" :key="index" :value="type.name">
@@ -48,12 +49,13 @@
               <div v-if="this.addDocumentType == false" @click="addType()" id="add-button">
                 <IconAdd />
               </div>
-              <div v-else @click="addTypeReverse()" id="add-button" >
+              <div v-else @click="addTypeReverse()" id="add-button">
                 <CardList />
               </div>
             </div>
 
-           Verloop datum <input v-model="this.document.date" :placeholder="this.document.date" type="date" class="date" name="Date" />
+            Verloop datum <input v-model="this.document.date" :placeholder="this.document.date" type="date" class="date"
+              name="Date" />
           </form>
         </ul>
 
@@ -118,7 +120,7 @@ export default {
       this.addDocumentType = !this.addDocumentType;
       this.document.type.name = "";
     },
-    addTypeReverse(){
+    addTypeReverse() {
       this.addDocumentType = !this.addDocumentType;
       this.document.type.name = "0";
     },
@@ -140,6 +142,10 @@ export default {
     },
     CreateFromData() {
       let formData = new FormData();
+
+      if (this.document.date == "") {
+        this.document.date = new Date(1, 0, 1);
+      }
 
       if (this.selectedFile != null) {
         formData.append('file', this.selectedFile);

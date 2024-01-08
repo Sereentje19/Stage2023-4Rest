@@ -171,9 +171,9 @@ namespace DAL.Repositories
             {
                 throw new NotFoundException("Geen product gevonden");
             }
-
+            
             _context.Entry(existingProduct).CurrentValues.SetValues(productRequest);
-            existingProduct.Type = productRequest.Type;
+            existingProduct.Type.Name = productRequest.Type.Name;
             
             await _context.SaveChangesAsync();
         }
