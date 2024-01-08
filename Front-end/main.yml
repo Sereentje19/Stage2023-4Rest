@@ -19,7 +19,7 @@ jobs:
           node-version: '20.6.0'
 
       - name: Build
-        run: npm run dev
+        run: npm run build
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
