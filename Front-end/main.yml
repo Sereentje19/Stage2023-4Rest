@@ -36,7 +36,7 @@ jobs:
           app_location: Front-end
           output_location: Front-end/dist
           default_file: index.html
-          platform: 'nodejs/14'
+          platform: 'nodejs/20.6.0'
 
 
       - name: Debug
