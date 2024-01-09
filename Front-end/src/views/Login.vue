@@ -7,7 +7,8 @@
           <div class="circle">
             <div id="profile-icon">
               <profile />
-            </div>
+            </div> 
+            
           </div>
           <div class="input-container">
             <div id="icon" class="icon-profile-fill">
