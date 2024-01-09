@@ -100,9 +100,9 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import PopUpMessage from '../components/notifications/PopUpMessage.vue';
-import Header from '../components/layout/Header.vue';
-import PopupChoice from '../components/notifications/PopUpChoice.vue';
+import PopUpMessage from '@/components/notifications/PopUpMessage.vue';
+import Header from '@/components/layout/Header.vue';
+import PopupChoice from '@/components/notifications/PopUpChoice.vue';
 
 export default {
     name: "InfoLoan",

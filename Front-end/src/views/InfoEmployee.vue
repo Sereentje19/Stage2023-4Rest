@@ -32,9 +32,9 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import PopUpMessage from '../components/notifications/PopUpMessage.vue';
-import PopupChoice from '../components/notifications/PopUpChoice.vue';
-import Header from '../components/layout/Header.vue';
+import PopUpMessage from '@/components/notifications/PopUpMessage.vue';
+import PopupChoice from '@/components/notifications/PopUpChoice.vue';
+import Header from '@/components/layout/Header.vue';
 
 export default {
     name: "Info",
