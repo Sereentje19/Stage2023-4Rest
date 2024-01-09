@@ -20,8 +20,8 @@
   
 <script>
 import axios from '../../axios-auth.js'
-import PopUpMessage from '../components/notifications/PopUpMessage.vue';
-import Header from '../components/layout/Header.vue';
+import PopUpMessage from '@/components/notifications/PopUpMessage.vue';
+import Header from '@/components/layout/Header.vue';
 
 export default {
     components: {
