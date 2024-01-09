@@ -56,11 +56,11 @@
 <script>
 import axios from '../../axios-auth.js';
 import moment from 'moment';
-import Pagination from '../components/pagination/Pagination.vue';
-import PopUpMessage from '../components/notifications/PopUpMessage.vue';
-import Header from '../components/layout/Header.vue';
-import History from '../components/icons/IconHistory.vue';
-import Archive from '../components/icons/IconArchive.vue';
+import Pagination from '@/components/pagination/Pagination.vue';
+import PopUpMessage from '@/components/notifications/PopUpMessage.vue';
+import Header from '@/components/layout/Header.vue';
+import History from '@/components/icons/IconHistory.vue';
+import Archive from '@/components/icons/IconArchive.vue';
 
 
 export default {
