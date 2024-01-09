@@ -31,5 +31,10 @@
   },
   "engines": {
     "node": ">=14.0.0"
-  }
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite.",
+  "main": "axios-auth.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
