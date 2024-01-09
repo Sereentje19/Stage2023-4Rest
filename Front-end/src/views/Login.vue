@@ -1,6 +1,6 @@
 <template>
   <div id="login-body">
-    <img id="logo-login" src="Users/seren/OneDrive/Documents/GitHub/Stage2023-4Rest/Front-end/src/assets/pictures/Logo-4-rest-IT.png" alt="does not work" />
+    <img id="logo-login" src="@/assets/pictures/Logo-4-rest-IT.png" alt="does not work" />
     <div id="login-container">
       <div id="background-circel">
         <div id="alignment-body">
