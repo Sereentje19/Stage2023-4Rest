@@ -10,7 +10,7 @@ import EditEmployee from '../views/EditEmployee.vue';
 import EditProduct from '../views/EditProduct.vue';
 
 //Info
-import InfoDocument from '../views/InfoDocument.vue';
+import InfoDocument from '../views/infoDocument.vue';
 import InfoProduct from '../views/InfoProduct.vue';
 import InfoEmployee from '../views/InfoEmployee.vue';
 
