@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <a id="logo-header-link" href="/overzicht/documenten"><img id="logo-header"
-                src="@/assets/pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
+                src="./assets/pictures/Logo-4-rest-IT.png" alt="does not work" /></a>
         <div id="header-buttons">
             <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
                 <a id="header-items" class="dropdown-link" href="/overzicht/documenten"
