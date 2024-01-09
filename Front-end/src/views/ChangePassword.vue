@@ -48,10 +48,10 @@
   
 <script>
 import axios from '../../axios-auth.js';
-import profile from "../components/icons/iconloginprofile.vue";
-import profileFill from "../components/icons/iconLoginProfileFill.vue";
+import profile from "../components/icons/IconLoginProfile.vue";
+import profileFill from "../components/icons/IconLoginProfileFill.vue";
 import lockClosed from "../components/icons/iconLoginLockClosed.vue";
-import eyeOpen from "../components/icons/iconLoginEyeOpen.vue";
+import eyeOpen from "../components/icons/IconLoginEyeOpen.vue";
 import eyeClosed from "../components/icons/iconLoginEyeClosed.vue";
 
 export default {
