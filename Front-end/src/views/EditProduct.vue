@@ -4,6 +4,7 @@
         <div class="upload-container-edit">
             <h1 id="h1">Edit {{ this.route }}</h1>
 
+            
             <form>
                 <div class="gegevens-edit">
                     <select v-model="this.product.type.name" class="Type">
