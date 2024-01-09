@@ -72,10 +72,10 @@
 
 <script>
 import axios from '../../axios-auth.js'
-import PopUpMessage from '../components/notifications/PopUpMessage.vue';
-import Header from '../components/layout/Header.vue';
-import IconAdd from '../components/icons/IconAdd.vue';
-import CardList from '../components/icons/IconCardList.vue';
+import PopUpMessage from '@/components/notifications/PopUpMessage.vue';
+import Header from '@/components/layout/Header.vue';
+import IconAdd from '@/components/icons/IconAdd.vue';
+import CardList from '@/components/icons/IconCardList.vue';
 
 export default {
   components: {
