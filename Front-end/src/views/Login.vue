@@ -44,11 +44,11 @@
 <script>
 import axios from '../../axios-auth.js';
 import VueJwtDecode from 'vue-jwt-decode';
-import profile from "../components/icons/IconLoginProfile.vue";
-import profileFill from "../components/icons/IconLoginProfileFill.vue";
-import lockClosed from "../components/icons/iconLoginLockClosed.vue";
-import eyeOpen from "../components/icons/IconLoginEyeOpen.vue";
-import eyeClosed from "../components/icons/iconLoginEyeClosed.vue";
+import profile from "/src/components/icons/IconLoginProfile.vue";
+import profileFill from "/src/components/icons/IconLoginProfileFill.vue";
+import lockClosed from "/src/components/icons/iconLoginLockClosed.vue";
+import eyeOpen from "/src/components/icons/IconLoginEyeOpen.vue";
+import eyeClosed from "/src/components/icons/iconLoginEyeClosed.vue";
 
 export default {
   name: "Login",
