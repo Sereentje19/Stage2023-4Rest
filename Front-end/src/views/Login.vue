@@ -34,7 +34,7 @@
           <div id="error-message">
             {{ this.errorMessage }}
           </div>
-          <a href="/login/wachtwoord-vergeten" id="forgot-password">Wachtwoord vergeten? </a>
+          <a href="/login/wachtwoord-vergeten" id="forgot-password">Wachtwoord vergeten? </a> 
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
 <script>
 import axios from '../../axios-auth.js';
 import VueJwtDecode from 'vue-jwt-decode';
-import profile from "@/components/icons/IconLoginProfile.vue";
+import profile from require("@/components/icons/IconLoginProfile.vue").default;
 import profileFill from "@/components/icons/IconLoginProfileFill.vue";
 import lockClosed from "@/components/icons/iconLoginLockClosed.vue";
 import eyeOpen from "@/components/icons/IconLoginEyeOpen.vue";
