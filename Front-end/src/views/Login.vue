@@ -1,6 +1,6 @@
 <template>
   <div id="login-body">
-    <img id="logo-login" src="../assets/pictures/Logo-4-rest-IT.png" alt="does not work" />
+    <img id="logo-login" :src="this.imageSource" alt="does not work" />
     <div id="login-container">
       <div id="background-circel">
         <div id="alignment-body">
@@ -62,6 +62,7 @@ export default {
   data() {
     return {
       eyeCon: false,
+      imageSource: "",
       inputType: "password",
       errorMessage: "",
       user: {
@@ -74,6 +75,9 @@ export default {
         userId: 0
       }
     };
+  },
+  mounted(){
+    this.imageSource = new URL('../assets/pictures/Logo-4-rest-IT.png', import.meta.url).toString();
   },
   methods: {
     login() {
