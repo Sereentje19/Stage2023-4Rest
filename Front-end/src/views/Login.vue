@@ -1,6 +1,6 @@
 <template>
   <div id="login-body">
-    <img id="logo-login" src="/logo.png" alt="does not work" />
+    <img id="logo-login" src="icons/logo.png" alt="does not work" />
     <div id="login-container">
       <div id="background-circel">
         <div id="alignment-body">
