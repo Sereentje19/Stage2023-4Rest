@@ -113,5 +113,5 @@ export default {
    
 <style>
 @import  '/assets/css/Main.css';
-@import  url('/assets/Css/Login.css');
+@import  '/assets/css/Login.css';
 </style>
