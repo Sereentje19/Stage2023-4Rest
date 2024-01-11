@@ -112,6 +112,6 @@ export default {
 </script>
    
 <style>
-@import  url('/assets/css/Main.css');
-@import  url('/assets/css/Login.css');
+@import  '/assets/css/Main.css';
+@import  url('/assets/Css/Login.css');
 </style>
