@@ -41,7 +41,7 @@ import moment from 'moment';
 import Pagination from '@/components/pagination/Pagination.vue';
 import PopUpMessage from '@/components/notifications/PopUpMessage.vue';
 import Header from '@/components/layout/Header.vue';
-import profileFill from "@/components/icons/IconLoginProfileFill.vue";
+import profileFill from "@/components/icons/IconProfileFill.vue";
 import lockClosed from "@/components/icons/iconLoginLockClosed.vue";
 import ProfilePeople from "@/components/icons/IconProfilePeople.vue";
 import ArrowRight from "@/components/icons/iconArrowRight.vue";
