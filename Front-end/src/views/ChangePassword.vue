@@ -48,7 +48,7 @@
   
 <script>
 import axios from '../../axios-auth.js';
-import profile from "@/components/icons/IconLoginProfile.vue";
+import profile from "@/components/icons/IconProfile.vue";
 import profileFill from "@/components/icons/IconLoginProfileFill.vue";
 import lockClosed from "@/components/icons/iconLoginLockClosed.vue";
 import eyeOpen from "@/components/icons/IconLoginEyeOpen.vue";
