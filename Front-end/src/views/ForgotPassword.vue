@@ -97,7 +97,7 @@ export default {
 </script>
      
 <style>
-@import '../assets/css/Main.css';
-@import '../assets/css/Login.css';
+@import '@/assets/css/Main.css';
+@import '@/assets/css/Login.css';
 </style>
   

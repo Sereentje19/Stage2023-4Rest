@@ -71,6 +71,6 @@ export default {
 </script>
 
 <style>
-@import '../../assets/css/Main.css';
-@import '../../assets/css/Header.css';
+@import '@/assets/css/Main.css';
+@import '@/assets/css/Header.css';
 </style>

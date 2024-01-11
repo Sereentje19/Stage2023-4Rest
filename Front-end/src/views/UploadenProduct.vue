@@ -192,7 +192,7 @@ export default {
 </script>
   
 <style>
-@import '../assets/css/Uploaden.css';
-@import '../assets/css/Main.css';
+@import '@/assets/css/Uploaden.css';
+@import '@/assets/css/Main.css';
 </style>
   
