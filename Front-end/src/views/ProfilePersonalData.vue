@@ -113,7 +113,7 @@ export default {
   
   
 <style>
-@import '@/assets/css//Profile.css';
-@import '@/assets/css/Main.css';
+@import '/assets/css//Profile.css';
+@import '/assets/css/Main.css';
 </style>
   

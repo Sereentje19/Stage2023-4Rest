@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <a id="logo-header-link" href="/overzicht/documenten"><img id="logo-header"
-                src="/pictures/logo.png" alt="does not work" /></a>
+                src="/assets/pictures/logo.png" alt="does not work" /></a>
         <div id="header-buttons">
             <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
                 <a id="header-items" class="dropdown-link" href="/overzicht/documenten"
@@ -71,6 +71,6 @@ export default {
 </script>
 
 <style>
-@import '@/assets/css/Main.css';
-@import '@/assets/css/Header.css';
+@import '/assets/css/Main.css';
+@import '/assets/css/Header.css';
 </style>

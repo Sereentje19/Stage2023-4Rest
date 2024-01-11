@@ -74,7 +74,7 @@ export default {
   
   
 <style>
-@import '@/assets/css/Main.css';
-@import '@/assets/css/Popup.css';
+@import '/assets/css/Main.css';
+@import '/assets/css/Popup.css';
 </style>
   

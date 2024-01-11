@@ -69,7 +69,7 @@
   height: 100px;
   background-size: cover;
   display: block;
-  background-image: url(/pictures/move.png);
+  background-image: url(/assets/pictures/move.png);
 }
 
 a {

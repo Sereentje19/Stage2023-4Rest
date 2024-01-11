@@ -220,7 +220,7 @@ export default {
   
   
 <style>
-@import '@/assets/css/Overview.css';
-@import '@/assets/css/Main.css';
+@import '/assets/css/Overview.css';
+@import '/assets/css/Main.css';
 </style>
   

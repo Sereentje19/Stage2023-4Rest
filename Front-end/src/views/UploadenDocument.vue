@@ -16,7 +16,7 @@
 
         <label class="overlay">
           <div id="select-document"> Selecteer document</div>
-          <img id="folder-image" src="/pictures/map.png">
+          <img id="folder-image" src="/assets/pictures/map.png">
           <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
         </label>
       </div>
@@ -234,6 +234,6 @@ export default {
 </script>
 
 <style>
-@import '@/assets/css/Uploaden.css';
-@import '@/assets/css/Main.css';
+@import '/assets/css/Uploaden.css';
+@import '/assets/css/Main.css';
 </style>

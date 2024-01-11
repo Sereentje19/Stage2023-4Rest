@@ -47,6 +47,6 @@ export default {
   
   
 <style>
-@import '@/assets/css/Main.css';
-@import '@/assets/css/Pagination.css';
+@import '/assets/css/Main.css';
+@import '/assets/css/Pagination.css';
 </style>
