@@ -66,7 +66,7 @@ void AddCors()
 {
     builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", corsPolicyBuilder =>
     {
-        corsPolicyBuilder.WithOrigins("http://localhost:5173")
+        corsPolicyBuilder.WithOrigins("http://https://salmon-pond-06eaf6d03.4.azurestaticapps.net/")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -124,6 +124,6 @@ void BuildApp()
     app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
     // Set the URL and port
-    app.Urls.Add("http://localhost:5050");
+    //app.Urls.Add("http://localhost:5050");
     app.Run();
 }
