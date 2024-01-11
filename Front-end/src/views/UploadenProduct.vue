@@ -16,7 +16,7 @@
 
                 <label class="overlay">
                     <div id="select-document"> Selecteer product</div>
-                    <img id="folder-image" src="../assets/pictures/map.png">
+                    <img id="folder-image" src="/pictures/map.png">
                     <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
                 </label>
             </div>
