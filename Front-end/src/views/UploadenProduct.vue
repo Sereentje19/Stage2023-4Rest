@@ -13,14 +13,12 @@
                 <div v-if="this.selectedFile != null">Geselecteerde bestand: <b>{{ this.selectedFile.name }}</b></div>
                 <div v-else>Nog geen bestand geselecteerd</div>
 
-
                 <label class="overlay">
                     <div id="select-document"> Selecteer product</div>
                     <img id="folder-image" src="/pictures/map.png">
                     <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
                 </label>
             </div>
-
 
             <div class="rightside" id="rightside-product">
                 <ul>
