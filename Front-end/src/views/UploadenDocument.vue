@@ -16,7 +16,7 @@
 
         <label class="overlay">
           <div id="select-document"> Selecteer document</div>
-          <img id="folder-image" :src="require('@/assets/pictures/folder.png')">
+          <img id="folder-image" src="@/assets/pictures/folder.png">
           <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
         </label>
       </div>
