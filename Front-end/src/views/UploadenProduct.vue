@@ -16,7 +16,7 @@
 
                 <label class="overlay">
                     <div id="select-document"> Selecteer product</div>
-                    <img id="folder-image" src="@/assets/pictures/folder.png">
+                    <img id="folder-image" :src="path">
                     <input type="file" class="file" accept=".jpg, .jpeg, .png, .gif, .pdf" @change="handleFileChange" />
                 </label>
             </div>
@@ -68,6 +68,7 @@ import PopUpMessage from '../components/notifications/PopUpMessage.vue';
 import Header from '../components/layout/Header.vue';
 import IconAdd from '../components/icons/IconAdd.vue';
 import CardList from '../components/icons/IconCardList.vue';
+const path = require('@/assets/pictures/folder.png');
 
 export default {
     components: {

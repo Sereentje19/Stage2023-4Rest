@@ -31,10 +31,10 @@
         <div v-for="(document, i) in displayedDocuments">
           <div @click="goToInfoPage(document)" id="item-documents">
             <img v-if="documentDaysFromExpiration(document, 35)" id="urgentie-symbool"
-              src="@/assets/pictures/hogeUrgentie.png" alt="does not work" />
+              :src="path1" alt="does not work" />
             <img v-else-if="documentDaysFromExpiration(document, 42)" id="urgentie-symbool"
-              src="@/assets/pictures/middelUrgentie.png" alt="does not work" />
-            <img v-else id="urgentie-symbool" src="@/assets/pictures/lageUrgentie.png" alt="does not work" />
+              :src="path2" alt="does not work" />
+            <img v-else id="urgentie-symbool" :src="path3" alt="does not work" />
             <div id="klantnaamTekst">{{ document.employeeName }}</div>
             <div id="geldigVanTekst">{{ formatDate(document.date) }}</div>
             <div id="geldigTotTekst">{{ daysAway(document.date) }}</div>
@@ -86,6 +86,9 @@ import PopUpMessage from '@/components/notifications/PopUpMessage.vue';
 import Header from '@/components/layout/Header.vue';
 import ArrowRight from "@/components/icons/iconArrowRight.vue";
 import Archive from '@/components/icons/IconArchive.vue';
+const path1 = require('@/assets/pictures/hogeUrgentie.png');
+const path2 = require('@/assets/pictures/middelUrgentie.png');
+const path3 = require('@/assets/pictures/lageUrgentie.png');
 
 
 export default {
