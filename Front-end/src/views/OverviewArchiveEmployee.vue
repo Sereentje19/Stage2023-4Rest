@@ -210,6 +210,8 @@ export default {
 </script>
   
   
-<style>@import '../assets/css/Overview.css';
-@import '@/assets/css/Main.css';</style>
+<style>
+@import '@/assets/css/Overview.css';
+@import '@/assets/css/Main.css';
+</style>
   
