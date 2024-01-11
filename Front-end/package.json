@@ -20,6 +20,7 @@
     "moment": "^2.29.4",
     "npm": "^10.2.5",
     "pinia": "^2.1.6",
+    "vite-plugin-style-import": "^2.0.0",
     "vue": "^3.3.4",
     "vue-jwt-decode": "^0.1.0",
     "vue-router": "^4.2.4"
