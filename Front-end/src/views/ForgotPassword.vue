@@ -37,8 +37,8 @@ import axios from '../../axios-auth.js';
 import profile from "@/components/icons/IconProfile.vue";
 import profileFill from "@/components/icons/iconProfileFill.vue";
 import lockClosed from "@/components/icons/iconLockClosed.vue";
-import eyeOpen from "@/components/icons/IconLoginEyeOpen.vue";
-import eyeClosed from "@/components/icons/iconLoginEyeClosed.vue";
+import eyeOpen from "@/components/icons/IconEyeOpen.vue";
+import eyeClosed from "@/components/icons/iconEyeClosed.vue";
 
 export default {
     name: "Login",
