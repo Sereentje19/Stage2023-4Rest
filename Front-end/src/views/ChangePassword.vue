@@ -1,6 +1,6 @@
 <template>
     <div id="login-body">
-        <img id="logo-login" :src="path" alt="does not work" />
+        <img id="logo-login" :src="require('@/assets/pictures/Logo-4-rest-IT.png')" alt="does not work" />
         <div id="login-container">
             <div id="background-circel">
                 <div id="alignment-body">
@@ -53,7 +53,6 @@ import profileFill from "@/components/icons/IconLoginProfileFill.vue";
 import lockClosed from "@/components/icons/iconLoginLockClosed.vue";
 import eyeOpen from "@/components/icons/IconLoginEyeOpen.vue";
 import eyeClosed from "@/components/icons/iconLoginEyeClosed.vue";
-const path = require('@/assets/pictures/Logo-4-rest-IT.png');
 
 export default {
     name: "Login",
