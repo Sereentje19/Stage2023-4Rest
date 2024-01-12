@@ -66,10 +66,11 @@ void AddCors()
 {
     builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", corsPolicyBuilder =>
     {
-        corsPolicyBuilder.WithOrigins("http://https://salmon-pond-06eaf6d03.4.azurestaticapps.net/")
+        corsPolicyBuilder.WithOrigins("https://salmon-pond-06eaf6d03.4.azurestaticapps.net")
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials();
+            .AllowCredentials()
+            .SetPreflightMaxAge(TimeSpan.FromSeconds(86400));
     }));
 }
 
@@ -124,6 +125,6 @@ void BuildApp()
     app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
     // Set the URL and port
-    //app.Urls.Add("http://localhost:5050");
+    app.Urls.Add("https://document-trace-manager.azurewebsites.net");
     app.Run();
 }
