@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://localhost:5050/',
+    baseURL: 'https://document-trace-manager.azurewebsites.net/',
     withCredentials: true, 
 });
 
