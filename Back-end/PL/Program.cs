@@ -69,8 +69,7 @@ void AddCors()
         corsPolicyBuilder.WithOrigins("https://salmon-pond-06eaf6d03.4.azurestaticapps.net")
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials()
-            .SetPreflightMaxAge(TimeSpan.FromSeconds(86400));
+            .AllowCredentials();
     }));
 }
 
