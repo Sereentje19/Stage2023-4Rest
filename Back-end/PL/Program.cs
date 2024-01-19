@@ -124,6 +124,5 @@ void BuildApp()
     app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
     // Set the URL and port
-    app.Urls.Add("https://document-trace-manager.azurewebsites.net");
     app.Run();
 }
