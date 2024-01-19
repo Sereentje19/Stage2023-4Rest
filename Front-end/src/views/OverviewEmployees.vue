@@ -64,6 +64,7 @@ import Archive from '@/components/icons/IconArchive.vue';
 
 
 export default {
+  name: "OverviewEmployees",
     components: {
         Pagination,
         PopUpMessage,
