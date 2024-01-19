@@ -125,6 +125,7 @@ export default {
     this.filterDocuments();
     this.getDocumentTypes();
 
+localStorage.getItem("jwt")
     if (this.$route.query.activePopup && localStorage.getItem('popUpSucces') === 'true') {
       this.$refs.PopUpMessage.popUpError("Data is bijgewerkt.");
     }

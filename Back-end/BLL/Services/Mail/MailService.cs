@@ -64,15 +64,15 @@ namespace BLL.Services.Mail
         /// Connects to the SMTP server, authenticates, and sends the email message.
         /// </summary>
         /// <param name="emailMessage">The MimeMessage to be sent.</param>
-        private void ConnectAndSendMail(MimeMessage emailMessage)
+        private async void ConnectAndSendMail(MimeMessage emailMessage)
         {
             using (MailKit.Net.Smtp.SmtpClient mailClient = new MailKit.Net.Smtp.SmtpClient())
             {
-                mailClient.Connect(_mailSettings.Server, _mailSettings.Port, 
+                await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, 
                     MailKit.Security.SecureSocketOptions.StartTls);
-                mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-                mailClient.Send(emailMessage);
-                mailClient.Disconnect(true);
+                await mailClient.AuthenticateAsync(_mailSettings.UserName, _mailSettings.Password);
+                await mailClient.SendAsync(emailMessage);
+                await mailClient.DisconnectAsync(true);
             }
         }
 
