@@ -32,7 +32,7 @@ namespace PL.Controllers
         /// ActionResult with a JSON response containing paged customers and pagination details.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetPagedEmployees(string searchfield, int page, int pageSize)
+        public async Task<IActionResult> GetPagedEmployees(string searchfield, int page = 1, int pageSize = 5)
         {
             (IEnumerable<object> pagedEmployees, Pager pager) = await _employeeService.GetPagedEmployees(searchfield, page, pageSize);
 
