@@ -170,7 +170,6 @@ export default {
           }
         })
         .then((res) => {
-          console.log(res.data)
           this.documentTypes = res.data;
         })
         .catch((error) => {

@@ -126,7 +126,6 @@ export default {
                 this.product.expirationDate = "2022-01-01T00:00:00Z";
             }
 
-            console.log(this.product.purchaseDate)
 
             if (this.selectedFile != null) {
                 formData.append('file', this.selectedFile);
@@ -148,7 +147,6 @@ export default {
                     }
                 })
                 .then((res) => {
-                    console.log(res.data)
                     this.productTypes = res.data;
                 })
                 .catch((error) => {

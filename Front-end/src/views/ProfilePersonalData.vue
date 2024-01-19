@@ -86,9 +86,6 @@ export default {
         updateUser(bool) {
             this.user.updateName = bool;
 
-            console.log(this.user.email)
-            console.log(this.email)
-
             axios.put("user", this.user, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

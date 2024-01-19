@@ -52,15 +52,12 @@ export default {
                 }
             })
                 .then((res) => {
-                    console.log(res.data)
                     this.employee = res.data;
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });
         },
         editEmployee() {
-            console.log(this.employee)
-
             axios.put("employee", this.employee,{
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

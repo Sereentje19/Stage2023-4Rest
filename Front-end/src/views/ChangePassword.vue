@@ -84,7 +84,6 @@ export default {
             axios.post("forgot-password/code", this.user
                 )
                 .then((res) => {
-                    console.log(res.data);
                     this.$router.push("/");
                 }).catch((error) => {
                     this.errorMessage = error.response.data

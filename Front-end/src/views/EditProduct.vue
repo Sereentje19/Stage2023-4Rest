@@ -77,8 +77,6 @@ export default {
                 this.product.purchaseDate = new Date(1, 0, 1);
             }
 
-            console.log(this.product.type.id)
-
             axios.put("product", this.product, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")

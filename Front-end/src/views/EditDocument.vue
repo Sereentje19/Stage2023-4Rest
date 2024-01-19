@@ -64,7 +64,6 @@ export default {
             })
                 .then((res) => {
                     this.document = res.data;
-                    console.log(res.data)
                 }).catch((error) => {
                     this.$refs.PopUpMessage.popUpError(error.response.data);
                 });

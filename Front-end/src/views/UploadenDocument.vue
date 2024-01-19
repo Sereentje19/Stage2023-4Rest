@@ -171,7 +171,6 @@ export default {
         })
           .then((res) => {
             this.filteredEmployees = res.data;
-            console.log(this.filteredEmployees)
           }).catch((error) => {
             this.$refs.PopUpMessage.popUpError(error.response.data);
           });
@@ -185,7 +184,6 @@ export default {
           }
         })
         .then((res) => {
-          console.log(res.data)
           this.documentTypes = res.data;
         })
         .catch((error) => {

@@ -70,7 +70,6 @@ export default {
                     },
                 })
                 .then((res) => {
-                    console.log(res.data);
                     this.isSend = true;
                     this.errorMessage = "";
                 }).catch((error) => {
@@ -85,7 +84,6 @@ export default {
                     },
                 })
                 .then((res) => {
-                    console.log(res.data);
                     localStorage.setItem("userEmail", this.user.email)
                     this.$router.push("/login/wachtwoord-vergeten/nieuw-wachtwoord/" + this.code);
                 }).catch((error) => {

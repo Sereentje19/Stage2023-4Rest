@@ -73,7 +73,6 @@ export default {
     },
     methods: {
         changePassword() {
-            console.log(this.currentUser)
             axios.put("forgot-password", this.currentUser, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwt")
