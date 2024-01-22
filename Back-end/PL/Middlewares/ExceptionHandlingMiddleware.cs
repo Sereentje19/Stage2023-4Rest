@@ -73,7 +73,7 @@ namespace PL.Middlewares
                     break;
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError; //500
-                    errorResponseDto.Message = "Interne serverfout. - " + exception.Message;
+                    errorResponseDto.Message = "Interne serverfout.";
                     break;
             }
 
