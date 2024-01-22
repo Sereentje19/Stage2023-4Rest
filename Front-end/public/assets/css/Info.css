@@ -1,0 +1,259 @@
+.info-container {
+    width: 85%;
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-document-container{
+    
+    width: 85%;
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+}
+
+.foto {
+    max-height: 500px;
+    max-width: 500px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin-left: auto;
+}
+
+#document-title {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+#loan-title {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+#info-edit-delete{
+    display: flex;
+    flex-direction: column;
+}
+
+#leftside-documents{
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 100%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    margin-bottom: 30px;
+}
+
+#leftside {
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 45%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    margin-bottom: 30px;
+}
+
+#loan-info-leftside {
+    padding: 0px 30px 30px 0px;
+
+}
+
+#box{
+    display: flex;
+}
+
+#edit-button {
+    color: rgb(0, 0, 0);
+    padding: 5px 10px 5px 10px;
+    font-size: 20px;
+    background-color: #e79908;
+    color: white;
+    margin-right: 20px;
+    border-bottom: 3px solid #c07d00;
+    border-right: 3px solid #c07d00;
+}
+
+#delete-button {
+    color: rgb(0, 0, 0);
+    padding: 5px 10px 5px 10px;
+    font-size: 20px;
+    background-color: #bd1e1e;
+    color: white;
+    border-bottom: 3px solid #971717;
+    border-right: 3px solid #971717;
+}
+
+#edit-button:hover,
+#delete-button:hover {
+    color: white;
+    border-left: 3px solid #ffffff;
+    border-top: 3px solid #ffffff;
+    border-bottom: none;
+    border-right: none;
+    border-radius: 4px;
+}
+
+#edit-button:hover{
+    background-color: #c07d00;
+}
+
+#delete-button:hover {
+    background-color: #971717;
+}
+
+#product-availability {
+    background-color: #f7f7f7;
+    padding: 30px;
+    width: 45%;
+    border-radius: 10px;
+    border: solid 1px #868686;
+    display: flex;
+}
+
+#employee {
+    display: flex;
+    flex-direction: column;
+}
+
+#button-item {
+    font-size: 20px;
+    background-color: #22421f;
+    color: white;
+    padding: 12px;
+    font-size: 25px;
+    border-radius: 5px;
+    border: none;
+    width: fit-content;
+    margin-top: 30px;
+    border-bottom: 3px solid #133610;
+    border-right: 3px solid #133610;
+}
+
+#button-item:hover {
+    background-color: #133610;
+    border-left: 3px solid #ffffff;
+    border-top: 3px solid #ffffff;
+    border-radius: 5px;
+    border-bottom: none;
+    border-right: none;
+}
+
+#second-leftside {
+    font-size: 25px;
+}
+
+#customers-list {
+    width: 600px;
+    margin-left: 50px;
+    margin-top: -300px;
+}
+
+#rightside {
+    background-color: #24232344;
+    border: solid 1px rgb(114, 114, 114);
+    padding: 30px;
+    width: 90%;
+    border-radius: 10px;
+    height: 334px;
+}
+
+.searchfield-loanhistory {
+    font-size: 20px;
+    padding-left: 20px;
+    margin-bottom: 30px;
+    width: 300px;
+    height: 40px;
+    border-radius: 5px;
+    border: black solid 1px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    padding-left: 20px;
+}
+
+tr {
+    cursor: pointer;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#top-table tr{
+    cursor:default;
+}
+
+#top-table {
+    text-align: center;
+    margin-right: 250px;
+}
+
+.first-row {
+    width: 200px;
+}
+
+#second-row {
+    border-right: none;
+}
+
+#empty-row {
+    width: 15px;
+    padding: 0;
+    border-left: none;
+}
+
+#bottom-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+#table-info-loan {
+    height: 215px;
+    cursor: auto;
+    overflow-y: auto;
+}
+
+.foto-product{
+    margin-top: 30px;
+}
+
+#info-item-div{
+    width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+#info-item-div-document{
+    width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+#loan-info {
+    font-size: 20px;
+    display: flex;
+}

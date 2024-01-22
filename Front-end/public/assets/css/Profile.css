@@ -1,0 +1,197 @@
+#body-profile {
+    width: 80%;
+    display: flex;
+    margin: auto;
+    margin-top: 80px;
+}
+
+.nav-item {
+    background-color: #709c6d;
+    font-size: 20px;
+    padding: 10px 10px 10px 10px;
+    border: #769275 1px solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.nav-item:first-child{
+    border-radius: 5px 5px 0px 0px;
+}
+
+.nav-item:last-child{
+    border-radius: 0px 0px 5px 5px;
+}
+
+.nav-item:hover {
+    background-color: #315a2e;
+}
+
+#current-nav-item {
+    background-color: #214d1d;
+}
+
+#nav-profile {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    height: 150px;
+}
+
+#profile-page {
+    background-color: #949494;
+    width: 65%;
+    height: 500px;
+    margin-left: auto;
+    border-radius: 5px;
+}
+
+#inputfields {
+    display: flex;
+    flex-direction: column;
+    padding: 80px;
+    width: 300px;
+}
+
+#input-edit {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.email-personal-data{
+    margin-top: 30px;
+}
+
+.inputfield-personal-data{
+    font-size: 17px;
+    width: 500px;
+    margin-right: 10px;
+    padding-left: 20px;
+    padding-right: 100px;
+    height: 35px;
+    border-radius: 5px;
+    border:none;
+}
+
+#button-personal-data{
+    font-size: 20px;
+    background-color: #264923;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    border-bottom: 3px solid #11300e;
+    width: fit-content;
+    border-right: 3px solid #133610;
+}
+
+#button-personal-data:hover{
+    border-left: 3px solid #949494;
+    border-top: 3px solid #949494;
+    border-bottom: none;
+    border-right: none;
+    border-radius: 5px;
+    width: fit-content;
+    background-color: #133610;
+}
+
+#titles-overview-users {
+    display: grid;
+    grid-template-columns: 2% 40% 40% 10%;
+    font-size: large;
+}
+
+#item-users {
+    width: 100%;
+    height: 55px;
+    background-color: white;
+    margin-bottom: 6px;
+    border-color: #949494;
+    border-width: 1px;
+    border-style: solid;
+    display: grid;
+    grid-template-columns: 2% 40% 40% 10%;
+    color: black;
+    margin-left: auto;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#profile-users{
+    margin: 20px 30px 60px 30px;
+    width: 80%;
+}
+
+#profile-page-users{
+    display: flex;
+    flex-direction: row;
+    background-color: #949494;
+    width: 65%;
+    height: 500px;
+    margin-left: auto;
+    border-radius: 5px;
+}
+
+#profile-page-add-users{
+    background-color: #949494;
+    width: 65%;
+    height: 500px;
+    margin-left: auto;
+}
+
+#profile-add-button{
+    height: fit-content;
+    background-color: #949494;
+    margin: 70px 0px 0px 0px;
+}
+
+#profile-back-button{
+    height: fit-content;
+    background-color: #949494;
+    margin: 75px 30px 0px 0px;
+}
+
+#table-users{
+    margin: 50px;
+}
+
+#table-add-users{
+    display: flex;
+    flex-direction: row;
+    margin-right: 20px;
+    justify-content: space-between;
+}
+
+.first-row-users {
+    width: 160px;
+}
+
+#third-row-users {
+    border-right: none;
+}
+
+#second-row-users{
+    width: 250px;
+}
+
+#table-info-users {
+    height: 205px;
+    cursor: auto;
+    overflow-y: auto;
+}
+
+#trash:hover{
+    color: rgb(173, 9, 9);
+}
+
+tr{
+    font-size: 15px;
+}
+
+
+#inputfield-title{
+    margin-bottom: 10px;
+}

@@ -1,0 +1,84 @@
+.header {
+  width: 100%;
+  height: 120px;
+  background-color: #153912;
+  margin-top: -1.5%;
+  display: flex;
+  flex-direction: row;
+}
+
+#logo-header {
+  width: 130px;
+  height: 80px;
+  margin-top: 28px;
+  padding: 0.5% 0% 0% 1%;
+}
+
+#logo-header-link{
+  margin-left: 7%;
+}
+
+#header-buttons {
+  position: absolute;
+  right: 5%;
+  padding: 50px 40px 0px 0px;
+}
+
+#header-items:hover {
+  color: #bebebe;
+}
+
+a {
+  font-size: 25px;
+  color: white;
+}
+
+#dropdown-links {
+  font-size: 18px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #153912;
+  min-width: 160px;
+  padding-top: 35px;
+  z-index: 1;
+  border-radius: 0px 0px 5px 5px;
+}
+
+.dropdown-content a:first-child {
+  border-top: rgb(0, 0, 0) 2px solid;
+}
+
+.dropdown-content a:last-child {
+  border-bottom: #153912 1px solid;
+}
+
+#box-shadow {
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.4), 5px 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-content a {
+  color: rgb(0, 0, 0);
+  padding: 5px 0px 5px 20px;
+  text-decoration: none;
+  display: block;
+  background-color: rgb(255, 255, 255);
+  border-left: #153912 1px solid;
+  border-right: #153912 1px solid;
+}
+
+.dropdown-content a:hover {
+  background-color: #153912;
+  color: white;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
