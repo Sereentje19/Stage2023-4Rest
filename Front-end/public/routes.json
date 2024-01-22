@@ -2,7 +2,8 @@
     "routes": [
         {
         "route": "/*",
-        "serve": "../index.html",
+        "serve": "/index.html",
+        "exclude": ["/pictures/*.{png,jpg,gif}", "/css/*"],
         "statusCode": 200
         }
     ]
