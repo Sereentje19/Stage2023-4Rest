@@ -3,6 +3,7 @@
         {
         "route": "/*",
         "serve": "/index.html",
+        "rewrite": "/index.html",
         "exclude": ["/pictures/*.{png,jpg,gif}", "/css/*"],
         "statusCode": 200
         }
