@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.Data;
@@ -167,13 +168,17 @@ namespace DAL.Repositories
                 .Include(p => p.Type)
                 .FirstOrDefaultAsync(p => p.ProductId == productRequest.ProductId);
 
+            ProductType productType = await _context.ProductTypes
+                .Where(t => t.Name == productRequest.Type.Name)
+                .FirstOrDefaultAsync();
+
             if (existingProduct == null)
             {
                 throw new NotFoundException("Geen product gevonden");
             }
             
             _context.Entry(existingProduct).CurrentValues.SetValues(productRequest);
-            existingProduct.Type.Name = productRequest.Type.Name;
+            existingProduct.Type = productType;
             
             await _context.SaveChangesAsync();
         }

@@ -193,8 +193,12 @@ namespace DAL.Repositories
                 .Where(d => d.DocumentId == document.DocumentId)
                 .FirstOrDefaultAsync();
 
+            DocumentType documentType = await _context.DocumentTypes
+                .Where(t => t.Name == document.Type.Name)
+                .FirstOrDefaultAsync();
+
             existingDocument.Date = document.Date;
-            existingDocument.Type = document.Type;
+            existingDocument.Type = documentType;
 
             await _context.SaveChangesAsync();
         }
